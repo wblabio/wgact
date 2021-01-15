@@ -1,0 +1,19 @@
+.subnav-li-active {
+    font-weight: bold;
+}
+
+.subnav-li-inactive {
+    /*text-decoration: underline;*/
+    color: #0073aa;
+}
+
+.subnav-tabs li {
+    float: left;
+}
+
+.subnav-tabs li + li::before {
+    content: "|";
+    padding: 0 5px 0 5px;
+    color: black;
+    font-weight: normal;
+}

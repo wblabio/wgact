@@ -1,0 +1,45 @@
+.subnav-li-active {
+    font-weight: bold;
+}
+
+.subnav-li-inactive {
+    /*text-decoration: underline;*/
+    color: #0073aa;
+}
+
+.subnav-tabs li {
+    float: left;
+}
+
+.subnav-tabs li + li::before {
+    content: "|";
+    padding: 0 5px 0 5px;
+    color: black;
+    font-weight: normal;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    /* width: 120px; */
+    background-color: #0073aa;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 5px 5px 5px;
+    position: absolute;
+    z-index: 1;
+    top: -5px;
+    left: 105%;
+    font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+    margin-left: 10px;
+    font-size: 16px;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}

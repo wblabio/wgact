@@ -1,0 +1,257 @@
+# Copyright (C) 2021 Wolf+Bär Agency
+# This file is distributed under the same license as the WooCommerce Google Ads Conversion Tracking plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Google Ads Conversion Tracking 1.7.8\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/trunk\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2021-01-15T05:37:25+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.4.0\n"
+"X-Domain: woocommerce-google-adwords-conversion-tracking-tag\n"
+
+#. Plugin Name of the plugin
+msgid "WooCommerce Google Ads Conversion Tracking"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://wordpress.org/plugins/woocommerce-google-adwords-conversion-tracking-tag/"
+msgstr ""
+
+#. Description of the plugin
+msgid "Google Ads dynamic conversion value tracking for WooCommerce."
+msgstr ""
+
+#. Author of the plugin
+msgid "Wolf+Bär Agency"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://wolfundbaer.ch"
+msgstr ""
+
+#: classes/admin/class-admin.php:64
+#: classes/admin/class-admin.php:65
+msgid "Google Ads Conversion Tracking"
+msgstr ""
+
+#: classes/admin/class-admin.php:132
+msgid "Conversion ID"
+msgstr ""
+
+#: classes/admin/class-admin.php:144
+msgid "Conversion Label"
+msgstr ""
+
+#: classes/admin/class-admin.php:177
+msgid "Facebook ID"
+msgstr ""
+
+#: classes/admin/class-admin.php:235
+msgid "Order Total Logic"
+msgstr ""
+
+#: classes/admin/class-admin.php:268
+msgid "gtag Deactivation"
+msgstr ""
+
+#: classes/admin/class-admin.php:291
+msgid "Beta"
+msgstr ""
+
+#: classes/admin/class-admin.php:302
+msgid "Activation"
+msgstr ""
+
+#: classes/admin/class-admin.php:314
+msgid "aw_merchant_id"
+msgstr ""
+
+#: classes/admin/class-admin.php:326
+msgid "aw_feed_country"
+msgstr ""
+
+#: classes/admin/class-admin.php:338
+msgid "aw_feed_language"
+msgstr ""
+
+#: classes/admin/class-admin.php:350
+msgid "Product Identifier"
+msgstr ""
+
+#: classes/admin/class-admin.php:362
+msgid "Dynamic Remarketing"
+msgstr ""
+
+#: classes/admin/class-admin.php:384
+msgid "Support"
+msgstr ""
+
+#: classes/admin/class-admin.php:402
+msgid "Author"
+msgstr ""
+
+#: classes/admin/class-admin.php:433
+msgid ""
+"It looks like you are using some sort of ad or script blocker which is blocking the script and CSS files of this plugin.\n"
+"                    In order for the plugin to work properly you need to disable the script blocker."
+msgstr ""
+
+#: classes/admin/class-admin.php:438
+msgid "Learn more"
+msgstr ""
+
+#. translators: 'Wolf+Bär' needs to always stay the same
+#: classes/admin/class-admin.php:466
+msgid "Profit Driven Marketing by Wolf+Bär"
+msgstr ""
+
+#: classes/admin/class-admin.php:470
+msgid "Visit us here:"
+msgstr ""
+
+#: classes/admin/class-admin.php:504
+msgid "Find out more about this new feature: "
+msgstr ""
+
+#: classes/admin/class-admin.php:506
+msgid "At the moment we are testing this feature. It might go into a PRO version of this plugin in the future."
+msgstr ""
+
+#: classes/admin/class-admin.php:513
+msgid "Use the following two resources for support: "
+msgstr ""
+
+#: classes/admin/class-admin.php:519
+msgid "Post a support request in the WordPress support forum here: "
+msgstr ""
+
+#: classes/admin/class-admin.php:522
+msgid "Support forum"
+msgstr ""
+
+#: classes/admin/class-admin.php:526
+msgid "Or send us an email to the following address: "
+msgstr ""
+
+#: classes/admin/class-admin.php:536
+msgid "copy to clipboard"
+msgstr ""
+
+#: classes/admin/class-admin.php:547
+msgid "More details about the developer of this plugin: "
+msgstr ""
+
+#. translators: 'Wolf+Bär' needs to always stay the same, while 'Agency' can be translated
+#: classes/admin/class-admin.php:552
+msgid "Developer: Wolf+Bär Agency"
+msgstr ""
+
+#: classes/admin/class-admin.php:555
+msgid "Website: "
+msgstr ""
+
+#: classes/admin/class-admin.php:695
+msgid "The conversion ID looks similar to this:"
+msgstr ""
+
+#: classes/admin/class-admin.php:703
+msgid "The conversion Label looks similar to this:"
+msgstr ""
+
+#: classes/admin/class-admin.php:710
+msgid "Use order_subtotal: Doesn't include tax and shipping (default)"
+msgstr ""
+
+#: classes/admin/class-admin.php:713
+msgid "Use order_total: Includes tax and shipping"
+msgstr ""
+
+#: classes/admin/class-admin.php:715
+msgid "This is the order total amount reported back to Google Ads"
+msgstr ""
+
+#: classes/admin/class-admin.php:723
+msgid "open the documentation"
+msgstr ""
+
+#: classes/admin/class-admin.php:738
+msgid "Disable gtag.js insertion if another plugin is inserting it already."
+msgstr ""
+
+#: classes/admin/class-admin.php:750
+msgid "Add the cart data to the conversion event"
+msgstr ""
+
+#: classes/admin/class-admin.php:763
+msgid "Enable dynamic remarketing audience collection"
+msgstr ""
+
+#: classes/admin/class-admin.php:766
+msgid "You need to choose the correct product identifier setting in order to match the product identifiers in the Google Merchant Center or your Google Ads business feed."
+msgstr ""
+
+#: classes/admin/class-admin.php:776
+msgid "Enter the ID of your Google Merchant Center account."
+msgstr ""
+
+#: classes/admin/class-admin.php:791
+msgid "Currently the plugin automatically detects the location of the visitor for this setting. In most, if not all, cases this will work fine. Please let us know if you have a use case where you need another output:"
+msgstr ""
+
+#: classes/admin/class-admin.php:823
+msgid "The plugin will use the WordPress default language for this setting. If the shop uses translations, in theory we could also use the visitors locale. But, if that language is  not set up in the Google Merchant Center we might run into issues. If you need more options here let us know:"
+msgstr ""
+
+#: classes/admin/class-admin.php:838
+msgid "post id (default)"
+msgstr ""
+
+#: classes/admin/class-admin.php:843
+msgid "post id with woocommerce_gpf_ prefix *"
+msgstr ""
+
+#: classes/admin/class-admin.php:848
+msgid "SKU"
+msgstr ""
+
+#: classes/admin/class-admin.php:851
+msgid "Choose a product identifier."
+msgstr ""
+
+#: classes/admin/class-admin.php:853
+msgid "* This is for users of the WooCommerce Google Product Feed Plugin"
+msgstr ""
+
+#: classes/admin/class-admin.php:867
+msgid "You have entered an invalid conversion id. It only contains 8 to 10 digits."
+msgstr ""
+
+#: classes/admin/class-admin.php:875
+msgid "You have entered an invalid conversion label."
+msgstr ""
+
+#: classes/admin/class-admin.php:883
+msgid "You have entered an invalid merchant id. It only contains 8 to 10 digits."
+msgstr ""
+
+#. translators: %d: the amount of purchase conversions that have been measured
+#: classes/admin/class-ask-for-rating.php:119
+msgid "Hey, I noticed that you tracked more than %d purchase conversions with the Google Ads Conversion Tracking plugin - that's awesome! Could you please do me a BIG favour and give it a 5-star rating on WordPress? Just to help us spread the word and boost our motivation."
+msgstr ""
+
+#: classes/admin/class-ask-for-rating.php:133
+msgid "Ok, you deserve it"
+msgstr ""
+
+#: classes/admin/class-ask-for-rating.php:138
+msgid "Nope, maybe later"
+msgstr ""
+
+#: classes/admin/class-ask-for-rating.php:143
+msgid "I already did"
+msgstr ""
