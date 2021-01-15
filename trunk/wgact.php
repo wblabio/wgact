@@ -5,7 +5,7 @@
  * Author:       Wolf+Bär Agency
  * Plugin URI:   https://wordpress.org/plugins/woocommerce-google-adwords-conversion-tracking-tag/
  * Author URI:   https://wolfundbaer.ch
- * Version:      1.7.11
+ * Version:      1.7.12
  * License:      GPLv2 or later
  * Text Domain:  woocommerce-google-adwords-conversion-tracking-tag
  * WC requires at least: 2.6
@@ -21,7 +21,6 @@
 // TODO force init gtag if it was deactivated but not initialized in the correct sequence on the website
 // TODO remove google_business_vertical cleanup
 
-namespace WGACT;
 
 use WGACT\Classes\Admin\Admin;
 use WGACT\Classes\Admin\Ask_For_Rating;
