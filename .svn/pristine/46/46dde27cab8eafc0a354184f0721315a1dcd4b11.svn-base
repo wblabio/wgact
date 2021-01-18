@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, conversion tracking, dynamic retargeting, remarke
 Requires at least: 3.7
 Tested up to: 5.6
 Requires PHP: 7.2
-Stable tag: 1.7.13
+Stable tag: 1.7.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -106,12 +106,6 @@ You can send the link to the front page of your shop too if you think it would b
 1. Settings page
 
 == Changelog ==
-
-= 1.7.13 =
-
-* New: Facebook pixel
-* Tweak: Adjust db and bump up to version 3
-* Tweak: Introduced Pixel_Manager and restructured Google Ads class
 
 = 1.7.12 =
 
