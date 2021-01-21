@@ -35,17 +35,7 @@ class Pixel
         $this->conversion_label         = $this->options['google']['ads']['conversion_label'];
         $this->dynamic_remarketing      = $this->options['google']['ads']['dynamic_remarketing'];
         $this->product_identifier       = $this->options['google']['ads']['product_identifier'];
-        $this->google_business_vertical = $this->get_google_business_vertical($this->options['google']['ads']['google_business_vertical']);
         $this->gtag_deactivation        = $this->options['google']['gtag']['deactivation'];
-    }
-
-    protected function get_google_business_vertical($id): string
-    {
-        $verticals = [
-            0 => 'retail',
-        ];
-
-        return $verticals[$id];
     }
 
     // get an array with all product categories

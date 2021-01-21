@@ -1,4 +1,4 @@
-(function (){
+jQuery(function (){
 
     jQuery('.wgact-rating-success-notice').show();
 
@@ -35,4 +35,4 @@
         jQuery('.wgact-rating-success-notice').remove();
     }
 
-})();
+});

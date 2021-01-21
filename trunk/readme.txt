@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, conversion tracking, dynamic retargeting, remarke
 Requires at least: 3.7
 Tested up to: 5.6
 Requires PHP: 7.2
-Stable tag: 1.7.13
+Stable tag: 1.7.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -106,6 +106,15 @@ You can send the link to the front page of your shop too if you think it would b
 1. Settings page
 
 == Changelog ==
+
+= 1.8.0 =
+
+* New: Google Analytics UA standard beta
+* New: Google Analytics 4 beta
+* New: Google Optimize beta
+* New: Activation indicators
+* Tweak: Put admin scripts into header for faster rendering
+* Fix: Detect proper admin path in tabs.js
 
 = 1.7.13 =
 

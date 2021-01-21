@@ -163,5 +163,10 @@ function setUrl(sectionSlug, subsectionSlug = "") {
     history.pushState('', 'WGACT ' + sectionSlug, document.location.pathname + "?page=wgact&" + newParams);
 
     // make WP remember which was the selected tab on a save and return to the same tab after saving
-    jQuery('input[name ="_wp_http_referer"]').val("/wp-admin/admin.php?page=wgact&" + newParams + "&settings-updated=true");
+    jQuery('input[name ="_wp_http_referer"]').val( getAdminPath() + "?page=wgact&" + newParams + "&settings-updated=true");
+}
+
+function getAdminPath(){
+    let url = new URL(jQuery('#wp-admin-canonical').attr('href'));
+    return url.pathname;
 }

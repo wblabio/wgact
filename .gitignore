@@ -138,6 +138,6 @@ tmtags
 /cypress/screenshots/
 
 # SVN
-
+.svn/
 /tags/
 

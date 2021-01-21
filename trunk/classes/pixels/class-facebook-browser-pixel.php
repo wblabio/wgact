@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-class Facebook extends Pixel
+class Facebook_Browser_Pixel extends Pixel
 {
     public function inject_everywhere()
     {
