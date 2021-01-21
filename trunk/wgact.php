@@ -5,7 +5,7 @@
  * Author:       Wolf+Bär Agency
  * Plugin URI:   https://wordpress.org/plugins/woocommerce-google-adwords-conversion-tracking-tag/
  * Author URI:   https://wolfundbaer.ch
- * Version:      1.7.14
+ * Version:      1.8.1
  * License:      GPLv2 or later
  * Text Domain:  woocommerce-google-adwords-conversion-tracking-tag
  * WC requires at least: 2.6
@@ -203,6 +203,13 @@ if (function_exists('wga_fs')) {
                 // remove by end of 2021 latest
                 if (array_key_exists('google_business_vertical', $this->options)) {
                     unset($this->options['google_business_vertical']);
+                }
+
+                // cleanup the db of this setting
+                // remove by end of 2021 latest
+                // accidentally had this dummy id left in the default options in 1.7.13
+                if($this->options['facebook']['pixel_id'] === '767038516805171'){
+                    $this->options['facebook']['pixel_id'] = '';
                 }
 
                 // add new default options to the options db array
