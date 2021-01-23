@@ -108,7 +108,7 @@ class Admin
         $this->add_section_main_subsection_facebook($section_ids);
 
         if (wga_fs()->is__premium_only()) {
-            $this->add_section_main_subsection_bing__premium_only($section_ids);
+            $this->add_section_main_subsection_more_pixels__premium_only($section_ids);
         }
     }
 
@@ -223,11 +223,11 @@ class Admin
         );
     }
 
-    public function add_section_main_subsection_bing__premium_only($section_ids)
+    public function add_section_main_subsection_more_pixels__premium_only($section_ids)
     {
         $sub_section_ids = [
-            'title' => 'Bing',
-            'slug' => 'bing'
+            'title' => 'more pixels',
+            'slug' => 'more-pixels'
         ];
 
         add_settings_field(
@@ -243,14 +243,50 @@ class Admin
             $section_ids['settings_name']
         );
 
-        // add the field for the conversion label
+        // add the field for the Bing Ads UET tag ID
         add_settings_field(
             'wgact_plugin_bing_uet_tag_id',
             esc_html__(
-                'Bing Ads UET tag ID',
+                'Microsoft Advertising UET tag ID',
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ) . $this->svg_beta(),
             [$this, 'wgact_plugin_setting_bing_uet_tag_id__premium_only'],
+            'wgact_plugin_options_page',
+            $section_ids['settings_name']
+        );
+
+        // add the field for the Twitter pixel
+        add_settings_field(
+            'wgact_plugin_twitter_pixel_id',
+            esc_html__(
+                'Twitter pixel ID',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ) . $this->svg_beta(),
+            [$this, 'wgact_plugin_setting_twitter_pixel_id__premium_only'],
+            'wgact_plugin_options_page',
+            $section_ids['settings_name']
+        );
+
+        // add the field for the Pinterest pixel
+        add_settings_field(
+            'wgact_plugin_pinterest_pixel_id',
+            esc_html__(
+                'Pinterest pixel ID',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ) . $this->svg_beta(),
+            [$this, 'wgact_plugin_setting_pinterest_pixel_id__premium_only'],
+            'wgact_plugin_options_page',
+            $section_ids['settings_name']
+        );
+
+        // add the field for the Hotjar pixel
+        add_settings_field(
+            'wgact_plugin_hotjar_site_id',
+            esc_html__(
+                'Hotjar site ID',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ) . $this->svg_beta(),
+            [$this, 'wgact_plugin_setting_hotjar_site_id__premium_only'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
@@ -630,7 +666,7 @@ class Admin
                 <textarea id="debug-info-textarea" class=""
                           style="display:block; margin-bottom: 10px; width: 100%;resize: none;color:dimgrey;"
                           cols="100%" rows="30"
-                          readonly><?php echo $this->get_debug_info() ?>
+                          readonly><?php echo (new Debug_info())->get_debug_info() ?>
                 </textarea>
                 <button id="debug-info-button"
                         type="button"><?php esc_html_e('copy to clipboard', 'woocommerce-google-adwords-conversion-tracking-tag'); ?></button>
@@ -661,135 +697,6 @@ class Admin
 
         </div>
         <?php
-    }
-
-    public function get_debug_info(): string
-    {
-        global $woocommerce, $wp_version, $current_user;
-
-        $html = '### Debugging Information ###' . PHP_EOL . PHP_EOL;
-
-        $html .= '## System Environment ##' . PHP_EOL . PHP_EOL;
-
-        $html .= 'This plugin\'s version: ' . WGACT_CURRENT_VERSION . PHP_EOL;
-
-        $html .= PHP_EOL;
-
-        $html .= 'WordPress version: ' . $wp_version . PHP_EOL;
-        $html .= 'WooCommerce version: ' . $woocommerce->version . PHP_EOL;
-        $html .= 'PHP version: ' . phpversion() . PHP_EOL;
-
-        $html .= PHP_EOL;
-
-        $multisite_enabled = is_multisite() ? 'yes' : 'no';
-        $html              .= 'Multisite enabled: ' . $multisite_enabled . PHP_EOL;
-
-        $wp_debug = 'no';
-        if (defined('WP_DEBUG') && true === WP_DEBUG) {
-            $wp_debug = 'yes';
-        }
-
-        $html .= 'WordPress debug mode enabled: ' . $wp_debug . PHP_EOL;
-
-        wp_get_current_user();
-        $html .= 'Logged in user login name: ' . $current_user->user_login . PHP_EOL;
-        $html .= 'Logged in user display name: ' . $current_user->display_name . PHP_EOL;
-
-        $html .= PHP_EOL . '## WooCommerce ##' . PHP_EOL . PHP_EOL;
-
-        $html .= 'Default currency: ' . get_woocommerce_currency() . PHP_EOL;
-        $html .= 'Shop URL: ' . get_home_url() . PHP_EOL;
-        $html .= 'Cart URL: ' . wc_get_cart_url() . PHP_EOL;
-        $html .= 'Checkout URL: ' . wc_get_checkout_url() . PHP_EOL;
-
-        $last_order_id = $this->get_last_order_id();
-//		echo('last order: ' . $last_order_id . PHP_EOL);
-        $last_order = new WC_Order(wc_get_order($last_order_id));
-        $html       .= 'Last order URL: ' . $last_order->get_checkout_order_received_url() . PHP_EOL;
-
-
-        $html .= PHP_EOL . '## Theme ##' . PHP_EOL . PHP_EOL;
-
-        $is_child_theme = is_child_theme() ? 'yes' : 'no';
-        $html           .= 'Is child theme: ' . $is_child_theme . PHP_EOL;
-        $theme_support  = current_theme_supports('woocommerce') ? 'yes' : 'no';
-        $html           .= 'WooCommerce support: ' . $theme_support . PHP_EOL;
-
-        $html .= PHP_EOL;
-
-        // using the double check prevents problems with some themes that have not implemented
-        // the child state correctly
-        // https://wordpress.org/support/topic/debug-error-33/
-        $theme_description_prefix = (is_child_theme() && wp_get_theme()->parent()) ? 'Child theme ' : 'Theme ';
-
-        $html .= $theme_description_prefix . 'Name: ' . wp_get_theme()->get('Name') . PHP_EOL;
-        $html .= $theme_description_prefix . 'ThemeURI: ' . wp_get_theme()->get('ThemeURI') . PHP_EOL;
-        $html .= $theme_description_prefix . 'Author: ' . wp_get_theme()->get('Author') . PHP_EOL;
-        $html .= $theme_description_prefix . 'AuthorURI: ' . wp_get_theme()->get('AuthorURI') . PHP_EOL;
-        $html .= $theme_description_prefix . 'Version: ' . wp_get_theme()->get('Version') . PHP_EOL;
-        $html .= $theme_description_prefix . 'Template: ' . wp_get_theme()->get('Template') . PHP_EOL;
-        $html .= $theme_description_prefix . 'Status: ' . wp_get_theme()->get('Status') . PHP_EOL;
-        $html .= $theme_description_prefix . 'TextDomain: ' . wp_get_theme()->get('TextDomain') . PHP_EOL;
-        $html .= $theme_description_prefix . 'DomainPath: ' . wp_get_theme()->get('DomainPath') . PHP_EOL;
-
-        $html .= PHP_EOL;
-
-        // using the double check prevents problems with some themes that have not implemented
-        // the child state correctly
-        if (is_child_theme() && wp_get_theme()->parent()) {
-            $html .= 'Parent theme Name: ' . wp_get_theme()->parent()->get('Name') . PHP_EOL;
-            $html .= 'Parent theme ThemeURI: ' . wp_get_theme()->parent()->get('ThemeURI') . PHP_EOL;
-            $html .= 'Parent theme Author: ' . wp_get_theme()->parent()->get('Author') . PHP_EOL;
-            $html .= 'Parent theme AuthorURI: ' . wp_get_theme()->parent()->get('AuthorURI') . PHP_EOL;
-            $html .= 'Parent theme Version: ' . wp_get_theme()->parent()->get('Version') . PHP_EOL;
-            $html .= 'Parent theme Template: ' . wp_get_theme()->parent()->get('Template') . PHP_EOL;
-            $html .= 'Parent theme Status: ' . wp_get_theme()->parent()->get('Status') . PHP_EOL;
-            $html .= 'Parent theme TextDomain: ' . wp_get_theme()->parent()->get('TextDomain') . PHP_EOL;
-            $html .= 'Parent theme DomainPath: ' . wp_get_theme()->parent()->get('DomainPath') . PHP_EOL;
-        }
-
-        // TODO maybe add all active plugins
-
-        $html .= PHP_EOL;
-
-        $html .= PHP_EOL . '## freemius ##' . PHP_EOL . PHP_EOL;
-
-        $html .= 'api.freemius.com : ' . $this->try_connect_to_server('api.freemius.com') . PHP_EOL;
-        $html .= 'wp.freemius.com : ' . $this->try_connect_to_server('wp.freemius.com') . PHP_EOL;
-
-//        $html .= PHP_EOL . '## misc ##' . PHP_EOL . PHP_EOL;
-
-//        $html .= 'Script blocker detected:';
-
-        $html .= PHP_EOL . PHP_EOL . '### End of Information ###';
-
-        return $html;
-    }
-
-    protected function try_connect_to_server($server): string
-    {
-        if ($socket = @ fsockopen($server, 80)) {
-            @fclose($socket);
-            return 'online';
-        } else {
-            return 'offline';
-        }
-    }
-
-    public function get_last_order_id()
-    {
-        global $wpdb;
-        $statuses = array_keys(wc_get_order_statuses());
-        $statuses = implode("','", $statuses);
-
-        // Getting last Order ID (max value)
-        $results = $wpdb->get_col("
-            SELECT MAX(ID) FROM {$wpdb->prefix}posts
-            WHERE post_type LIKE 'shop_order'
-            AND post_status IN ('$statuses')
-        ");
-
-        return reset($results);
     }
 
     public function wgact_plugin_settings_google_analytics_universal_property()
@@ -865,8 +772,38 @@ class Admin
         echo $this->get_status_icon($this->options['bing']['uet_tag_id']);
 //        echo $this->get_documentation_html('/wgact/#/bing');
         echo '<br><br>';
-        esc_html_e('The Bing Ads UET tag ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
+        esc_html_e('The Microsoft Advertising UET tag ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo '&nbsp;<i>12345678</i>';
+    }
+
+    public function wgact_plugin_setting_twitter_pixel_id__premium_only()
+    {
+        echo "<input id='wgact_plugin_twitter_pixel_id' name='wgact_plugin_options[twitter][pixel_id]' size='40' type='text' value='{$this->options['twitter']['pixel_id']}' />";
+        echo $this->get_status_icon($this->options['twitter']['pixel_id']);
+//        echo $this->get_documentation_html('/wgact/#/bing');
+        echo '<br><br>';
+        esc_html_e('The Twitter pixel ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
+        echo '&nbsp;<i>abcde</i>';
+    }
+
+    public function wgact_plugin_setting_pinterest_pixel_id__premium_only()
+    {
+        echo "<input id='wgact_plugin_pinterest_pixel_id' name='wgact_plugin_options[pinterest][pixel_id]' size='40' type='text' value='{$this->options['pinterest']['pixel_id']}' />";
+        echo $this->get_status_icon($this->options['pinterest']['pixel_id']);
+//        echo $this->get_documentation_html('/wgact/#/bing');
+        echo '<br><br>';
+        esc_html_e('The Pinterest pixel ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
+        echo '&nbsp;<i>1234567890123</i>';
+    }
+
+    public function wgact_plugin_setting_hotjar_site_id__premium_only()
+    {
+        echo "<input id='wgact_plugin_hotjar_site_id' name='wgact_plugin_options[hotjar][site_id]' size='40' type='text' value='{$this->options['hotjar']['site_id']}' />";
+        echo $this->get_status_icon($this->options['hotjar']['site_id']);
+//        echo $this->get_documentation_html('/wgact/#/bing');
+        echo '<br><br>';
+        esc_html_e('The Hotjar site ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
+        echo '&nbsp;<i>1234567</i>';
     }
 
     public function wgact_plugin_setting_order_total_logic()
@@ -1221,6 +1158,30 @@ class Admin
             }
         }
 
+        // validate Twitter pixel ID
+        if (isset($input['twitter']['pixel_id'])) {
+            if (!$this->is_twitter_pixel_id($input['twitter']['pixel_id'])) {
+                $input['twitter']['pixel_id'] = isset($this->options['twitter']['pixel_id']) ? $this->options['twitter']['pixel_id'] : '';
+                add_settings_error('wgact_plugin_options', 'invalid-twitter-pixel-id', esc_html__('You have entered an invalid Twitter pixel ID. It only contains 5 to lowercase letters.', 'woocommerce-google-adwords-conversion-tracking-tag'));
+            }
+        }
+
+        // validate Pinterest pixel ID
+        if (isset($input['pinterest']['pixel_id'])) {
+            if (!$this->is_pinterest_pixel_id($input['pinterest']['pixel_id'])) {
+                $input['pinterest']['pixel_id'] = isset($this->options['pinterest']['pixel_id']) ? $this->options['pinterest']['pixel_id'] : '';
+                add_settings_error('wgact_plugin_options', 'invalid-pinterest-pixel-id', esc_html__('You have entered an invalid Pinterest pixel ID. It only contains 13 digits.', 'woocommerce-google-adwords-conversion-tracking-tag'));
+            }
+        }
+
+        // validate Hotjar site ID
+        if (isset($input['hotjar']['site_id'])) {
+            if (!$this->is_hotjar_site_id($input['hotjar']['site_id'])) {
+                $input['hotjar']['site_id'] = isset($this->options['hotjar']['site_id']) ? $this->options['hotjar']['site_id'] : '';
+                add_settings_error('wgact_plugin_options', 'invalid-hotjar-site-id', esc_html__('You have entered an invalid Hotjar site ID. It only contains 7 to 9 digits.', 'woocommerce-google-adwords-conversion-tracking-tag'));
+            }
+        }
+
         // merging with the existing options
         // and overwriting old values
 
@@ -1265,14 +1226,18 @@ class Admin
 
     protected function non_form_keys($input): array
     {
+        // place here what could be overwritten when a form field is missing
+        // and what should not be re-set to the default value
+        // but should be preserved
+
         $non_form_keys = [
             'db_version' => $this->options['db_version'],
         ];
 
         // in case the form field input is missing
-        if (!array_key_exists('google_business_vertical', $input['google']['ads'])) {
-            $non_form_keys['google']['ads']['google_business_vertical'] = $this->options['google']['ads']['google_business_vertical'];
-        }
+//        if (!array_key_exists('google_business_vertical', $input['google']['ads'])) {
+//            $non_form_keys['google']['ads']['google_business_vertical'] = $this->options['google']['ads']['google_business_vertical'];
+//        }
 
         return $non_form_keys;
     }
@@ -1367,6 +1332,39 @@ class Admin
     }
 
     protected function is_bing_uet_tag_id($string): bool
+    {
+        if (empty($string)) {
+            return true;
+        }
+
+        $re = '/^\d{7,9}$/m';
+
+        return $this->validate_with_regex($re, $string);
+    }
+
+    protected function is_twitter_pixel_id($string): bool
+    {
+        if (empty($string)) {
+            return true;
+        }
+
+        $re = '/^[a-z]{5,7}$/m';
+
+        return $this->validate_with_regex($re, $string);
+    }
+
+    protected function is_pinterest_pixel_id($string): bool
+    {
+        if (empty($string)) {
+            return true;
+        }
+
+        $re = '/^\d{13}$/m';
+
+        return $this->validate_with_regex($re, $string);
+    }
+
+    protected function is_hotjar_site_id($string): bool
     {
         if (empty($string)) {
             return true;

@@ -110,10 +110,14 @@ You can send the link to the front page of your shop too if you think it would b
 = 1.8.4 =
 
 [//]: # fs_premium_only_begin
-* New: Bing Ads pixel
+* New: Microsoft Ads pixel
+* New: Twitter pixel
+* New: Pinterest pixel
+* New: Hotjar pixel
 [//]: # fs_premium_only_end
 * Tweak: Renamed subsection 'Order Logic' to 'Shop'
-* Tweak: Adjusted
+* Tweak: Refactored debug info
+* Tweak: Added WP Rocket JavaScript concatenation to debug info
 
 = 1.8.3 =
 

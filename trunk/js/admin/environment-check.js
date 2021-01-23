@@ -16,4 +16,20 @@ jQuery(function () {
         });
 
     });
+
+    // dismiss WP Rocket JavaScript concatenation error
+    jQuery(document).on('click', '#wgact-dismiss-wp-rocket-js-concatenation-error', function (e) {
+        e.preventDefault();
+
+        let data = {
+            'action': 'environment_check_handler',
+            'set'   : 'dismiss_wp_rocket_javascript_concatenation_error'
+        };
+
+        jQuery.post(ajaxurl, data, function (response) {
+            // console.log('Got this from the server: ' + response);
+            // console.log('update rating done');
+            location.reload();
+        });
+    });
 });

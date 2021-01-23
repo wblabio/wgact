@@ -11,7 +11,7 @@
  * WC requires at least: 2.6
  * WC tested up to: 4.9
  *
- *  @fs_premium_only /classes/pixels/class-bing.php
+ *  @fs_premium_only /classes/pixels/class-bing.php, /classes/pixels/class-twitter.php, /classes/pixels/class-pinterest.php
  **/
 
 // TODO give users choice to use content or footer based code insertion
@@ -284,6 +284,15 @@ if (function_exists('wga_fs')) {
                 ],
                 'bing' => [
                     'uet_tag_id' => ''
+                ],
+                'twitter' => [
+                    'pixel_id' => ''
+                ],
+                'pinterest' => [
+                    'pixel_id' => ''
+                ],
+                'hotjar' => [
+                    'site_id' => ''
                 ],
                 'shop' => [
                     'order_total_logic' => 0,

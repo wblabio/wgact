@@ -32,7 +32,14 @@ class Notifications
             </p>
             <p>
             <div id="wgact-wp-rocket-js-concatenation-disable" class="button button-primary">
-                <?php esc_html_e('Click here to turn off the WP Rocket JavaScript concatenation', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+                <?php esc_html_e('Click here to simply turn off the WP Rocket JavaScript concatenation', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+            </div>
+            </p>
+            <p>
+            <div id="wgact-dismiss-wp-rocket-js-concatenation-error" class="button" style="white-space:normal;">
+                <?php esc_html_e('Click here to dismiss this warning forever.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?><br>
+                <?php esc_html_e('And I swear that I triple checked that the visitor and conversion tracking is working just fine and that I won\'t ask for support as long as the WP Rocket JavaScript concatenation is turned on!', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+
             </div>
             </p>
 

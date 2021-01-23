@@ -52,17 +52,27 @@ class Pixel_Manager
         if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_everywhere();
 
         if (wga_fs()->is__premium_only()) {
-            if ($this->options_obj->bing_ads->uet_tag_id) (new Bing_Ads($this->options, $this->options_obj))->inject_everywhere();
+            if ($this->options_obj->bing->uet_tag_id) (new Bing($this->options, $this->options_obj))->inject_everywhere();
+            if ($this->options_obj->twitter->pixel_id) (new Twitter($this->options, $this->options_obj))->inject_everywhere();
+            if ($this->options_obj->pinterest->pixel_id) (new Pinterest($this->options, $this->options_obj))->inject_everywhere();
+            if ($this->options_obj->hotjar->site_id) (new Hotjar($this->options, $this->options_obj))->inject_everywhere();
         }
 
         if (is_product_category()) {
 
             if ($this->google_active) (new Google($this->options, $this->options_obj))->inject_product_category();
+            if (wga_fs()->is__premium_only()) {
+                if ($this->options_obj->pinterest->pixel_id) (new Pinterest($this->options, $this->options_obj))->inject_product_category();
+            }
 
         } elseif (is_search()) {
 
             if ($this->google_active) (new Google($this->options, $this->options_obj))->inject_search();
             if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_search();
+            if (wga_fs()->is__premium_only()) {
+                if ($this->options_obj->twitter->pixel_id) (new Twitter($this->options, $this->options_obj))->inject_search();
+                if ($this->options_obj->pinterest->pixel_id) (new Pinterest($this->options, $this->options_obj))->inject_search();
+            }
 
         } elseif (is_product() && (!isset($_POST['add-to-cart']))) {
 
@@ -76,11 +86,19 @@ class Pixel_Manager
 
             if ($this->google_active) (new Google($this->options, $this->options_obj))->inject_product($product_id, $product);
             if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_product($product_id, $product);
+            if (wga_fs()->is__premium_only()) {
+                if ($this->options_obj->twitter->pixel_id) (new Twitter($this->options, $this->options_obj))->inject_product($product_id, $product);
+                if ($this->options_obj->pinterest->pixel_id) (new Pinterest($this->options, $this->options_obj))->inject_product($product_id, $product);
+            }
 
         } elseif (is_cart()) {
 
             if ($this->google_active) (new Google($this->options, $this->options_obj))->inject_cart($cart, $cart_total);
             if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_cart($cart, $cart_total);
+            if (wga_fs()->is__premium_only()) {
+                if ($this->options_obj->twitter->pixel_id) (new Twitter($this->options, $this->options_obj))->inject_cart($cart, $cart_total);
+                if ($this->options_obj->pinterest->pixel_id) (new Pinterest($this->options, $this->options_obj))->inject_cart($cart, $cart_total);
+            }
 
         } elseif (is_order_received_page()) {
 
@@ -96,7 +114,9 @@ class Pixel_Manager
             if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids);
 
             if (wga_fs()->is__premium_only()) {
-                if ($this->options_obj->bing_ads->uet_tag_id) (new Bing_Ads($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids);
+                if ($this->options_obj->bing->uet_tag_id) (new Bing($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids);
+                if ($this->options_obj->twitter->pixel_id) (new Twitter($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids);
+                if ($this->options_obj->pinterest->pixel_id) (new Pinterest($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids);
             }
         }
 

@@ -40,12 +40,20 @@ class Environment_Check
             update_option('wp_rocket_settings', $wp_rocket_options);
         }
 
+        if('dismiss_wp_rocket_javascript_concatenation_error' == $set){
+            $wgact_notifications = get_option('wgact_notifications');
+            $wgact_notifications['dismiss_wp_rocket_javascript_concatenation_error'] = true;
+            update_option('wgact_notifications', $wgact_notifications);
+        }
+
         wp_die(); // this is required to terminate immediately and return a proper response
     }
 
     private function check_wp_rocket_js_concatenation()
     {
-        if (is_plugin_active('wp-rocket/wp-rocket.php')) {
+        $wgact_notifications = get_option('wgact_notifications');
+
+        if (is_plugin_active('wp-rocket/wp-rocket.php') && false == $wgact_notifications['dismiss_wp_rocket_javascript_concatenation_error']) {
 
             $wp_rocket_settings = get_option('wp_rocket_settings');
 
