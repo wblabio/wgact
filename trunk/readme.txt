@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, conversion tracking, dynamic retargeting, remarke
 Requires at least: 3.7
 Tested up to: 5.6
 Requires PHP: 7.2
-Stable tag: 1.8.2
+Stable tag: 1.8.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -106,6 +106,20 @@ You can send the link to the front page of your shop too if you think it would b
 1. Settings page
 
 == Changelog ==
+
+= 1.8.4 =
+
+[//]: # fs_premium_only_begin
+* New: Bing Ads pixel
+[//]: # fs_premium_only_end
+* Tweak: Renamed subsection 'Order Logic' to 'Shop'
+* Tweak: Adjusted
+
+= 1.8.3 =
+
+[//]: # fs_premium_only_begin
+* New: Google business vertical setting
+[//]: # fs_premium_only_end
 
 = 1.8.2 =
 

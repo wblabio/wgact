@@ -18,7 +18,7 @@ class Pixel_Manager
 
     public function __construct($options)
     {
-        $this->options     = $options;
+        $this->options = $options;
 
         $this->options_obj = json_decode(json_encode($this->options));
 
@@ -46,12 +46,14 @@ class Pixel_Manager
         $cart       = $woocommerce->cart->get_cart();
         $cart_total = WC()->cart->get_cart_contents_total();
 
-
         $this->inject_noptimize_opening_tag();
 
         if ($this->google_active) (new Google($this->options, $this->options_obj))->inject_everywhere();
         if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_everywhere();
 
+        if (wga_fs()->is__premium_only()) {
+            if ($this->options_obj->bing_ads->uet_tag_id) (new Bing_Ads($this->options, $this->options_obj))->inject_everywhere();
+        }
 
         if (is_product_category()) {
 
@@ -93,6 +95,9 @@ class Pixel_Manager
             if ($this->google_active) (new Google($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids);
             if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids);
 
+            if (wga_fs()->is__premium_only()) {
+                if ($this->options_obj->bing_ads->uet_tag_id) (new Bing_Ads($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids);
+            }
         }
 
 

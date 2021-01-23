@@ -19,7 +19,7 @@ class Google extends Pixel
 
         $this->conversion_identifiers[$this->conversion_id] = $this->conversion_label;
 
-        $this->conversion_identifiers = apply_filters('wgact_conversion_identifiers', $this->conversion_identifiers);
+        $this->conversion_identifiers = apply_filters('wgact_google_ads_conversion_identifiers', $this->conversion_identifiers);
     }
 
     public function inject_everywhere()

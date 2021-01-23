@@ -5,11 +5,13 @@
  * Author:       Wolf+Bär Agency
  * Plugin URI:   https://wordpress.org/plugins/woocommerce-google-adwords-conversion-tracking-tag/
  * Author URI:   https://wolfundbaer.ch
- * Version:      1.8.2
+ * Version:      1.8.4
  * License:      GPLv2 or later
  * Text Domain:  woocommerce-google-adwords-conversion-tracking-tag
  * WC requires at least: 2.6
  * WC tested up to: 4.9
+ *
+ *  @fs_premium_only /classes/pixels/class-bing.php
  **/
 
 // TODO give users choice to use content or footer based code insertion
@@ -39,6 +41,7 @@ if (function_exists('wga_fs')) {
     wga_fs()->set_basename(true, __FILE__);
 } else {
     // DO NOT REMOVE THIS IF, IT IS ESSENTIAL FOR THE `function_exists` CALL ABOVE TO PROPERLY WORK.
+
     if (!function_exists('wga_fs')) {
         // Create a helper function for easy SDK access.
         function wga_fs()
@@ -49,26 +52,36 @@ if (function_exists('wga_fs')) {
                 // Include Freemius SDK.
                 require_once dirname(__FILE__) . '/freemius/start.php';
 
-                $wga_fs = fs_dynamic_init([
+                $wga_fs = fs_dynamic_init(array(
+//                    'navigation' => 'tabs',
                     'id' => '7498',
                     'slug' => 'woocommerce-google-adwords-conversion-tracking-tag',
-                    'premium_slug' => 'wgact-premium',
+                    'premium_slug' => 'woopt-pixel-pro',
                     'type' => 'plugin',
                     'public_key' => 'pk_d4182c5e1dc92c6032e59abbfdb91',
-                    'is_premium' => false,
+                    'is_premium' => true,
+                    'premium_suffix' => 'Pro',
+                    // If your plugin is a serviceware, set this option to false.
+                    'has_premium_version' => true,
                     'has_addons' => false,
-                    'has_paid_plans' => false,
-                    'menu' => [
+                    'has_paid_plans' => true,
+                    'trial' => array(
+                        'days' => 14,
+                        'is_require_payment' => true,
+                    ),
+                    'menu' => array(
                         'slug' => 'wgact',
                         'override_exact' => true,
-                        'account' => false,
                         'contact' => false,
                         'support' => false,
-                        'parent' => [
+                        'parent' => array(
                             'slug' => 'woocommerce',
-                        ],
-                    ],
-                ]);
+                        ),
+                    ),
+                    // Set the SDK to work in a sandbox mode (for development & testing).
+                    // IMPORTANT: MAKE SURE TO REMOVE SECRET KEY BEFORE DEPLOYMENT.
+                    'secret_key' => 'sk_Mf9Be;uQ%dP8:i#M?Zzwm9texPfz}',
+                ));
             }
 
             return $wga_fs;
@@ -211,7 +224,7 @@ if (function_exists('wga_fs')) {
                 // cleanup the db of this setting
                 // remove by end of 2021 latest
                 // accidentally had this dummy id left in the default options in 1.7.13
-                if($this->options['facebook']['pixel_id'] === '767038516805171'){
+                if ($this->options['facebook']['pixel_id'] === '767038516805171') {
                     $this->options['facebook']['pixel_id'] = '';
                 }
 
@@ -268,6 +281,9 @@ if (function_exists('wga_fs')) {
                 ],
                 'facebook' => [
                     'pixel_id' => ''
+                ],
+                'bing' => [
+                    'uet_tag_id' => ''
                 ],
                 'shop' => [
                     'order_total_logic' => 0,

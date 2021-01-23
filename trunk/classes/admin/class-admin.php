@@ -106,6 +106,10 @@ class Admin
 
         $this->add_section_main_subsection_google_ads($section_ids);
         $this->add_section_main_subsection_facebook($section_ids);
+
+        if (wga_fs()->is__premium_only()) {
+            $this->add_section_main_subsection_bing__premium_only($section_ids);
+        }
     }
 
     public function add_section_main_subsection_google_ads($section_ids)
@@ -217,7 +221,39 @@ class Admin
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
+    }
 
+    public function add_section_main_subsection_bing__premium_only($section_ids)
+    {
+        $sub_section_ids = [
+            'title' => 'Bing',
+            'slug' => 'bing'
+        ];
+
+        add_settings_field(
+            'wgact_plugin_subsection_' . $sub_section_ids['slug'] . '_opening_div',
+            esc_html__(
+                $sub_section_ids['title'],
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ),
+            function () use ($section_ids, $sub_section_ids) {
+                $this->wgact_subsection_generic_opening_div_html($section_ids, $sub_section_ids);
+            },
+            'wgact_plugin_options_page',
+            $section_ids['settings_name']
+        );
+
+        // add the field for the conversion label
+        add_settings_field(
+            'wgact_plugin_bing_uet_tag_id',
+            esc_html__(
+                'Bing Ads UET tag ID',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ) . $this->svg_beta(),
+            [$this, 'wgact_plugin_setting_bing_uet_tag_id__premium_only'],
+            'wgact_plugin_options_page',
+            $section_ids['settings_name']
+        );
     }
 
     public function add_section_advanced()
@@ -247,8 +283,8 @@ class Admin
     public function add_section_advanced_subsection_order_logic($section_ids)
     {
         $sub_section_ids = [
-            'title' => 'Order Logic',
-            'slug' => 'order-logic'
+            'title' => 'Shop',
+            'slug' => 'shop'
         ];
 
         add_settings_field(
@@ -402,6 +438,20 @@ class Admin
             'wgact_plugin_options_page',
             'wgact_plugin_beta_section'
         );
+
+        if (wga_fs()->is__premium_only()) {
+            // google_business_vertical
+            add_settings_field(
+                'wgact_plugin_option_google_business_vertical',
+                esc_html__(
+                    'Google Business Vertical',
+                    'woocommerce-google-adwords-conversion-tracking-tag'
+                ),
+                [$this, 'wgact_plugin_option_google_business_vertical__premium_only'],
+                'wgact_plugin_options_page',
+                'wgact_plugin_beta_section'
+            );
+        }
     }
 
     public function add_section_support()
@@ -809,6 +859,16 @@ class Admin
         echo '&nbsp;<i>765432112345678</i>';
     }
 
+    public function wgact_plugin_setting_bing_uet_tag_id__premium_only()
+    {
+        echo "<input id='wgact_plugin_bing_uet_tag_id' name='wgact_plugin_options[bing][uet_tag_id]' size='40' type='text' value='{$this->options['bing']['uet_tag_id']}' />";
+        echo $this->get_status_icon($this->options['bing']['uet_tag_id']);
+//        echo $this->get_documentation_html('/wgact/#/bing');
+        echo '<br><br>';
+        esc_html_e('The Bing Ads UET tag ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
+        echo '&nbsp;<i>12345678</i>';
+    }
+
     public function wgact_plugin_setting_order_total_logic()
     {
         ?>
@@ -910,6 +970,44 @@ class Admin
             ?><span class="dashicons dashicons-info"></span>
             <?php esc_html_e('You need to choose the correct product identifier setting in order to match the product identifiers in the Google Merchant Center or your Google Ads business feed', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
         </p>
+        <?php
+    }
+
+    public function wgact_plugin_option_google_business_vertical__premium_only()
+    {
+        ?>
+        <input type='radio' id='wgact_plugin_google_business_vertical_0'
+               name='wgact_plugin_options[google][ads][google_business_vertical]'
+               value='0'  <?php echo(checked(0, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php esc_html_e('Retail', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        <br>
+        <input type='radio' id='wgact_plugin_google_business_vertical_1'
+               name='wgact_plugin_options[google][ads][google_business_vertical]'
+               value='1'  <?php echo(checked(1, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php esc_html_e('Education', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        <br>
+        <input type='radio' id='wgact_plugin_google_business_vertical_3'
+               name='wgact_plugin_options[google][ads][google_business_vertical]'
+               value='3'  <?php echo(checked(3, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php esc_html_e('Hotels and rentals', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        <br>
+        <input type='radio' id='wgact_plugin_google_business_vertical_4'
+               name='wgact_plugin_options[google][ads][google_business_vertical]'
+               value='4'  <?php echo(checked(4, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php esc_html_e('Jobs', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        <br>
+        <input type='radio' id='wgact_plugin_google_business_vertical_4'
+               name='wgact_plugin_options[google][ads][google_business_vertical]'
+               value='4'  <?php echo(checked(4, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php esc_html_e('Jobs', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        <br>
+        <input type='radio' id='wgact_plugin_google_business_vertical_5'
+               name='wgact_plugin_options[google][ads][google_business_vertical]'
+               value='5'  <?php echo(checked(5, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php esc_html_e('Local deals', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        <br>
+        <input type='radio' id='wgact_plugin_google_business_vertical_6'
+               name='wgact_plugin_options[google][ads][google_business_vertical]'
+               value='6'  <?php echo(checked(6, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php esc_html_e('Real estate', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        <br>
+        <input type='radio' id='wgact_plugin_google_business_vertical_8'
+               name='wgact_plugin_options[google][ads][google_business_vertical]'
+               value='8'  <?php echo(checked(8, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php esc_html_e('Custom', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        <br>
         <?php
     }
 
@@ -1115,6 +1213,14 @@ class Admin
             }
         }
 
+        // validate Bing Ads UET tag ID
+        if (isset($input['bing']['uet_tag_id'])) {
+            if (!$this->is_bing_uet_tag_id($input['bing']['uet_tag_id'])) {
+                $input['bing']['uet_tag_id'] = isset($this->options['bing']['uet_tag_id']) ? $this->options['bing']['uet_tag_id'] : '';
+                add_settings_error('wgact_plugin_options', 'invalid-bing-ads-uet-tag-id', esc_html__('You have entered an invalid Bing Ads UET tag ID. It only contains 7 to 9 digits.', 'woocommerce-google-adwords-conversion-tracking-tag'));
+            }
+        }
+
         // merging with the existing options
         // and overwriting old values
 
@@ -1256,6 +1362,17 @@ class Admin
         }
 
         $re = '/^\d{14,16}$/m';
+
+        return $this->validate_with_regex($re, $string);
+    }
+
+    protected function is_bing_uet_tag_id($string): bool
+    {
+        if (empty($string)) {
+            return true;
+        }
+
+        $re = '/^\d{7,9}$/m';
 
         return $this->validate_with_regex($re, $string);
     }
