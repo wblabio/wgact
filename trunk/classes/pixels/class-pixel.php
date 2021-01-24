@@ -58,7 +58,7 @@ class Pixel
     }
 
     // get an array with all cart product ids
-    protected function get_cart_ids($cart): array
+    public function get_cart_ids($cart): array
     {
         // error_log(print_r($cart, true));
         // initiate product identifier array

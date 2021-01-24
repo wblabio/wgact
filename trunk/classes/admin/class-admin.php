@@ -23,7 +23,7 @@ class Admin
     public function __construct()
     {
         $this->plugin_hook        = 'woocommerce_page_wgact';
-        $this->documentation_host = 'docs.wolfundbaer.ch';
+        $this->documentation_host = 'docs.woopt.com';
 
         $this->options = get_option('wgact_plugin_options');
 
@@ -106,10 +106,7 @@ class Admin
 
         $this->add_section_main_subsection_google_ads($section_ids);
         $this->add_section_main_subsection_facebook($section_ids);
-
-        if (wga_fs()->is__premium_only()) {
-            $this->add_section_main_subsection_more_pixels__premium_only($section_ids);
-        }
+        $this->add_section_main_subsection_more_pixels($section_ids);
     }
 
     public function add_section_main_subsection_google_ads($section_ids)
@@ -223,7 +220,7 @@ class Admin
         );
     }
 
-    public function add_section_main_subsection_more_pixels__premium_only($section_ids)
+    public function add_section_main_subsection_more_pixels($section_ids)
     {
         $sub_section_ids = [
             'title' => 'more pixels',
@@ -243,41 +240,44 @@ class Admin
             $section_ids['settings_name']
         );
 
-        // add the field for the Bing Ads UET tag ID
-        add_settings_field(
-            'wgact_plugin_bing_uet_tag_id',
-            esc_html__(
-                'Microsoft Advertising UET tag ID',
-                'woocommerce-google-adwords-conversion-tracking-tag'
-            ) . $this->svg_beta(),
-            [$this, 'wgact_plugin_setting_bing_uet_tag_id__premium_only'],
-            'wgact_plugin_options_page',
-            $section_ids['settings_name']
-        );
+        if (wga_fs()->is__premium_only()) {
 
-        // add the field for the Twitter pixel
-        add_settings_field(
-            'wgact_plugin_twitter_pixel_id',
-            esc_html__(
-                'Twitter pixel ID',
-                'woocommerce-google-adwords-conversion-tracking-tag'
-            ) . $this->svg_beta(),
-            [$this, 'wgact_plugin_setting_twitter_pixel_id__premium_only'],
-            'wgact_plugin_options_page',
-            $section_ids['settings_name']
-        );
+            // add the field for the Bing Ads UET tag ID
+            add_settings_field(
+                'wgact_plugin_bing_uet_tag_id',
+                esc_html__(
+                    'Microsoft Advertising UET tag ID',
+                    'woocommerce-google-adwords-conversion-tracking-tag'
+                ) . $this->svg_beta(),
+                [$this, 'wgact_plugin_setting_bing_uet_tag_id__premium_only'],
+                'wgact_plugin_options_page',
+                $section_ids['settings_name']
+            );
 
-        // add the field for the Pinterest pixel
-        add_settings_field(
-            'wgact_plugin_pinterest_pixel_id',
-            esc_html__(
-                'Pinterest pixel ID',
-                'woocommerce-google-adwords-conversion-tracking-tag'
-            ) . $this->svg_beta(),
-            [$this, 'wgact_plugin_setting_pinterest_pixel_id__premium_only'],
-            'wgact_plugin_options_page',
-            $section_ids['settings_name']
-        );
+            // add the field for the Twitter pixel
+            add_settings_field(
+                'wgact_plugin_twitter_pixel_id',
+                esc_html__(
+                    'Twitter pixel ID',
+                    'woocommerce-google-adwords-conversion-tracking-tag'
+                ) . $this->svg_beta(),
+                [$this, 'wgact_plugin_setting_twitter_pixel_id__premium_only'],
+                'wgact_plugin_options_page',
+                $section_ids['settings_name']
+            );
+
+            // add the field for the Pinterest pixel
+            add_settings_field(
+                'wgact_plugin_pinterest_pixel_id',
+                esc_html__(
+                    'Pinterest pixel ID',
+                    'woocommerce-google-adwords-conversion-tracking-tag'
+                ) . $this->svg_beta(),
+                [$this, 'wgact_plugin_setting_pinterest_pixel_id__premium_only'],
+                'wgact_plugin_options_page',
+                $section_ids['settings_name']
+            );
+        }
 
         // add the field for the Hotjar pixel
         add_settings_field(
@@ -569,7 +569,9 @@ class Admin
 
 
         </div>
+
         <div style="width:90%; float: left; margin: 5px">
+
             <?php settings_errors(); ?>
 
             <h2 class="nav-tab-wrapper">
@@ -585,6 +587,7 @@ class Admin
                 ?>
 
             </form>
+
 
             <div class="developer-banner">
                 <div>
@@ -642,6 +645,7 @@ class Admin
     {
         ?>
         <div style="margin-top:20px">
+            <h2><?php esc_html_e('Support contacts', 'woocommerce-google-adwords-conversion-tracking-tag'); ?></h2>
             <?php esc_html_e('Use the following two resources for support: ', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
         </div>
         <div style="margin-bottom: 30px;">
@@ -660,7 +664,16 @@ class Admin
                 </li>
             </ul>
         </div>
-        <div class=" woocommerce-message">
+        <hr style="border: none;height: 1px; color: #333; background-color: #333;">
+        <div style="margin-bottom: 20px">
+            <h2><?php esc_html_e('Translations', 'woocommerce-google-adwords-conversion-tracking-tag'); ?></h2>
+            <?php esc_html_e('If you want to participate improving the translations of this plugin into your language, please follow this link:', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+            <a href="https://translate.wordpress.org/projects/wp-plugins/woocommerce-google-adwords-conversion-tracking-tag/" target="_blank">translate.wordpress.org</a>
+
+        </div>
+        <hr style="border: none;height: 1px; color: #333; background-color: #333;">
+        <div>
+            <h2><?php esc_html_e('Debugging information', 'woocommerce-google-adwords-conversion-tracking-tag'); ?></h2>
 
             <div>
                 <textarea id="debug-info-textarea" class=""
@@ -770,7 +783,7 @@ class Admin
     {
         echo "<input id='wgact_plugin_bing_uet_tag_id' name='wgact_plugin_options[bing][uet_tag_id]' size='40' type='text' value='{$this->options['bing']['uet_tag_id']}' />";
         echo $this->get_status_icon($this->options['bing']['uet_tag_id']);
-//        echo $this->get_documentation_html('/wgact/#/bing');
+        echo $this->get_documentation_html('/wgact/#/pixels/microsoft-advertising');
         echo '<br><br>';
         esc_html_e('The Microsoft Advertising UET tag ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo '&nbsp;<i>12345678</i>';
@@ -800,7 +813,7 @@ class Admin
     {
         echo "<input id='wgact_plugin_hotjar_site_id' name='wgact_plugin_options[hotjar][site_id]' size='40' type='text' value='{$this->options['hotjar']['site_id']}' />";
         echo $this->get_status_icon($this->options['hotjar']['site_id']);
-//        echo $this->get_documentation_html('/wgact/#/bing');
+        echo $this->get_documentation_html('/wgact/#/pixels/hotjar');
         echo '<br><br>';
         esc_html_e('The Hotjar site ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo '&nbsp;<i>1234567</i>';

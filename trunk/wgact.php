@@ -5,13 +5,16 @@
  * Author:       Wolf+Bär Agency
  * Plugin URI:   https://wordpress.org/plugins/woocommerce-google-adwords-conversion-tracking-tag/
  * Author URI:   https://wolfundbaer.ch
- * Version:      1.8.4
+ * Version:      1.8.5
  * License:      GPLv2 or later
  * Text Domain:  woocommerce-google-adwords-conversion-tracking-tag
  * WC requires at least: 2.6
  * WC tested up to: 4.9
  *
- *  @fs_premium_only /classes/pixels/class-bing.php, /classes/pixels/class-twitter.php, /classes/pixels/class-pinterest.php
+ * @fs_premium_only /classes/pixels/class-bing.php
+ * @fs_premium_only /classes/pixels/class-twitter.php
+ * @fs_premium_only /classes/pixels/class-pinterest.php
+ *
  **/
 
 // TODO give users choice to use content or footer based code insertion
@@ -53,7 +56,7 @@ if (function_exists('wga_fs')) {
                 require_once dirname(__FILE__) . '/freemius/start.php';
 
                 $wga_fs = fs_dynamic_init(array(
-//                    'navigation' => 'tabs',
+                    'navigation' => 'tabs',
                     'id' => '7498',
                     'slug' => 'woocommerce-google-adwords-conversion-tracking-tag',
                     'premium_slug' => 'woopt-pixel-pro',
