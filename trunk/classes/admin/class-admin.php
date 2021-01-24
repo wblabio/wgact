@@ -738,7 +738,7 @@ class Admin
     {
         echo "<input id='wgact_plugin_conversion_id' name='wgact_plugin_options[google][ads][conversion_id]' size='40' type='text' value='{$this->options['google']['ads']['conversion_id']}' />";
         echo $this->get_status_icon($this->options['google']['ads']['conversion_id']);
-        echo $this->get_documentation_html('/wgact/#/plugin-configuration?id=configure-the-plugin');
+        echo $this->get_documentation_html('/wgact/?utm_source=woopt-pixel-plugin&utm_medium=docs&utm_campaign=google-ads#/pixels/google-ads?id=configure-the-plugin');
         echo '<br><br>';
         esc_html_e('The conversion ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo '&nbsp;<i>123456789</i>';
@@ -748,7 +748,7 @@ class Admin
     {
         echo "<input id='wgact_plugin_conversion_label' name='wgact_plugin_options[google][ads][conversion_label]' size='40' type='text' value='{$this->options['google']['ads']['conversion_label']}' />";
         echo $this->get_status_icon($this->options['google']['ads']['conversion_label'], $this->options['google']['ads']['conversion_id']);
-        echo $this->get_documentation_html('/wgact/#/plugin-configuration?id=configure-the-plugin');
+        echo $this->get_documentation_html('/wgact/?utm_source=woopt-pixel-plugin&utm_medium=docs&utm_campaign=google-ads#/pixels/google-ads?id=configure-the-plugin');
         echo '<br><br>';
         esc_html_e('The conversion Label looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo '&nbsp;<i>Xt19CO3axGAX0vg6X3gM</i>';
@@ -773,7 +773,7 @@ class Admin
     {
         echo "<input id='wgact_plugin_facebook_pixel_id' name='wgact_plugin_options[facebook][pixel_id]' size='40' type='text' value='{$this->options['facebook']['pixel_id']}' />";
         echo $this->get_status_icon($this->options['facebook']['pixel_id']);
-        echo $this->get_documentation_html('/wgact/#/facebook');
+        echo $this->get_documentation_html('/wgact/?utm_source=woopt-pixel-plugin&utm_medium=docs&utm_campaign=facebook#/facebook');
         echo '<br><br>';
         esc_html_e('The Facebook pixel ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo '&nbsp;<i>765432112345678</i>';
@@ -783,7 +783,7 @@ class Admin
     {
         echo "<input id='wgact_plugin_bing_uet_tag_id' name='wgact_plugin_options[bing][uet_tag_id]' size='40' type='text' value='{$this->options['bing']['uet_tag_id']}' />";
         echo $this->get_status_icon($this->options['bing']['uet_tag_id']);
-        echo $this->get_documentation_html('/wgact/#/pixels/microsoft-advertising');
+        echo $this->get_documentation_html('/wgact/?utm_source=woopt-pixel-plugin&utm_medium=docs&utm_campaign=microsoft-advertising#/troubleshooting?id=wp-rocket-javascript-concatenation');
         echo '<br><br>';
         esc_html_e('The Microsoft Advertising UET tag ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo '&nbsp;<i>12345678</i>';
@@ -813,7 +813,7 @@ class Admin
     {
         echo "<input id='wgact_plugin_hotjar_site_id' name='wgact_plugin_options[hotjar][site_id]' size='40' type='text' value='{$this->options['hotjar']['site_id']}' />";
         echo $this->get_status_icon($this->options['hotjar']['site_id']);
-        echo $this->get_documentation_html('/wgact/#/pixels/hotjar');
+        echo $this->get_documentation_html('/wgact/?utm_source=woopt-pixel-plugin&utm_medium=docs&utm_campaign=hotjar#/pixels/hotjar');
         echo '<br><br>';
         esc_html_e('The Hotjar site ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo '&nbsp;<i>1234567</i>';
@@ -834,11 +834,10 @@ class Admin
         <?php
     }
 
-
     protected function get_documentation_html($path): string
     {
-        $html = '<a style="text-decoration: none" href="//' . $this->documentation_host . $path . '" target="_blank">';
-        $html .= '<span style="margin-left: 10px; vertical-align: middle" class="dashicons dashicons-info-outline tooltip"><span class="tooltiptext">';
+        $html = '<a style="text-decoration: none;margin-left: 10px;" href="//' . $this->documentation_host . $path . '" target="_blank">';
+        $html .= '<span style="vertical-align: middle" class="dashicons dashicons-info-outline tooltip"><span class="tooltiptext">';
         $html .= esc_html__('open the documentation', 'woocommerce-google-adwords-conversion-tracking-tag');
         $html .= '</span></span></a>';
 
@@ -896,7 +895,6 @@ class Admin
 
     public function wgact_plugin_option_dynamic_remarketing()
     {
-
         // adding the hidden input is a hack to make WordPress save the option with the value zero,
         // instead of not saving it and remove that array key entirely
         // https://stackoverflow.com/a/1992745/4688612
@@ -908,7 +906,7 @@ class Admin
 
         <?php esc_html_e('Enable dynamic remarketing audience collection', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
         <?php echo $this->get_status_icon($this->options['google']['ads']['dynamic_remarketing'], $this->options['google']['ads']['conversion_id']) ?>
-        <?php echo $this->get_documentation_html('/wgact/#/dynamic-remarketing'); ?>
+        <?php echo $this->get_documentation_html('/wgact/?utm_source=woopt-pixel-plugin&utm_medium=docs&utm_campaign=google-ads-dynamic-remarketing#/pixels/google-ads?id=dynamic-remarketing'); ?>
         <p><?php
             if (!$this->options['google']['ads']['conversion_id']) {
                 ?>

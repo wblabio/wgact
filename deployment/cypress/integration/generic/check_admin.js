@@ -27,6 +27,10 @@ describe('check minimum dev requirements', () => {
         //     .containins('7.2')
     })
 
+    it('visit woopt Pixel settings page', () => {
+        cy.visit('/wp-admin/admin.php?page=wgact')
+    })
+
     it('log out', () => {
         cy.contains('Log Out').click({ force: true })
     })

@@ -110,6 +110,7 @@ You can send the link to the front page of your shop too if you think it would b
 = 1.8.6 =
 
 * Tweak: Code cleanup
+* Tweak: Adjusted doc links
 
 = 1.8.5 =
 

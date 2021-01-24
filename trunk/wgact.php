@@ -56,34 +56,34 @@ if (function_exists('wga_fs')) {
                 require_once dirname(__FILE__) . '/freemius/start.php';
 
                 $wga_fs = fs_dynamic_init(array(
-                    'navigation' => 'tabs',
-                    'id' => '7498',
-                    'slug' => 'woocommerce-google-adwords-conversion-tracking-tag',
-                    'premium_slug' => 'woopt-pixel-pro',
-                    'type' => 'plugin',
-                    'public_key' => 'pk_d4182c5e1dc92c6032e59abbfdb91',
-                    'is_premium' => true,
-                    'premium_suffix' => 'Pro',
+                    'navigation'          => 'tabs',
+                    'id'                  => '7498',
+                    'slug'                => 'woocommerce-google-adwords-conversion-tracking-tag',
+                    'premium_slug'        => 'woopt-pixel-pro',
+                    'type'                => 'plugin',
+                    'public_key'          => 'pk_d4182c5e1dc92c6032e59abbfdb91',
+                    'is_premium'          => true,
+                    'premium_suffix'      => 'Pro',
                     // If your plugin is a serviceware, set this option to false.
                     'has_premium_version' => true,
-                    'has_addons' => false,
-                    'has_paid_plans' => true,
-                    'trial' => array(
-                        'days' => 14,
+                    'has_addons'          => false,
+                    'has_paid_plans'      => true,
+                    'trial'               => array(
+                        'days'               => 14,
                         'is_require_payment' => true,
                     ),
-                    'menu' => array(
-                        'slug' => 'wgact',
+                    'menu'                => array(
+                        'slug'           => 'wgact',
                         'override_exact' => true,
-                        'contact' => false,
-                        'support' => false,
-                        'parent' => array(
+                        'contact'        => false,
+                        'support'        => false,
+                        'parent'         => array(
                             'slug' => 'woocommerce',
                         ),
                     ),
                     // Set the SDK to work in a sandbox mode (for development & testing).
                     // IMPORTANT: MAKE SURE TO REMOVE SECRET KEY BEFORE DEPLOYMENT.
-                    'secret_key' => 'sk_Mf9Be;uQ%dP8:i#M?Zzwm9texPfz}',
+                    'secret_key'          => 'sk_Mf9Be;uQ%dP8:i#M?Zzwm9texPfz}',
                 ));
             }
 
@@ -257,47 +257,47 @@ if (function_exists('wga_fs')) {
         {
             // default options settings
             return [
-                'google' => [
-                    'ads' => [
-                        'conversion_id' => '',
-                        'conversion_label' => '',
-                        'add_cart_data' => 0,
-                        'aw_merchant_id' => '',
-                        'product_identifier' => 0,
+                'google'     => [
+                    'ads'       => [
+                        'conversion_id'            => '',
+                        'conversion_label'         => '',
+                        'add_cart_data'            => 0,
+                        'aw_merchant_id'           => '',
+                        'product_identifier'       => 0,
                         'google_business_vertical' => 0,
-                        'dynamic_remarketing' => 0
+                        'dynamic_remarketing'      => 0
                     ],
                     'analytics' => [
                         'universal' => [
                             'property_id' => '',
                         ],
-                        'ga4' => [
+                        'ga4'       => [
                             'measurement_id' => '',
                         ]
                     ],
-                    'optimize' => [
+                    'optimize'  => [
                         'container_id' => '',
                     ],
-                    'gtag' => [
+                    'gtag'      => [
                         'deactivation' => 0,
                     ],
                 ],
-                'facebook' => [
+                'facebook'   => [
                     'pixel_id' => ''
                 ],
-                'bing' => [
+                'bing'       => [
                     'uet_tag_id' => ''
                 ],
-                'twitter' => [
+                'twitter'    => [
                     'pixel_id' => ''
                 ],
-                'pinterest' => [
+                'pinterest'  => [
                     'pixel_id' => ''
                 ],
-                'hotjar' => [
+                'hotjar'     => [
                     'site_id' => ''
                 ],
-                'shop' => [
+                'shop'       => [
                     'order_total_logic' => 0,
                 ],
                 'db_version' => WGACT_DB_VERSION,
