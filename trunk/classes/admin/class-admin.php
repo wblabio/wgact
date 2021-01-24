@@ -286,7 +286,7 @@ class Admin
                 'Hotjar site ID',
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ) . $this->svg_beta(),
-            [$this, 'wgact_plugin_setting_hotjar_site_id__premium_only'],
+            [$this, 'wgact_plugin_setting_hotjar_site_id'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
@@ -809,7 +809,7 @@ class Admin
         echo '&nbsp;<i>1234567890123</i>';
     }
 
-    public function wgact_plugin_setting_hotjar_site_id__premium_only()
+    public function wgact_plugin_setting_hotjar_site_id()
     {
         echo "<input id='wgact_plugin_hotjar_site_id' name='wgact_plugin_options[hotjar][site_id]' size='40' type='text' value='{$this->options['hotjar']['site_id']}' />";
         echo $this->get_status_icon($this->options['hotjar']['site_id']);

@@ -1,0 +1,8 @@
+{
+  "baseUrl": "https://wordpress-deployment.test",
+  "chromeWebSecurity": true,
+  "env": {
+    "admin_username": "admin",
+    "admin_password": "root"
+  }
+}

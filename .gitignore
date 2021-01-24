@@ -141,3 +141,8 @@ tmtags
 .svn/
 /tags/
 
+# deployment
+/deployment/freemius/
+/deployment/wp.org/
+/deployment/cypress/screenshots/
+
