@@ -9,13 +9,13 @@
 // TODO implement CCM https://wordpress.org/plugins/auto-terms-of-service-and-privacy-policy/ (100k)
 // TODO implement CCM https://wordpress.org/plugins/complianz-gdpr/ (100k)
 // TODO implement CCM https://wordpress.org/plugins/eu-cookie-law/ (100k) -> doesn't set a non tracking cookie. bad programming overall
-// TODO implement CCM https://wordpress.org/plugins/gdpr-cookie-compliance/ (100k)
-// TODO implement CCM https://wordpress.org/plugins/cookiebot/ (60k) -> no cookie or filter based third party tracking opt out
-// TODO implement CCM https://wordpress.org/plugins/gdpr/ (30k) -> not possible to implement since users can choose their own cookie names
-// TODO implement CCM https://wordpress.org/plugins/wf-cookie-consent/ (20k)
-// TODO implement CCM https://wordpress.org/plugins/responsive-cookie-consent/ (3k)
-// TODO implement CCM https://wordpress.org/plugins/surbma-gdpr-proof-google-analytics/ (1k)
-
+// TODO https://wordpress.org/plugins/gdpr-cookie-compliance/ (100k)
+// TODO https://wordpress.org/plugins/cookiebot/ (60k) -> no cookie or filter based third party tracking opt out
+// TODO https://wordpress.org/plugins/gdpr/ (30k) -> not possible to implement since users can choose their own cookie names
+// TODO https://wordpress.org/plugins/gdpr-framework/ (30k)
+// TODO https://wordpress.org/plugins/wf-cookie-consent/ (20k)
+// TODO https://wordpress.org/plugins/responsive-cookie-consent/ (3k)
+// TODO https://wordpress.org/plugins/surbma-gdpr-proof-google-analytics/ (1k)
 
 namespace WGACT\Classes\Pixels;
 

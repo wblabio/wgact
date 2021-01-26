@@ -25,7 +25,7 @@ With this data you can optimize all your Google Ads campaigns to achieve maximum
 
 <strong>Documentation</strong>
 
-Link to the full documentation of the plugin: [Open the documentation](https://docs.wolfundbaer.ch/wgact/#/)
+Link to the full documentation of the plugin: [Open the documentation](https://docs.woopt.com/wgact/?utm_source=wp-org&utm_medium=documentation-link&utm_campaign=wp-org-documentation-link#/)
 
 <strong>Cookie Consent Management</strong>
 
@@ -58,7 +58,7 @@ It is also possible for developers of Cookie Consent Management plugins to deact
 
 = Is there detailed documentation for the plugin? =
 
-Yes. Head over to this link: [Documentation](https://docs.wolfundbaer.ch/wgact/#/)
+Yes. Head over to this link: [Documentation](https://docs.woopt.com/wgact/?utm_source=wp-org&utm_medium=documentation-link&utm_campaign=wp-org-documentation-link#/)
 
 = How do I check if the plugin is working properly? =
 
@@ -115,6 +115,7 @@ You can send the link to the front page of your shop too if you think it would b
 * Tweak: Bumped up version
 * Tweak: Changed regex for GMC IDs to allow 7 digit IDs
 * Tweak: Improved speed to hide script blocker warning
+* Tweak: Adjusted documentation links
 
 = 1.8.7 =
 

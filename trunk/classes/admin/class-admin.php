@@ -137,7 +137,7 @@ class Admin
                 'Google Ads Conversion ID',
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ),
-            [$this, 'wgact_plugin_setting_conversion_id'],
+            [$this, 'wgact_option_html_google_ads_conversion_id'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
@@ -149,7 +149,7 @@ class Admin
                 'Google Ads Conversion Label',
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ),
-            [$this, 'wgact_plugin_setting_conversion_label'],
+            [$this, 'wgact_option_html_google_ads_conversion_label'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
@@ -160,7 +160,7 @@ class Admin
                 'Google Analytics UA',
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ) . $this->svg_beta(),
-            [$this, 'wgact_plugin_settings_google_analytics_universal_property'],
+            [$this, 'wgact_option_html_google_analytics_universal_property'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
@@ -171,7 +171,7 @@ class Admin
                 'Google Analytics 4',
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ) . $this->svg_beta(),
-            [$this, 'wgact_plugin_settings_google_analytics_4_id'],
+            [$this, 'wgact_option_html_google_analytics_4_id'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
@@ -182,7 +182,7 @@ class Admin
                 'Google Optimize',
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ) . $this->svg_beta(),
-            [$this, 'wgact_plugin_google_optimize_container_id'],
+            [$this, 'wgact_option_html_google_optimize_container_id'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
@@ -215,7 +215,7 @@ class Admin
                 'Facebook pixel ID',
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ) . $this->svg_beta(),
-            [$this, 'wgact_plugin_setting_facebook_pixel_id'],
+            [$this, 'wgact_option_html_facebook_pixel_id'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
@@ -250,7 +250,7 @@ class Admin
                     'Microsoft Advertising UET tag ID',
                     'woocommerce-google-adwords-conversion-tracking-tag'
                 ) . $this->svg_beta(),
-                [$this, 'wgact_plugin_setting_bing_uet_tag_id__premium_only'],
+                [$this, 'wgact_option_html_bing_uet_tag_id__premium_only'],
                 'wgact_plugin_options_page',
                 $section_ids['settings_name']
             );
@@ -262,7 +262,7 @@ class Admin
                     'Twitter pixel ID',
                     'woocommerce-google-adwords-conversion-tracking-tag'
                 ) . $this->svg_beta(),
-                [$this, 'wgact_plugin_setting_twitter_pixel_id__premium_only'],
+                [$this, 'wgact_option_html_twitter_pixel_id__premium_only'],
                 'wgact_plugin_options_page',
                 $section_ids['settings_name']
             );
@@ -274,7 +274,7 @@ class Admin
                     'Pinterest pixel ID',
                     'woocommerce-google-adwords-conversion-tracking-tag'
                 ) . $this->svg_beta(),
-                [$this, 'wgact_plugin_setting_pinterest_pixel_id__premium_only'],
+                [$this, 'wgact_option_html_pinterest_pixel_id__premium_only'],
                 'wgact_plugin_options_page',
                 $section_ids['settings_name']
             );
@@ -287,7 +287,7 @@ class Admin
                 'Hotjar site ID',
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ) . $this->svg_beta(),
-            [$this, 'wgact_plugin_setting_hotjar_site_id'],
+            [$this, 'wgact_option_html_hotjar_site_id'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
@@ -344,7 +344,7 @@ class Admin
                 'Order Total Logic',
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ),
-            [$this, 'wgact_plugin_setting_order_total_logic'],
+            [$this, 'wgact_option_html_shop_order_total_logic'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
@@ -377,7 +377,7 @@ class Admin
                 'gtag Deactivation',
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ),
-            [$this, 'wgact_plugin_setting_gtag_deactivation'],
+            [$this, 'wgact_option_html_google_gtag_deactivation'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
@@ -411,7 +411,7 @@ class Admin
                 'Activation',
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ),
-            [$this, 'wgact_plugin_setting_add_cart_data'],
+            [$this, 'wgact_option_html_google_ads_add_cart_data'],
             'wgact_plugin_options_page',
             'wgact_plugin_beta_section'
         );
@@ -471,7 +471,7 @@ class Admin
                 'Dynamic Remarketing',
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ),
-            [$this, 'wgact_plugin_option_dynamic_remarketing'],
+            [$this, 'wgact_option_html_google_ads_dynamic_remarketing'],
             'wgact_plugin_options_page',
             'wgact_plugin_beta_section'
         );
@@ -718,7 +718,7 @@ class Admin
         <?php
     }
 
-    public function wgact_plugin_settings_google_analytics_universal_property()
+    public function wgact_option_html_google_analytics_universal_property()
     {
         echo "<input id='wgact_plugin_analytics_ua_property_id' name='wgact_plugin_options[google][analytics][universal][property_id]' size='40' type='text' value='{$this->options['google']['analytics']['universal']['property_id']}' />";
         echo $this->get_status_icon($this->options['google']['analytics']['universal']['property_id']);
@@ -730,7 +730,7 @@ class Admin
         esc_html_e('At the moment only Google Analytics standard tracking is implemented. Enhanced ecommerce tracking is in development.', 'woocommerce-google-adwords-conversion-tracking-tag');
     }
 
-    public function wgact_plugin_settings_google_analytics_4_id()
+    public function wgact_option_html_google_analytics_4_id()
     {
         echo "<input id='wgact_plugin_analytics_4_measurement_id' name='wgact_plugin_options[google][analytics][ga4][measurement_id]' size='40' type='text' value='{$this->options['google']['analytics']['ga4']['measurement_id']}' />";
         echo $this->get_status_icon($this->options['google']['analytics']['ga4']['measurement_id']);
@@ -740,21 +740,21 @@ class Admin
         echo '&nbsp;<i>G-R912ZZ1MHH0</i>';
     }
 
-    public function wgact_plugin_setting_conversion_id()
+    public function wgact_option_html_google_ads_conversion_id()
     {
         echo "<input id='wgact_plugin_conversion_id' name='wgact_plugin_options[google][ads][conversion_id]' size='40' type='text' value='{$this->options['google']['ads']['conversion_id']}' />";
         echo $this->get_status_icon($this->options['google']['ads']['conversion_id']);
-        echo $this->get_documentation_html('/wgact/?utm_source=woopt-pixel-plugin&utm_medium=docs&utm_campaign=google-ads#/pixels/google-ads?id=configure-the-plugin');
+        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-ads-conversion-id#/pixels/google-ads?id=configure-the-plugin');
         echo '<br><br>';
         esc_html_e('The conversion ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo '&nbsp;<i>123456789</i>';
     }
 
-    public function wgact_plugin_setting_conversion_label()
+    public function wgact_option_html_google_ads_conversion_label()
     {
         echo "<input id='wgact_plugin_conversion_label' name='wgact_plugin_options[google][ads][conversion_label]' size='40' type='text' value='{$this->options['google']['ads']['conversion_label']}' />";
         echo $this->get_status_icon($this->options['google']['ads']['conversion_label'], $this->options['google']['ads']['conversion_id']);
-        echo $this->get_documentation_html('/wgact/?utm_source=woopt-pixel-plugin&utm_medium=docs&utm_campaign=google-ads#/pixels/google-ads?id=configure-the-plugin');
+        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-ads-conversion-label#/pixels/google-ads?id=configure-the-plugin');
         echo '<br><br>';
         esc_html_e('The conversion Label looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo '&nbsp;<i>Xt19CO3axGAX0vg6X3gM</i>';
@@ -765,7 +765,7 @@ class Admin
         echo '</p>';
     }
 
-    public function wgact_plugin_google_optimize_container_id()
+    public function wgact_option_html_google_optimize_container_id()
     {
         echo "<input id='wgact_plugin_google_optimize_container_id' name='wgact_plugin_options[google][optimize][container_id]' size='40' type='text' value='{$this->options['google']['optimize']['container_id']}' />";
         echo $this->get_status_icon($this->options['google']['optimize']['container_id']);
@@ -775,27 +775,27 @@ class Admin
         echo '&nbsp;<i>GTM-WMAB1BM</i>';
     }
 
-    public function wgact_plugin_setting_facebook_pixel_id()
+    public function wgact_option_html_facebook_pixel_id()
     {
         echo "<input id='wgact_plugin_facebook_pixel_id' name='wgact_plugin_options[facebook][pixel_id]' size='40' type='text' value='{$this->options['facebook']['pixel_id']}' />";
         echo $this->get_status_icon($this->options['facebook']['pixel_id']);
-        echo $this->get_documentation_html('/wgact/?utm_source=woopt-pixel-plugin&utm_medium=docs&utm_campaign=facebook#/facebook');
+        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=facebook-pixel-id#/pixels/facebook');
         echo '<br><br>';
         esc_html_e('The Facebook pixel ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo '&nbsp;<i>765432112345678</i>';
     }
 
-    public function wgact_plugin_setting_bing_uet_tag_id__premium_only()
+    public function wgact_option_html_bing_uet_tag_id__premium_only()
     {
         echo "<input id='wgact_plugin_bing_uet_tag_id' name='wgact_plugin_options[bing][uet_tag_id]' size='40' type='text' value='{$this->options['bing']['uet_tag_id']}' />";
         echo $this->get_status_icon($this->options['bing']['uet_tag_id']);
-        echo $this->get_documentation_html('/wgact/?utm_source=woopt-pixel-plugin&utm_medium=docs&utm_campaign=microsoft-advertising#/troubleshooting?id=wp-rocket-javascript-concatenation');
+        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=microsoft-advertising-uet-tag-id#/pixels/microsoft-advertising?id=setting-up-the-uet-tag');
         echo '<br><br>';
         esc_html_e('The Microsoft Advertising UET tag ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo '&nbsp;<i>12345678</i>';
     }
 
-    public function wgact_plugin_setting_twitter_pixel_id__premium_only()
+    public function wgact_option_html_twitter_pixel_id__premium_only()
     {
         echo "<input id='wgact_plugin_twitter_pixel_id' name='wgact_plugin_options[twitter][pixel_id]' size='40' type='text' value='{$this->options['twitter']['pixel_id']}' />";
         echo $this->get_status_icon($this->options['twitter']['pixel_id']);
@@ -805,7 +805,7 @@ class Admin
         echo '&nbsp;<i>abcde</i>';
     }
 
-    public function wgact_plugin_setting_pinterest_pixel_id__premium_only()
+    public function wgact_option_html_pinterest_pixel_id__premium_only()
     {
         echo "<input id='wgact_plugin_pinterest_pixel_id' name='wgact_plugin_options[pinterest][pixel_id]' size='40' type='text' value='{$this->options['pinterest']['pixel_id']}' />";
         echo $this->get_status_icon($this->options['pinterest']['pixel_id']);
@@ -815,17 +815,17 @@ class Admin
         echo '&nbsp;<i>1234567890123</i>';
     }
 
-    public function wgact_plugin_setting_hotjar_site_id()
+    public function wgact_option_html_hotjar_site_id()
     {
         echo "<input id='wgact_plugin_hotjar_site_id' name='wgact_plugin_options[hotjar][site_id]' size='40' type='text' value='{$this->options['hotjar']['site_id']}' />";
         echo $this->get_status_icon($this->options['hotjar']['site_id']);
-        echo $this->get_documentation_html('/wgact/?utm_source=woopt-pixel-plugin&utm_medium=docs&utm_campaign=hotjar#/pixels/hotjar');
+        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=hotjar-site-id#/pixels/hotjar');
         echo '<br><br>';
         esc_html_e('The Hotjar site ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo '&nbsp;<i>1234567</i>';
     }
 
-    public function wgact_plugin_setting_order_total_logic()
+    public function wgact_option_html_shop_order_total_logic()
     {
         ?>
         <input type='radio' id='wgact_plugin_order_total_logic_0'
@@ -850,7 +850,7 @@ class Admin
         return $html;
     }
 
-    public function wgact_plugin_setting_gtag_deactivation()
+    public function wgact_option_html_google_gtag_deactivation()
     {
         // adding the hidden input is a hack to make WordPress save the option with the value zero,
         // instead of not saving it and remove that array key entirely
@@ -869,7 +869,7 @@ class Admin
         <?php
     }
 
-    public function wgact_plugin_setting_add_cart_data()
+    public function wgact_option_html_google_ads_add_cart_data()
     {
         // adding the hidden input is a hack to make WordPress save the option with the value zero,
         // instead of not saving it and remove that array key entirely
@@ -899,7 +899,7 @@ class Admin
         }
     }
 
-    public function wgact_plugin_option_dynamic_remarketing()
+    public function wgact_option_html_google_ads_dynamic_remarketing()
     {
         // adding the hidden input is a hack to make WordPress save the option with the value zero,
         // instead of not saving it and remove that array key entirely
@@ -912,7 +912,7 @@ class Admin
 
         <?php esc_html_e('Enable dynamic remarketing audience collection', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
         <?php echo $this->get_status_icon($this->options['google']['ads']['dynamic_remarketing'], $this->options['google']['ads']['conversion_id']) ?>
-        <?php echo $this->get_documentation_html('/wgact/?utm_source=woopt-pixel-plugin&utm_medium=docs&utm_campaign=google-ads-dynamic-remarketing#/pixels/google-ads?id=dynamic-remarketing'); ?>
+        <?php echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-ads-dynamic-remarketing#/pixels/google-ads?id=dynamic-remarketing'); ?>
         <p><?php
             if (!$this->options['google']['ads']['conversion_id']) {
                 ?>
@@ -1147,7 +1147,7 @@ class Admin
         if (isset($input['google']['ads']['aw_merchant_id'])) {
             if (!$this->is_gads_aw_merchant_id($input['google']['ads']['aw_merchant_id'])) {
                 $input['google']['ads']['aw_merchant_id'] = isset($this->options['google']['ads']['aw_merchant_id']) ? $this->options['google']['ads']['aw_merchant_id'] : '';
-                add_settings_error('wgact_plugin_options', 'invalid-aw-merchant-id', esc_html__('You have entered an invalid merchant ID. It only contains 8 to 10 digits.', 'woocommerce-google-adwords-conversion-tracking-tag'));
+                add_settings_error('wgact_plugin_options', 'invalid-aw-merchant-id', esc_html__('You have entered an invalid merchant ID. It only contains 7 to 10 digits.', 'woocommerce-google-adwords-conversion-tracking-tag'));
             }
         }
 
@@ -1179,7 +1179,7 @@ class Admin
         if (isset($input['twitter']['pixel_id'])) {
             if (!$this->is_twitter_pixel_id($input['twitter']['pixel_id'])) {
                 $input['twitter']['pixel_id'] = isset($this->options['twitter']['pixel_id']) ? $this->options['twitter']['pixel_id'] : '';
-                add_settings_error('wgact_plugin_options', 'invalid-twitter-pixel-id', esc_html__('You have entered an invalid Twitter pixel ID. It only contains 5 to lowercase letters.', 'woocommerce-google-adwords-conversion-tracking-tag'));
+                add_settings_error('wgact_plugin_options', 'invalid-twitter-pixel-id', esc_html__('You have entered an invalid Twitter pixel ID. It only contains 5 to 7 lowercase letters.', 'woocommerce-google-adwords-conversion-tracking-tag'));
             }
         }
 
