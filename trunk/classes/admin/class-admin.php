@@ -45,6 +45,7 @@ class Admin
             return;
         }
 
+        wp_enqueue_script('script-blocker-warning', plugin_dir_url(__DIR__) . '../js/admin/script-blocker-warning.js', array(), WGACT_CURRENT_VERSION, false);
         wp_enqueue_script('admin-helpers', plugin_dir_url(__DIR__) . '../js/admin/helpers.js', array(), WGACT_CURRENT_VERSION, false);
         wp_enqueue_script('admin-tabs', plugin_dir_url(__DIR__) . '../js/admin/tabs.js', array(), WGACT_CURRENT_VERSION, false);
 
@@ -567,6 +568,11 @@ class Admin
                 </a>
             </p>
 
+            <script>
+                if (typeof wgact_hide_script_blocker_warning === "function") {
+                    wgact_hide_script_blocker_warning();
+                }
+            </script>
 
         </div>
 
@@ -1293,7 +1299,7 @@ class Admin
             return true;
         }
 
-        $re = '/^\d{8,10}$/m';
+        $re = '/^\d{7,10}$/m';
 
         return $this->validate_with_regex($re, $string);
     }

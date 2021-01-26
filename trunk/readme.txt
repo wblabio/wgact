@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, conversion tracking, dynamic retargeting, remarke
 Requires at least: 3.7
 Tested up to: 5.6
 Requires PHP: 7.2
-Stable tag: 1.8.6
+Stable tag: 1.8.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -106,6 +106,19 @@ You can send the link to the front page of your shop too if you think it would b
 1. Settings page
 
 == Changelog ==
+
+= 1.8.8 =
+
+[//]: # fs_premium_only_begin
+* Tweak: Adjusted directory name
+[//]: # fs_premium_only_end
+* Tweak: Bumped up version
+* Tweak: Changed regex for GMC IDs to allow 7 digit IDs
+* Tweak: Improved speed to hide script blocker warning
+
+= 1.8.7 =
+
+* Fix: Added new classes to SVN
 
 = 1.8.6 =
 

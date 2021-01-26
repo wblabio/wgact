@@ -5,7 +5,7 @@
  * Author:       Wolf+Bär Agency
  * Plugin URI:   https://wordpress.org/plugins/woocommerce-google-adwords-conversion-tracking-tag/
  * Author URI:   https://wolfundbaer.ch
- * Version:      1.8.6
+ * Version:      1.8.8
  * License:      GPLv2 or later
  * Text Domain:  woocommerce-google-adwords-conversion-tracking-tag
  * WC requires at least: 2.6
@@ -59,7 +59,7 @@ if (function_exists('wga_fs')) {
                     'navigation'          => 'tabs',
                     'id'                  => '7498',
                     'slug'                => 'woocommerce-google-adwords-conversion-tracking-tag',
-                    'premium_slug'        => 'woopt-pixel-pro',
+                    'premium_slug'        => 'woopt-pixel-manager-pro',
                     'type'                => 'plugin',
                     'public_key'          => 'pk_d4182c5e1dc92c6032e59abbfdb91',
                     'is_premium'          => true,

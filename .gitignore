@@ -143,6 +143,8 @@ tmtags
 
 # deployment
 /deployment/freemius/
-/deployment/wp.org/
+/deployment/free-version/
+/deployment/wp.org/wgact
 /deployment/cypress/screenshots/
+/deployment/tmp
 
