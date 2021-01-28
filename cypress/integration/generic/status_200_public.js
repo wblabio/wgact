@@ -38,7 +38,7 @@ describe('status 200 public', () => {
     })
 
     it('visit WC purchase confirmation page', () =>{
-        cy.visit('/checkout/order-received/61/?key=wc_order_nPUFu8qoiCSkv')
+        cy.visit(Cypress.env('purchase_confirmation_url'))
     })
 
     it('visit WC regular page', () =>{

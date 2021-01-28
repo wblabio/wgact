@@ -26,18 +26,15 @@ class Google extends Pixel
     {
         if ($this->options_obj->google->optimize->container_id) {
             ?>
-            <script async
-                    src="https://www.googleoptimize.com/optimize.js?id=<?php
-                    _e($this->options_obj->google->optimize->container_id) ?>"></script>
+
+            <script async src="https://www.googleoptimize.com/optimize.js?id=<?php _e($this->options_obj->google->optimize->container_id) ?>"></script>
             <?php
         }
 
         if (!$this->options_obj->google->gtag->deactivation) {
             ?>
 
-            <script async
-                    src="https://www.googletagmanager.com/gtag/js?id=<?php
-                    _e($this->get_gtag_id()) ?>"></script>
+            <script async src="https://www.googletagmanager.com/gtag/js?id=<?php _e($this->get_gtag_id()) ?>"></script>
             <script>
                 window.dataLayer = window.dataLayer || [];
 

@@ -1,8 +1,9 @@
 {
-  "baseUrl": "https://wordpress-deployment.test",
+  "baseUrl": "https://wordpress.test",
   "chromeWebSecurity": true,
   "env": {
     "admin_username": "admin",
-    "admin_password": "root"
+    "admin_password": "root",
+    "purchase_confirmation_url": "/checkout/order-received/116/?key=wc_order_h5odZIxSD4Vgc"
   }
 }

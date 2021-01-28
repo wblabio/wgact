@@ -97,7 +97,7 @@ class Pixel_Manager
                 if ($this->options_obj->pinterest->pixel_id) (new Pinterest($this->options, $this->options_obj))->inject_product($product_id, $product);
             }
 
-        } elseif (is_cart()) {
+        } elseif (is_cart() && !empty($cart)) {
 
             if ($this->google_active) (new Google($this->options, $this->options_obj))->inject_cart($cart, $cart_total);
             if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_cart($cart, $cart_total);

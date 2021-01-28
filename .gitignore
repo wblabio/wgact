@@ -148,4 +148,5 @@ tmtags
 /deployment/cypress/screenshots/
 /deployment/tmp
 /cypress/sreenshots/
+/cypress/videos/
 

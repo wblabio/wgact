@@ -112,6 +112,7 @@ You can send the link to the front page of your shop too if you think it would b
 * Tweak: readme.txt links
 * Tweak: fallback to post ID in case the SKU is not set
 * Tweak: Adjusted the HTML comments
+* Tweak: Don't inject cart scripts on cart page if cart is empty
 
 = 1.8.8 =
 
