@@ -16,7 +16,6 @@ class Pinterest extends Pixel
         // @formatter:off
         ?>
 
-        <!-- Pinterest Tag -->
         <script>
             !function(e){if(!window.pintrk){window.pintrk = function () {
                 window.pintrk.queue.push(Array.prototype.slice.call(arguments))};var
@@ -32,7 +31,6 @@ class Pinterest extends Pixel
             <img height="1" width="1" style="display:none;" alt=""
                  src="https://ct.pinterest.com/v3/?event=init&tid=<?php echo $this->options_obj->pinterest->pixel_id ?>&noscript=1" />
         </noscript>
-        <!-- end Pinterest Tag -->
         <?php
         // @formatter:on
 

@@ -27,16 +27,17 @@ class Google extends Pixel
         if ($this->options_obj->google->optimize->container_id) {
             ?>
             <script async
-                    src="https://www.googleoptimize.com/optimize.js?id=<?php _e($this->options_obj->google->optimize->container_id) ?>"></script>
+                    src="https://www.googleoptimize.com/optimize.js?id=<?php
+                    _e($this->options_obj->google->optimize->container_id) ?>"></script>
             <?php
         }
 
         if (!$this->options_obj->google->gtag->deactivation) {
             ?>
 
-            <!-- Global site tag (gtag.js) - Google Ads: <?php _e($this->conversion_id) ?> -->
             <script async
-                    src="https://www.googletagmanager.com/gtag/js?id=<?php _e($this->get_gtag_id()) ?>"></script>
+                    src="https://www.googletagmanager.com/gtag/js?id=<?php
+                    _e($this->get_gtag_id()) ?>"></script>
             <script>
                 window.dataLayer = window.dataLayer || [];
 
@@ -180,7 +181,7 @@ class Google extends Pixel
         }
     }
 
-    public function inject_order_received_page($order, $order_total)
+    public function inject_order_received_page($order, $order_total, $order_item_ids)
     {
         // use the right function to get the currency depending on the WooCommerce version
         $order_currency = $this->woocommerce_3_and_above() ? $order->get_currency() : $order->get_order_currency();
@@ -194,7 +195,6 @@ class Google extends Pixel
 
         ?>
 
-        <!-- Google Code for Sales Conversion Page -->
         <?php
 
         // Only run conversion script if the payment has not failed. (has_status('completed') is too restrictive)
@@ -203,7 +203,8 @@ class Google extends Pixel
 //           if ( ! $order->has_status( 'failed' ) ) {
             ?>
 
-            <?php if ($this->options_obj->google->ads->conversion_label): ?>
+            <?php
+            if ($this->options_obj->google->ads->conversion_label): ?>
 
                 <script>
                     gtag('event', 'conversion', {
@@ -213,9 +214,11 @@ class Google extends Pixel
                         'transaction_id': '<?php echo $order->get_order_number(); ?>',
                     });
                 </script>
-            <?php endif; ?>
+            <?php
+            endif; ?>
 
-            <?php echo $this->get_dyn_remarketing_purchase_script($order, $order_total) ?>
+            <?php
+            echo $this->get_dyn_remarketing_purchase_script($order, $order_total) ?>
 
             <?php
 
@@ -253,18 +256,17 @@ class Google extends Pixel
 
         ?>
 
-        <!-- END Google Code for Sales Conversion Page -->
         <?php
     }
 
     private function get_event_purchase_json($order, $order_total_filtered, $order_currency, $channel)
     {
         $gtag_data = [
-            'send_to' => [],
+            'send_to'        => [],
             'transaction_id' => $order->get_order_number(),
-            'currency' => $order_currency,
-            'discount' => $order->get_total_discount(),
-            'items' => $this->get_gads_formatted_order_items($order),
+            'currency'       => $order_currency,
+            'discount'       => $order->get_total_discount(),
+            'items'          => $this->get_gads_formatted_order_items($order),
         ];
 
         if ('ads' === $channel) {
@@ -356,7 +358,11 @@ class Google extends Pixel
         } else if (1 == $this->product_identifier) {
             return (string)'woocommerce_gpf_' . $product_id;
         } else {
-            return (string)$product_sku;
+            if ($product_sku) {
+                return (string)$product_sku;
+            } else {
+                return (string)$product_id;
+            }
         }
     }
 

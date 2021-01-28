@@ -13,7 +13,6 @@ class Hotjar extends Pixel
         // @formatter:off
         ?>
 
-        <!-- Hotjar Tracking Code for https://safeswisscloud.com/ -->
         <script>
             (function(h,o,t,j,a,r){
                 h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};

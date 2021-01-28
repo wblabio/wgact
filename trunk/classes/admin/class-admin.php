@@ -181,7 +181,7 @@ class Admin
             esc_html__(
                 'Google Optimize',
                 'woocommerce-google-adwords-conversion-tracking-tag'
-            ) . $this->svg_beta(),
+            ),
             [$this, 'wgact_option_html_google_optimize_container_id'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
@@ -549,7 +549,7 @@ class Admin
 
     public function wgact_subsection_generic_opening_div_html($section_ids, $sub_section_ids)
     {
-        echo '<div class="subsection" data-section-slug="' . $section_ids['slug'] . '" data-subsection-title="' . $sub_section_ids['title'] . '" data-subsection-slug="' . $sub_section_ids['slug'] . '">asdf</div>';
+        echo '<div class="subsection" data-section-slug="' . $section_ids['slug'] . '" data-subsection-title="' . $sub_section_ids['title'] . '" data-subsection-slug="' . $sub_section_ids['slug'] . '"></div>';
     }
 
     // display the admin options page

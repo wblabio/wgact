@@ -15,7 +15,6 @@ class Twitter extends Pixel
         // @formatter:off
         ?>
 
-        <!-- Twitter universal website tag code -->
         <script>
             !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);
             },s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='//static.ads-twitter.com/uwt.js',
@@ -29,7 +28,6 @@ class Twitter extends Pixel
             twq('track','PageView');
         </script>
         <?php endif; ?>
-        <!-- End Twitter universal website tag code -->
         <?php
         // @formatter:on
 

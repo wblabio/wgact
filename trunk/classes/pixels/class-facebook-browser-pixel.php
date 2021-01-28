@@ -14,7 +14,6 @@ class Facebook_Browser_Pixel extends Pixel
         // @formatter:off
         ?>
 
-        <!-- Facebook Pixel Code -->
         <script>
             !function(f,b,e,v,n,t,s)
             {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -30,7 +29,6 @@ class Facebook_Browser_Pixel extends Pixel
         <noscript><img height="1" width="1" style="display:none"
                        src="https://www.facebook.com/tr?id=<?php echo $this->options_obj->facebook->pixel_id ?>&ev=PageView&noscript=1"
             /></noscript>
-        <!-- End Facebook Pixel Code -->
         <?php
         // @formatter:on
 

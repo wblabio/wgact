@@ -2,6 +2,7 @@
 
 namespace WGACT\Classes\Pixels;
 
+use stdClass;
 use WC_Order;
 
 if (!defined('ABSPATH')) {
@@ -22,7 +23,7 @@ class Pixel_Manager
 
         $this->options_obj = json_decode(json_encode($this->options));
 
-        $this->options_obj->shop->currency = new \stdClass();
+        $this->options_obj->shop->currency = new stdClass();
         $this->options_obj->shop->currency = get_woocommerce_currency();
 
         $this->facebook_active = !empty($this->options_obj->facebook->pixel_id);
@@ -45,6 +46,8 @@ class Pixel_Manager
 
         $cart       = $woocommerce->cart->get_cart();
         $cart_total = WC()->cart->get_cart_contents_total();
+
+        echo '<!-- START woopt Pixel Manager -->' . PHP_EOL;
 
         $this->inject_noptimize_opening_tag();
 
@@ -126,6 +129,7 @@ class Pixel_Manager
 
 
         $this->inject_noptimize_closing_tag();
+        echo PHP_EOL . '<!-- END woopt Pixel Manager -->' . PHP_EOL;
     }
 
     private function inject_body_pixels()

@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, conversion tracking, dynamic retargeting, remarke
 Requires at least: 3.7
 Tested up to: 5.6
 Requires PHP: 7.2
-Stable tag: 1.8.8
+Stable tag: 1.8.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,7 +45,7 @@ It is also possible for developers of Cookie Consent Management plugins to deact
 
 <strong>Requirements</strong>
 
-[List of requirements](https://docs.wolfundbaer.ch/wgact/#/requirements)
+[List of requirements](https://docs.woopt.com/wgact/?utm_source=wp-org&utm_medium=documentation-link&utm_campaign=wp-org-documentation-link&utm_content=requirements#/requirements)
 
 == Installation ==
 
@@ -106,6 +106,12 @@ You can send the link to the front page of your shop too if you think it would b
 1. Settings page
 
 == Changelog ==
+
+= 1.8.9 =
+
+* Tweak: readme.txt links
+* Tweak: fallback to post ID in case the SKU is not set
+* Tweak: Adjusted the HTML comments
 
 = 1.8.8 =
 
