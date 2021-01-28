@@ -144,6 +144,8 @@ tmtags
 # deployment
 /deployment/freemius/
 /deployment/free-version/
+/deployment/freemius-plugin-free
+/deployment/freemius-plugin-pro
 /deployment/wp.org/wgact
 /deployment/cypress/screenshots/
 /deployment/tmp

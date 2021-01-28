@@ -9,9 +9,12 @@ popd () {
 }
 
 echo 'uninstalling current plugin from deployment testing WordPress install'
-pushd ~/dev/apps/wordpress-deployment/
-wp plugin deactivate woocommerce-google-adwords-conversion-tracking-tag
-wp plugin uninstall woocommerce-google-adwords-conversion-tracking-tag
+# pushd ~/dev/apps/wordpress-deployment/
+# wp plugin deactivate woocommerce-google-adwords-conversion-tracking-tag
+# wp plugin uninstall woocommerce-google-adwords-conversion-tracking-tag
+# popd
+pushd ~/dev/apps/wordpress-deployment/wp-content/plugins/
+rm woocommerce-google-adwords-conversion-tracking-tag
 popd
 echo 'unzipping '$1
 mkdir -p tmp
