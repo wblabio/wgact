@@ -37,7 +37,8 @@ class Google extends Pixel
 
             <script async src="https://www.googletagmanager.com/gtag/js?id=<?php
             _e($this->get_gtag_id()) ?>"></script>
-            <script<?php $this->options_obj->shop->cookie_consent_mgmt->cookiebot->active ? _e(' data-cookieconsent="ignore"') : ''; ?>>
+            <script<?php
+            $this->options_obj->shop->cookie_consent_mgmt->cookiebot->active ? _e(' data-cookieconsent="ignore"') : ''; ?>>
                 window.dataLayer = window.dataLayer || [];
 
                 function gtag() {
@@ -71,7 +72,7 @@ class Google extends Pixel
     {
         return "gtag('consent', 'default', {
                     'ad_storage': 'denied', 
-                    'analytics_storage': 'denied'
+                    'analytics_storage': 'denied',
                     'wait_for_update': 500
                 });
                 
@@ -150,11 +151,11 @@ class Google extends Pixel
         }
     }
 
-    public function inject_product($product_id, $product)
+    public function inject_product($product_id_compiled, $product)
     {
         if ($this->is_dynamic_remarketing_active()) {
 
-            $product_details = $this->get_gads_formatted_product_details_from_product_id($product_id);
+            $product_details = $this->get_gads_formatted_product_details_from_product_id($product->get_id());
             ?>
 
             <script type="text/javascript">
@@ -194,7 +195,7 @@ class Google extends Pixel
         }
     }
 
-    public function inject_order_received_page($order, $order_total, $order_item_ids)
+    public function inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer)
     {
         // use the right function to get the currency depending on the WooCommerce version
         $order_currency = $this->woocommerce_3_and_above() ? $order->get_currency() : $order->get_order_currency();
@@ -220,6 +221,8 @@ class Google extends Pixel
             if ($this->options_obj->google->ads->conversion_label): ?>
 
                 <script>
+                    // no deduper needed here
+                    // Google does this server side
                     gtag('event', 'conversion', {
                         'send_to'       : <?php echo json_encode($this->get_google_ads_conversion_ids(true))?>,
                         'value'         : <?php echo $order_total_filtered; ?>,
@@ -234,21 +237,22 @@ class Google extends Pixel
             echo $this->get_dyn_remarketing_purchase_script($order, $order_total) ?>
 
             <?php
-
         }
 
         if (!$order->has_status('failed') && !current_user_can('edit_others_pages') && ($this->add_cart_data == 1 || $this->is_google_analytics_active())) {
             ?>
 
             <script>
+
                 <?php if ($this->add_cart_data && $this->conversion_id && $this->conversion_label ): ?>
-                gtag('event', 'purchase', <?php echo $this->get_event_purchase_json($order, $order_total_filtered, $order_currency, 'ads') ?>);
+                gtag('event', 'purchase', <?php echo $this->get_event_purchase_json($order, $order_total_filtered, $order_currency, $is_new_customer, 'ads') ?>);
                 <?php endif; ?>
 
-                <?php if ($this->is_google_analytics_active() ): ?>
-                gtag('event', 'purchase', <?php echo $this->get_event_purchase_json($order, $order_total_filtered, $order_currency, 'analytics') ?>);
-                <?php endif; ?>
-
+                if ((typeof wgact !== "undefined") && !wgact.isOrderIdStored(<?php echo $order->get_id() ?>)) {
+                    <?php if ($this->is_google_analytics_active() ): ?>
+                    gtag('event', 'purchase', <?php echo $this->get_event_purchase_json($order, $order_total_filtered, $order_currency, $is_new_customer, 'analytics') ?>);
+                    <?php endif; ?>
+                }
             </script>
             <?php
 
@@ -272,7 +276,7 @@ class Google extends Pixel
         <?php
     }
 
-    private function get_event_purchase_json($order, $order_total_filtered, $order_currency, $channel)
+    private function get_event_purchase_json($order, $order_total_filtered, $order_currency, $is_new_customer, $channel)
     {
         $gtag_data = [
             'send_to'        => [],
@@ -288,6 +292,7 @@ class Google extends Pixel
             $gtag_data['aw_merchant_id']   = $this->aw_merchant_id;
             $gtag_data['aw_feed_country']  = $this->get_visitor_country();
             $gtag_data['aw_feed_language'] = $this->get_gmc_language();
+            $gtag_data['new_customer']     = $is_new_customer;
         }
 
         if ('analytics' === $channel) {
@@ -363,21 +368,6 @@ class Google extends Pixel
         return $order_items_array;
     }
 
-    protected function get_compiled_product_id($product_id, $product_sku): string
-    {
-        // depending on setting use product IDs or SKUs
-        if (0 == $this->product_identifier) {
-            return (string)$product_id;
-        } else if (1 == $this->product_identifier) {
-            return (string)'woocommerce_gpf_' . $product_id;
-        } else {
-            if ($product_sku) {
-                return (string)$product_sku;
-            } else {
-                return (string)$product_id;
-            }
-        }
-    }
 
     // get products from wp_query
     protected function get_products_from_wp_query($wp_query): array
@@ -460,11 +450,13 @@ class Google extends Pixel
             ?>
 
             <script>
-                gtag('event', 'purchase', {
-                    'send_to': <?php echo json_encode($this->get_google_ads_conversion_ids()) ?>,
-                    'value'  : <?php echo $order_total; ?>,
-                    'items'  : <?php echo (json_encode($this->get_gads_formatted_order_items($order))) . PHP_EOL ?>
-                });
+                if ((typeof wgact !== "undefined") && !wgact.isOrderIdStored(<?php echo $order->get_id() ?>)) {
+                    gtag('event', 'purchase', {
+                        'send_to': <?php echo json_encode($this->get_google_ads_conversion_ids()) ?>,
+                        'value'  : <?php echo $order_total; ?>,
+                        'items'  : <?php echo (json_encode($this->get_gads_formatted_order_items($order))) . PHP_EOL ?>
+                    });
+                }
             </script>
             <?php
         }

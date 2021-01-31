@@ -37,7 +37,7 @@ It works with the following Cookie Consent Management plugins out of the box:
 * [Cookie Law Info](https://wordpress.org/plugins/cookie-law-info/)
 * [GDPR Cookie Compliance](https://wordpress.org/plugins/gdpr-cookie-compliance/)
 * [Borlabs Cookie](https://borlabs.io/borlabs-cookie/) (from version 2.1.0)
-  [Borlabs Cookie Setup](https://wolfundbaer.ch/en/blog/our-marketing-plugins-now-support-borlabs-cookie/)
+  [Borlabs Cookie Setup](https://docs.woopt.com/wgact/?utm_source=wp-org&utm_medium=documentation-link&utm_campaign=wp-org-documentation-link&utm_content=borlabs-cookie#/consent-mgmt/borlabs-cookie)
 
 It is also possible for developers of Cookie Consent Management plugins to deactivate the pixel injection with a filter:
 
@@ -109,7 +109,19 @@ You can send the link to the front page of your shop too if you think it would b
 
 = 1.8.10 =
 
+[//]: # fs_premium_only_begin
+* New: Google consent mode
+* New: Setting for cookiebot
+* New: Added advanced order deduper
+* Tweak: Removed Pinterest noscript pixel
+[//]: # fs_premium_only_end
+* New: Added basic order deduper
+* New: Google Shopping new_customer parameter
+* New: Added switch to disable transaction deduping while testing
+* Tweak: Product identifier output now for all the same
 * Tweak: Adjusted the HTML comment output
+* Tweak: Added new cookie for Borlabs Cookie
+* Tweak: Made some input elements clickable
 
 = 1.8.9 =
 

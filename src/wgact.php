@@ -145,11 +145,9 @@ if (function_exists('wga_fs')) {
                 // autoloader
                 require_once 'lib/autoload.php';
 
-                if (is_admin()) {
-                    $plugin_data    = get_file_data(__FILE__, ['Version' => 'Version'], false);
-                    $plugin_version = $plugin_data['Version'];
-                    define('WGACT_CURRENT_VERSION', $plugin_version);
-                }
+                $plugin_data    = get_file_data(__FILE__, ['Version' => 'Version'], false);
+                $plugin_version = $plugin_data['Version'];
+                define('WGACT_CURRENT_VERSION', $plugin_version);
 
                 // running the DB updater
                 if (get_option(WGACT_DB_OPTIONS_NAME)) {
@@ -258,7 +256,7 @@ if (function_exists('wga_fs')) {
             // default options settings
             return [
                 'google'     => [
-                    'ads'       => [
+                    'ads'          => [
                         'conversion_id'            => '',
                         'conversion_label'         => '',
                         'add_cart_data'            => 0,
@@ -267,7 +265,7 @@ if (function_exists('wga_fs')) {
                         'google_business_vertical' => 0,
                         'dynamic_remarketing'      => 0
                     ],
-                    'analytics' => [
+                    'analytics'    => [
                         'universal' => [
                             'property_id' => '',
                         ],
@@ -275,10 +273,10 @@ if (function_exists('wga_fs')) {
                             'measurement_id' => '',
                         ]
                     ],
-                    'optimize'  => [
+                    'optimize'     => [
                         'container_id' => '',
                     ],
-                    'gtag'      => [
+                    'gtag'         => [
                         'deactivation' => 0,
                     ],
                     'consent_mode' => [
@@ -301,12 +299,13 @@ if (function_exists('wga_fs')) {
                     'site_id' => ''
                 ],
                 'shop'       => [
-                    'order_total_logic' => 0,
+                    'order_total_logic'   => 0,
                     'cookie_consent_mgmt' => [
-                      'cookiebot' => [
-                          'active' => 0
-                      ],
+                        'cookiebot' => [
+                            'active' => 0
+                        ],
                     ],
+                    'order_deduplication' => 1
                 ],
                 'db_version' => WGACT_DB_VERSION,
             ];

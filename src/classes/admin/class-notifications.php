@@ -19,7 +19,7 @@ class Notifications
                 </span><br>
             </p>
             <p>
-                <a href="https://docs.woopt.com/wgact/?utm_source=woopt-pixel-plugin&utm_medium=notice&utm_campaign=wgact_wp_rocket_javascript_concatenation_error#/troubleshooting?id=wp-rocket-javascript-concatenation" target="_blank"
+                <a href="https://docs.woopt.com/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=wp-rocket-javascript-concatenation-error#/troubleshooting?id=wp-rocket-javascript-concatenation" target="_blank"
                    style="font-weight: bold;color:blue">
                     <?php esc_html_e('Learn more', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
                 </a>

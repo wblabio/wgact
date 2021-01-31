@@ -27,10 +27,6 @@ class Pinterest extends Pixel
             pintrk('load', '<?php echo $this->options_obj->pinterest->pixel_id ?>');
             pintrk('page');
         </script>
-        <noscript>
-            <img height="1" width="1" style="display:none;" alt=""
-                 src="https://ct.pinterest.com/v3/?event=init&tid=<?php echo $this->options_obj->pinterest->pixel_id ?>&noscript=1" />
-        </noscript>
         <?php
         // @formatter:on
 
@@ -42,10 +38,6 @@ class Pinterest extends Pixel
         <script>
             pintrk('track', 'viewcategory');
         </script>
-        <noscript>
-            <img height="1" width="1" style="display:none;" alt=""
-                 src="https://ct.pinterest.com/v3/?tid=<?php echo $this->options_obj->pinterest->pixel_id ?>&event=viewcategory&noscript=1"/>
-        </noscript>
         <?php
 
     }
@@ -59,10 +51,6 @@ class Pinterest extends Pixel
                 search_query: '<?php echo get_search_query() ?>'
             });
         </script>
-        <noscript>
-            <img height="1" width="1" style="display:none;" alt=""
-                 src="https://ct.pinterest.com/v3/?tid=<?php echo $this->options_obj->pinterest->pixel_id ?>&event=search&ed[search_query]=<?php echo get_search_query() ?>&noscript=1"/>
-        </noscript>
         <?php
 
     }
@@ -74,10 +62,6 @@ class Pinterest extends Pixel
         <script>
             pintrk('track', 'pagevisit');
         </script>
-        <noscript>
-            <img height="1" width="1" style="display:none;" alt=""
-                 src="https://ct.pinterest.com/v3/?tid=<?php echo $this->options_obj->pinterest->pixel_id ?>&event=pagevisit&noscript=1"/>
-        </noscript>
         <?php
     }
 
@@ -92,10 +76,6 @@ class Pinterest extends Pixel
                 currency      : '<?php echo get_woocommerce_currency() ?>'
             });
         </script>
-        <noscript>
-            <img height="1" width="1" style="display:none;" alt=""
-                 src="https://ct.pinterest.com/v3/?tid=<?php echo $this->options_obj->pinterest->pixel_id ?>&event=addtocart&ed[value]=<?php echo $cart_total ?>&ed[order_quantity]=<?php echo count($cart) ?>&noscript=1"/>
-        </noscript>
 
         <?php
     }
@@ -105,17 +85,16 @@ class Pinterest extends Pixel
         ?>
 
         <script>
-            pintrk('track', 'checkout', {
-                value   : <?php echo $order_total ?>,
-                order_quantity: <?php echo count($order->get_items()) ?>,
-                currency: '<?php echo $order->get_currency() ?>',
-                order_id: '<?php echo $order->get_order_number(); ?>',
-                product_ids: <?php echo json_encode($order_item_ids) ?>
-            });
+            if ((typeof wgact !== "undefined") && !wgact.isOrderIdStored(<?php echo $order->get_id() ?>)) {
+                pintrk('track', 'checkout', {
+                    value         : <?php echo $order_total ?>,
+                    order_quantity: <?php echo count($order->get_items()) ?>,
+                    currency      : '<?php echo $order->get_currency() ?>',
+                    order_id      : '<?php echo $order->get_order_number(); ?>',
+                    product_ids   : <?php echo json_encode($order_item_ids) ?>
+                });
+            }
         </script>
-        <noscript>
-            <img height="1" width="1" style="display:none;" alt="" src="https://ct.pinterest.com/v3/?tid=<?php echo $this->options_obj->pinterest->pixel_id ?>&event=checkout&ed[value]=<?php echo $order_total ?>&ed[order_quantity]=2&noscript=1" />
-        </noscript>
         <?php
     }
 }

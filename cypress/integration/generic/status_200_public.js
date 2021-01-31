@@ -37,7 +37,17 @@ describe('status 200 public', () => {
         cy.visit('/shop/?color=Blue')
     })
 
+    it('visit WC purchase confirmation generic page', () =>{
+        cy.visit('/checkout/order-received/')
+    })
+
     it('visit WC purchase confirmation page', () =>{
+        cy.visit(Cypress.env('purchase_confirmation_url'))
+    })
+
+    it('visit WC purchase confirmation page twice, checking deduping', () =>{
+        cy.visit(Cypress.env('purchase_confirmation_url'))
+        cy.wait(4000);
         cy.visit(Cypress.env('purchase_confirmation_url'))
     })
 

@@ -66,7 +66,13 @@ class Pixel
 
         // go through the array and get all product identifiers
         foreach ((array)$cart as $item) {
-            array_push($cart_items, (string)$item['product_id']);
+
+            $product_id = $item['product_id'];
+            $product    = wc_get_product($product_id);
+
+            $product_id_compiled = $this->get_compiled_product_id($item['product_id'], $product->get_sku());
+
+            array_push($cart_items, $product_id_compiled);
         }
 
         return $cart_items;
@@ -88,5 +94,21 @@ class Pixel
     protected function isLocalhost(): bool
     {
         return in_array($_SERVER['REMOTE_ADDR'], ['127.0.0.1', '::1']);
+    }
+
+    protected function get_compiled_product_id($product_id, $product_sku): string
+    {
+        // depending on setting use product IDs or SKUs
+        if (0 == $this->product_identifier) {
+            return (string)$product_id;
+        } else if (1 == $this->product_identifier) {
+            return (string)'woocommerce_gpf_' . $product_id;
+        } else {
+            if ($product_sku) {
+                return (string)$product_sku;
+            } else {
+                return (string)$product_id;
+            }
+        }
     }
 }

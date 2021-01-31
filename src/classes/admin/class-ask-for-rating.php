@@ -22,7 +22,7 @@ class Ask_For_Rating {
 
 		// ask for a rating in a plugin notice
 		add_action( 'admin_enqueue_scripts', [$this,'wgact_rating_script'] );
-		add_action( 'wp_ajax_wgact_dismissed_notice_handler', [$this, 'ajax_rating_notice_handler'] );
+        add_action( 'wp_ajax_wgact_dismissed_notice_handler', [$this, 'ajax_rating_notice_handler'] );
 		add_action( 'admin_notices', [$this, 'ask_for_rating_notices_if_not_asked_before'] );
 	}
 

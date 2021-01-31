@@ -67,21 +67,21 @@ class Twitter extends Pixel
     {
         // TODO find out under which circumstances to use different values in content_type
 
-        // @formatter:off
-
         ?>
 
         <script>
-            twq('track','Purchase', {
-                value: '<?php echo $order_total ?>',
-                currency: '<?php echo $order->get_currency() ?>',
-                num_items: '<?php echo count($order->get_items()) ?>',
-                content_ids: <?php echo json_encode($order_item_ids) ?>,
-                content_type: 'product',
-                order_id: '<?php echo $order->get_order_number(); ?>'
-            });
+            if ((typeof wgact !== "undefined") && !wgact.isOrderIdStored(<?php echo $order->get_id() ?>)) {
+                twq('track', 'Purchase', {
+                    value       : '<?php echo $order_total ?>',
+                    currency    : '<?php echo $order->get_currency() ?>',
+                    num_items   : '<?php echo count($order->get_items()) ?>',
+                    content_ids : <?php echo json_encode($order_item_ids) ?>,
+                    content_type: 'product',
+                    order_id    : '<?php echo $order->get_order_number(); ?>'
+                });
+            }
+
         </script>
         <?php
-        // @formatter:on
     }
 }

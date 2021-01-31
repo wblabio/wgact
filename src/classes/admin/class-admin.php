@@ -313,12 +313,15 @@ class Admin
 
         $this->output_section_data_field($section_ids);
 
-        $this->add_section_advanced_subsection_order_logic($section_ids);
+        $this->add_section_advanced_subsection_shop($section_ids);
         $this->add_section_advanced_subsection_google($section_ids);
-        $this->add_section_advanced_subsection_cookie_consent_mgmt($section_ids);
+
+        if (wga_fs()->is__premium_only()) {
+            $this->add_section_advanced_subsection_cookie_consent_mgmt__premium_only($section_ids);
+        }
     }
 
-    public function add_section_advanced_subsection_order_logic($section_ids)
+    public function add_section_advanced_subsection_shop($section_ids)
     {
         $sub_section_ids = [
             'title' => 'Shop',
@@ -346,6 +349,18 @@ class Admin
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ),
             [$this, 'wgact_option_html_shop_order_total_logic'],
+            'wgact_plugin_options_page',
+            $section_ids['settings_name']
+        );
+
+        // add checkbox for order deduplication
+        add_settings_field(
+            'wgact_setting_order_deduplication',
+            esc_html__(
+                'Order deduplication',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ),
+            [$this, 'wgact_setting_html_order_deduplication'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
@@ -398,7 +413,7 @@ class Admin
         }
     }
 
-    public function add_section_advanced_subsection_cookie_consent_mgmt($section_ids)
+    public function add_section_advanced_subsection_cookie_consent_mgmt__premium_only($section_ids)
     {
         $sub_section_ids = [
             'title' => 'Cookie Consent Management',
@@ -418,6 +433,7 @@ class Admin
             $section_ids['settings_name']
         );
 
+
         // add fields for the gtag insertion
         add_settings_field(
             'wgact_setting_cookiebot_active',
@@ -429,7 +445,6 @@ class Admin
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
-
     }
 
     public function add_section_beta()
@@ -721,6 +736,10 @@ class Admin
                         <?php
                         esc_html_e('Support forum', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
                     </a>
+                    &nbsp;
+                    <span class="dashicons dashicons-info"></span>
+                    <?php
+                    esc_html_e('(Never post the debug or other sensitive information to the support forum. Instead send us the information by email.)', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
                 </li>
                 <li>
                     <?php
@@ -757,6 +776,8 @@ class Admin
             </div>
 
         </div>
+        <hr style="border: none;height: 1px; color: #333; background-color: #333;">
+
 
         <?php
     }
@@ -896,17 +917,19 @@ class Admin
     public function wgact_option_html_shop_order_total_logic()
     {
         ?>
+            <label>
         <input type='radio' id='wgact_plugin_order_total_logic_0'
                name='wgact_plugin_options[shop][order_total_logic]'
                value='0'  <?php
         echo(checked(0, $this->options['shop']['order_total_logic'], false)) ?> ><?php
-        esc_html_e('Use order_subtotal: Doesn\'t include tax and shipping (default)', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        esc_html_e('Use order_subtotal: Doesn\'t include tax and shipping (default)', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
         <br>
+        <label>
         <input type='radio' id='wgact_plugin_order_total_logic_1'
                name='wgact_plugin_options[shop][order_total_logic]'
                value='1'  <?php
         echo(checked(1, $this->options['shop']['order_total_logic'], false)) ?> ><?php
-        esc_html_e('Use order_total: Includes tax and shipping', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        esc_html_e('Use order_total: Includes tax and shipping', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
         <br><br>
         <?php
         esc_html_e('This is the order total amount reported back to Google Ads', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
@@ -929,13 +952,14 @@ class Admin
         // instead of not saving it and remove that array key entirely
         // https://stackoverflow.com/a/1992745/4688612
         ?>
+            <label>
         <input type='hidden' value='0' name='wgact_plugin_options[google][gtag][deactivation]'>
         <input type='checkbox' id='wgact_plugin_option_gtag_deactivation'
                name='wgact_plugin_options[google][gtag][deactivation]'
                value='1' <?php
         checked($this->options['google']['gtag']['deactivation']); ?> />
         <?php
-        esc_html_e('Disable gtag.js insertion if another plugin is inserting it already.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+        esc_html_e('Disable gtag.js insertion if another plugin is inserting it already', 'woocommerce-google-adwords-conversion-tracking-tag'); ?></label>
         <br>
         <p>
             <span class="dashicons dashicons-info"></span>
@@ -951,15 +975,18 @@ class Admin
         // instead of not saving it and remove that array key entirely
         // https://stackoverflow.com/a/1992745/4688612
         ?>
+            <label>
         <input type='hidden' value='0' name='wgact_plugin_options[google][consent_mode][active]'>
         <input type='checkbox' id='wgact_setting_google_consent_mode_active'
                name='wgact_plugin_options[google][consent_mode][active]'
                value='1' <?php
         checked($this->options['google']['consent_mode']['active']); ?> />
         <?php
-        esc_html_e('Enable Google consent mode with standard settings.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+        esc_html_e('Enable Google consent mode with standard settings', 'woocommerce-google-adwords-conversion-tracking-tag'); ?></label>
         <?php
         echo $this->get_status_icon($this->options['google']['consent_mode']['active'], true, true); ?>
+        <?php
+        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-consent-mode#/consent-mgmt/google-consent-mode'); ?>
         <?php
     }
 
@@ -969,13 +996,14 @@ class Admin
         // instead of not saving it and remove that array key entirely
         // https://stackoverflow.com/a/1992745/4688612
         ?>
+            <label>
         <input type='hidden' value='0' name='wgact_plugin_options[shop][cookie_consent_mgmt][cookiebot][active]'>
         <input type='checkbox' id='wgact_setting_cookiebot_active'
                name='wgact_plugin_options[shop][cookie_consent_mgmt][cookiebot][active]'
                value='1' <?php
         checked($this->options['shop']['cookie_consent_mgmt']['cookiebot']['active']); ?> />
         <?php
-        esc_html_e('Enable Cookiebot settings', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+        esc_html_e('Enable Cookiebot settings', 'woocommerce-google-adwords-conversion-tracking-tag'); ?></label>
         <?php
         echo $this->get_status_icon($this->options['shop']['cookie_consent_mgmt']['cookiebot']['active'], $this->options['google']['consent_mode']['active'], true);
         ?>
@@ -993,13 +1021,14 @@ class Admin
         // instead of not saving it and remove that array key entirely
         // https://stackoverflow.com/a/1992745/4688612
         ?>
+            <label>
         <input type='hidden' value='0' name='wgact_plugin_options[google][ads][add_cart_data]'>
         <input type='checkbox' id='wgact_plugin_option_gads_add_cart_data'
                name='wgact_plugin_options[google][ads][add_cart_data]'
                value='1' <?php
         checked($this->options['google']['ads']['add_cart_data']); ?> />
         <?php
-        esc_html_e('Add the cart data to the conversion event', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+        esc_html_e('Add the cart data to the conversion event', 'woocommerce-google-adwords-conversion-tracking-tag'); ?></label>
         <?php
         echo $this->get_status_icon($this->options['google']['ads']['add_cart_data'], $this->add_to_cart_requirements_fulfilled());
         if (!$this->add_to_cart_requirements_fulfilled()) {
@@ -1009,6 +1038,40 @@ class Admin
                 esc_html_e('Requires an active Google Ads Conversion ID, an active Conversion Label and an active Google Merchant Center ID (aw_merchant_id)', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
             </p>
             <?php
+        }
+    }
+
+    public function wgact_setting_html_order_deduplication()
+    {
+        // adding the hidden input is a hack to make WordPress save the option with the value zero,
+        // instead of not saving it and remove that array key entirely
+        // https://stackoverflow.com/a/1992745/4688612
+        ?>
+            <label>
+        <input type='hidden' value='0' name='wgact_plugin_options[shop][order_deduplication]'>
+        <input type='checkbox' id='wgact_setting_order_deduplication'
+               name='wgact_plugin_options[shop][order_deduplication]'
+               value='1' <?php
+        checked($this->options['shop']['order_deduplication']); ?> />
+        <?php
+        $this->get_order_deduplication_text(); ?></label>
+        <?php
+        echo $this->get_status_icon($this->options['shop']['order_deduplication']); ?>
+        <br>
+        <p>
+            <span class="dashicons dashicons-info"></span>
+            <?php
+            esc_html_e('Only disable order deduplication for testing. Remember to re-enable the setting once done.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+        </p>
+        <?php
+    }
+
+    private function get_order_deduplication_text()
+    {
+        if (wga_fs()->is__premium_only()) {
+            esc_html_e('Advanced order deduplication is ', 'woocommerce-google-adwords-conversion-tracking-tag');
+        } else {
+            esc_html_e('Basic order deduplication is ', 'woocommerce-google-adwords-conversion-tracking-tag');
         }
     }
 
@@ -1027,6 +1090,7 @@ class Admin
         // instead of not saving it and remove that array key entirely
         // https://stackoverflow.com/a/1992745/4688612
         ?>
+            <label>
         <input type='hidden' value='0' name='wgact_plugin_options[google][ads][dynamic_remarketing]'>
         <input type='checkbox' id='wgact_plugin_option_gads_dynamic_remarketing'
                name='wgact_plugin_options[google][ads][dynamic_remarketing]'
@@ -1034,7 +1098,7 @@ class Admin
         checked($this->options['google']['ads']['dynamic_remarketing']); ?> />
 
         <?php
-        esc_html_e('Enable dynamic remarketing audience collection', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+        esc_html_e('Enable dynamic remarketing audience collection', 'woocommerce-google-adwords-conversion-tracking-tag'); ?></label>
         <?php
         echo $this->get_status_icon($this->options['google']['ads']['dynamic_remarketing'], $this->options['google']['ads']['conversion_id']) ?>
         <?php
@@ -1044,7 +1108,7 @@ class Admin
                 ?>
                 <span class="dashicons dashicons-info"></span>
                 <?php
-                esc_html_e('Requires an active Google Ads Conversion ID', 'woocommerce-google-adwords-conversion-tracking-tag');
+                esc_html_e('Requires an active Google Ads Conversion ID', '!woocommerce-google-adwords-conversion-tracking-tag');
                 echo '<br>';
             }
             ?><span class="dashicons dashicons-info"></span>
@@ -1057,53 +1121,61 @@ class Admin
     public function wgact_plugin_option_google_business_vertical__premium_only()
     {
         ?>
+            <label>
         <input type='radio' id='wgact_plugin_google_business_vertical_0'
                name='wgact_plugin_options[google][ads][google_business_vertical]'
                value='0'  <?php
         echo(checked(0, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php
-        esc_html_e('Retail', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        esc_html_e('Retail', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
         <br>
+        <label>
         <input type='radio' id='wgact_plugin_google_business_vertical_1'
                name='wgact_plugin_options[google][ads][google_business_vertical]'
                value='1'  <?php
         echo(checked(1, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php
-        esc_html_e('Education', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        esc_html_e('Education', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
         <br>
+        <label>
         <input type='radio' id='wgact_plugin_google_business_vertical_3'
                name='wgact_plugin_options[google][ads][google_business_vertical]'
                value='3'  <?php
         echo(checked(3, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php
-        esc_html_e('Hotels and rentals', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        esc_html_e('Hotels and rentals', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
         <br>
+        <label>
         <input type='radio' id='wgact_plugin_google_business_vertical_4'
                name='wgact_plugin_options[google][ads][google_business_vertical]'
                value='4'  <?php
         echo(checked(4, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php
-        esc_html_e('Jobs', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        esc_html_e('Jobs', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
         <br>
+        <label>
         <input type='radio' id='wgact_plugin_google_business_vertical_4'
                name='wgact_plugin_options[google][ads][google_business_vertical]'
                value='4'  <?php
         echo(checked(4, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php
-        esc_html_e('Jobs', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        esc_html_e('Jobs', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
         <br>
+        <label>
         <input type='radio' id='wgact_plugin_google_business_vertical_5'
                name='wgact_plugin_options[google][ads][google_business_vertical]'
                value='5'  <?php
         echo(checked(5, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php
-        esc_html_e('Local deals', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        esc_html_e('Local deals', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
         <br>
+        <label>
         <input type='radio' id='wgact_plugin_google_business_vertical_6'
                name='wgact_plugin_options[google][ads][google_business_vertical]'
                value='6'  <?php
         echo(checked(6, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php
-        esc_html_e('Real estate', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        esc_html_e('Real estate', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
         <br>
+        <label>
         <input type='radio' id='wgact_plugin_google_business_vertical_8'
                name='wgact_plugin_options[google][ads][google_business_vertical]'
                value='8'  <?php
         echo(checked(8, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php
-        esc_html_e('Custom', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        esc_html_e('Custom', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
         <br>
         <?php
     }
@@ -1190,25 +1262,27 @@ class Admin
     public function wgact_plugin_option_product_identifier()
     {
         ?>
+            <label>
         <input type='radio' id='wgact_plugin_option_product_identifier_0'
                name='wgact_plugin_options[google][ads][product_identifier]'
                value='0' <?php
         echo(checked(0, $this->options['google']['ads']['product_identifier'], false)) ?>/><?php
-        esc_html_e('post id (default)', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        esc_html_e('post id (default)', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
         <br>
-
+<label>
         <input type='radio' id='wgact_plugin_option_product_identifier_1'
                name='wgact_plugin_options[google][ads][product_identifier]'
                value='1' <?php
         echo(checked(1, $this->options['google']['ads']['product_identifier'], false)) ?>/><?php
-        esc_html_e('post id with woocommerce_gpf_ prefix *', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        esc_html_e('post id with woocommerce_gpf_ prefix *', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
         <br>
-
+<label>
         <input type='radio' id='wgact_plugin_option_product_identifier_2'
                name='wgact_plugin_options[google][ads][product_identifier]'
                value='2' <?php
         echo(checked(2, $this->options['google']['ads']['product_identifier'], false)) ?>/><?php
-        esc_html_e('SKU', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        esc_html_e('SKU', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
+
         <br><br>
 
         <?php

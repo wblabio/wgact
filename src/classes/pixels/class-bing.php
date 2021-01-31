@@ -28,7 +28,7 @@ class Bing extends Pixel
 
         <script>
             window.uetq = window.uetq || [];
-            window.uetq.push ('event', '', {
+            window.uetq.push('event', '', {
                 'ecomm_pagetype': 'category'
             });
         </script>
@@ -41,7 +41,7 @@ class Bing extends Pixel
 
         <script>
             window.uetq = window.uetq || [];
-            window.uetq.push ('event', '', {
+            window.uetq.push('event', '', {
                 'ecomm_pagetype': 'searchresults'
             });
         </script>
@@ -54,9 +54,9 @@ class Bing extends Pixel
 
         <script>
             window.uetq = window.uetq || [];
-            window.uetq.push ('event', '', {
+            window.uetq.push('event', '', {
                 'ecomm_pagetype': 'product',
-                'ecomm_prodid': <?php echo $product_id ?>
+                'ecomm_prodid'  : '<?php echo $product_id?>'
             });
         </script>
         <?php
@@ -68,9 +68,9 @@ class Bing extends Pixel
 
         <script>
             window.uetq = window.uetq || [];
-            window.uetq.push ('event', '', {
+            window.uetq.push('event', '', {
                 'ecomm_pagetype': 'cart',
-                'ecomm_prodid': <?php echo json_encode($this->get_cart_ids($cart)) ?>
+                'ecomm_prodid'  : <?php echo json_encode($this->get_cart_ids($cart)) . PHP_EOL ?>
             });
         </script>
         <?php
@@ -82,12 +82,14 @@ class Bing extends Pixel
         ?>
 
         <script>
-            window.uetq = window.uetq || [];
-            window.uetq.push('event', 'purchase', {
-                'ecomm_pagetype': 'purchase',
-                'revenue_value': <?php echo $order_total ?>,
-                'currency': '<?php echo $order->get_currency() ?>'
-            });
+            if ((typeof wgact !== "undefined") && !wgact.isOrderIdStored(<?php echo $order->get_id() ?>)) {
+                window.uetq = window.uetq || [];
+                window.uetq.push('event', 'purchase', {
+                    'ecomm_pagetype': 'purchase',
+                    'revenue_value' : <?php echo $order_total ?>,
+                    'currency'      : '<?php echo $order->get_currency() ?>'
+                });
+            }
         </script>
         <?php
     }

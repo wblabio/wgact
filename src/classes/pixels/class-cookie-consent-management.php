@@ -73,7 +73,7 @@ class Cookie_Consent_Management {
 			// the minimum version I know of that supports gaveConsent('marketing') is 2.2.4
 			if(version_compare('2.1.0', $borlabs_info['Version'], '<=')){
 
-				if (BorlabsCookieHelper()->gaveConsent('google-ads')){
+				if (BorlabsCookieHelper()->gaveConsent('google-ads') || BorlabsCookieHelper()->gaveConsent('woopt-pixel-manager')){
 					return true;
 				}
 			}
