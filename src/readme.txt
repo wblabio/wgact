@@ -122,6 +122,7 @@ You can send the link to the front page of your shop too if you think it would b
 * Tweak: Adjusted the HTML comment output
 * Tweak: Added new cookie for Borlabs Cookie
 * Tweak: Made some input elements clickable
+* Tweak: Moved check for failed payments and admin and shop manager up to the pixel manager
 
 = 1.8.9 =
 

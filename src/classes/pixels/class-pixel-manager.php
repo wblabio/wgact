@@ -145,7 +145,10 @@ class Pixel_Manager
                 $order_key = $_GET['key'];
                 $order     = new WC_Order(wc_get_order_id_by_order_key($order_key));
 
-                if (!$this->options['shop']['order_deduplication'] || get_post_meta($order->get_id(), '_WGACT_conversion_pixel_fired', true) != true) {
+                if (!$order->has_status('failed') &&
+                    !current_user_can('edit_others_pages') &&
+                    (!$this->options['shop']['order_deduplication'] ||
+                        get_post_meta($order->get_id(), '_WGACT_conversion_pixel_fired', true) != true)) {
 
                     if (is_user_logged_in()) {
                         $user = get_current_user_id();
@@ -184,7 +187,11 @@ class Pixel_Manager
     private function conversion_pixels_already_fired_html__premium_only()
     {
         ?>
-        <!-- The conversion pixels have already fired and have been blocked server side to not fire again -->
+
+        <!-- The conversion pixels have not been inserted. Possible reasons: -->
+        <!--    You are logged into WooCommerce as admin or shop manager. -->
+        <!--    The order payment has failed. -->
+        <!--    The pixels have already been fired. To prevent double counting the pixels are only fired once. -->
         <?php
     }
 

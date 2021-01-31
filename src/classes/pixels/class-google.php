@@ -213,7 +213,7 @@ class Google extends Pixel
 
         // Only run conversion script if the payment has not failed. (has_status('completed') is too restrictive)
         // Also don't run the pixel if an admin or shop manager is logged in.
-        if (!$order->has_status('failed') && !current_user_can('edit_others_pages') && ($this->add_cart_data == 0) && $this->options_obj->google->ads->conversion_id) {
+        if ($this->add_cart_data == 0 && $this->options_obj->google->ads->conversion_id) {
 //           if ( ! $order->has_status( 'failed' ) ) {
             ?>
 
@@ -239,7 +239,7 @@ class Google extends Pixel
             <?php
         }
 
-        if (!$order->has_status('failed') && !current_user_can('edit_others_pages') && ($this->add_cart_data == 1 || $this->is_google_analytics_active())) {
+        if ($this->add_cart_data == 1 || $this->is_google_analytics_active()) {
             ?>
 
             <script>
@@ -255,21 +255,7 @@ class Google extends Pixel
                 }
             </script>
             <?php
-
-
         }
-
-        if ($order->has_status('failed') || current_user_can('edit_others_pages')) {
-
-            ?>
-
-            <!-- The pixels have not been inserted. Possible reasons: -->
-            <!--    You are logged into WooCommerce as admin or shop manager. -->
-            <!--    The order payment has failed. -->
-            <!--    The pixel has already been fired. To prevent double counting the pixel is not being fired again. -->
-
-            <?php
-        } // end if order status
 
         ?>
 
