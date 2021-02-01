@@ -56,7 +56,7 @@ class Bing extends Pixel
             window.uetq = window.uetq || [];
             window.uetq.push('event', '', {
                 'ecomm_pagetype': 'product',
-                'ecomm_prodid'  : '<?php echo $product_id?>'
+                'ecomm_prodid'  : '<?php echo $product_id ?>'
             });
         </script>
         <?php
@@ -86,6 +86,7 @@ class Bing extends Pixel
                 window.uetq = window.uetq || [];
                 window.uetq.push('event', 'purchase', {
                     'ecomm_pagetype': 'purchase',
+                    'ecomm_prodid'  :<?php echo json_encode($order_item_ids) ?>,
                     'revenue_value' : <?php echo $order_total ?>,
                     'currency'      : '<?php echo $order->get_currency() ?>'
                 });

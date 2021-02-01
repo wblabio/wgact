@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, conversion tracking, dynamic retargeting, remarke
 Requires at least: 3.7
 Tested up to: 5.6
 Requires PHP: 7.2
-Stable tag: 1.8.10
+Stable tag: 1.8.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -106,6 +106,13 @@ You can send the link to the front page of your shop too if you think it would b
 1. Settings page
 
 == Changelog ==
+
+= 1.8.11 =
+
+[//]: # fs_premium_only_begin
+* Tweak: Added product IDs to Microsoft Advertising purchase event
+[//]: # fs_premium_only_end
+* Fix: Removed a function call where the function was missing
 
 = 1.8.10 =
 

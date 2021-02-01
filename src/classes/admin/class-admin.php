@@ -966,7 +966,7 @@ class Admin
             esc_html_e('Disable gtag.js insertion, if another plugin is inserting it already', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
         </label>
         <?php
-        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=gtag-js#/faq?id=google-tag-assistant-reports-multiple-installations-of-global-site-tag-gtagjs-detected');
+        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=gtag-js#/faq?id=google-tag-assistant-reports-multiple-installations-of-global-site-tag-gtagjs-detected-what-shall-i-do');
         ?>
         <br>
         <p>
@@ -977,7 +977,7 @@ class Admin
         <p>
             <span class="dashicons dashicons-info"></span>
             <?php
-            esc_html_e('This function is deprecated', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+            esc_html_e('This setting is deprecated. It will be removed in future versions of the plugin. Read more about it in the documentation.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
         </p>
         <?php
     }

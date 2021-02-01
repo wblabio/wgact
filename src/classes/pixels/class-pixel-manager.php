@@ -172,7 +172,9 @@ class Pixel_Manager
 
                     $this->inject_transaction_deduper_script($order->get_id());
                 } else {
-                    $this->conversion_pixels_already_fired_html__premium_only();
+                    if (wga_fs()->is__premium_only()) {
+                        $this->conversion_pixels_already_fired_html__premium_only();
+                    }
                 }
 
             }
