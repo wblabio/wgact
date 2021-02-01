@@ -41,6 +41,8 @@ describe('purchase', () => {
             .click()
         cy.wait(2000)
         cy.url().should('include','/checkout/order-received/')
+        cy.wait(2000)
+        cy.reload()
     })
 
 })
