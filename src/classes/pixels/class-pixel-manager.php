@@ -170,9 +170,7 @@ class Pixel_Manager
                         if ($this->options_obj->pinterest->pixel_id) (new Pinterest($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids);
                     }
 
-//                    if (!$this->options['shop']['order_deduplication_deactivation']) {
                     $this->inject_transaction_deduper_script($order->get_id());
-//                    }
                 } else {
                     $this->conversion_pixels_already_fired_html__premium_only();
                 }

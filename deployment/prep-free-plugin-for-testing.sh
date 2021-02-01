@@ -8,13 +8,19 @@ popd () {
     command popd "$@" > /dev/null
 }
 
-echo 'uninstalling current plugin from deployment testing WordPress install'
-# pushd ~/dev/apps/wordpress-deployment/
-# wp plugin deactivate woocommerce-google-adwords-conversion-tracking-tag
-# wp plugin uninstall woocommerce-google-adwords-conversion-tracking-tag
-# popd
+echo 'uninstalling current plugin from ~/dev/apps/wordpress-deployment/'
+# https://stackoverflow.com/a/10372685/4688612
 pushd ~/dev/apps/wordpress-deployment/wp-content/plugins/
-rm woocommerce-google-adwords-conversion-tracking-tag
+wp plugin deactivate woocommerce-google-adwords-conversion-tracking-tag
+# Detect if the plugin is symlinked. If so, delete the symlink. Otherwise, uninstall the plugin.
+if ls -l | grep -q '^l.*woocommerce-google-adwords-conversion-tracking-tag ';
+  then
+    echo 'symlink detected -> removing symlink'
+    rm woocommerce-google-adwords-conversion-tracking-tag
+  else
+    echo 'no symlink detected -> uninstalling plugin'
+    wp plugin uninstall woocommerce-google-adwords-conversion-tracking-tag
+fi
 popd
 echo 'unzipping '$1
 mkdir -p tmp
