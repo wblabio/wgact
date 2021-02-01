@@ -113,11 +113,12 @@ You can send the link to the front page of your shop too if you think it would b
 * New: Google consent mode
 * New: Setting for cookiebot
 * New: Added advanced order deduper
-* Tweak: Removed Pinterest noscript pixel
+* Tweak: Removed Pinterest noscript tags
+* Fix: Added product IDs to Microsoft Advertising purchase event
 [//]: # fs_premium_only_end
 * New: Added basic order deduper
 * New: Google Shopping new_customer parameter
-* New: Added switch to disable transaction deduping while testing
+* New: Added switch to enable transaction deduping (default enabled)
 * Tweak: Product identifier output now for all the same
 * Tweak: Adjusted the HTML comment output
 * Tweak: Added new cookie for Borlabs Cookie
