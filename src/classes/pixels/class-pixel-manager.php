@@ -159,6 +159,9 @@ class Pixel_Manager
 
                     $order_total = 0 == $this->options_obj->shop->order_total_logic ? $order->get_subtotal() - $order->get_total_discount() : $order->get_total();
 
+                    // filter to adjust the order value
+                    $order_total = apply_filters('wgact_conversion_value_filter', $order_total, $order);
+
                     $order_item_ids = $this->get_order_item_ids($order);
 
                     if ($this->google_active) (new Google($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);

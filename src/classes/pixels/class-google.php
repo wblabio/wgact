@@ -200,9 +200,6 @@ class Google extends Pixel
         // use the right function to get the currency depending on the WooCommerce version
         $order_currency = $this->woocommerce_3_and_above() ? $order->get_currency() : $order->get_order_currency();
 
-        // filter to adjust the order value
-        $order_total_filtered = apply_filters('wgact_conversion_value_filter', $order_total, $order);
-
         $ratings                      = get_option(WGACT_DB_RATINGS);
         $ratings['conversions_count'] = $ratings['conversions_count'] + 1;
         update_option(WGACT_DB_RATINGS, $ratings);
@@ -225,7 +222,7 @@ class Google extends Pixel
                     // Google does this server side
                     gtag('event', 'conversion', {
                         'send_to'       : <?php echo json_encode($this->get_google_ads_conversion_ids(true))?>,
-                        'value'         : <?php echo $order_total_filtered; ?>,
+                        'value'         : <?php echo $order_total; ?>,
                         'currency'      : '<?php echo $order_currency; ?>',
                         'transaction_id': '<?php echo $order->get_order_number(); ?>',
                     });
@@ -245,12 +242,12 @@ class Google extends Pixel
             <script>
 
                 <?php if ($this->add_cart_data && $this->conversion_id && $this->conversion_label ): ?>
-                gtag('event', 'purchase', <?php echo $this->get_event_purchase_json($order, $order_total_filtered, $order_currency, $is_new_customer, 'ads') ?>);
+                gtag('event', 'purchase', <?php echo $this->get_event_purchase_json($order, $order_total, $order_currency, $is_new_customer, 'ads') ?>);
                 <?php endif; ?>
 
                 if ((typeof wgact !== "undefined") && !wgact.isOrderIdStored(<?php echo $order->get_id() ?>)) {
                     <?php if ($this->is_google_analytics_active() ): ?>
-                    gtag('event', 'purchase', <?php echo $this->get_event_purchase_json($order, $order_total_filtered, $order_currency, $is_new_customer, 'analytics') ?>);
+                    gtag('event', 'purchase', <?php echo $this->get_event_purchase_json($order, $order_total, $order_currency, $is_new_customer, 'analytics') ?>);
                     <?php endif; ?>
                 }
             </script>
@@ -262,7 +259,7 @@ class Google extends Pixel
         <?php
     }
 
-    private function get_event_purchase_json($order, $order_total_filtered, $order_currency, $is_new_customer, $channel)
+    private function get_event_purchase_json($order, $order_total, $order_currency, $is_new_customer, $channel)
     {
         $gtag_data = [
             'send_to'        => [],
@@ -274,7 +271,7 @@ class Google extends Pixel
 
         if ('ads' === $channel) {
             array_push($gtag_data['send_to'], $this->get_google_ads_conversion_ids(true));
-            $gtag_data['value']            = $order_total_filtered;
+            $gtag_data['value']            = $order_total;
             $gtag_data['aw_merchant_id']   = $this->aw_merchant_id;
             $gtag_data['aw_feed_country']  = $this->get_visitor_country();
             $gtag_data['aw_feed_language'] = $this->get_gmc_language();
