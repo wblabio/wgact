@@ -145,8 +145,12 @@ class Pixel_Manager
                 $order_key = $_GET['key'];
                 $order     = new WC_Order(wc_get_order_id_by_order_key($order_key));
 
+                $conversion_prevention = false;
+                $conversion_prevention = apply_filters( 'wgact_conversion_prevention',$conversion_prevention, $order );
+
                 if (!$order->has_status('failed') &&
                     !current_user_can('edit_others_pages') &&
+                    $conversion_prevention == false &&
                     (!$this->options['shop']['order_deduplication'] ||
                         get_post_meta($order->get_id(), '_WGACT_conversion_pixel_fired', true) != true)) {
 
@@ -218,7 +222,7 @@ class Pixel_Manager
     {
         ?>
         <script>
-            let wgact_order_deduplication = <?php $this->options['shop']['order_deduplication'] ? _e('true') : _e('false') ?>;
+            let wgact_order_deduplication = <?php echo $this->options['shop']['order_deduplication'] ? 'true' : 'false' ?>;
         </script>
         <?php
     }

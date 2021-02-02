@@ -28,7 +28,7 @@ class Google extends Pixel
             ?>
 
             <script async src="https://www.googleoptimize.com/optimize.js?id=<?php
-            _e($this->options_obj->google->optimize->container_id) ?>"></script>
+            echo $this->options_obj->google->optimize->container_id ?>"></script>
             <?php
         }
 
@@ -36,16 +36,16 @@ class Google extends Pixel
             ?>
 
             <script async src="https://www.googletagmanager.com/gtag/js?id=<?php
-            _e($this->get_gtag_id()) ?>"></script>
-            <script<?php
-            $this->options_obj->shop->cookie_consent_mgmt->cookiebot->active ? _e(' data-cookieconsent="ignore"') : ''; ?>>
+            echo $this->get_gtag_id() ?>"></script>
+            <script<?php echo
+            $this->options_obj->shop->cookie_consent_mgmt->cookiebot->active ? ' data-cookieconsent="ignore"' : ''; ?>>
                 window.dataLayer = window.dataLayer || [];
 
                 function gtag() {
                     dataLayer.push(arguments);
                 }
 
-                <?php $this->options_obj->google->consent_mode->active ? _e($this->consent_mode_gtag_html()) : ''; ?>
+                <?php echo $this->options_obj->google->consent_mode->active ? $this->consent_mode_gtag_html() : ''; ?>
 
                 gtag('js', new Date());
 
@@ -58,11 +58,11 @@ class Google extends Pixel
 
         <script>
             <?php foreach ($this->conversion_identifiers as $conversion_id => $conversion_label): ?>
-            <?php $this->options_obj->google->ads->conversion_id ? _e($this->gtag_config($conversion_id, 'ads')) : _e(PHP_EOL); ?>
+            <?php echo $this->options_obj->google->ads->conversion_id ? $this->gtag_config($conversion_id, 'ads') : PHP_EOL; ?>
             <?php endforeach; ?>
 
-            <?php $this->options_obj->google->analytics->universal->property_id ? _e($this->gtag_config($this->options_obj->google->analytics->universal->property_id, 'analytics') . PHP_EOL) : _e(PHP_EOL); ?>
-            <?php $this->options_obj->google->analytics->ga4->measurement_id ? _e($this->gtag_config($this->options_obj->google->analytics->ga4->measurement_id, 'analytics')) : _e(PHP_EOL); ?>
+            <?php echo $this->options_obj->google->analytics->universal->property_id ? $this->gtag_config($this->options_obj->google->analytics->universal->property_id, 'analytics') . PHP_EOL : PHP_EOL; ?>
+            <?php echo $this->options_obj->google->analytics->ga4->measurement_id ? $this->gtag_config($this->options_obj->google->analytics->ga4->measurement_id, 'analytics') : PHP_EOL; ?>
 
         </script>
         <?php
@@ -109,7 +109,7 @@ class Google extends Pixel
                 }, c);
                 h.timeout = c;
             })(window, document.documentElement, 'async-hide', 'dataLayer', 4000,
-                {'<?php _e($this->options_obj->google->optimize->container_id) ?>': true});</script>
+                {'<?php echo $this->options_obj->google->optimize->container_id ?>': true});</script>
         <?php
     }
 

@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, conversion tracking, dynamic retargeting, remarke
 Requires at least: 3.7
 Tested up to: 5.6
 Requires PHP: 7.2
-Stable tag: 1.8.12
+Stable tag: 1.8.13
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -38,10 +38,6 @@ It works with the following Cookie Consent Management plugins out of the box:
 * [GDPR Cookie Compliance](https://wordpress.org/plugins/gdpr-cookie-compliance/)
 * [Borlabs Cookie](https://borlabs.io/borlabs-cookie/) (from version 2.1.0)
   [Borlabs Cookie Setup](https://docs.woopt.com/wgact/?utm_source=wp-org&utm_medium=documentation-link&utm_campaign=wp-org-documentation-link&utm_content=borlabs-cookie#/consent-mgmt/borlabs-cookie)
-
-It is also possible for developers of Cookie Consent Management plugins to deactivate the pixel injection with a filter:
-
-`add_filter( 'wgact_cookie_prevention', '__return_true' );`
 
 <strong>Requirements</strong>
 
@@ -106,6 +102,12 @@ You can send the link to the front page of your shop too if you think it would b
 1. Settings page
 
 == Changelog ==
+
+= 1.8.13 =
+
+* New: Filter to prevent conversion pixels to fire on purchase confirmation page
+* Tweak: Replaced _e() with echo where necessary
+* Tweak: Syntax cleanup
 
 = 1.8.12 =
 

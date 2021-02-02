@@ -30,34 +30,34 @@ class Cookie_Consent_Management {
 	// check if third party cookie prevention is active
 	public function is_cookie_prevention_active() {
 
-		$cookiePrevention = false;
+		$cookie_prevention = false;
 
 		// use filter to set default to activate prevention
 		// add_filter( 'wgact_cookie_prevention', '__return_true' );
 		// later, turn it off in order to allow cookies in case they have been actively approved
-		$cookiePrevention = apply_filters( $this->pluginPrefix . 'cookie_prevention', $cookiePrevention );
+		$cookie_prevention = apply_filters( $this->pluginPrefix . 'cookie_prevention', $cookie_prevention );
 
 		// check if the Moove third party cookie prevention is on
 		if ( $this->is_moove_cookie_prevention_active() ) {
-			$cookiePrevention = true;
+			$cookie_prevention = true;
 		}
 
 		// check if the Cooke Notice Plugin third party cookie prevention is on
 		if ( $this->is_cookie_notice_plugin_cookie_prevention_active() ) {
-			$cookiePrevention = true;
+			$cookie_prevention = true;
 		}
 
 		// check if the Cooke Law Info third party cookie prevention is on
 		if ( $this->is_cookie_law_info_cookie_prevention_active() ) {
-			$cookiePrevention = true;
+			$cookie_prevention = true;
 		}
 
 		// check if marketing cookies have been approved by Borlabs
 		if ( $this->checkBorlabsGaveMarketingConsent() ){
-			$cookiePrevention = false;
+			$cookie_prevention = false;
 		}
 
-		return $cookiePrevention;
+		return $cookie_prevention;
 	}
 
 	public function checkBorlabsGaveMarketingConsent(){
@@ -100,9 +100,9 @@ class Cookie_Consent_Management {
 	// https://wordpress.org/plugins/cookie-law-info/
 	public function is_cookie_law_info_cookie_prevention_active() {
 
-		$cookieConsentManagementcookie = $this->getCookie( 'cookielawinfo-checkbox-non-necessary' );
+		$cookie_consent_management_cookie = $this->getCookie( 'cookielawinfo-checkbox-non-necessary' );
 
-		if ( $cookieConsentManagementcookie == 'no' ) {
+		if ( $cookie_consent_management_cookie == 'no' ) {
 			return true;
 		} else {
 			return false;
@@ -113,9 +113,9 @@ class Cookie_Consent_Management {
 	// https://wordpress.org/plugins/cookie-notice/
 	public function is_cookie_notice_plugin_cookie_prevention_active() {
 
-		$cookieConsentManagementcookie = $this->getCookie( 'cookie_notice_accepted' );
+		$cookie_consent_management_cookie = $this->getCookie( 'cookie_notice_accepted' );
 
-		if ( $cookieConsentManagementcookie == 'false' ) {
+		if ( $cookie_consent_management_cookie == 'false' ) {
 			return true;
 		} else {
 			return false;
@@ -127,11 +127,11 @@ class Cookie_Consent_Management {
 	public function is_moove_cookie_prevention_active() {
 		if ( isset( $_COOKIE['moove_gdpr_popup'] ) ) {
 
-			$cookieConsentManagementcookie = $_COOKIE['moove_gdpr_popup'];
-			$cookieConsentManagementcookie = json_decode( stripslashes( $cookieConsentManagementcookie ), true );
+			$cookie_consent_management_cookie = $_COOKIE['moove_gdpr_popup'];
+			$cookie_consent_management_cookie = json_decode( stripslashes( $cookie_consent_management_cookie ), true );
 
-			if ( $cookieConsentManagementcookie['thirdparty'] == 0 ) {
-				// print_r( $cookieConsentManagementcookie );
+			if ( $cookie_consent_management_cookie['thirdparty'] == 0 ) {
+				// print_r( $cookie_consent_management_cookie );
 				return true;
 			} else {
 				return false;
