@@ -4,6 +4,7 @@ namespace WGACT\Classes\Pixels;
 
 use stdClass;
 use WC_Order;
+use WGACT\Classes\Admin\Environment_Check;
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
@@ -73,11 +74,14 @@ class Pixel_Manager
         $cart       = $woocommerce->cart->get_cart();
         $cart_total = WC()->cart->get_cart_contents_total();
 
+        if ((new Environment_Check())->is_autoptimize_active()) {
+            $this->inject_noptimize_opening_tag();
+        }
+
         echo PHP_EOL . '<!-- START woopt Pixel Manager -->' . PHP_EOL;
 
         $this->inject_wgact_order_deduplication_script();
 
-        $this->inject_noptimize_opening_tag();
 
         if ($this->google_active) (new Google($this->options, $this->options_obj))->inject_everywhere();
         if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_everywhere();
@@ -146,7 +150,7 @@ class Pixel_Manager
                 $order     = new WC_Order(wc_get_order_id_by_order_key($order_key));
 
                 $conversion_prevention = false;
-                $conversion_prevention = apply_filters( 'wgact_conversion_prevention',$conversion_prevention, $order );
+                $conversion_prevention = apply_filters('wgact_conversion_prevention', $conversion_prevention, $order);
 
                 if (!$order->has_status('failed') &&
                     !current_user_can('edit_others_pages') &&
@@ -187,8 +191,11 @@ class Pixel_Manager
             }
         }
 
-        $this->inject_noptimize_closing_tag();
         echo PHP_EOL . '<!-- END woopt Pixel Manager -->' . PHP_EOL;
+
+        if ((new Environment_Check())->is_autoptimize_active()) {
+            $this->inject_noptimize_closing_tag();
+        }
     }
 
     private function conversion_pixels_already_fired_html__premium_only()
@@ -235,15 +242,12 @@ class Pixel_Manager
 
     private function inject_noptimize_opening_tag()
     {
-        ?>
-        <!--noptimize--><?php
+        echo PHP_EOL . '<!--noptimize-->';
     }
 
     private function inject_noptimize_closing_tag()
     {
-        ?>
-        <!--/noptimize-->
-        <?php
+        echo '<!--/noptimize-->' . PHP_EOL . PHP_EOL;
     }
 
     protected function get_order_item_ids($order)
