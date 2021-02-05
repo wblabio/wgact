@@ -11,34 +11,38 @@ $changelog_pro  = [];
 $changelog_free = [];
 
 if ($handle) {
-    $write_pro  = false;
-    $write_free = false;
+    $write_mode = null;
 
     while (($line = fgets($handle)) !== false) {
 
         if (strpos($line, 'Changelog') == true) {
-            $write_pro  = true;
-            $write_free = true;
-
+            $write_mode = 'all';
             array_push($changelog_pro, $line);
             array_push($changelog_free, $line);
-
             continue;
         }
 
-        if ($write_pro == true && !(strpos($line, 'fs_premium_only_begin') || strpos($line, 'fs_premium_only_end'))) {
-            array_push($changelog_pro, $line);
-        }
-
+        // set up write mode
         if (strpos($line, 'fs_premium_only_begin')) {
-            $write_free = false;
+            $write_mode = 'pro';
             continue;
-        } else if (strpos($line, 'fs_premium_only_end')) {
-            $write_free = true;
+        } else if(strpos($line, 'fs_free_only_begin')) {
+            $write_mode = 'free';
             continue;
         }
 
-        if ($write_free == true) {
+        // never write if we're on an end directive
+        if (strpos($line, 'fs_premium_only_end') || strpos($line, 'fs_free_only_end')) {
+            $write_mode = 'all';
+            continue;
+        }
+
+        if($write_mode === 'pro') {
+            array_push($changelog_pro, $line);
+        } else if($write_mode === 'free') {
+            array_push($changelog_free, $line);
+        } else if ($write_mode === 'all') {
+            array_push($changelog_pro, $line);
             array_push($changelog_free, $line);
         }
     }
@@ -50,4 +54,3 @@ if ($handle) {
 
 file_put_contents($target_file_pro, $changelog_pro);
 file_put_contents($target_file_free, $changelog_free);
-
