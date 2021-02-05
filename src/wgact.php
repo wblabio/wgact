@@ -18,12 +18,9 @@
  **/
 
 // TODO give users choice to use content or footer based code insertion
-// TODO make this class a singleton
-// TODO don't run if minimum versions of PHP, WordPress and WooCommerce are not met, and issue a warning notification
 // TODO export settings function
 // TODO add option checkbox on uninstall and ask if user wants to delete options from db
 // TODO ask inverse cookie approval. Only of cookies have been allowed, fire the pixels.
-// TODO force init gtag if it was deactivated but not initialized in the correct sequence on the website
 // TODO remove google_business_vertical cleanup
 
 
@@ -32,7 +29,6 @@ use WGACT\Classes\Admin\Ask_For_Rating;
 use WGACT\Classes\Admin\Environment_Check;
 use WGACT\Classes\Db_Upgrade;
 use WGACT\Classes\Pixels\Cookie_Consent_Management;
-use WGACT\Classes\Pixels\Google;
 use WGACT\Classes\Pixels\Pixel_Manager;
 
 

@@ -82,7 +82,6 @@ class Pixel_Manager
 
         $this->inject_wgact_order_deduplication_script();
 
-
         if ($this->google_active) (new Google($this->options, $this->options_obj))->inject_everywhere();
         if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_everywhere();
 
@@ -250,7 +249,7 @@ class Pixel_Manager
         echo '<!--/noptimize-->' . PHP_EOL . PHP_EOL;
     }
 
-    protected function get_order_item_ids($order)
+    protected function get_order_item_ids($order): array
     {
         $order_items       = $order->get_items();
         $order_items_array = [];
@@ -264,9 +263,6 @@ class Pixel_Manager
 
             array_push($order_items_array, $product_id_compiled);
         }
-
-        // apply filter to the $order_items_array array
-        $order_items_array = apply_filters('wgact_filter', $order_items_array, 'order_items_array');
 
         return $order_items_array;
     }

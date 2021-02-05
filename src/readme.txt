@@ -106,6 +106,7 @@ You can send the link to the front page of your shop too if you think it would b
 = 1.8.14 =
 
 * Tweak: Make the <noptimize> tag only appear if Autoptimize is active
+* Tweak: Removed a duplicate filter
 
 = 1.8.13 =
 
