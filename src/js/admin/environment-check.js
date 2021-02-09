@@ -42,7 +42,7 @@ jQuery(function () {
 
         let data = {
             'action': 'environment_check_handler',
-            'set'   : 'dismiss_litespeed_inline_js_dom_ready_error'
+            'set'   : 'dismiss_litespeed_inline_js_dom_ready'
         };
 
         wgact_send_ajax_data(data);

@@ -56,6 +56,7 @@ class Environment_Check
         }
 
         if ('dismiss_litespeed_inline_js_dom_ready' == $set) {
+            error_log('test');
             $wgact_notifications                                                = get_option('wgact_notifications');
             $wgact_notifications['dismiss_litespeed_inline_js_dom_ready_error'] = true;
             update_option('wgact_notifications', $wgact_notifications);
