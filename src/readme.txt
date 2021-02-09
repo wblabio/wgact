@@ -362,145 +362,265 @@ You can send the link to the front page of your shop too if you think it would b
 * Tweak: Refactored the code into classes
 
 = 1.6.5 =
+
 * Tweak: Removed duplicate noptimize tag
 * Tweak: Removed CDATA fix since it is not necessary anymore with the new conversion tag
+
 = 1.6.4 =
+
 * Fix: Fixed the calculation for the non-default order total value (which includes tax and shipping)
+
 = 1.6.3 =
+
 * Info: Tested up to WP 5.4
+
 = 1.6.2 =
+
 * Tweak: More reliable method to detect the visitor country added
+
 = 1.6.1 =
+
 * New: Add Cart Data feature
 * New: Added a switch to disable the insertion of the gtag
 * Tweak: Added more descriptions on the settings page
 * Tweak: Code optimisations
+
 = 1.5.5 =
+
 * Tweak: Made the conversion ID and label validation code more robust
+
 = 1.5.4 =
+
 * Tweak: Updated function that inserts the settings link on the plugins overview page
+
 = 1.5.3 =
+
 * Info: Tested up to WP 5.2
+
 = 1.5.2 =
+
 * Fix: Correctly calculate the value when no filter is active
+
 = 1.5.1 =
+
 * Tweak: Re-enabled order value filter
+
 = 1.4.17 =
+
 * Info: Tested up to WP 5.1
+
 = 1.4.16 =
+
 * Info: Updated a few text strings
+
 = 1.4.15 =
+
 * Info: Changing name from AdWords to Google Ads
+
 = 1.4.14 =
+
 * Info: Tested up to WC 3.5.3
+
 = 1.4.13 =
+
 * Info: Tested up to WC 3.5.2
+
 = 1.4.12 =
+
 * Tweak: bumping up the WC version
+
 = 1.4.11 =
+
 * Tweak: remove some debug code
 * fix: properly save the order_total_logic option
+
 = 1.4.10 =
+
 * Tweak: switched sanitization function to wp_strip_all_tags
+
 = 1.4.9 =
+
 * Tweak: Added input validation and sanitization
 * Tweak: Added output escaping
+
 = 1.4.8 =
+
 * Tweak: Added discounts into order value calculation
+
 = 1.4.7 =
+
 * New: Switched over to the newest version of the AdWords conversion tracking pixel
+
 = 1.4.6 =
+
 * Tweak: Disabled minification through Autoptimize
+
 = 1.4.5 =
+
 * Tweak: Order ID back in apostrophes
+
 = 1.4.4 =
+
 * Tweak: Switched on JavaScript tracking with a fix for the CDATA bug http://core.trac.wordpress.org/ticket/3670
 * Tweak: The correct function is being used to get the currency depending on the WooCommerce version
 * Fix: Added missing </noscript> tag
+
 = 1.4.3 =
+
 * Tweak: Remove campaign URL parameter
+
 = 1.4.2 =
+
 * Fix: Backward compatibility for $order->get_currency()
+
 = 1.4.1 =
+
 * Tweak: Making the plugin PHP 5.4 backwards compatible
 * Fix: Fixing double counting check logic
+
 = 1.4 =
+
 * New: Ask kindly for a rating of the plugin
 * New: Add a radio button to use different styles of order total
 * Tweak: Consolidate options into one array
 * Tweak: Code cleanup
+
 = 1.3.6 =
+
 * New: WordPress 4.8 compatibility update
 * Tweak: Minor text tweak.
+
 = 1.3.5 =
+
 * Fix: Fixed a syntax error that caused issues on some installations.
+
 = 1.3.4 =
+
 * Tweak: Added some text output to make debugging for users easier.
+
 = 1.3.3 =
+
 * Tweak: Refurbishment of the settings page
+
 = 1.3.2 =
+
 * New: Uninstall routine
+
 = 1.3.1 =
+
 * New: Keep old deduplication logic in the code as per recommendation by AdWords
+
 = 1.3.0 =
+
 * New: AdWords native order ID deduplication variable
+
 = 1.2.2 =
+
 * New: Filter for the conversion value
+
 = 1.2.1 =
+
 * Fix: wrong conversion value fix
+
 = 1.2 =
+
 * New: Filter for the conversion value
+
 = 1.1 =
+
 * Tweak: Code cleanup
 * Tweak: To avoid over reporting only insert the retargeting code for visitors, not shop managers and admins
+
 = 1.0.6 =
+
 * Tweak: Switching single pixel function from transient to post meta
+
 = 1.0.5 =
+
 * Fix: Adding session handling to avoid duplications
+
 = 1.0.4 =
+
 * Fix: Skipping a tag version
+
 = 1.0.3 =
+
 * Fix: Implement different logic to exclude failed orders as the old one is too restrictive
+
 = 1.0.2 =
+
 * Fix: Exclude orders where the payment has failed
+
 = 1.0.1 =
+
 * New: Banner and icon
 * Update: Name change
+
 = 1.0 =
-* New: Translation into Serbian by Adrijana Nikolic from http://webhostinggeeks.com
+
 * Update: Release of version 1.0!
+
 = 0.2.4 =
+
 * Update: Minor update to the internationalization
+
 = 0.2.3 =
+
 * Update: Minor update to the internationalization
+
 = 0.2.2 =
+
 * New: The plugin is now translation ready
+
 = 0.2.1 =
+
 * Update: Improving plugin security
 * Update: Moved the settings to the submenu of WooCommerce
+
 = 0.2.0 =
+
 * Update: Further improving cross browser compatibility
+
 = 0.1.9 =
+
 * Update: Implemented a much better workaround tor the CDATA issue
 * Update: Implemented the new currency field
 * Fix: Corrected the missing slash dot after the order value
+
 = 0.1.8 =
-* Fix: Corrected the plugin source to prevent an error during activation 
+
+* Fix: Corrected the plugin source to prevent an error during activation
+
 = 0.1.7 =
+
 * Significantly improved the database access to evaluate the order value.
+
 = 0.1.6 =
-* Added some PHP code to the tracking tag as recommended by Google. 
+
+* Added some PHP code to the tracking tag as recommended by Google.
+
 = 0.1.5 =
+
 * Added settings field to the plugin page.
 * Visual improvements to the options page.
+
 = 0.1.4 =
-* Changed the woo_foot hook to wp_footer to avoid problems with some themes. This should be more compatible with most themes as long as they use the wp_footer hook. 
+
+* Changed the woo_foot hook to wp_footer to avoid problems with some themes. This should be more compatible with most themes as long as they use the wp_footer hook.
+
 = 0.1.3 =
-* Changed conversion language to 'en'. 
+
+* Changed conversion language to 'en'.
+
 = 0.1.2 =
-* Disabled the check if WooCommerce is running. The check doesn't work properly with multisite WP installations, though the plugin does work with the multisite feature turned on. 
+
+* Disabled the check if WooCommerce is running. The check doesn't work properly with multisite WP installations, though the plugin does work with the multisite feature turned on.
 * Added more description in the code to explain why I've build a workaround to not place the tracking code into the thankyou template of WC.
+
 = 0.1.1 =
+
 * Some minor changes to the code
+
 = 0.1 =
+
 * This is the initial release of the plugin. There are no known bugs so far.

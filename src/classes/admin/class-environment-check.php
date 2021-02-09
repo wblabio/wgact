@@ -20,6 +20,7 @@ class Environment_Check
     public function run_checks()
     {
         $this->check_wp_rocket_js_concatenation();
+        $this->check_litespeed_js_inline_after_dom();
     }
 
     public function environment_check_script()
@@ -49,6 +50,17 @@ class Environment_Check
             update_option('wgact_notifications', $wgact_notifications);
         }
 
+        if ('disable_litespeed_inline_js_dom_ready' == $set) {
+            $litespeed_inline_js_dom_ready_option = 0;
+            update_option('litespeed.conf.optm-js_inline_defer', $litespeed_inline_js_dom_ready_option);
+        }
+
+        if ('dismiss_litespeed_inline_js_dom_ready' == $set) {
+            $wgact_notifications                                                = get_option('wgact_notifications');
+            $wgact_notifications['dismiss_litespeed_inline_js_dom_ready_error'] = true;
+            update_option('wgact_notifications', $wgact_notifications);
+        }
+
         wp_die(); // this is required to terminate immediately and return a proper response
     }
 
@@ -64,6 +76,23 @@ class Environment_Check
                 if (true == $wp_rocket_settings['minify_concatenate_js']) {
                     // display warning
                     (new Notifications())->wp_rocket_js_concatenation_error();
+                }
+            }
+        }
+    }
+
+    private function check_litespeed_js_inline_after_dom()
+    {
+        $wgact_notifications = get_option('wgact_notifications');
+
+        if (is_plugin_active('litespeed-cache/litespeed-cache.php') && false == $wgact_notifications['dismiss_litespeed_inline_js_dom_ready_error']) {
+
+            $litespeed_js_inline_defer_settings = get_option('litespeed.conf.optm-js_inline_defer');
+
+            if ($litespeed_js_inline_defer_settings) {
+                if (1 == $litespeed_js_inline_defer_settings) {
+                    // display warning
+                    (new Notifications())->litespeed_js_defer_error();
                 }
             }
         }
