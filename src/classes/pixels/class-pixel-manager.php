@@ -71,9 +71,6 @@ class Pixel_Manager
     {
         global $woocommerce;
 
-        $cart       = $woocommerce->cart->get_cart();
-        $cart_total = WC()->cart->get_cart_contents_total();
-
         if ((new Environment_Check())->is_autoptimize_active()) {
             $this->inject_noptimize_opening_tag();
         }
@@ -130,7 +127,10 @@ class Pixel_Manager
                 if ($this->options_obj->pinterest->pixel_id) (new Pinterest($this->options, $this->options_obj))->inject_product($product_id_compiled, $product);
             }
 
-        } elseif (is_cart() && !empty($cart)) {
+        } elseif (is_cart() && !empty($woocommerce->cart->get_cart())) {
+
+            $cart       = $woocommerce->cart->get_cart();
+            $cart_total = WC()->cart->get_cart_contents_total();
 
             if ($this->google_active) (new Google($this->options, $this->options_obj))->inject_cart($cart, $cart_total);
             if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_cart($cart, $cart_total);
