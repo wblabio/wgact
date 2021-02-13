@@ -107,7 +107,7 @@ You can send the link to the front page of your shop too if you think it would b
 
 * Tweak: Make the <noptimize> tag only appear if Autoptimize is active
 * Tweak: Removed a duplicate filter
-* Tweak: Moved get_cart() query into is_cart() condition
+* Fix: Moved get_cart() query into is_cart() condition
 
 = 1.8.13 =
 
