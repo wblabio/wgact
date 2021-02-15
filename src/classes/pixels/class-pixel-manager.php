@@ -192,7 +192,6 @@ class Pixel_Manager
                         $this->conversion_pixels_already_fired_html__premium_only();
                     }
                 }
-
             }
         }
 

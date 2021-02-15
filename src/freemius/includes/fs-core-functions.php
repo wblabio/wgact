@@ -111,32 +111,25 @@
         }
     }
 
-    if ( ! function_exists( 'fs_enqueue_local_style' ) ) {
-        function fs_enqueue_local_style( $handle, $path, $deps = array(), $ver = false, $media = 'all' ) {
-
-            if ( defined( 'WP_FS__SYMLINKS' ) && true === WP_FS__SYMLINKS ) {
-
-                wp_enqueue_style( $handle, plugin_dir_url( '' ) . 'woocommerce-google-adwords-conversion-tracking-tag' . '/freemius/assets/css'. $path, $deps, $ver, $media );
-            } else {
-                wp_enqueue_style( $handle, fs_asset_url( WP_FS__DIR_CSS . '/' . trim( $path, '/' ) ), $deps, $ver, $media );
-
-            }
+if ( ! function_exists( 'fs_enqueue_local_style' ) ) {
+    function fs_enqueue_local_style( $handle, $path, $deps = array(), $ver = false, $media = 'all' ) {
+        if ( defined( 'WP_FS__SYMLINKS' ) && true === WP_FS__SYMLINKS ) {
+            wp_enqueue_style( $handle, plugin_dir_url( '' ) . 'woocommerce-google-adwords-conversion-tracking-tag' . '/freemius/assets/css'. $path, $deps, $ver, $media );
+        } else {
+            wp_enqueue_style( $handle, fs_asset_url( WP_FS__DIR_CSS . '/' . trim( $path, '/' ) ), $deps, $ver, $media );
         }
     }
+}
 
-    if ( ! function_exists( 'fs_enqueue_local_script' ) ) {
-        function fs_enqueue_local_script( $handle, $path, $deps = array(), $ver = false, $in_footer = 'all' ) {
-            if ( defined( 'WP_FS__SYMLINKS' ) && true === WP_FS__SYMLINKS ) {
-
-                error_log('FS_WP__DIR');
-
-                wp_enqueue_script( $handle, plugin_dir_url( '' ) . 'woocommerce-google-adwords-conversion-tracking-tag' . '/freemius/assets/js/'. $path, $deps, $ver, $in_footer );
-            } else {
-                wp_enqueue_script( $handle, fs_asset_url( WP_FS__DIR_JS . '/' . trim( $path, '/' ) ), $deps, $ver, $in_footer );
-
-            }
+if ( ! function_exists( 'fs_enqueue_local_script' ) ) {
+    function fs_enqueue_local_script( $handle, $path, $deps = array(), $ver = false, $in_footer = 'all' ) {
+        if ( defined( 'WP_FS__SYMLINKS' ) && true === WP_FS__SYMLINKS ) {
+            wp_enqueue_script( $handle, plugin_dir_url( '' ) . 'woocommerce-google-adwords-conversion-tracking-tag' . '/freemius/assets/js/'. $path, $deps, $ver, $in_footer );
+        } else {
+            wp_enqueue_script( $handle, fs_asset_url( WP_FS__DIR_JS . '/' . trim( $path, '/' ) ), $deps, $ver, $in_footer );
         }
     }
+}
 
     if ( ! function_exists( 'fs_img_url' ) ) {
         function fs_img_url( $path, $img_dir = WP_FS__DIR_IMG ) {
