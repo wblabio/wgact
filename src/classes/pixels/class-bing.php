@@ -48,7 +48,7 @@ class Bing extends Pixel
         <?php
     }
 
-    public function inject_product($product_id, $product)
+    public function inject_product($product_id, $product, $product_attributes)
     {
         ?>
 

@@ -28,14 +28,14 @@ class Pixel
         $this->options     = $options;
         $this->options_obj = $options_obj;
 
-        $this->order_total_logic        = $this->options['shop']['order_total_logic'];
-        $this->add_cart_data            = $this->options['google']['ads']['add_cart_data'];
-        $this->aw_merchant_id           = $this->options['google']['ads']['aw_merchant_id'];
-        $this->conversion_id            = $this->options['google']['ads']['conversion_id'];
-        $this->conversion_label         = $this->options['google']['ads']['conversion_label'];
-        $this->dynamic_remarketing      = $this->options['google']['ads']['dynamic_remarketing'];
-        $this->product_identifier       = $this->options['google']['ads']['product_identifier'];
-        $this->gtag_deactivation        = $this->options['google']['gtag']['deactivation'];
+        $this->order_total_logic   = $this->options['shop']['order_total_logic'];
+        $this->add_cart_data       = $this->options['google']['ads']['add_cart_data'];
+        $this->aw_merchant_id      = $this->options['google']['ads']['aw_merchant_id'];
+        $this->conversion_id       = $this->options['google']['ads']['conversion_id'];
+        $this->conversion_label    = $this->options['google']['ads']['conversion_label'];
+        $this->dynamic_remarketing = $this->options['google']['ads']['dynamic_remarketing'];
+        $this->product_identifier  = $this->options['google']['ads']['product_identifier'];
+        $this->gtag_deactivation   = $this->options['google']['gtag']['deactivation'];
     }
 
     // get an array with all product categories

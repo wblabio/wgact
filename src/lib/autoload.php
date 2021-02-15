@@ -1,20 +1,23 @@
 <?php
 
-// https://github.com/tommcfarlin/simple-autoloader-for-wordpress/
-// class names need to be
-// class-something.php
-// not
-// class-some-thing.php
-// namespaces must reflect the folder structure exactly
-spl_autoload_register(function( $filename ) {
+/**
+ * https://github.com/tommcfarlin/simple-autoloader-for-wordpress/
+ *
+ * Example:
+ * class name: SomeThing
+ * file name: class-something.php
+ *
+ * class name: Some_Thing
+ * file name: class-some-thing.php
+ *
+ * namespaces must reflect the folder structure exactly
+ *
+ */
 
-//    if (strpos($filename, 'WGACT') !== false) {
-//        error_log('filename: ' . $filename);
-//
-//    }
+spl_autoload_register(function ($filename) {
 
     // First, separate the components of the incoming file.
-    $file_path = explode( '\\', $filename );
+    $file_path = explode('\\', $filename);
 
     /**
      * - The first index will always be the namespace since it's part of the plugin.
@@ -24,26 +27,45 @@ spl_autoload_register(function( $filename ) {
 
     // Get the last index of the array. This is the class we're loading.
     $file_name = '';
-    if ( isset( $file_path[ count( $file_path ) - 1 ] ) ) {
+    if (isset($file_path[count($file_path) - 1])) {
 
         $file_name = strtolower(
-            $file_path[ count( $file_path ) - 1 ]
+            $file_path[count($file_path) - 1]
         );
 
-        $file_name       = str_ireplace( '_', '-', $file_name );
-        $file_name_parts = explode( '-', $file_name );
+        $file_name       = str_ireplace('_', '-', $file_name);
+        $file_name_parts = explode('-', $file_name);
 
-        // Interface support: handle both Interface_Foo or Foo_Interface.
-        $index = array_search( 'interface', $file_name_parts );
+        /**
+         * Interface and Trait support
+         * Handle both Interface_Foo or Foo_Interface (or Trait_Foo or Foo_Trait)
+         *
+         * File name format: interface-foo.php (or trait-foo.php)
+         * Class name format: class Interface_Foo {} (or class Trait_Foo {})
+         */
 
-        if ( false !== $index ) {
+        $index_interface = array_search('interface', $file_name_parts);
+        $index_trait     = array_search('trait', $file_name_parts);
+
+        if (false !== $index_interface) {
             // Remove the 'interface' part.
-            unset( $file_name_parts[ $index ] );
+            unset($file_name_parts[$index_interface]);
 
             // Rebuild the file name.
-            $file_name = implode( '-', $file_name_parts );
+            $file_name = implode('-', $file_name_parts);
 
             $file_name = "interface-{$file_name}.php";
+            error_log('interface: ' . $file_name);
+
+        } elseif (false !== $index_trait) {
+            // Remove the 'trait' part.
+            unset($file_name_parts[$index_trait]);
+
+            // Rebuild the file name.
+            $file_name = implode('-', $file_name_parts);
+
+            $file_name = "trait-{$file_name}.php";
+            error_log('trait: ' . $file_name);
         } else {
             $file_name = "class-$file_name.php";
         }
@@ -56,26 +78,19 @@ spl_autoload_register(function( $filename ) {
      */
     $fully_qualified_path = trailingslashit(
         dirname(
-            dirname( __FILE__ )
+            dirname(__FILE__)
         )
     );
 
-    for ( $i = 1; $i < count( $file_path ) - 1; $i++ ) {
+    for ($i = 1; $i < count($file_path) - 1; $i++) {
 
-        $dir = strtolower( $file_path[ $i ] );
-        $fully_qualified_path .= trailingslashit( $dir );
+        $dir                  = strtolower($file_path[$i]);
+        $fully_qualified_path .= trailingslashit($dir);
     }
     $fully_qualified_path .= $file_name;
 
-//    if (strpos($filename, 'WGACT') !== false) {
-//        error_log('fully qualified path: ' . $fully_qualified_path);
-//
-//    }
-
-
-
     // Now include the file.
-    if ( stream_resolve_include_path($fully_qualified_path) ) {
+    if (stream_resolve_include_path($fully_qualified_path)) {
         include_once $fully_qualified_path;
     }
 });

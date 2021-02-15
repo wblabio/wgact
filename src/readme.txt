@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, conversion tracking, dynamic retargeting, remarke
 Requires at least: 3.7
 Tested up to: 5.6
 Requires PHP: 7.2
-Stable tag: 1.8.14
+Stable tag: 1.8.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,14 @@ You can send the link to the front page of your shop too if you think it would b
 1. Settings page
 
 == Changelog ==
+
+= 1.8.15 =
+
+* New: Added Facebook microdata output
+* Tweak: Created new trait to calculate brand for product
+* Tweak: Added a new array with additional product attributes (like brand which is calculated)
+* Tweak: added ability to load traits in autoload.php
+* Tweak: Bumped up WC version
 
 = 1.8.14 =
 

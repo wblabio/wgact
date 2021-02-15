@@ -12,6 +12,8 @@ if (!defined('ABSPATH')) {
 
 class Pixel_Manager
 {
+    use Trait_Product;
+
     protected $options;
     protected $options_obj;
     protected $cart;
@@ -60,10 +62,10 @@ class Pixel_Manager
 
     public function wgact_front_end_scripts()
     {
-        wp_enqueue_script('front-end-scripts', plugin_dir_url(__DIR__) . '../js/public/wgact.js', array(), WGACT_CURRENT_VERSION, false);
+        wp_enqueue_script('front-end-scripts', plugin_dir_url(__DIR__) . '../js/public/wgact.js', [], WGACT_CURRENT_VERSION, false);
         if (wga_fs()->is__premium_only()) {
-            wp_enqueue_script('front-end-scripts-premium-only', plugin_dir_url(__DIR__) . '../js/public/wgact__premium_only.js', array(), WGACT_CURRENT_VERSION, false);
-            wp_localize_script('front-end-scripts-premium-only', 'ajax_object', array('ajax_url' => admin_url('admin-ajax.php')));
+            wp_enqueue_script('front-end-scripts-premium-only', plugin_dir_url(__DIR__) . '../js/public/wgact__premium_only.js', [], WGACT_CURRENT_VERSION, false);
+            wp_localize_script('front-end-scripts-premium-only', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
         }
     }
 
@@ -112,19 +114,23 @@ class Pixel_Manager
             $product_id = get_the_ID();
             $product    = wc_get_product($product_id);
 
-            $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku());
-
             if (is_bool($product)) {
 //               error_log( 'WooCommerce detects the page ID ' . $product_id . ' as product, but when invoked by wc_get_product( ' . $product_id . ' ) it returns no product object' );
                 return;
             }
 
-            if ($this->google_active) (new Google($this->options, $this->options_obj))->inject_product($product_id_compiled, $product);
-            if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_product($product_id_compiled, $product);
+            $product_attributes = [
+                'brand' => $this->get_brand_name($product_id),
+            ];
+
+            $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku());
+
+            if ($this->google_active) (new Google($this->options, $this->options_obj))->inject_product($product_id_compiled, $product, $product_attributes);
+            if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_product($product_id_compiled, $product, $product_attributes);
             if (wga_fs()->is__premium_only()) {
-                if ($this->options_obj->bing->uet_tag_id) (new Bing($this->options, $this->options_obj))->inject_product($product_id_compiled, $product);
-                if ($this->options_obj->twitter->pixel_id) (new Twitter($this->options, $this->options_obj))->inject_product($product_id_compiled, $product);
-                if ($this->options_obj->pinterest->pixel_id) (new Pinterest($this->options, $this->options_obj))->inject_product($product_id_compiled, $product);
+                if ($this->options_obj->bing->uet_tag_id) (new Bing($this->options, $this->options_obj))->inject_product($product_id_compiled, $product, $product_attributes);
+                if ($this->options_obj->twitter->pixel_id) (new Twitter($this->options, $this->options_obj))->inject_product($product_id_compiled, $product, $product_attributes);
+                if ($this->options_obj->pinterest->pixel_id) (new Pinterest($this->options, $this->options_obj))->inject_product($product_id_compiled, $product, $product_attributes);
             }
 
         } elseif (is_cart() && !empty($woocommerce->cart->get_cart())) {

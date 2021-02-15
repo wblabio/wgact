@@ -18,9 +18,10 @@ class Facebook_Pixel_Manager extends Pixel
         (new Facebook_Browser_Pixel($this->options, $this->options_obj))->inject_search();
     }
 
-    public function inject_product($product_id, $product)
+    public function inject_product($product_id, $product, $product_attributes)
     {
-        (new Facebook_Browser_Pixel($this->options, $this->options_obj))->inject_product($product_id, $product);
+        (new Facebook_Browser_Pixel($this->options, $this->options_obj))->inject_product($product_id, $product, $product_attributes);
+        (new Facebook_Microdata($this->options, $this->options_obj))->inject_product($product_id, $product, $product_attributes);
     }
 
     public function inject_cart($cart, $cart_total)

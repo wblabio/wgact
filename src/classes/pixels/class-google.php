@@ -151,7 +151,7 @@ class Google extends Pixel
         }
     }
 
-    public function inject_product($product_id_compiled, $product)
+    public function inject_product($product_id_compiled, $product, $product_attributes)
     {
         if ($this->is_dynamic_remarketing_active()) {
 
