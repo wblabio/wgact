@@ -151,6 +151,10 @@ tmtags
 /deployment/tmp
 /cypress/sreenshots/
 /cypress/videos/
+/deployment/freemius-deploy-config*
 
 #npm
 /node_modules/
+
+#tmp
+/tmp/

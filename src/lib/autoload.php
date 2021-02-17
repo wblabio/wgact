@@ -55,7 +55,7 @@ spl_autoload_register(function ($filename) {
             $file_name = implode('-', $file_name_parts);
 
             $file_name = "interface-{$file_name}.php";
-            error_log('interface: ' . $file_name);
+//            error_log('interface: ' . $file_name);
 
         } elseif (false !== $index_trait) {
             // Remove the 'trait' part.
@@ -65,7 +65,7 @@ spl_autoload_register(function ($filename) {
             $file_name = implode('-', $file_name_parts);
 
             $file_name = "trait-{$file_name}.php";
-            error_log('trait: ' . $file_name);
+//            error_log('trait: ' . $file_name);
         } else {
             $file_name = "class-$file_name.php";
         }

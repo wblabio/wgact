@@ -110,6 +110,7 @@ You can send the link to the front page of your shop too if you think it would b
 * Tweak: Added a new array with additional product attributes (like brand which is calculated)
 * Tweak: added ability to load traits in autoload.php
 * Tweak: Bumped up WC version
+* Tweak: Added an additional is_array() check in order to avoid a PHP 7.4 notice when checking the environment
 
 = 1.8.14 =
 

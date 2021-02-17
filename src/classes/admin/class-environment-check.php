@@ -69,7 +69,7 @@ class Environment_Check
     {
         $wgact_notifications = get_option('wgact_notifications');
 
-        if (is_plugin_active('wp-rocket/wp-rocket.php') && false == $wgact_notifications['dismiss_wp_rocket_javascript_concatenation_error']) {
+        if (is_plugin_active('wp-rocket/wp-rocket.php') && (!is_array($wgact_notifications) || false == $wgact_notifications['dismiss_wp_rocket_javascript_concatenation_error'])) {
 
             $wp_rocket_settings = get_option('wp_rocket_settings');
 
@@ -86,7 +86,7 @@ class Environment_Check
     {
         $wgact_notifications = get_option('wgact_notifications');
 
-        if (is_plugin_active('litespeed-cache/litespeed-cache.php') && false == $wgact_notifications['dismiss_litespeed_inline_js_dom_ready_error']) {
+        if (is_plugin_active('litespeed-cache/litespeed-cache.php') && (!is_array($wgact_notifications) ||false == $wgact_notifications['dismiss_litespeed_inline_js_dom_ready_error'])) {
 
             $litespeed_js_inline_defer_settings = get_option('litespeed.conf.optm-js_inline_defer');
 
