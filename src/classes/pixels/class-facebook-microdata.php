@@ -10,6 +10,9 @@ if (!defined('ABSPATH')) {
 
 class Facebook_Microdata extends Pixel
 {
+
+    use Trait_Product;
+
     public function inject_product($product_id, $product, $product_attributes)
     {
         $product_microdata = [
@@ -38,6 +41,7 @@ class Facebook_Microdata extends Pixel
             //                ]
             //            ]
         ];
+
         ?>
 
         <script type="application/ld+json">

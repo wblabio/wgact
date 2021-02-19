@@ -168,7 +168,7 @@ class Pixel_Manager
                     } else {
                         $user = $order->get_billing_email();
                     }
-                    $is_new_customer = !$this->has_bought($user);
+                    $is_new_customer = !$this->has_bought($user, $order);
 
                     $order_total = 0 == $this->options_obj->shop->order_total_logic ? $order->get_subtotal() - $order->get_total_discount() : $order->get_total();
 
@@ -302,7 +302,7 @@ class Pixel_Manager
     }
 
     // https://stackoverflow.com/a/46216073/4688612
-    private function has_bought($value = 0): bool
+    private function has_bought($value = 0, $order): bool
     {
         global $wpdb;
 
@@ -323,6 +323,7 @@ class Pixel_Manager
         INNER JOIN {$wpdb->prefix}postmeta AS pm ON p.ID = pm.post_id
         WHERE p.post_status IN ( 'wc-" . implode("','wc-", $paid_order_statuses) . "' )
         AND p.post_type LIKE 'shop_order'
+        AND p.ID <> {$order->get_id()}
         AND pm.meta_key = '%s'
         AND pm.meta_value = %s
         LIMIT 1

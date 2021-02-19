@@ -11,9 +11,7 @@
  * WC requires at least: 2.6
  * WC tested up to: 5.0
  *
- * @fs_premium_only /classes/pixels/class-bing.php
- * @fs_premium_only /classes/pixels/class-twitter.php
- * @fs_premium_only /classes/pixels/class-pinterest.php
+ * @fs_premium_only /classes/pixels/class-bing.php, /classes/pixels/class-twitter.php, /classes/pixels/class-pinterest.php, /classes/pixels/class-facebook-microdata.php
  *
  **/
 
@@ -51,7 +49,7 @@ if (function_exists('wga_fs')) {
                 // Include Freemius SDK.
                 require_once dirname(__FILE__) . '/freemius/start.php';
 
-                $wga_fs = fs_dynamic_init(array(
+                $wga_fs = fs_dynamic_init([
                     'navigation'          => 'tabs',
                     'id'                  => '7498',
                     'slug'                => 'woocommerce-google-adwords-conversion-tracking-tag',
@@ -64,23 +62,23 @@ if (function_exists('wga_fs')) {
                     'has_premium_version' => true,
                     'has_addons'          => false,
                     'has_paid_plans'      => true,
-                    'trial'               => array(
+                    'trial'               => [
                         'days'               => 14,
                         'is_require_payment' => true,
-                    ),
-                    'menu'                => array(
+                    ],
+                    'menu'                => [
                         'slug'           => 'wgact',
                         'override_exact' => true,
                         'contact'        => false,
                         'support'        => false,
-                        'parent'         => array(
+                        'parent'         => [
                             'slug' => 'woocommerce',
-                        ),
-                    ),
+                        ],
+                    ],
                     // Set the SDK to work in a sandbox mode (for development & testing).
                     // IMPORTANT: MAKE SURE TO REMOVE SECRET KEY BEFORE DEPLOYMENT.
                     'secret_key'          => 'sk_Mf9Be;uQ%dP8:i#M?Zzwm9texPfz}',
-                ));
+                ]);
             }
 
             return $wga_fs;
@@ -280,7 +278,8 @@ if (function_exists('wga_fs')) {
                     ],
                 ],
                 'facebook'   => [
-                    'pixel_id' => ''
+                    'pixel_id'  => '',
+                    'microdata' => 0,
                 ],
                 'bing'       => [
                     'uet_tag_id' => ''
