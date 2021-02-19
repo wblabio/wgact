@@ -85,7 +85,7 @@ try {
     $zip_pro = $api->GetSignedUrl('plugins/' . $options['FS__PLUGIN_ID'] . '/tags/' . $deploy->id . '.zip' . '?is_premium=true');
     $new_zip_pro_name = 'freemius-plugin-pro/' . 'woopt-pixel-manager-pro.' . $version . '.zip';
     file_put_contents($new_zip_pro_name, file_get_contents($zip_pro));
-    echo 'Download the pro version from Freemius: success' . PHP_EOL . PHP_EOL;
+    echo 'Download the pro version from Freemius: success' . PHP_EOL;
 
     // Generate url to download the free zip
     echo PHP_EOL . 'Download the free version from Freemius: start'. PHP_EOL;

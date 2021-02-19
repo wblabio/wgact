@@ -45,11 +45,11 @@ class Admin
             return;
         }
 
-        wp_enqueue_script('script-blocker-warning', plugin_dir_url(__DIR__) . '../js/admin/script-blocker-warning.js', array(), WGACT_CURRENT_VERSION, false);
-        wp_enqueue_script('admin-helpers', plugin_dir_url(__DIR__) . '../js/admin/helpers.js', array(), WGACT_CURRENT_VERSION, false);
-        wp_enqueue_script('admin-tabs', plugin_dir_url(__DIR__) . '../js/admin/tabs.js', array(), WGACT_CURRENT_VERSION, false);
+        wp_enqueue_script('script-blocker-warning', plugin_dir_url(__DIR__) . '../js/admin/script-blocker-warning.js', [], WGACT_CURRENT_VERSION, false);
+        wp_enqueue_script('admin-helpers', plugin_dir_url(__DIR__) . '../js/admin/helpers.js', [], WGACT_CURRENT_VERSION, false);
+        wp_enqueue_script('admin-tabs', plugin_dir_url(__DIR__) . '../js/admin/tabs.js', [], WGACT_CURRENT_VERSION, false);
 
-        wp_enqueue_style('admin-css', plugin_dir_url(__DIR__) . '../css/admin.css', array(), WGACT_CURRENT_VERSION);
+        wp_enqueue_style('admin-css', plugin_dir_url(__DIR__) . '../css/admin.css', [], WGACT_CURRENT_VERSION);
     }
 
     // Load text domain function
@@ -317,6 +317,7 @@ class Admin
         $this->add_section_advanced_subsection_google($section_ids);
 
         if (wga_fs()->is__premium_only()) {
+            $this->add_section_advanced_subsection_facebook__premium_only($section_ids);
             $this->add_section_advanced_subsection_cookie_consent_mgmt__premium_only($section_ids);
         }
     }
@@ -444,6 +445,40 @@ class Admin
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ) . $this->svg_beta(),
             [$this, 'wgact_setting_html_cookiebot_active__premium_only'],
+            'wgact_plugin_options_page',
+            $section_ids['settings_name']
+        );
+    }
+
+    public function add_section_advanced_subsection_facebook__premium_only($section_ids)
+    {
+        $sub_section_ids = [
+            'title' => 'Facebook',
+            'slug'  => 'facebook'
+        ];
+
+        add_settings_field(
+            'wgact_plugin_subsection_' . $sub_section_ids['slug'] . '_opening_div',
+            esc_html__(
+                $sub_section_ids['title'],
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ),
+            function () use ($section_ids, $sub_section_ids) {
+                $this->wgact_subsection_generic_opening_div_html($section_ids, $sub_section_ids);
+            },
+            'wgact_plugin_options_page',
+            $section_ids['settings_name']
+        );
+
+
+        // add fields for the gtag insertion
+        add_settings_field(
+            'wgact_setting_facebook_microdata_active',
+            esc_html__(
+                'Facebook microdata',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ) . $this->svg_beta(),
+            [$this, 'wgact_setting_html_facebook_microdata__premium_only'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
@@ -1027,6 +1062,25 @@ class Admin
             esc_html_e('You need to activate the Google consent mode', 'woocommerce-google-adwords-conversion-tracking-tag');
             echo '</p><br>';
         }
+    }
+
+    public function wgact_setting_html_facebook_microdata__premium_only()
+    {
+        // adding the hidden input is a hack to make WordPress save the option with the value zero,
+        // instead of not saving it and remove that array key entirely
+        // https://stackoverflow.com/a/1992745/4688612
+        ?>
+        <label>
+            <input type='hidden' value='0' name='wgact_plugin_options[facebook][microdata]'>
+            <input type='checkbox' id='wgact_setting_facebook_microdata_active'
+                   name='wgact_plugin_options[facebook][microdata]'
+                   value='1' <?php
+            checked($this->options['facebook']['microdata']); ?> />
+            <?php
+            esc_html_e('Enable Facebook product microdata output', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+        </label>
+        <?php
+        echo $this->get_status_icon($this->options['facebook']['microdata'], true, true);
     }
 
     public function wgact_option_html_google_ads_add_cart_data()
