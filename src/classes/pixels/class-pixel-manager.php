@@ -81,7 +81,7 @@ class Pixel_Manager
 
         $this->inject_wgact_order_deduplication_script();
 
-        if ($this->google_active) (new Google($this->options, $this->options_obj))->inject_everywhere();
+        if ($this->google_active) (new Google_Pixel_Manager($this->options, $this->options_obj))->inject_everywhere();
         if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_everywhere();
 
         if (wga_fs()->is__premium_only()) {
@@ -93,7 +93,7 @@ class Pixel_Manager
 
         if (is_product_category()) {
 
-            if ($this->google_active) (new Google($this->options, $this->options_obj))->inject_product_category();
+            if ($this->google_active) (new Google_Pixel_Manager($this->options, $this->options_obj))->inject_product_category();
             if (wga_fs()->is__premium_only()) {
                 if ($this->options_obj->bing->uet_tag_id) (new Bing($this->options, $this->options_obj))->inject_product_category();
                 if ($this->options_obj->pinterest->pixel_id) (new Pinterest($this->options, $this->options_obj))->inject_product_category();
@@ -101,7 +101,7 @@ class Pixel_Manager
 
         } elseif (is_search()) {
 
-            if ($this->google_active) (new Google($this->options, $this->options_obj))->inject_search();
+            if ($this->google_active) (new Google_Pixel_Manager($this->options, $this->options_obj))->inject_search();
             if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_search();
             if (wga_fs()->is__premium_only()) {
                 if ($this->options_obj->bing->uet_tag_id) (new Bing($this->options, $this->options_obj))->inject_search();
@@ -125,7 +125,7 @@ class Pixel_Manager
 
             $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku());
 
-            if ($this->google_active) (new Google($this->options, $this->options_obj))->inject_product($product_id_compiled, $product, $product_attributes);
+            if ($this->google_active) (new Google_Pixel_Manager($this->options, $this->options_obj))->inject_product($product_id_compiled, $product, $product_attributes);
             if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_product($product_id_compiled, $product, $product_attributes);
             if (wga_fs()->is__premium_only()) {
                 if ($this->options_obj->bing->uet_tag_id) (new Bing($this->options, $this->options_obj))->inject_product($product_id_compiled, $product, $product_attributes);
@@ -138,7 +138,7 @@ class Pixel_Manager
             $cart       = $woocommerce->cart->get_cart();
             $cart_total = WC()->cart->get_cart_contents_total();
 
-            if ($this->google_active) (new Google($this->options, $this->options_obj))->inject_cart($cart, $cart_total);
+            if ($this->google_active) (new Google_Pixel_Manager($this->options, $this->options_obj))->inject_cart($cart, $cart_total);
             if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_cart($cart, $cart_total);
             if (wga_fs()->is__premium_only()) {
                 if ($this->options_obj->bing->uet_tag_id) (new Bing($this->options, $this->options_obj))->inject_cart($cart, $cart_total);
@@ -177,7 +177,7 @@ class Pixel_Manager
 
                     $order_item_ids = $this->get_order_item_ids($order);
 
-                    if ($this->google_active) (new Google($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
+                    if ($this->google_active) (new Google_Pixel_Manager($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
                     if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids);
 
                     if (wga_fs()->is__premium_only()) {
@@ -241,7 +241,7 @@ class Pixel_Manager
 
     private function inject_body_pixels()
     {
-//        (new Google())->inject_google_optimize_anti_flicker_snippet();
+//        (new Google_Pixel_Manager())->inject_google_optimize_anti_flicker_snippet();
     }
 
     private function inject_noptimize_opening_tag()

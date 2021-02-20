@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-class Google extends Pixel
+class Google_Ads extends Google_Pixel
 {
     protected $google_business_vertical;
     protected $conversion_identifiers;

@@ -265,7 +265,8 @@ if (function_exists('wga_fs')) {
                         ],
                         'ga4'       => [
                             'measurement_id' => '',
-                        ]
+                        ],
+                        'eec' => 0,
                     ],
                     'optimize'     => [
                         'container_id' => '',
