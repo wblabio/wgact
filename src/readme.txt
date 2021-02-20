@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, conversion tracking, dynamic retargeting, remarke
 Requires at least: 3.7
 Tested up to: 5.6
 Requires PHP: 7.2
-Stable tag: 1.8.15
+Stable tag: 1.8.16
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,9 +103,17 @@ You can send the link to the front page of your shop too if you think it would b
 
 == Changelog ==
 
+= 1.8.16 =
+
+[//]: # fs_premium_only_begin
+* Tweak: Strip HTML tags from description in microdata output for FB
+[//]: # fs_premium_only_end
+
 = 1.8.15 =
 
+[//]: # fs_premium_only_begin
 * New: Added Facebook microdata output
+[//]: # fs_premium_only_end
 * Fix: Determine correctly new customer for shopping cart data on new customers who paid immediately
 * Tweak: Created new trait to calculate brand for product
 * Tweak: Added a new array with additional product attributes (like brand which is calculated)

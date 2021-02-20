@@ -20,7 +20,7 @@ class Facebook_Microdata extends Pixel
             '@type'       => 'Product',
             'productID'   => $product_id,
             'name'        => $product->get_name(),
-            'description' => substr($product->get_description(), 0, 500),
+            'description' => $this->get_description($product),
             'url'         => get_permalink(),
             'image'       => wp_get_attachment_url($product->get_image_id()),
             'brand'       => $product_attributes['brand'],
@@ -47,8 +47,20 @@ class Facebook_Microdata extends Pixel
         <script type="application/ld+json">
             <?php echo json_encode($product_microdata) ?>
 
+
         </script>
         <?php
+    }
+
+    private function get_description($product): string
+    {
+        $text = strip_tags($product->get_description());
+
+        if (strlen($text) > 497) {
+            $text = substr($text, 0, 497) . '...';
+        }
+
+        return $text;
     }
 
     // https://schema.org/ItemAvailability

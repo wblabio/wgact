@@ -3,7 +3,7 @@
 /**
  * https://github.com/CodeAtCode/freemius-suite
  *
- * example: php freemius-deploy.php zip-file.zip version sandbox release_mode
+ * example: php freemius-deploy.php zip-file.zip sandbox release_mode version
  *
  */
 
@@ -12,9 +12,15 @@ require_once('freemius-php-sdk-master/freemius/Freemius.php');
 
 $options      = include 'freemius-deploy-config.php';
 $file_name    = $argv[1];
-$version      = $argv[2];
-$sandbox      = $argv[3] === 'false' ? false : true;
-$release_mode = $argv[4] ?: 'pending'; // can be 'pending', 'beta' and 'released'
+$sandbox      = $argv[2] === 'false' ? false : true;
+$release_mode = $argv[3] ?: 'pending'; // can be 'pending', 'beta' and 'released'
+$version      = $argv[4];
+
+// check if we have a valid version number, otherwise stop
+if( ! version_compare( $version, '0.0.1', '>=' ) >= 0 ) {
+    echo 'Invalid version number' . PHP_EOL;
+    die();
+}
 
 echo PHP_EOL . 'Deployment to Freemius: started' . PHP_EOL;
 
