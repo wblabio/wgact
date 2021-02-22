@@ -4,6 +4,8 @@
   "env": {
     "admin_username": "admin",
     "admin_password": "root",
-    "purchase_confirmation_url": "/checkout/order-received/61/?key=wc_order_nPUFu8qoiCSkv"
+    "purchase_confirmation_url": "/checkout/order-received/61/?key=wc_order_nPUFu8qoiCSkv",
+    "wgact_options_presets_folder": "~/dev/PhpstormProjects/WGACT/cypress/fixtures/wgact-options-presets/",
+    "wordpress_install_directory": "/Users/aleksandarvucenovic/dev/apps/wordpress-deployment"
   }
 }

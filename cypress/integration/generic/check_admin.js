@@ -1,5 +1,9 @@
 describe('check minimum dev requirements', () => {
 
+    before(function (){
+        cy.exec('wp option update wgact_plugin_options < ' + Cypress.env('wgact_options_presets_folder') + 'all-pixels-enabled.json --format=json --path=' + Cypress.env('wordpress_install_directory'))
+    })
+
     beforeEach(function() {
         cy.visit('/wp-login.php')
 
