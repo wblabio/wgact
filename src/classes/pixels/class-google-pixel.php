@@ -40,6 +40,8 @@ class Google_Pixel extends Pixel
         $order_items       = $order->get_items();
         $order_items_array = [];
 
+        $list_position = 1;
+
         foreach ((array)$order_items as $item) {
 
             $product = wc_get_product($item['product_id']);
@@ -56,10 +58,10 @@ class Google_Pixel extends Pixel
             if ($this->is_google_analytics_active()) {
                 $item_details_array['name'] = (string)$product->get_name();
 //                $item_details_array['list_name'] = '';
-                $item_details_array['brand'] = $this->get_brand_name($item['product_id']);
+                $item_details_array['brand']    = $this->get_brand_name($item['product_id']);
                 $item_details_array['category'] = $this->get_product_category($item['product_id']);
 //                $item_details_array['variant'] = '';
-//                $item_details_array['list_position'] = 1;
+                $item_details_array['list_position'] = $list_position++;
             }
 
             array_push($order_items_array, $item_details_array);
@@ -102,7 +104,6 @@ class Google_Pixel extends Pixel
         return json_encode($gtag_data);
     }
 
-
     protected function get_gmc_language(): string
     {
         return strtoupper(substr(get_locale(), 0, 2));
@@ -122,5 +123,20 @@ class Google_Pixel extends Pixel
         } else {
             return false;
         }
+    }
+
+    protected function get_google_ads_conversion_ids($purchase = false): array
+    {
+        $formatted_conversion_ids = [];
+        if ($purchase) {
+            foreach ($this->conversion_identifiers as $conversion_id => $conversion_label) {
+                array_push($formatted_conversion_ids, 'AW-' . $conversion_id . '/' . $conversion_label);
+            }
+        } else {
+            foreach ($this->conversion_identifiers as $conversion_id => $conversion_label) {
+                array_push($formatted_conversion_ids, 'AW-' . $conversion_id);
+            }
+        }
+        return $formatted_conversion_ids;
     }
 }

@@ -332,18 +332,5 @@ class Google_Ads extends Google_Pixel
 
 
 
-    protected function get_google_ads_conversion_ids($purchase = false): array
-    {
-        $formatted_conversion_ids = [];
-        if ($purchase) {
-            foreach ($this->conversion_identifiers as $conversion_id => $conversion_label) {
-                array_push($formatted_conversion_ids, 'AW-' . $conversion_id . '/' . $conversion_label);
-            }
-        } else {
-            foreach ($this->conversion_identifiers as $conversion_id => $conversion_label) {
-                array_push($formatted_conversion_ids, 'AW-' . $conversion_id);
-            }
-        }
-        return $formatted_conversion_ids;
-    }
+
 }
