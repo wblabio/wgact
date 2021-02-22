@@ -665,7 +665,7 @@ class Admin
                     In order for the plugin to work properly you need to disable the script blocker.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
             </p>
             <p>
-                <a href="https://docs.wolfundbaer.ch/wgact/#/script-blockers" target="_blank">
+                <a href="https://docs.woopt.com/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=script-blocker-error#/script-blockers" target="_blank">
                     <?php
                     esc_html_e('Learn more', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
                 </a>
