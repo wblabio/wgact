@@ -884,7 +884,7 @@ class Admin
         echo '<br><br>';
         esc_html_e('The conversion Label looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo '&nbsp;<i>Xt19CO3axGAX0vg6X3gM</i>';
-        if (!$this->options['google']['ads']['conversion_id']) {
+        if ($this->options['google']['ads']['conversion_label'] && !$this->options['google']['ads']['conversion_id']) {
             echo '<p><span class="dashicons dashicons-info"></span>';
             esc_html_e('Requires an active Google Ads Conversion ID', 'woocommerce-google-adwords-conversion-tracking-tag');
         }
@@ -1055,8 +1055,7 @@ class Admin
             esc_html_e('Enable Cookiebot settings', 'woocommerce-google-adwords-conversion-tracking-tag'); ?></label>
         <?php
         echo $this->get_status_icon($this->options['shop']['cookie_consent_mgmt']['cookiebot']['active'], $this->options['google']['consent_mode']['active'], true);
-        ?>
-        <?php
+
         if ($this->options['shop']['cookie_consent_mgmt']['cookiebot']['active'] && !$this->options['google']['consent_mode']['active']) {
             echo '<p></p><span class="dashicons dashicons-info"></span>';
             esc_html_e('You need to activate the Google consent mode', 'woocommerce-google-adwords-conversion-tracking-tag');
@@ -1080,7 +1079,12 @@ class Admin
             esc_html_e('Enable Facebook product microdata output', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
         </label>
         <?php
-        echo $this->get_status_icon($this->options['facebook']['microdata'], true, true);
+        echo $this->get_status_icon($this->options['facebook']['microdata'], $this->options['facebook']['pixel_id'], true);
+        if ($this->options['facebook']['microdata'] && !$this->options['facebook']['pixel_id']) {
+            echo '<p></p><span class="dashicons dashicons-info"></span>';
+            esc_html_e('You need to activate the Facebook pixel', 'woocommerce-google-adwords-conversion-tracking-tag');
+            echo '</p><br>';
+        }
     }
 
     public function wgact_option_html_google_ads_add_cart_data()
@@ -1178,7 +1182,7 @@ class Admin
                 ?>
                 <span class="dashicons dashicons-info"></span>
                 <?php
-                esc_html_e('Requires an active Google Ads Conversion ID', '!woocommerce-google-adwords-conversion-tracking-tag');
+                esc_html_e('Requires an active Google Ads Conversion ID', 'woocommerce-google-adwords-conversion-tracking-tag');
                 echo '<br>';
             }
             ?><span class="dashicons dashicons-info"></span>

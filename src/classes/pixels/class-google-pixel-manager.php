@@ -7,12 +7,20 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-class Google_Pixel_Manager extends Pixel
+class Google_Pixel_Manager extends Google_Pixel
 {
+    use Trait_Google;
+
     public function inject_everywhere()
     {
         (new Google_Ads($this->options, $this->options_obj))->inject_everywhere();
 //        (new Google_Enhanced_Ecommerce($this->options, $this->options_obj))->inject_everywhere();
+    }
+
+    public function inject_product_category()
+    {
+        (new Google_Ads($this->options, $this->options_obj))->inject_product_category();
+//        (new Google_Enhanced_Ecommerce($this->options, $this->options_obj))->inject_product_category();
     }
 
     public function inject_search()
@@ -35,9 +43,15 @@ class Google_Pixel_Manager extends Pixel
 
     public function inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer)
     {
-        (new Google_Ads($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
-        if ($this->options_obj->google->analytics->eec == false) (new Google_Standard_Ecommerce($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
-//        (new Google_Enhanced_Ecommerce($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
+        if ($this->options_obj->google->ads->conversion_id) (new Google_Ads($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
+        if ($this->is_google_analytics_active()) {
+
+            if ($this->options_obj->google->analytics->eec == false) {
+                (new Google_Standard_Ecommerce($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
+            } else if (wga_fs()->is__premium_only()) {
+                (new Google_Enhanced_Ecommerce($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
+            }
+        }
     }
 }
 

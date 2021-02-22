@@ -11,7 +11,7 @@
  * WC requires at least: 2.6
  * WC tested up to: 5.0
  *
- * @fs_premium_only /classes/pixels/class-bing.php, /classes/pixels/class-twitter.php, /classes/pixels/class-pinterest.php, /classes/pixels/class-facebook-microdata.php
+ * @fs_premium_only /classes/pixels/class-bing.php, /classes/pixels/class-twitter.php, /classes/pixels/class-pinterest.php, /classes/pixels/class-facebook-microdata.php, /classes/pixels/class-google-enhanced-ecommerce.php
  *
  **/
 

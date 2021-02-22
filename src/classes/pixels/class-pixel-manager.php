@@ -13,6 +13,7 @@ if (!defined('ABSPATH')) {
 class Pixel_Manager
 {
     use Trait_Product;
+    use Trait_Google;
 
     protected $options;
     protected $options_obj;
@@ -163,6 +164,8 @@ class Pixel_Manager
                     (!$this->options['shop']['order_deduplication'] ||
                         get_post_meta($order->get_id(), '_WGACT_conversion_pixel_fired', true) != true)) {
 
+                    $this->increase_conversion_count_for_ratings();
+
                     if (is_user_logged_in()) {
                         $user = get_current_user_id();
                     } else {
@@ -200,6 +203,13 @@ class Pixel_Manager
         if ((new Environment_Check())->is_autoptimize_active()) {
             $this->inject_noptimize_closing_tag();
         }
+    }
+
+    private function increase_conversion_count_for_ratings()
+    {
+        $ratings                      = get_option(WGACT_DB_RATINGS);
+        $ratings['conversions_count'] = $ratings['conversions_count'] + 1;
+        update_option(WGACT_DB_RATINGS, $ratings);
     }
 
     private function conversion_pixels_already_fired_html__premium_only()
@@ -272,18 +282,7 @@ class Pixel_Manager
         return $order_items_array;
     }
 
-    private function google_active(): bool
-    {
-        if ($this->options_obj->google->analytics->universal->property_id) {
-            return true;
-        } elseif ($this->options_obj->google->analytics->ga4->measurement_id) {
-            return true;
-        } elseif ($this->options_obj->google->ads->conversion_id) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+
 
     protected function get_compiled_product_id($product_id, $product_sku): string
     {
