@@ -11,11 +11,17 @@ class Google_Pixel extends Pixel
     use Trait_Product;
     use Trait_Google;
 
+    protected $conversion_identifiers;
+
     public function __construct($options, $options_obj)
     {
         parent::__construct($options, $options_obj);
 
         $this->google_business_vertical = $this->get_google_business_vertical($this->options['google']['ads']['google_business_vertical']);
+
+        $this->conversion_identifiers[$this->conversion_id] = $this->conversion_label;
+
+        $this->conversion_identifiers = apply_filters('wgact_google_ads_conversion_identifiers', $this->conversion_identifiers);
     }
 
     protected function get_google_business_vertical($id): string

@@ -9,7 +9,6 @@ if (!defined('ABSPATH')) {
 trait Trait_Google
 {
 
-
     protected function google_active(): bool
     {
         if ($this->options_obj->google->analytics->universal->property_id) {

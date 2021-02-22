@@ -14,10 +14,6 @@ class Google_Pixel_Manager extends Google_Pixel
     public function __construct($options, $options_obj)
     {
         parent::__construct($options, $options_obj);
-
-        $this->conversion_identifiers[$this->conversion_id] = $this->conversion_label;
-
-        $this->conversion_identifiers = apply_filters('wgact_google_ads_conversion_identifiers', $this->conversion_identifiers);
     }
 
     public function inject_everywhere()

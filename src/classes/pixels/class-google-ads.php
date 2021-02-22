@@ -9,7 +9,6 @@ if (!defined('ABSPATH')) {
 class Google_Ads extends Google_Pixel
 {
     protected $google_business_vertical;
-    protected $conversion_identifiers;
 
     public function __construct($options, $options_obj)
     {
