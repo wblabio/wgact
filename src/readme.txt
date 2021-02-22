@@ -106,8 +106,10 @@ You can send the link to the front page of your shop too if you think it would b
 = 1.8.16 =
 
 [//]: # fs_premium_only_begin
+* New: Google Analytics enhanced e-commerce
 * Tweak: Strip HTML tags from description in microdata output for FB
 [//]: # fs_premium_only_end
+Fix: Script blocker documentation link
 
 = 1.8.15 =
 

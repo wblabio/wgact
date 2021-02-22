@@ -14,103 +14,7 @@ class Google_Ads extends Google_Pixel
     public function __construct($options, $options_obj)
     {
         parent::__construct($options, $options_obj);
-
-        $this->conversion_identifiers[$this->conversion_id] = $this->conversion_label;
-
-        $this->conversion_identifiers = apply_filters('wgact_google_ads_conversion_identifiers', $this->conversion_identifiers);
     }
-
-    public function inject_everywhere()
-    {
-        if ($this->options_obj->google->optimize->container_id) {
-            ?>
-
-            <script async src="https://www.googleoptimize.com/optimize.js?id=<?php
-            echo $this->options_obj->google->optimize->container_id ?>"></script>
-            <?php
-        }
-
-        if (!$this->options_obj->google->gtag->deactivation) {
-            ?>
-
-            <script async src="https://www.googletagmanager.com/gtag/js?id=<?php
-            echo $this->get_gtag_id() ?>"></script>
-            <script<?php echo
-            $this->options_obj->shop->cookie_consent_mgmt->cookiebot->active ? ' data-cookieconsent="ignore"' : ''; ?>>
-                window.dataLayer = window.dataLayer || [];
-
-                function gtag() {
-                    dataLayer.push(arguments);
-                }
-
-                <?php echo $this->options_obj->google->consent_mode->active ? $this->consent_mode_gtag_html() : ''; ?>
-
-                gtag('js', new Date());
-
-            </script>
-
-            <?php
-        }
-
-        ?>
-
-        <script>
-            <?php foreach ($this->conversion_identifiers as $conversion_id => $conversion_label): ?>
-            <?php echo $this->options_obj->google->ads->conversion_id ? $this->gtag_config($conversion_id, 'ads') : PHP_EOL; ?>
-            <?php endforeach; ?>
-
-            <?php echo $this->options_obj->google->analytics->universal->property_id ? $this->gtag_config($this->options_obj->google->analytics->universal->property_id, 'analytics') . PHP_EOL : PHP_EOL; ?>
-            <?php echo $this->options_obj->google->analytics->ga4->measurement_id ? $this->gtag_config($this->options_obj->google->analytics->ga4->measurement_id, 'analytics') : PHP_EOL; ?>
-
-        </script>
-        <?php
-    }
-
-    private function consent_mode_gtag_html(): string
-    {
-        return "gtag('consent', 'default', {
-                    'ad_storage': 'denied', 
-                    'analytics_storage': 'denied',
-                    'wait_for_update': 500
-                });
-                
-                gtag('set', 'ads_data_redaction', true);
-                
-                gtag('set', 'url_passthrough', true);" . PHP_EOL;
-    }
-
-    private function get_gtag_id(): string
-    {
-        if ($this->options_obj->google->analytics->universal->property_id) {
-            return $this->options_obj->google->analytics->universal->property_id;
-        } elseif ($this->options_obj->google->analytics->ga4->measurement_id) {
-            return $this->options_obj->google->analytics->ga4->measurement_id;
-        } elseif ($this->options_obj->google->ads->conversion_id) {
-            return 'AW-' . $this->options_obj->google->ads->conversion_id;
-        }
-    }
-
-    public function inject_google_optimize_anti_flicker_snippet()
-    {
-        ?>
-
-        <script>(function (a, s, y, n, c, h, i, d, e) {
-                s.className += ' ' + y;
-                h.start                  = 1 * new Date;
-                h.end                    = i = function () {
-                    s.className = s.className.replace(RegExp(' ?' + y), '')
-                };
-                (a[n] = a[n] || []).hide = h;
-                setTimeout(function () {
-                    i();
-                    h.end = null
-                }, c);
-                h.timeout = c;
-            })(window, document.documentElement, 'async-hide', 'dataLayer', 4000,
-                {'<?php echo $this->options_obj->google->optimize->container_id ?>': true});</script>
-        <?php
-    }
-
 
     public function inject_product_category()
     {
@@ -264,15 +168,6 @@ class Google_Ads extends Google_Pixel
         return $items;
     }
 
-    protected function gtag_config($id, $channel = ''): string
-    {
-        if ('ads' === $channel) {
-            return "gtag('config', 'AW-" . $id . "');" . PHP_EOL;
-        } elseif ('analytics') {
-            return "gtag('config', '" . $id . "', { 'anonymize_ip': true });";
-        }
-    }
-
     protected function get_gads_formatted_product_details_from_product_id($product_id): array
     {
         $product = wc_get_product($product_id);
@@ -329,8 +224,4 @@ class Google_Ads extends Google_Pixel
         </script>
         <?php
     }
-
-
-
-
 }

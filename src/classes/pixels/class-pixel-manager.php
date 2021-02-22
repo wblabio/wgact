@@ -100,6 +100,8 @@ class Pixel_Manager
                 if ($this->options_obj->pinterest->pixel_id) (new Pinterest($this->options, $this->options_obj))->inject_product_category();
             }
 
+        } elseif (is_product_tag()) {
+            if ($this->google_active) (new Google_Pixel_Manager($this->options, $this->options_obj))->inject_product_tag();
         } elseif (is_search()) {
 
             if ($this->google_active) (new Google_Pixel_Manager($this->options, $this->options_obj))->inject_search();
@@ -134,6 +136,8 @@ class Pixel_Manager
                 if ($this->options_obj->pinterest->pixel_id) (new Pinterest($this->options, $this->options_obj))->inject_product($product_id_compiled, $product, $product_attributes);
             }
 
+        } elseif ($this->is_shop_top_page()) {
+            if ($this->google_active) (new Google_Pixel_Manager($this->options, $this->options_obj))->inject_shop_top_page();
         } elseif (is_cart() && !empty($woocommerce->cart->get_cart())) {
 
             $cart       = $woocommerce->cart->get_cart();
@@ -202,6 +206,22 @@ class Pixel_Manager
 
         if ((new Environment_Check())->is_autoptimize_active()) {
             $this->inject_noptimize_closing_tag();
+        }
+    }
+
+    private function is_shop_top_page(): bool
+    {
+        if (
+            !is_product() &&
+            !is_product_category() &&
+            !is_order_received_page() &&
+            !is_cart() &&
+            !is_search() &&
+            is_shop()
+        ) {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -281,7 +301,6 @@ class Pixel_Manager
 
         return $order_items_array;
     }
-
 
 
     protected function get_compiled_product_id($product_id, $product_sku): string

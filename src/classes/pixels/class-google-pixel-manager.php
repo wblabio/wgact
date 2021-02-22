@@ -11,34 +11,109 @@ class Google_Pixel_Manager extends Google_Pixel
 {
     use Trait_Google;
 
+    public function __construct($options, $options_obj)
+    {
+        parent::__construct($options, $options_obj);
+
+        $this->conversion_identifiers[$this->conversion_id] = $this->conversion_label;
+
+        $this->conversion_identifiers = apply_filters('wgact_google_ads_conversion_identifiers', $this->conversion_identifiers);
+    }
+
     public function inject_everywhere()
     {
-        (new Google_Ads($this->options, $this->options_obj))->inject_everywhere();
-//        (new Google_Enhanced_Ecommerce($this->options, $this->options_obj))->inject_everywhere();
+        if ($this->options_obj->google->optimize->container_id) {
+            ?>
+
+            <script async src="https://www.googleoptimize.com/optimize.js?id=<?php
+            echo $this->options_obj->google->optimize->container_id ?>"></script>
+            <?php
+        }
+
+        if (!$this->options_obj->google->gtag->deactivation) {
+            ?>
+
+            <script async src="https://www.googletagmanager.com/gtag/js?id=<?php
+            echo $this->get_gtag_id() ?>"></script>
+            <script<?php echo
+            $this->options_obj->shop->cookie_consent_mgmt->cookiebot->active ? ' data-cookieconsent="ignore"' : ''; ?>>
+                window.dataLayer = window.dataLayer || [];
+
+                function gtag() {
+                    dataLayer.push(arguments);
+                }
+
+                <?php echo $this->options_obj->google->consent_mode->active ? $this->consent_mode_gtag_html() : ''; ?>
+
+                gtag('js', new Date());
+
+            </script>
+
+            <?php
+        }
+
+        ?>
+
+        <script>
+            <?php foreach ($this->conversion_identifiers as $conversion_id => $conversion_label): ?>
+            <?php echo $this->options_obj->google->ads->conversion_id ? $this->gtag_config($conversion_id, 'ads') : PHP_EOL; ?>
+            <?php endforeach; ?>
+
+            <?php echo $this->options_obj->google->analytics->universal->property_id ? $this->gtag_config($this->options_obj->google->analytics->universal->property_id, 'analytics') . PHP_EOL : PHP_EOL; ?>
+            <?php echo $this->options_obj->google->analytics->ga4->measurement_id ? $this->gtag_config($this->options_obj->google->analytics->ga4->measurement_id, 'analytics') : PHP_EOL; ?>
+
+        </script>
+        <?php
     }
 
     public function inject_product_category()
     {
         (new Google_Ads($this->options, $this->options_obj))->inject_product_category();
-//        (new Google_Enhanced_Ecommerce($this->options, $this->options_obj))->inject_product_category();
+
+        if (wga_fs()->is__premium_only()) {
+            if ($this->options_obj->google->analytics->eec) (new Google_Enhanced_Ecommerce($this->options, $this->options_obj))->inject_product_list_object('product_category');
+        }
+    }
+
+    public function inject_product_tag()
+    {
+        if (wga_fs()->is__premium_only()) {
+            if ($this->options_obj->google->analytics->eec) (new Google_Enhanced_Ecommerce($this->options, $this->options_obj))->inject_product_list_object('product_tag');
+        }
+    }
+
+    public function inject_shop_top_page()
+    {
+        if (wga_fs()->is__premium_only()) {
+            if ($this->options_obj->google->analytics->eec) (new Google_Enhanced_Ecommerce($this->options, $this->options_obj))->inject_product_list_object('shop');
+        }
     }
 
     public function inject_search()
     {
         (new Google_Ads($this->options, $this->options_obj))->inject_search();
-//        (new Google_Enhanced_Ecommerce($this->options, $this->options_obj))->inject_search();
+
+        if (wga_fs()->is__premium_only()) {
+            if ($this->options_obj->google->analytics->eec) (new Google_Enhanced_Ecommerce($this->options, $this->options_obj))->inject_product_list_object('search');
+        }
     }
 
     public function inject_product($product_id, $product, $product_attributes)
     {
         (new Google_Ads($this->options, $this->options_obj))->inject_product($product_id, $product, $product_attributes);
-//        (new Google_Enhanced_Ecommerce($this->options, $this->options_obj))->inject_product($product_id, $product, $product_attributes);
+
+        if (wga_fs()->is__premium_only()) {
+            if ($this->options_obj->google->analytics->eec) (new Google_Enhanced_Ecommerce($this->options, $this->options_obj))->inject_product($product_id, $product, $product_attributes);
+        }
     }
 
     public function inject_cart($cart, $cart_total)
     {
         (new Google_Ads($this->options, $this->options_obj))->inject_cart($cart, $cart_total);
-//        (new Google_Enhanced_Ecommerce($this->options, $this->options_obj))->inject_cart($cart, $cart_total);
+
+        if (wga_fs()->is__premium_only()) {
+            if ($this->options_obj->google->analytics->eec) (new Google_Enhanced_Ecommerce($this->options, $this->options_obj))->inject_cart($cart, $cart_total);
+        }
     }
 
     public function inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer)
@@ -46,12 +121,42 @@ class Google_Pixel_Manager extends Google_Pixel
         if ($this->options_obj->google->ads->conversion_id) (new Google_Ads($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
         if ($this->is_google_analytics_active()) {
 
-            if ($this->options_obj->google->analytics->eec == false) {
-                (new Google_Standard_Ecommerce($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
-            } else if (wga_fs()->is__premium_only()) {
-                (new Google_Enhanced_Ecommerce($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
-            }
+            // this is the same code for standard and eec, therefore using the same for both
+            (new Google_Standard_Ecommerce($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
         }
+    }
+
+    private function get_gtag_id(): string
+    {
+        if ($this->options_obj->google->analytics->universal->property_id) {
+            return $this->options_obj->google->analytics->universal->property_id;
+        } elseif ($this->options_obj->google->analytics->ga4->measurement_id) {
+            return $this->options_obj->google->analytics->ga4->measurement_id;
+        } elseif ($this->options_obj->google->ads->conversion_id) {
+            return 'AW-' . $this->options_obj->google->ads->conversion_id;
+        }
+    }
+
+    protected function gtag_config($id, $channel = ''): string
+    {
+        if ('ads' === $channel) {
+            return "gtag('config', 'AW-" . $id . "');" . PHP_EOL;
+        } elseif ('analytics') {
+            return "gtag('config', '" . $id . "', { 'anonymize_ip': true });";
+        }
+    }
+
+    private function consent_mode_gtag_html(): string
+    {
+        return "gtag('consent', 'default', {
+                    'ad_storage': 'denied', 
+                    'analytics_storage': 'denied',
+                    'wait_for_update': 500
+                });
+                
+                gtag('set', 'ads_data_redaction', true);
+                
+                gtag('set', 'url_passthrough', true);" . PHP_EOL;
     }
 }
 
