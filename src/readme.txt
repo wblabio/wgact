@@ -109,6 +109,7 @@ You can send the link to the front page of your shop too if you think it would b
 * New: Google Analytics enhanced e-commerce
 * Tweak: Strip HTML tags from description in microdata output for FB
 [//]: # fs_premium_only_end
+Tweak: Output the variation ID for dynamic remarketing when a variation is accessed directly (with URL parameters)
 Fix: Script blocker documentation link
 
 = 1.8.15 =

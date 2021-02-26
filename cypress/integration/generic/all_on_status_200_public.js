@@ -1,5 +1,12 @@
 describe('status 200 public', () => {
 
+    const wgact_options_preset = 'all-pixels-enabled.json';
+
+    // seed options into database
+    before(function (){
+        cy.exec('wp option update wgact_plugin_options < ' + Cypress.env('wgact_options_presets_folder') + wgact_options_preset + ' --format=json --path=' + Cypress.env('wordpress_install_directory')).its('code').should('eq', 0)
+    })
+
     afterEach(() =>{
         cy.get('html').should(($html) => {
             expect($html).to.not.contain('Fatal error')
@@ -17,8 +24,28 @@ describe('status 200 public', () => {
         cy.visit('/shop/')
     })
 
-    it('visit WC product page', () =>{
+    it('visit WC product page: simple product', () =>{
         cy.visit('/product/album/')
+    })
+
+    it('visit WC product page: variable product', () =>{
+        cy.visit('/product/hoodie/')
+    })
+
+    it('visit WC product page: variable product, all attributes set in filter', () =>{
+        cy.visit('/product/hoodie/?attribute_pa_color=blue&attribute_logo=Yes')
+    })
+
+    it('visit WC product page: variable product, partial attributes set in filter', () =>{
+        cy.visit('/product/hoodie/?attribute_pa_color=blue')
+    })
+
+    it('visit WC product page: external/affiliate product', () =>{
+        cy.visit('/product/wordpress-pennant/')
+    })
+
+    it('visit WC product page: grouped product', () =>{
+        cy.visit('/product/logo-collection/')
     })
 
     it('visit WC product category page', () =>{

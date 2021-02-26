@@ -171,7 +171,7 @@ class Google_Ads extends Google_Pixel
     {
         $product = wc_get_product($product_id);
 
-        $product_details['id']       = $this->get_compiled_product_id(get_the_ID(), $product->get_sku());
+        $product_details['id']       = $this->get_compiled_product_id($product_id, $product->get_sku());
         $product_details['category'] = $this->get_product_category($product_id);
         // $product_details['list_position'] = 1;
         $product_details['quantity']                 = 1;

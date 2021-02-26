@@ -64,6 +64,11 @@ class Google_Enhanced_Ecommerce extends Google_Pixel
         <?php
     }
 
+    public function inject_cart($cart, $cart_total)
+    {
+        // no function yet
+    }
+
     protected function eec_appweb_get_product_details_array($product_id, $list_id, $position = null): array
     {
         $list = $this->get_list_name_by_current_page_type($list_id);

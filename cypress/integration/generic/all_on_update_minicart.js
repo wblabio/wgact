@@ -5,6 +5,13 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 
 describe('update mini-cart', () => {
 
+    const wgact_options_preset = 'all-pixels-enabled.json';
+
+    // seed options into database
+    before(function (){
+        cy.exec('wp option update wgact_plugin_options < ' + Cypress.env('wgact_options_presets_folder') + wgact_options_preset + ' --format=json --path=' + Cypress.env('wordpress_install_directory')).its('code').should('eq', 0)
+    })
+
     // afterEach(() =>{
     //     cy.get('html').should(($html) => {
     //         expect($html).to.not.contain('Fatal error')

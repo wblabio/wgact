@@ -126,6 +126,19 @@ class Pixel_Manager
                 'brand' => $this->get_brand_name($product_id),
             ];
 
+            if ($product->is_type('variable')) {
+                // find out if attributes have been set in the URL
+                // if not, continue
+                // if yes get the variation id and variation SKU
+
+                if ($this->query_string_contains_all_variation_attributes($product)) {
+                    // get variation product
+                    $product_id = $this->get_variation_from_query_string($product_id, $product);
+                    $product = wc_get_product($product_id);
+                }
+            }
+
+
             $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku());
 
             if ($this->google_active) (new Google_Pixel_Manager($this->options, $this->options_obj))->inject_product($product_id_compiled, $product, $product_attributes);
@@ -206,6 +219,44 @@ class Pixel_Manager
 
         if ((new Environment_Check())->is_autoptimize_active()) {
             $this->inject_noptimize_closing_tag();
+        }
+    }
+
+    private function get_variation_from_query_string($product_id, $product): int
+    {
+        parse_str($_SERVER['QUERY_STRING'], $query_string_attributes);
+
+        $search_variation_attributes = [];
+
+        foreach (array_keys($product->get_attributes()) as $variation_attribute => $value) {
+            $search_variation_attributes['attribute_' . $value] = $query_string_attributes['attribute_' . $value];
+        }
+
+        return $this->find_matching_product_variation_id($product_id, $search_variation_attributes);
+    }
+
+    private function find_matching_product_variation_id($product_id, $attributes): int
+    {
+        return (new \WC_Product_Data_Store_CPT())->find_matching_product_variation(
+            new \WC_Product($product_id),
+            $attributes
+        );
+    }
+
+
+    private function query_string_contains_all_variation_attributes($product): bool
+    {
+        if (!empty($_SERVER['QUERY_STRING'])) {
+            parse_str($_SERVER['QUERY_STRING'], $query_string_attributes);
+
+            foreach (array_keys($product->get_attributes()) as $variation_attribute => $value) {
+                if (!array_key_exists('attribute_' . $value, $query_string_attributes)) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
         }
     }
 
