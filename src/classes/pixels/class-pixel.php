@@ -71,7 +71,7 @@ class Pixel
         // go through the array and get all product identifiers
         foreach ((array)$cart as $cart_item) {
 
-            $product_id = $this->get_variation_or_product_id($cart_item);
+            $product_id = $this->get_variation_or_product_id($cart_item, $this->options_obj->general->variations_output);
             $product    = wc_get_product($product_id);
 
             $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku());

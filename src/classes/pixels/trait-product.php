@@ -8,12 +8,12 @@ if (!defined('ABSPATH')) {
 
 trait Trait_Product
 {
-    protected function get_variation_or_product_id($item)
+    protected function get_variation_or_product_id($item, $variations_output = true)
     {
 //        error_log(print_r($item, true));
 //        error_log('id: ' . $item['product_id']);
 //            error_log('id: ' . $item['variation_id']);
-        if ($item['variation_id'] <> 0) {
+        if ($item['variation_id'] <> 0 && $variations_output == true) {
             return $item['variation_id'];
         } else {
             return $item['product_id'];

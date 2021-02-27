@@ -342,7 +342,7 @@ class Pixel_Manager
 
         foreach ((array)$order_items as $order_item) {
 
-            $product_id = $this->get_variation_or_product_id($order_item->get_data());
+            $product_id = $this->get_variation_or_product_id($order_item->get_data(), $this->options_obj->general->variations_output);
 
             $product    = wc_get_product($product_id);
 
