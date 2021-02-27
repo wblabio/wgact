@@ -40,8 +40,10 @@ class Google_Pixel extends Pixel
         return $verticals[$id];
     }
 
-    protected function get_formatted_order_items($order)
+    protected function get_formatted_order_items($order, $channel = '')
     {
+        error_log('channel: ' . $channel);
+
         $order_items       = $order->get_items();
         $order_items_array = [];
 
@@ -49,12 +51,12 @@ class Google_Pixel extends Pixel
 
         foreach ((array)$order_items as $order_item) {
 
-            $product_id = $this->get_variation_or_product_id($order_item->get_data());
+            $product_id = $this->get_variation_or_product_id($order_item->get_data(), $channel);
             $product = wc_get_product($product_id);
 
             $item_details_array = [];
 
-            $item_details_array['id']       = $this->get_compiled_product_id($product_id, $product->get_sku());
+            $item_details_array['id']       = $this->get_compiled_product_id($product_id, $product->get_sku(), $channel);
             $item_details_array['quantity'] = (int)$order_item['quantity'];
             $item_details_array['price']    = (int)$product->get_price();
             if ($this->is_google_ads_active()) {
@@ -86,7 +88,7 @@ class Google_Pixel extends Pixel
             'transaction_id' => $order->get_order_number(),
             'currency'       => $order_currency,
             'discount'       => $order->get_total_discount(),
-            'items'          => $this->get_formatted_order_items($order),
+            'items'          => $this->get_formatted_order_items($order, $channel),
         ];
 
         if ('ads' === $channel) {

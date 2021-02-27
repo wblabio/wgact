@@ -13,7 +13,7 @@ trait Trait_Product
 //        error_log(print_r($item, true));
 //        error_log('id: ' . $item['product_id']);
 //            error_log('id: ' . $item['variation_id']);
-        if($item['variation_id'] <> 0){
+        if ($item['variation_id'] <> 0) {
             return $item['variation_id'];
         } else {
             return $item['product_id'];

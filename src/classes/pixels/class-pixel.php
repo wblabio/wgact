@@ -100,10 +100,10 @@ class Pixel
         return in_array($_SERVER['REMOTE_ADDR'], ['127.0.0.1', '::1']);
     }
 
-    protected function get_compiled_product_id($product_id, $product_sku): string
+    protected function get_compiled_product_id($product_id, $product_sku, $channel = ''): string
     {
         // depending on setting use product IDs or SKUs
-        if (0 == $this->product_identifier) {
+        if (0 == $this->product_identifier || $channel == 'analytics') {
             return (string)$product_id;
         } else if (1 == $this->product_identifier) {
             return (string)'woocommerce_gpf_' . $product_id;

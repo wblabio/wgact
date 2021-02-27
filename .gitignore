@@ -158,3 +158,4 @@ tmtags
 
 #tmp
 /tmp/
+/cypress/fixtures/wgact-options-presets/tmp.json

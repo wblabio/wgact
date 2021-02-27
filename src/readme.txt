@@ -110,6 +110,7 @@ You can send the link to the front page of your shop too if you think it would b
 * Tweak: Strip HTML tags from description in microdata output for FB
 [//]: # fs_premium_only_end
 Tweak: Output the variation ID for dynamic remarketing when a variation is accessed directly (with URL parameters)
+Tweak: Made Google Analytics always receive the post ID as product ID because this is more robust
 Fix: Script blocker documentation link
 
 = 1.8.15 =
