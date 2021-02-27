@@ -365,6 +365,18 @@ class Admin
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
+
+        // add checkbox for maximum compatibility mode
+        add_settings_field(
+            'wgact_setting_maximum_compatibility_mode',
+            esc_html__(
+                'Maximum Compatibility Mode',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ),
+            [$this, 'wgact_setting_html_maximum_compatibility_mode'],
+            'wgact_plugin_options_page',
+            $section_ids['settings_name']
+        );
     }
 
     public function add_section_advanced_subsection_google($section_ids)
@@ -577,7 +589,7 @@ class Admin
             'wgact_plugin_beta_section'
         );
 
-        // add fields for dynamic remarketing
+        // add checkbox for dynamic remarketing
         add_settings_field(
             'wgact_plugin_option_dynamic_remarketing',
             esc_html__(
@@ -589,7 +601,7 @@ class Admin
             'wgact_plugin_beta_section'
         );
 
-        // add fields for dynamic remarketing
+        // add checkbox for variations output
         add_settings_field(
             'wgact_plugin_option_variations_output',
             esc_html__(
@@ -618,7 +630,6 @@ class Admin
 
     public function add_section_support()
     {
-
         $section_ids = [
             'title'         => 'Support',
             'slug'          => 'support',
@@ -637,7 +648,6 @@ class Admin
 
     public function add_section_author()
     {
-
         $section_ids = [
             'title'         => 'Author',
             'slug'          => 'author',
@@ -689,7 +699,8 @@ class Admin
                     In order for the plugin to work properly you need to disable the script blocker.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
             </p>
             <p>
-                <a href="https://docs.woopt.com/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=script-blocker-error#/script-blockers" target="_blank">
+                <a href="https://docs.woopt.com/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=script-blocker-error#/script-blockers"
+                   target="_blank">
                     <?php
                     esc_html_e('Learn more', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
                 </a>
@@ -1081,7 +1092,8 @@ class Admin
         <?php
         echo $this->get_status_icon($this->options['google']['analytics']['eec'], $this->options['google']['analytics']['universal']['property_id'] || $this->options['google']['analytics']['ga4']['measurement_id'], true); ?>
         <?php
-//        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-consent-mode#/consent-mgmt/google-consent-mode'); ?>
+//        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-consent-mode#/consent-mgmt/google-consent-mode');
+        ?>
         <?php
         if ($this->options['google']['analytics']['eec'] && (!$this->options['google']['analytics']['universal']['property_id'] && !$this->options['google']['analytics']['ga4']['measurement_id'])) {
             echo '<p></p><span class="dashicons dashicons-info"></span>';
@@ -1190,6 +1202,28 @@ class Admin
         <?php
     }
 
+    public function wgact_setting_html_maximum_compatibility_mode()
+    {
+        // adding the hidden input is a hack to make WordPress save the option with the value zero,
+        // instead of not saving it and remove that array key entirely
+        // https://stackoverflow.com/a/1992745/4688612
+        ?>
+        <label>
+            <input type='hidden' value='0' name='wgact_plugin_options[general][maximum_compatibility_mode]'>
+            <input type='checkbox' id='wgact_setting_maximum_compatibility_mode'
+                   name='wgact_plugin_options[general][maximum_compatibility_mode]'
+                   value='1' <?php
+            checked($this->options['general']['maximum_compatibility_mode']); ?> />
+            <?php
+            esc_html_e('Enable the maximum compatibility mode', 'woocommerce-google-adwords-conversion-tracking-tag');
+            ?>
+        </label>
+        <?php
+            echo $this->get_status_icon($this->options['general']['maximum_compatibility_mode']);
+            echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=dynamic-remarketing#/dynamic-remarketing');
+
+    }
+
     private function get_order_deduplication_text()
     {
         if (wga_fs()->is__premium_only()) {
@@ -1260,7 +1294,7 @@ class Admin
             esc_html_e('Enable variations output', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
         </label>
         <?php
-        echo $this->get_status_icon($this->options['general']['variations_output'],$this->options['google']['ads']['dynamic_remarketing'], true) ?>
+        echo $this->get_status_icon($this->options['general']['variations_output'], $this->options['google']['ads']['dynamic_remarketing'], true) ?>
         <?php
         echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=dynamic-remarketing#/dynamic-remarketing'); ?>
         <p><span class="dashicons dashicons-info"></span>

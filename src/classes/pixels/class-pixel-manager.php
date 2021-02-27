@@ -36,6 +36,8 @@ class Pixel_Manager
         $this->facebook_active = !empty($this->options_obj->facebook->pixel_id);
         $this->google_active   = $this->google_active();
 
+        if($this->options_obj->general->maximum_compatibility_mode)(new Environment_Check())->enable_maximum_compatibility_mode();
+
         add_action('wp_enqueue_scripts', [$this, 'wgact_front_end_scripts']);
 
         if (wga_fs()->is__premium_only()) {

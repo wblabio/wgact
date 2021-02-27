@@ -56,7 +56,6 @@ class Environment_Check
         }
 
         if ('dismiss_litespeed_inline_js_dom_ready' == $set) {
-            error_log('test');
             $wgact_notifications                                                = get_option('wgact_notifications');
             $wgact_notifications['dismiss_litespeed_inline_js_dom_ready_error'] = true;
             update_option('wgact_notifications', $wgact_notifications);
@@ -69,7 +68,7 @@ class Environment_Check
     {
         $wgact_notifications = get_option('wgact_notifications');
 
-        if (is_plugin_active('wp-rocket/wp-rocket.php') && (!is_array($wgact_notifications) || false == $wgact_notifications['dismiss_wp_rocket_javascript_concatenation_error'])) {
+        if ($this->is_wp_rocket_active() && (!is_array($wgact_notifications) || false == $wgact_notifications['dismiss_wp_rocket_javascript_concatenation_error'])) {
 
             $wp_rocket_settings = get_option('wp_rocket_settings');
 
@@ -86,7 +85,7 @@ class Environment_Check
     {
         $wgact_notifications = get_option('wgact_notifications');
 
-        if (is_plugin_active('litespeed-cache/litespeed-cache.php') && (!is_array($wgact_notifications) || false == $wgact_notifications['dismiss_litespeed_inline_js_dom_ready_error'])) {
+        if ($this->is_litespeed_active() && (!is_array($wgact_notifications) || false == $wgact_notifications['dismiss_litespeed_inline_js_dom_ready_error'])) {
 
             $litespeed_js_inline_defer_settings = get_option('litespeed.conf.optm-js_inline_defer');
 
@@ -99,8 +98,54 @@ class Environment_Check
         }
     }
 
+    public function is_wp_rocket_active(): bool
+    {
+        return is_plugin_active('wp-rocket/wp-rocket.php');
+    }
+
+    public function is_litespeed_active(): bool
+    {
+        // TODO find out if there is a pro version with different folder and file name
+
+        return is_plugin_active('litespeed-cache/litespeed-cache.php');
+    }
+
     public function is_autoptimize_active(): bool
     {
+        // TODO find out if there is a pro version with different folder and file name
+
         return is_plugin_active('autoptimize/autoptimize.php');
+    }
+
+    public function is_yoast_seo_active(): bool
+    {
+        // TODO find out if there is a pro version with different folder and file name
+
+        return is_plugin_active('wordpress-seo/wp-seo.php');
+    }
+
+    public function disable_yoast_seo_facebook_social($option)
+    {
+        $option['opengraph'] = false;
+        return $option;
+    }
+
+    public function disable_litespeed_js_inline_after_dom($option): int
+    {
+        $option = 0;
+        return $option;
+    }
+
+    public function disable_wp_rocket_js_concatenation($option)
+    {
+        $option['minify_concatenate_js'] = 0;
+        return $option;
+    }
+
+    public function enable_maximum_compatibility_mode()
+    {
+        if($this->is_yoast_seo_active()) add_filter('option_wpseo_social', [$this, 'disable_yoast_seo_facebook_social']);
+        if($this->is_litespeed_active()) add_filter('option_litespeed.conf.optm-js_inline_defer', [$this, 'disable_litespeed_js_inline_after_dom']);
+        if($this->is_wp_rocket_active()) add_filter('option_wp_rocket_settings', [$this, 'disable_wp_rocket_js_concatenation']);
     }
 }

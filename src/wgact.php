@@ -305,6 +305,7 @@ if (function_exists('wga_fs')) {
                 ],
                 'general' => [
                     'variations_output' => 1,
+                    'maximum_compatibility_mode' => 0,
                 ],
                 'db_version' => WGACT_DB_VERSION,
             ];
