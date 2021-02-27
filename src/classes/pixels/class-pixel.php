@@ -10,6 +10,8 @@ if (!defined('ABSPATH')) {
 
 class Pixel
 {
+    use Trait_Product;
+
     protected $add_cart_data;
     protected $aw_merchant_id;
     protected $conversion_id;
@@ -38,6 +40,8 @@ class Pixel
         $this->gtag_deactivation   = $this->options['google']['gtag']['deactivation'];
     }
 
+
+
     // get an array with all product categories
     protected function get_product_category($product_id): array
     {
@@ -65,12 +69,12 @@ class Pixel
         $cart_items = [];
 
         // go through the array and get all product identifiers
-        foreach ((array)$cart as $item) {
+        foreach ((array)$cart as $cart_item) {
 
-            $product_id = $item['product_id'];
+            $product_id = $this->get_variation_or_product_id($cart_item);
             $product    = wc_get_product($product_id);
 
-            $product_id_compiled = $this->get_compiled_product_id($item['product_id'], $product->get_sku());
+            $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku());
 
             array_push($cart_items, $product_id_compiled);
         }

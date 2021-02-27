@@ -303,6 +303,9 @@ if (function_exists('wga_fs')) {
                     ],
                     'order_deduplication' => 1
                 ],
+                'general' => [
+                    'variations_output' => 1,
+                ],
                 'db_version' => WGACT_DB_VERSION,
             ];
         }

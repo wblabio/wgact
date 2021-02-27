@@ -184,18 +184,19 @@ class Google_Ads extends Google_Pixel
     // get an array with all cart product ids
     protected function get_gads_formatted_cart_items($cart)
     {
-        // error_log(print_r($cart, true));
+//         error_log(print_r($cart, true));
         // initiate product identifier array
         $cart_items   = [];
         $item_details = [];
 
         // go through the array and get all product identifiers
-        foreach ((array)$cart as $item) {
+        foreach ((array)$cart as $cart_item) {
 
-            $product = wc_get_product($item['product_id']);
+            $product_id = $this->get_variation_or_product_id($cart_item);
+            $product = wc_get_product($product_id);
 
-            $item_details['id']                       = $this->get_compiled_product_id($item['product_id'], $product->get_sku());
-            $item_details['quantity']                 = (int)$item['quantity'];
+            $item_details['id']                       = $this->get_compiled_product_id($product_id, $product->get_sku());
+            $item_details['quantity']                 = (int)$cart_item['quantity'];
             $item_details['price']                    = (int)$product->get_price();
             $item_details['google_business_vertical'] = $this->google_business_vertical;
 

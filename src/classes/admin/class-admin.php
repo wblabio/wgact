@@ -589,6 +589,18 @@ class Admin
             'wgact_plugin_beta_section'
         );
 
+        // add fields for dynamic remarketing
+        add_settings_field(
+            'wgact_plugin_option_variations_output',
+            esc_html__(
+                'Variations output',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ),
+            [$this, 'wgact_option_html_variations_output'],
+            'wgact_plugin_options_page',
+            'wgact_plugin_beta_section'
+        );
+
         if (wga_fs()->is__premium_only()) {
             // google_business_vertical
             add_settings_field(
@@ -1215,7 +1227,7 @@ class Admin
         <?php
         echo $this->get_status_icon($this->options['google']['ads']['dynamic_remarketing'], $this->options['google']['ads']['conversion_id']) ?>
         <?php
-        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-ads-dynamic-remarketing#/pixels/google-ads?id=dynamic-remarketing'); ?>
+        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=dynamic-remarketing#/dynamic-remarketing'); ?>
         <p><?php
             if (!$this->options['google']['ads']['conversion_id']) {
                 ?>
@@ -1227,6 +1239,33 @@ class Admin
             ?><span class="dashicons dashicons-info"></span>
             <?php
             esc_html_e('You need to choose the correct product identifier setting in order to match the product identifiers in the Google Merchant Center or your Google Ads business feed', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+        </p>
+        <?php
+    }
+
+    public function wgact_option_html_variations_output()
+    {
+        // adding the hidden input is a hack to make WordPress save the option with the value zero,
+        // instead of not saving it and remove that array key entirely
+        // https://stackoverflow.com/a/1992745/4688612
+        ?>
+        <label>
+            <input type='hidden' value='0' name='wgact_plugin_options[general][variations_output]'>
+            <input type='checkbox' id='wgact_plugin_option_variations_output'
+                   name='wgact_plugin_options[general][variations_output]'
+                   value='1' <?php
+            checked($this->options['general']['variations_output']); ?> />
+
+            <?php
+            esc_html_e('Enable variations output', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+        </label>
+        <?php
+        echo $this->get_status_icon($this->options['general']['variations_output'],$this->options['google']['ads']['dynamic_remarketing'], true) ?>
+        <?php
+        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=dynamic-remarketing#/dynamic-remarketing'); ?>
+        <p><span class="dashicons dashicons-info"></span>
+            <?php
+            esc_html_e('In order for this to work you need to upload your Google Merchant Center feed including product variations and the item_group_id. Disable it, if you choose only to upload the parent product for variable products.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
         </p>
         <?php
     }

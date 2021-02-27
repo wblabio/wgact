@@ -340,12 +340,13 @@ class Pixel_Manager
         $order_items       = $order->get_items();
         $order_items_array = [];
 
-        foreach ((array)$order_items as $item) {
+        foreach ((array)$order_items as $order_item) {
 
-            $product_id = $item['product_id'];
+            $product_id = $this->get_variation_or_product_id($order_item->get_data());
+
             $product    = wc_get_product($product_id);
 
-            $product_id_compiled = $this->get_compiled_product_id($item['product_id'], $product->get_sku());
+            $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku());
 
             array_push($order_items_array, $product_id_compiled);
         }

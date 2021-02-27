@@ -8,7 +8,6 @@ if (!defined('ABSPATH')) {
 
 class Google_Pixel extends Pixel
 {
-    use Trait_Product;
     use Trait_Google;
 
     protected $conversion_identifiers;
@@ -48,14 +47,15 @@ class Google_Pixel extends Pixel
 
         $list_position = 1;
 
-        foreach ((array)$order_items as $item) {
+        foreach ((array)$order_items as $order_item) {
 
-            $product = wc_get_product($item['product_id']);
+            $product_id = $this->get_variation_or_product_id($order_item->get_data());
+            $product = wc_get_product($product_id);
 
             $item_details_array = [];
 
-            $item_details_array['id']       = $this->get_compiled_product_id($item['product_id'], $product->get_sku());
-            $item_details_array['quantity'] = (int)$item['quantity'];
+            $item_details_array['id']       = $this->get_compiled_product_id($product_id, $product->get_sku());
+            $item_details_array['quantity'] = (int)$order_item['quantity'];
             $item_details_array['price']    = (int)$product->get_price();
             if ($this->is_google_ads_active()) {
                 $item_details_array['google_business_vertical'] = $this->google_business_vertical;
@@ -64,8 +64,8 @@ class Google_Pixel extends Pixel
             if ($this->is_google_analytics_active()) {
                 $item_details_array['name'] = (string)$product->get_name();
 //                $item_details_array['list_name'] = '';
-                $item_details_array['brand']    = $this->get_brand_name($item['product_id']);
-                $item_details_array['category'] = $this->get_product_category($item['product_id']);
+                $item_details_array['brand']    = $this->get_brand_name($product_id);
+                $item_details_array['category'] = $this->get_product_category($product_id);
 //                $item_details_array['variant'] = '';
                 $item_details_array['list_position'] = $list_position++;
             }

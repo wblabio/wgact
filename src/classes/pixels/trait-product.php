@@ -8,6 +8,18 @@ if (!defined('ABSPATH')) {
 
 trait Trait_Product
 {
+    protected function get_variation_or_product_id($item)
+    {
+//        error_log('id: ' . $item['product_id']);
+//            error_log('id: ' . $item['variation_id']);
+        if(array_key_exists('variation_id', $item)){
+//            error_log('hello');
+            return $item['variation_id'];
+        } else {
+            return $item['product_id'];
+        }
+    }
+
     // https://stackoverflow.com/a/56278308/4688612
     // https://stackoverflow.com/a/39034036/4688612
     public function get_brand_name($product_id): string
