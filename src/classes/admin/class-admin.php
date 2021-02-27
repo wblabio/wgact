@@ -1220,7 +1220,7 @@ class Admin
         </label>
         <?php
             echo $this->get_status_icon($this->options['general']['maximum_compatibility_mode']);
-            echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=dynamic-remarketing#/dynamic-remarketing');
+            echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=maximum-compatibility-mode#/general?id=maximum-compatibility-mode');
 
     }
 

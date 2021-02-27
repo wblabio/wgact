@@ -36,7 +36,14 @@ class Pixel_Manager
         $this->facebook_active = !empty($this->options_obj->facebook->pixel_id);
         $this->google_active   = $this->google_active();
 
-        if($this->options_obj->general->maximum_compatibility_mode)(new Environment_Check())->enable_maximum_compatibility_mode();
+        if ($this->options_obj->general->maximum_compatibility_mode) (new Environment_Check())->enable_maximum_compatibility_mode();
+
+        if (
+            $this->options_obj->general->maximum_compatibility_mode &&
+            $this->options_obj->facebook->microdata
+        ) {
+            (new Environment_Check())->enable_maximum_compatibility_mode_yoast_seo();
+        }
 
         add_action('wp_enqueue_scripts', [$this, 'wgact_front_end_scripts']);
 
@@ -136,7 +143,7 @@ class Pixel_Manager
                 if ($this->query_string_contains_all_variation_attributes($product)) {
                     // get variation product
                     $product_id = $this->get_variation_from_query_string($product_id, $product);
-                    $product = wc_get_product($product_id);
+                    $product    = wc_get_product($product_id);
                 }
             }
 
@@ -346,7 +353,7 @@ class Pixel_Manager
 
             $product_id = $this->get_variation_or_product_id($order_item->get_data(), $this->options_obj->general->variations_output);
 
-            $product    = wc_get_product($product_id);
+            $product = wc_get_product($product_id);
 
             $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku());
 

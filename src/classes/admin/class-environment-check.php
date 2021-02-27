@@ -144,8 +144,12 @@ class Environment_Check
 
     public function enable_maximum_compatibility_mode()
     {
-        if($this->is_yoast_seo_active()) add_filter('option_wpseo_social', [$this, 'disable_yoast_seo_facebook_social']);
         if($this->is_litespeed_active()) add_filter('option_litespeed.conf.optm-js_inline_defer', [$this, 'disable_litespeed_js_inline_after_dom']);
         if($this->is_wp_rocket_active()) add_filter('option_wp_rocket_settings', [$this, 'disable_wp_rocket_js_concatenation']);
+    }
+
+    public function enable_maximum_compatibility_mode_yoast_seo()
+    {
+        if($this->is_yoast_seo_active()) add_filter('option_wpseo_social', [$this, 'disable_yoast_seo_facebook_social']);
     }
 }
