@@ -10,10 +10,10 @@ trait Trait_Product
 {
     protected function get_variation_or_product_id($item)
     {
+//        error_log(print_r($item, true));
 //        error_log('id: ' . $item['product_id']);
 //            error_log('id: ' . $item['variation_id']);
-        if(array_key_exists('variation_id', $item)){
-//            error_log('hello');
+        if($item['variation_id'] <> 0){
             return $item['variation_id'];
         } else {
             return $item['product_id'];

@@ -13,7 +13,7 @@ class Google_Enhanced_Ecommerce extends Google_Pixel
 
     public function inject_product_list_object($list_id)
     {
-        error_log('list_id:' . $list_id);
+//        error_log('list_id:' . $list_id);
         global $wp_query;
 
         $items = [];

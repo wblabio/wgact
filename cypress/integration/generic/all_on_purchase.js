@@ -21,9 +21,27 @@ describe('purchase', () => {
 
     it('make a purchase', () =>{
 
+        // add simple product
         cy.visit('/product/album/')
         cy.contains('Add to cart')
             .click()
+
+        // add variable product
+        cy.visit('/product/hoodie/')
+            .get('#pa_color')
+                .select('Blue')
+            .get('#logo')
+                .select('Yes')
+        cy.contains('Add to cart')
+            .click()
+
+        // add grouped product
+        cy.visit('/product/logo-collection/')
+            .get('.input-text.qty')
+                .type('1')
+        cy.contains('Add to cart')
+            .click()
+
         cy.contains('Cart')
             .click()
         cy.contains('Proceed to checkout')

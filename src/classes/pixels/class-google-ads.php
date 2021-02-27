@@ -191,8 +191,9 @@ class Google_Ads extends Google_Pixel
 
         // go through the array and get all product identifiers
         foreach ((array)$cart as $cart_item) {
-
+//            error_log(print_r($cart_item,true));
             $product_id = $this->get_variation_or_product_id($cart_item);
+//            error_log('id: ' . $product_id);
             $product = wc_get_product($product_id);
 
             $item_details['id']                       = $this->get_compiled_product_id($product_id, $product->get_sku());
