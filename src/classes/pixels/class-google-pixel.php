@@ -42,8 +42,6 @@ class Google_Pixel extends Pixel
 
     protected function get_formatted_order_items($order, $channel = '')
     {
-        error_log('channel: ' . $channel);
-
         $order_items       = $order->get_items();
         $order_items_array = [];
 
