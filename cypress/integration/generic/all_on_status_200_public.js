@@ -1,6 +1,8 @@
 describe('status 200 public', () => {
 
     const wgact_options_preset = 'all-pixels-enabled.json';
+    const wgact_options_preset_conversion_cart_data_off = 'all-pixels-enabled_conversion-cart-data-off.json';
+
 
     // seed options into database
     before(function (){
@@ -85,6 +87,12 @@ describe('status 200 public', () => {
         cy.visit(Cypress.env('purchase_confirmation_url'))
         cy.wait(4000);
         cy.visit(Cypress.env('purchase_confirmation_url'))
+    })
+
+    it('visit WC purchase confirmation with conversion cart data turned off', () =>{
+        cy.exec('wp option update wgact_plugin_options < ' + Cypress.env('wgact_options_presets_folder') + wgact_options_preset_conversion_cart_data_off + ' --format=json --path=' + Cypress.env('wordpress_install_directory')).its('code').should('eq', 0)
+        cy.visit(Cypress.env('purchase_confirmation_url'))
+        cy.exec('wp option update wgact_plugin_options < ' + Cypress.env('wgact_options_presets_folder') + wgact_options_preset + ' --format=json --path=' + Cypress.env('wordpress_install_directory')).its('code').should('eq', 0)
     })
 
     it('visit WC regular page', () =>{

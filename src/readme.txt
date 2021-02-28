@@ -108,13 +108,15 @@ You can send the link to the front page of your shop too if you think it would b
 [//]: # fs_premium_only_begin
 * New: Google Analytics enhanced e-commerce
 [//]: # fs_premium_only_end
-New: Output the variation ID for dynamic remarketing
-New: Maximum compatibility mode
+* New: Output the variation ID for dynamic remarketing
+* New: Maximum compatibility mode
 [//]: # fs_premium_only_begin
 * Tweak: Strip HTML tags from description in microdata output for FB
 [//]: # fs_premium_only_end
-Tweak: Made Google Analytics always receive the post ID as product ID because this is more robust
-Fix: Script blocker documentation link
+* Tweak: Switched logic to activate conversion cart data automatically when merchant center ID is set
+* Tweak: Made Google Analytics always receive the post ID as product ID because this is more robust
+* Tweak: Removed some unnecessary text output in the settings
+* Fix: Script blocker documentation link
 
 = 1.8.15 =
 

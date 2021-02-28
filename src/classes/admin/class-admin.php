@@ -530,22 +530,22 @@ class Admin
         );
 
         // add fields for cart data
-        add_settings_field(
-            'wgact_plugin_add_cart_data',
-            esc_html__(
-                'Activation',
-                'woocommerce-google-adwords-conversion-tracking-tag'
-            ),
-            [$this, 'wgact_option_html_google_ads_add_cart_data'],
-            'wgact_plugin_options_page',
-            'wgact_plugin_beta_section'
-        );
+//        add_settings_field(
+//            'wgact_plugin_add_cart_data',
+//            esc_html__(
+//                'Activation',
+//                'woocommerce-google-adwords-conversion-tracking-tag'
+//            ),
+//            [$this, 'wgact_option_html_google_ads_add_cart_data'],
+//            'wgact_plugin_options_page',
+//            'wgact_plugin_beta_section'
+//        );
 
         // add the field for the aw_merchant_id
         add_settings_field(
             'wgact_plugin_aw_merchant_id',
             esc_html__(
-                'aw_merchant_id',
+                'Conversion Cart Data',
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ),
             [$this, 'wgact_plugin_setting_aw_merchant_id'],
@@ -554,28 +554,28 @@ class Admin
         );
 
         // add the field for the aw_feed_country
-        add_settings_field(
-            'wgact_plugin_aw_feed_country',
-            esc_html__(
-                'aw_feed_country',
-                'woocommerce-google-adwords-conversion-tracking-tag'
-            ),
-            [$this, 'wgact_plugin_setting_aw_feed_country'],
-            'wgact_plugin_options_page',
-            'wgact_plugin_beta_section'
-        );
+//        add_settings_field(
+//            'wgact_plugin_aw_feed_country',
+//            esc_html__(
+//                'aw_feed_country',
+//                'woocommerce-google-adwords-conversion-tracking-tag'
+//            ),
+//            [$this, 'wgact_plugin_setting_aw_feed_country'],
+//            'wgact_plugin_options_page',
+//            'wgact_plugin_beta_section'
+//        );
 
         // add the field for the aw_feed_language
-        add_settings_field(
-            'wgact_plugin_aw_feed_language',
-            esc_html__(
-                'aw_feed_language',
-                'woocommerce-google-adwords-conversion-tracking-tag'
-            ),
-            [$this, 'wgact_plugin_setting_aw_feed_language'],
-            'wgact_plugin_options_page',
-            'wgact_plugin_beta_section'
-        );
+//        add_settings_field(
+//            'wgact_plugin_aw_feed_language',
+//            esc_html__(
+//                'aw_feed_language',
+//                'woocommerce-google-adwords-conversion-tracking-tag'
+//            ),
+//            [$this, 'wgact_plugin_setting_aw_feed_language'],
+//            'wgact_plugin_options_page',
+//            'wgact_plugin_beta_section'
+//        );
 
         // add fields for the product identifier
         add_settings_field(
@@ -782,10 +782,10 @@ class Admin
 
     public function wgact_plugin_section_add_cart_data_description()
     {
-        echo '<div id="beta-description" style="margin-top:20px">';
-        esc_html_e('Find out more about this new feature: ', 'woocommerce-google-adwords-conversion-tracking-tag');
-        echo '<a href="https://support.google.com/google-ads/answer/9028254" target="_blank">https://support.google.com/google-ads/answer/9028254</a><br>';
-        echo '</div>';
+//        echo '<div id="beta-description" style="margin-top:20px">';
+//        esc_html_e('Find out more about this new feature: ', 'woocommerce-google-adwords-conversion-tracking-tag');
+//        echo '<a href="https://support.google.com/google-ads/answer/9028254" target="_blank">https://support.google.com/google-ads/answer/9028254</a><br>';
+//        echo '</div>';
     }
 
     public function wgact_plugin_section_support_description()
@@ -1370,15 +1370,9 @@ class Admin
     public function wgact_plugin_setting_aw_merchant_id()
     {
         echo "<input type='text' id='wgact_plugin_aw_merchant_id' name='wgact_plugin_options[google][ads][aw_merchant_id]' size='40' value='{$this->options['google']['ads']['aw_merchant_id']}' />";
-        echo $this->get_status_icon($this->options['google']['ads']['aw_merchant_id'], $this->options['google']['ads']['add_cart_data']);
+        echo $this->get_status_icon($this->options['google']['ads']['aw_merchant_id']);
+        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=conversion-cart-data#/pixels/google-ads?id=conversion-cart-data');
         echo '<br>';
-        ?>
-        <?php
-        if ($this->options['google']['ads']['aw_merchant_id'] && !$this->options['google']['ads']['add_cart_data']) {
-            echo '<span class="dashicons dashicons-info"></span>';
-            esc_html_e('You need to check the activation checkbox', 'woocommerce-google-adwords-conversion-tracking-tag');
-            echo '<br>';
-        }
         esc_html_e('ID of your Google Merchant Center account. It looks like this: 12345678', 'woocommerce-google-adwords-conversion-tracking-tag');
     }
 

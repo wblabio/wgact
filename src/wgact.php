@@ -253,7 +253,6 @@ if (function_exists('wga_fs')) {
                     'ads'          => [
                         'conversion_id'            => '',
                         'conversion_label'         => '',
-                        'add_cart_data'            => 0,
                         'aw_merchant_id'           => '',
                         'product_identifier'       => 0,
                         'google_business_vertical' => 0,
