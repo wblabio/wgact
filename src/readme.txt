@@ -105,7 +105,10 @@ You can send the link to the front page of your shop too if you think it would b
 
 = 1.8.18 =
 
-* Tweak: ...
+[//]: # fs_premium_only_begin
+* Fix: Fixed the country name for Macedonia in Google consent mode
+* Fix: Fixed duplicated jobs option
+[//]: # fs_premium_only_end
 
 = 1.8.17 =
 
