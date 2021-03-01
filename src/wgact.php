@@ -274,7 +274,8 @@ if (function_exists('wga_fs')) {
                         'deactivation' => 0,
                     ],
                     'consent_mode' => [
-                        'active' => 0
+                        'active' => 0,
+                        'regions' => [],
                     ],
                 ],
                 'facebook'   => [

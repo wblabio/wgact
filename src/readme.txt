@@ -107,6 +107,7 @@ You can send the link to the front page of your shop too if you think it would b
 
 [//]: # fs_premium_only_begin
 * New: Google Analytics enhanced e-commerce
+* New: Added Google consent regions setting
 [//]: # fs_premium_only_end
 * New: Output the variation ID for dynamic remarketing
 * New: Maximum compatibility mode

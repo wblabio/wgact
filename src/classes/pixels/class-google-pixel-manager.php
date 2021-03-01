@@ -144,15 +144,24 @@ class Google_Pixel_Manager extends Google_Pixel
 
     private function consent_mode_gtag_html(): string
     {
-        return "gtag('consent', 'default', {
-                    'ad_storage': 'denied', 
-                    'analytics_storage': 'denied',
-                    'wait_for_update': 500
-                });
+        $data = [
+            'ad_storage'        => 'denied',
+            'analytics_storage' => 'denied',
+            'wait_for_update'   => 500
+        ];
+
+        if ($this->options_obj->google->consent_mode->regions) {
+            $data['regions'] = $this->options_obj->google->consent_mode->regions;
+        }
+
+        $ads_data_redaction = 'true'; // needs to be output as text
+        $url_passthrough    = 'true'; // needs to be output as text
+
+        return "gtag('consent', 'default', " . json_encode($data) . ");
                 
-                gtag('set', 'ads_data_redaction', true);
+                gtag('set', 'ads_data_redaction', " . $ads_data_redaction . ");
                 
-                gtag('set', 'url_passthrough', true);" . PHP_EOL;
+                gtag('set', 'url_passthrough', " . $url_passthrough . ");" . PHP_EOL;
     }
 }
 
