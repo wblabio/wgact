@@ -1384,13 +1384,6 @@ class Admin
             esc_html_e('Jobs', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
         <br>
         <label>
-            <input type='radio' id='wgact_plugin_google_business_vertical_4'
-                   name='wgact_plugin_options[google][ads][google_business_vertical]'
-                   value='4' <?php
-            echo(checked(4, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php
-            esc_html_e('Jobs', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
-        <br>
-        <label>
             <input type='radio' id='wgact_plugin_google_business_vertical_5'
                    name='wgact_plugin_options[google][ads][google_business_vertical]'
                    value='5' <?php
@@ -1998,7 +1991,7 @@ class Admin
             'LT'    => 'Lithuania',
             'LU'    => 'Luxembourg',
             'MO'    => 'Macao',
-            'MK'    => 'Macedonia, the Former Yugoslav Republic of',
+            'MK'    => 'North Macedonia',
             'MG'    => 'Madagascar',
             'MW'    => 'Malawi',
             'MY'    => 'Malaysia',
