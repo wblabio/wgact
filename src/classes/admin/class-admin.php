@@ -162,7 +162,7 @@ class Admin
             esc_html__(
                 'Google Analytics UA',
                 'woocommerce-google-adwords-conversion-tracking-tag'
-            ) . $this->svg_beta(),
+            ),
             [$this, 'wgact_option_html_google_analytics_universal_property'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
@@ -217,7 +217,7 @@ class Admin
             esc_html__(
                 'Facebook pixel ID',
                 'woocommerce-google-adwords-conversion-tracking-tag'
-            ) . $this->svg_beta(),
+            ),
             [$this, 'wgact_option_html_facebook_pixel_id'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
