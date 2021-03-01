@@ -10,21 +10,28 @@ if (!defined('ABSPATH')) {
 
 class Facebook_Microdata extends Pixel
 {
-
     use Trait_Product;
 
     public function inject_product($product_id, $product, $product_attributes)
     {
+        if (wp_get_post_parent_id($product->get_id()) <> 0) {
+            $parent_product_id = wp_get_post_parent_id($product->get_id());
+            $parent_product    = wc_get_product($parent_product_id);
+        } else {
+            $parent_product_id = $product->get_id();
+            $parent_product    = $product;
+        }
+
         $product_microdata = [
-            '@context'    => 'https://schema.org',
-            '@type'       => 'Product',
-            'productID'   => $product_id,
-            'name'        => $product->get_name(),
-            'description' => $this->get_description($product),
-            'url'         => get_permalink(),
-            'image'       => wp_get_attachment_url($product->get_image_id()),
-            'brand'       => $product_attributes['brand'],
-            'offers'      => [
+            '@context'           => 'https://schema.org',
+            '@type'              => 'Product',
+            'productID'          => $product_id,
+            'name'               => $product->get_name(),
+            'description'        => $this->get_description($product),
+            'url'                => get_permalink(),
+            'image'              => wp_get_attachment_url($product->get_image_id()),
+            'brand'              => $product_attributes['brand'],
+            'offers'             => [
                 [
                     '@type'         => 'Offer',
                     'price'         => $product->get_price(),
@@ -33,20 +40,19 @@ class Facebook_Microdata extends Pixel
                     'availability'  => 'https://schema.org/' . $this->get_schema_stock_status($product),
                 ]
             ],
-            //            'additionalProperty' => [
-            //                [
-            //                    '@type'      => 'PropertyValue',
-            //                    'propertyID' => 'item_group_id',
-            //                    'value'      => 'fb_tshirts'
-            //                ]
-            //            ]
+            'additionalProperty' => [
+                [
+                    '@type'      => 'PropertyValue',
+                    'propertyID' => 'item_group_id',
+                    'value'      => $this->get_compiled_product_id($parent_product_id, $parent_product->get_sku()),
+                ]
+            ]
         ];
 
         ?>
 
         <script type="application/ld+json">
             <?php echo json_encode($product_microdata) ?>
-
 
         </script>
         <?php
