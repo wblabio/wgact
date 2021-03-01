@@ -17,7 +17,7 @@ $release_mode = $argv[3] ?: 'pending'; // can be 'pending', 'beta' and 'released
 $version      = $argv[4];
 
 // check if we have a valid version number, otherwise stop
-if( ! version_compare( $version, '0.0.1', '>=' ) >= 0 ) {
+if (!version_compare($version, '0.0.1', '>=') ) {
     echo 'Invalid version number' . PHP_EOL;
     die();
 }
@@ -87,15 +87,15 @@ try {
      */
 
     // Generate url to download the pro zip
-    echo PHP_EOL . 'Download the pro version from Freemius: start'. PHP_EOL;
-    $zip_pro = $api->GetSignedUrl('plugins/' . $options['FS__PLUGIN_ID'] . '/tags/' . $deploy->id . '.zip' . '?is_premium=true');
+    echo PHP_EOL . 'Download the pro version from Freemius: start' . PHP_EOL;
+    $zip_pro          = $api->GetSignedUrl('plugins/' . $options['FS__PLUGIN_ID'] . '/tags/' . $deploy->id . '.zip' . '?is_premium=true');
     $new_zip_pro_name = 'freemius-plugin-pro/' . 'woopt-pixel-manager-pro.' . $version . '.zip';
     file_put_contents($new_zip_pro_name, file_get_contents($zip_pro));
     echo 'Download the pro version from Freemius: success' . PHP_EOL;
 
     // Generate url to download the free zip
-    echo PHP_EOL . 'Download the free version from Freemius: start'. PHP_EOL;
-    $zip_free = $api->GetSignedUrl('plugins/' . $options['FS__PLUGIN_ID'] . '/tags/' . $deploy->id . '.zip' . '?is_premium=false');
+    echo PHP_EOL . 'Download the free version from Freemius: start' . PHP_EOL;
+    $zip_free          = $api->GetSignedUrl('plugins/' . $options['FS__PLUGIN_ID'] . '/tags/' . $deploy->id . '.zip' . '?is_premium=false');
     $new_zip_free_name = 'freemius-plugin-free/' . 'woocommerce-google-adwords-conversion-tracking-tag' . '-free.' . $version . '.zip';
     file_put_contents($new_zip_free_name, file_get_contents($zip_free));
     echo 'Download the free version from Freemius: success' . PHP_EOL;
