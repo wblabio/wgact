@@ -60,6 +60,31 @@ class Google_Pixel_Manager extends Google_Pixel
 
         </script>
         <?php
+
+        if ($this->options_obj->google->consent_mode->borlabs_support) {
+            ?>
+
+            <script>
+                (function updateGoogleConsentMode() {
+                    if (typeof BorlabsCookie == "undefined" || typeof gtag == "undefined") {
+                        window.setTimeout(updateGoogleConsentMode, 50);
+                    } else {
+                        if (window.BorlabsCookie.checkCookieGroupConsent('statistics')) {
+                            gtag('consent', 'update', {
+                                'analytics_storage': 'granted'
+                            });
+                        }
+
+                        if (window.BorlabsCookie.checkCookieGroupConsent('marketing')) {
+                            gtag('consent', 'update', {
+                                'ad_storage': 'granted'
+                            });
+                        }
+                    }
+                })();
+            </script>
+            <?php
+        }
     }
 
     public function inject_product_category()

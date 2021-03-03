@@ -2,7 +2,7 @@
 Contributors: alekv, wolfbaer, woopt
 Tags: woocommerce, google ads, conversion tracking, dynamic retargeting, remarketing , adwords
 Requires at least: 3.7
-Tested up to: 5.6
+Tested up to: 5.7
 Requires PHP: 7.2
 Stable tag: 1.8.18
 License: GPLv2 or later
@@ -106,9 +106,13 @@ You can send the link to the front page of your shop too if you think it would b
 = 1.8.18 =
 
 [//]: # fs_premium_only_begin
+* New: Added Borlabs support for Google Consent Mode
 * Fix: Fixed the country name for Macedonia in Google consent mode
 * Fix: Fixed duplicated jobs option
 [//]: # fs_premium_only_end
+* Tweak: Bumping up WP supported version to 5.7
+* Tweak: Some code syntax cleanup
+
 
 = 1.8.17 =
 

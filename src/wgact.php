@@ -276,6 +276,7 @@ if (function_exists('wga_fs')) {
                     'consent_mode' => [
                         'active' => 0,
                         'regions' => [],
+                        'borlabs_support' => 0,
                     ],
                 ],
                 'facebook'   => [

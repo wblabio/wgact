@@ -477,14 +477,26 @@ class Admin
             $section_ids['settings_name']
         );
 
-        // add fields for the gtag insertion
+        // add fields for the Borlabs support
+        add_settings_field(
+            'wgact_setting_borlabs_support',
+            esc_html__(
+                'Borlabs support',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ) . $this->svg_beta(),
+            [$this, 'wgact_setting_html_borlabs_support__premium_only'],
+            'wgact_plugin_options_page',
+            $section_ids['settings_name']
+        );
+
+        // add fields for the Cookiebot support
         add_settings_field(
             'wgact_setting_cookiebot_active',
             esc_html__(
-                'Cookiebot activation',
+                'Cookiebot support',
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ) . $this->svg_beta(),
-            [$this, 'wgact_setting_html_cookiebot_active__premium_only'],
+            [$this, 'wgact_setting_html_cookiebot_support__premium_only'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
@@ -1150,7 +1162,31 @@ class Admin
         }
     }
 
-    public function wgact_setting_html_cookiebot_active__premium_only()
+    public function wgact_setting_html_borlabs_support__premium_only()
+    {
+        // adding the hidden input is a hack to make WordPress save the option with the value zero,
+        // instead of not saving it and remove that array key entirely
+        // https://stackoverflow.com/a/1992745/4688612
+        ?>
+        <label>
+            <input type='hidden' value='0' name='wgact_plugin_options[google][consent_mode][borlabs_support]'>
+            <input type='checkbox' id='wgact_setting_cookiebot_active'
+                   name='wgact_plugin_options[google][consent_mode][borlabs_support]'
+                   value='1' <?php
+            checked($this->options['google']['consent_mode']['borlabs_support']); ?> />
+            <?php
+            esc_html_e('Enable Borlabs support', 'woocommerce-google-adwords-conversion-tracking-tag'); ?></label>
+        <?php
+        echo $this->get_status_icon($this->options['google']['consent_mode']['borlabs_support'], $this->options['google']['consent_mode']['active'], true);
+
+        if ($this->options['google']['consent_mode']['borlabs_support'] && !$this->options['google']['consent_mode']['active']) {
+            echo '<p></p><span class="dashicons dashicons-info"></span>';
+            esc_html_e('You need to activate the Google consent mode', 'woocommerce-google-adwords-conversion-tracking-tag');
+            echo '</p><br>';
+        }
+    }
+
+    public function wgact_setting_html_cookiebot_support__premium_only()
     {
         // adding the hidden input is a hack to make WordPress save the option with the value zero,
         // instead of not saving it and remove that array key entirely
@@ -1526,7 +1562,7 @@ class Admin
 
     private function svg_active(): string
     {
-        return '<svg height="20"  style="vertical-align: middle; margin-left: 8px; margin-bottom: 1px" viewBox="0 0 500 200"
+        return '<svg height="20"  style="vertical-align: top; margin-left: 8px; margin-bottom: 1px; margin-top: 2px" viewBox="0 0 500 200"
     xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
     <path d="M490.702 34.281c0-14.148-11.487-25.636-25.637-25.636h-431.9c-14.149 0-25.637 11.488-25.637 25.636V165.72c0 14.15 11.488 25.637 25.637 25.637h431.9c14.15 0 25.637-11.487 25.637-25.637V34.28z" fill="none"/>
     <path d="M490.702 34.281c0-14.148-11.487-25.636-25.637-25.636h-431.9c-14.149 0-25.637 11.488-25.637 25.636V165.72c0 14.15 11.488 25.637 25.637 25.637h431.9c14.15 0 25.637-11.487 25.637-25.637V34.28zm-10 0V165.72c0 8.63-7.007 15.635-15.637 15.635h-431.9c-8.63 0-15.636-7.005-15.636-15.635V34.28c0-8.63 7.006-15.635 15.636-15.635h431.9c8.63 0 15.636 7.005 15.636 15.635z" fill="#18b208"/>
@@ -1538,7 +1574,7 @@ class Admin
 
     private function svg_inactive(): string
     {
-        return '<svg height="16" style="vertical-align: middle; margin-left: 8px; margin-bottom: 1px" viewBox="0 0 660 200" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2"><path d="M653.248 33.033c0-14.417-11.705-26.124-26.123-26.124H32.874c-14.42 0-26.125 11.707-26.125 26.124v133.934c0 14.419 11.705 26.123 26.125 26.123h594.251c14.418 0 26.123-11.704 26.123-26.123V33.033z" fill="none"/><path d="M653.248 33.033c0-14.417-11.705-26.124-26.123-26.124H32.874c-14.42 0-26.125 11.707-26.125 26.124v133.934c0 14.419 11.705 26.123 26.125 26.123h594.251c14.418 0 26.123-11.704 26.123-26.123V33.033zm-9.999 0v133.934c0 8.9-7.226 16.123-16.124 16.123H32.874c-8.9 0-16.124-7.224-16.124-16.123V33.033c0-8.9 7.224-16.124 16.124-16.124h594.251c8.898 0 16.124 7.224 16.124 16.124z" fill="#ff160b"/><g><text font-family="\'LucidaGrande\',\'Lucida Grande\',sans-serif" font-weight="500" font-size="144.709" fill="#ff170b" transform="matrix(.9989 0 0 .98128 59.818 144.808)">inactive</text></g></svg>';
+        return '<svg height="16" style="vertical-align: top; margin-left: 8px; margin-bottom: 1px; margin-top: 2px" viewBox="0 0 660 200" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2"><path d="M653.248 33.033c0-14.417-11.705-26.124-26.123-26.124H32.874c-14.42 0-26.125 11.707-26.125 26.124v133.934c0 14.419 11.705 26.123 26.125 26.123h594.251c14.418 0 26.123-11.704 26.123-26.123V33.033z" fill="none"/><path d="M653.248 33.033c0-14.417-11.705-26.124-26.123-26.124H32.874c-14.42 0-26.125 11.707-26.125 26.124v133.934c0 14.419 11.705 26.123 26.125 26.123h594.251c14.418 0 26.123-11.704 26.123-26.123V33.033zm-9.999 0v133.934c0 8.9-7.226 16.123-16.124 16.123H32.874c-8.9 0-16.124-7.224-16.124-16.123V33.033c0-8.9 7.224-16.124 16.124-16.124h594.251c8.898 0 16.124 7.224 16.124 16.124z" fill="#ff160b"/><g><text font-family="\'LucidaGrande\',\'Lucida Grande\',sans-serif" font-weight="500" font-size="144.709" fill="#ff170b" transform="matrix(.9989 0 0 .98128 59.818 144.808)">inactive</text></g></svg>';
     }
 
     private function svg_partially_active(): string
