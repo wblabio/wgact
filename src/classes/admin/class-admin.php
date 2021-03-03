@@ -487,18 +487,6 @@ class Admin
             $section_ids['settings_name']
         );
 
-        // add fields for the Borlabs support
-        add_settings_field(
-            'wgact_setting_borlabs_support',
-            esc_html__(
-                'Borlabs support',
-                'woocommerce-google-adwords-conversion-tracking-tag'
-            ) . $this->svg_beta(),
-            [$this, 'wgact_setting_html_borlabs_support__premium_only'],
-            'wgact_plugin_options_page',
-            $section_ids['settings_name']
-        );
-
         // add fields for the Cookiebot support
         add_settings_field(
             'wgact_setting_cookiebot_active',
@@ -1196,30 +1184,6 @@ class Admin
         if ($this->options['google']['analytics']['link_attribution'] && (!$this->options['google']['analytics']['universal']['property_id'] && !$this->options['google']['analytics']['ga4']['measurement_id'])) {
             echo '<p></p><span class="dashicons dashicons-info"></span>';
             esc_html_e('You need to activate at least Google Analytics UA or Google Analytics 4', 'woocommerce-google-adwords-conversion-tracking-tag');
-            echo '</p><br>';
-        }
-    }
-
-    public function wgact_setting_html_borlabs_support__premium_only()
-    {
-        // adding the hidden input is a hack to make WordPress save the option with the value zero,
-        // instead of not saving it and remove that array key entirely
-        // https://stackoverflow.com/a/1992745/4688612
-        ?>
-        <label>
-            <input type='hidden' value='0' name='wgact_plugin_options[google][consent_mode][borlabs_support]'>
-            <input type='checkbox' id='wgact_setting_cookiebot_active'
-                   name='wgact_plugin_options[google][consent_mode][borlabs_support]'
-                   value='1' <?php
-            checked($this->options['google']['consent_mode']['borlabs_support']); ?> />
-            <?php
-            esc_html_e('Enable Borlabs support', 'woocommerce-google-adwords-conversion-tracking-tag'); ?></label>
-        <?php
-        echo $this->get_status_icon($this->options['google']['consent_mode']['borlabs_support'], $this->options['google']['consent_mode']['active'], true);
-
-        if ($this->options['google']['consent_mode']['borlabs_support'] && !$this->options['google']['consent_mode']['active']) {
-            echo '<p></p><span class="dashicons dashicons-info"></span>';
-            esc_html_e('You need to activate the Google consent mode', 'woocommerce-google-adwords-conversion-tracking-tag');
             echo '</p><br>';
         }
     }

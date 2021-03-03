@@ -124,6 +124,13 @@ class Environment_Check
         return is_plugin_active('wordpress-seo/wp-seo.php');
     }
 
+    public function is_borlabs_cookie_active(): bool
+    {
+        // TODO find out if there is a pro version with different folder and file name
+
+        return is_plugin_active('borlabs-cookie/borlabs-cookie.php');
+    }
+
     public function disable_yoast_seo_facebook_social($option)
     {
         $option['opengraph'] = false;

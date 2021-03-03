@@ -3,6 +3,8 @@
 
 namespace WGACT\Classes\Pixels;
 
+use WGACT\Classes\Admin\Environment_Check;
+
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
@@ -61,7 +63,7 @@ class Google_Pixel_Manager extends Google_Pixel
         </script>
         <?php
 
-        if ($this->options_obj->google->consent_mode->borlabs_support) {
+        if ($this->options_obj->google->consent_mode->active && (new Environment_Check())->is_borlabs_cookie_active()) {
             ?>
 
             <script>
