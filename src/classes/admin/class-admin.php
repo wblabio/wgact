@@ -428,9 +428,19 @@ class Admin
                 'wgact_plugin_options_page',
                 $section_ids['settings_name']
             );
-
-
         }
+
+        // add fields for the Google Analytics link attribution
+        add_settings_field(
+            'wgact_setting_google_analytics_link_attribution',
+            esc_html__(
+                'Link Attribution',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ) . $this->svg_beta(),
+            [$this, 'wgact_setting_html_google_analytics_link_attribution'],
+            'wgact_plugin_options_page',
+            $section_ids['settings_name']
+        );
     }
 
     public function add_section_advanced_subsection_cookie_consent_mgmt__premium_only($section_ids)
@@ -1142,7 +1152,7 @@ class Admin
         ?>
         <label>
             <input type='hidden' value='0' name='wgact_plugin_options[google][analytics][eec]'>
-            <input type='checkbox' id='wgact_setting_google_consent_mode_active'
+            <input type='checkbox' id='wgact_setting_google_analytics_eec'
                    name='wgact_plugin_options[google][analytics][eec]'
                    value='1' <?php
             checked($this->options['google']['analytics']['eec']); ?> />
@@ -1156,6 +1166,34 @@ class Admin
         ?>
         <?php
         if ($this->options['google']['analytics']['eec'] && (!$this->options['google']['analytics']['universal']['property_id'] && !$this->options['google']['analytics']['ga4']['measurement_id'])) {
+            echo '<p></p><span class="dashicons dashicons-info"></span>';
+            esc_html_e('You need to activate at least Google Analytics UA or Google Analytics 4', 'woocommerce-google-adwords-conversion-tracking-tag');
+            echo '</p><br>';
+        }
+    }
+
+    public function wgact_setting_html_google_analytics_link_attribution()
+    {
+        // adding the hidden input is a hack to make WordPress save the option with the value zero,
+        // instead of not saving it and remove that array key entirely
+        // https://stackoverflow.com/a/1992745/4688612
+        ?>
+        <label>
+            <input type='hidden' value='0' name='wgact_plugin_options[google][analytics][link_attribution]'>
+            <input type='checkbox' id='wgact_setting_google_analytics_link_attribution'
+                   name='wgact_plugin_options[google][analytics][link_attribution]'
+                   value='1' <?php
+            checked($this->options['google']['analytics']['link_attribution']); ?> />
+            <?php
+            esc_html_e('Enable Google Analytics link attribution', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+        </label>
+        <?php
+        echo $this->get_status_icon($this->options['google']['analytics']['link_attribution'], $this->options['google']['analytics']['universal']['property_id'] || $this->options['google']['analytics']['ga4']['measurement_id'], true); ?>
+        <?php
+//        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-consent-mode#/consent-mgmt/google-consent-mode');
+        ?>
+        <?php
+        if ($this->options['google']['analytics']['link_attribution'] && (!$this->options['google']['analytics']['universal']['property_id'] && !$this->options['google']['analytics']['ga4']['measurement_id'])) {
             echo '<p></p><span class="dashicons dashicons-info"></span>';
             esc_html_e('You need to activate at least Google Analytics UA or Google Analytics 4', 'woocommerce-google-adwords-conversion-tracking-tag');
             echo '</p><br>';

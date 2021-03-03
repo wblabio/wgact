@@ -266,6 +266,7 @@ if (function_exists('wga_fs')) {
                             'measurement_id' => '',
                         ],
                         'eec' => 0,
+                        'link_attribution' => 0,
                     ],
                     'optimize'     => [
                         'container_id' => '',

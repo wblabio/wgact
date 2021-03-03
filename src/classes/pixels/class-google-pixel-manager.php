@@ -160,10 +160,15 @@ class Google_Pixel_Manager extends Google_Pixel
 
     protected function gtag_config($id, $channel = ''): string
     {
+        $analytics_parameters = [
+            'anonymize_ip'     => 'true', // must be a string for correct output
+            'link_attribution' => $this->options_obj->google->analytics->link_attribution ? 'true' : 'false', // must be a string for correct output
+        ];
+
         if ('ads' === $channel) {
             return "gtag('config', 'AW-" . $id . "');" . PHP_EOL;
         } elseif ('analytics') {
-            return "gtag('config', '" . $id . "', { 'anonymize_ip': true });";
+            return "gtag('config', '" . $id . "', " . json_encode($analytics_parameters) . ");";
         }
     }
 

@@ -107,12 +107,14 @@ You can send the link to the front page of your shop too if you think it would b
 
 [//]: # fs_premium_only_begin
 * New: Added Borlabs support for Google Consent Mode
-* Fix: Fixed the country name for Macedonia in Google consent mode
-* Fix: Fixed duplicated jobs option
 [//]: # fs_premium_only_end
+* New: Google Analytics link attribution
 * Tweak: Bumping up WP supported version to 5.7
 * Tweak: Some code syntax cleanup
-
+[//]: # fs_premium_only_begin
+* Fix: Fixed the country name for Macedonia in Google consent mode
+* Fix: Fixed duplicated jobs option in Google business verticals
+[//]: # fs_premium_only_end
 
 = 1.8.17 =
 
