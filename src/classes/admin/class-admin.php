@@ -487,6 +487,20 @@ class Admin
             $section_ids['settings_name']
         );
 
+        if((new Environment_Check())->is_borlabs_cookie_active()){
+            // add fields for the Borlabs support
+            add_settings_field(
+                'wgact_setting_borlabs_support',
+                esc_html__(
+                    'Borlabs support',
+                    'woocommerce-google-adwords-conversion-tracking-tag'
+                ) . $this->svg_beta(),
+                [$this, 'wgact_setting_html_borlabs_support__premium_only'],
+                'wgact_plugin_options_page',
+                $section_ids['settings_name']
+            );
+        }
+
         // add fields for the Cookiebot support
         add_settings_field(
             'wgact_setting_cookiebot_active',
@@ -1039,7 +1053,7 @@ class Admin
     protected function get_documentation_html($path): string
     {
         $html = '<a style="text-decoration: none;margin-left: 10px;" href="//' . $this->documentation_host . $path . '" target="_blank">';
-        $html .= '<span style="vertical-align: top; margin-top: 2px" class="dashicons dashicons-info-outline tooltip"><span class="tooltiptext">';
+        $html .= '<span style="vertical-align: top; margin-top: 0px" class="dashicons dashicons-info-outline tooltip"><span class="tooltiptext">';
         $html .= esc_html__('open the documentation', 'woocommerce-google-adwords-conversion-tracking-tag');
         $html .= '</span></span></a>';
 
@@ -1186,6 +1200,12 @@ class Admin
             esc_html_e('You need to activate at least Google Analytics UA or Google Analytics 4', 'woocommerce-google-adwords-conversion-tracking-tag');
             echo '</p><br>';
         }
+    }
+
+    public function wgact_setting_html_borlabs_support__premium_only()
+    {
+        esc_html_e('Borlabs detected. Automatic support is:', 'woocommerce-google-adwords-conversion-tracking-tag');
+        echo $this->get_status_icon(true, true, true);
     }
 
     public function wgact_setting_html_cookiebot_support__premium_only()
@@ -1564,7 +1584,7 @@ class Admin
 
     private function svg_active(): string
     {
-        return '<svg height="20"  style="vertical-align: top; margin-left: 8px; margin-bottom: 1px; margin-top: 2px" viewBox="0 0 500 200"
+        return '<svg height="20"  style="vertical-align: top; margin-left: 8px; margin-bottom: 1px; margin-top: 0px" viewBox="0 0 500 200"
     xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
     <path d="M490.702 34.281c0-14.148-11.487-25.636-25.637-25.636h-431.9c-14.149 0-25.637 11.488-25.637 25.636V165.72c0 14.15 11.488 25.637 25.637 25.637h431.9c14.15 0 25.637-11.487 25.637-25.637V34.28z" fill="none"/>
     <path d="M490.702 34.281c0-14.148-11.487-25.636-25.637-25.636h-431.9c-14.149 0-25.637 11.488-25.637 25.636V165.72c0 14.15 11.488 25.637 25.637 25.637h431.9c14.15 0 25.637-11.487 25.637-25.637V34.28zm-10 0V165.72c0 8.63-7.007 15.635-15.637 15.635h-431.9c-8.63 0-15.636-7.005-15.636-15.635V34.28c0-8.63 7.006-15.635 15.636-15.635h431.9c8.63 0 15.636 7.005 15.636 15.635z" fill="#18b208"/>
