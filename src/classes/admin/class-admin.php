@@ -244,7 +244,7 @@ class Admin
             $section_ids['settings_name']
         );
 
-        if (wga_fs()->is__premium_only()) {
+        if (wga_fs()->is__premium_only() || $this->options['general']['pro_version_demo']) {
 
             // add the field for the Bing Ads UET tag ID
             add_settings_field(
@@ -253,7 +253,7 @@ class Admin
                     'Microsoft Advertising UET tag ID',
                     'woocommerce-google-adwords-conversion-tracking-tag'
                 ) . $this->svg_beta(),
-                [$this, 'wgact_option_html_bing_uet_tag_id__premium_only'],
+                [$this, 'wgact_option_html_bing_uet_tag_id'],
                 'wgact_plugin_options_page',
                 $section_ids['settings_name']
             );
@@ -265,7 +265,7 @@ class Admin
                     'Twitter pixel ID',
                     'woocommerce-google-adwords-conversion-tracking-tag'
                 ) . $this->svg_beta(),
-                [$this, 'wgact_option_html_twitter_pixel_id__premium_only'],
+                [$this, 'wgact_option_html_twitter_pixel_id'],
                 'wgact_plugin_options_page',
                 $section_ids['settings_name']
             );
@@ -277,7 +277,7 @@ class Admin
                     'Pinterest pixel ID',
                     'woocommerce-google-adwords-conversion-tracking-tag'
                 ) . $this->svg_beta(),
-                [$this, 'wgact_option_html_pinterest_pixel_id__premium_only'],
+                [$this, 'wgact_option_html_pinterest_pixel_id'],
                 'wgact_plugin_options_page',
                 $section_ids['settings_name']
             );
@@ -319,9 +319,9 @@ class Admin
         $this->add_section_advanced_subsection_shop($section_ids);
         $this->add_section_advanced_subsection_google($section_ids);
 
-        if (wga_fs()->is__premium_only()) {
-            $this->add_section_advanced_subsection_facebook__premium_only($section_ids);
-            $this->add_section_advanced_subsection_cookie_consent_mgmt__premium_only($section_ids);
+        if (wga_fs()->is__premium_only() || $this->pro_version_demo_active()) {
+            $this->add_section_advanced_subsection_facebook($section_ids);
+            $this->add_section_advanced_subsection_cookie_consent_mgmt($section_ids);
         }
     }
 
@@ -416,7 +416,7 @@ class Admin
             );
         }
 
-        if (wga_fs()->is__premium_only()) {
+        if (wga_fs()->is__premium_only() || $this->pro_version_demo_active()) {
             // add fields for the Google enhanced e-commerce
             add_settings_field(
                 'wgact_setting_google_analytics_eec',
@@ -424,7 +424,7 @@ class Admin
                     'Enhanced e-commerce',
                     'woocommerce-google-adwords-conversion-tracking-tag'
                 ) . $this->svg_beta(),
-                [$this, 'wgact_setting_html_google_analytics_eec__premium_only'],
+                [$this, 'wgact_setting_html_google_analytics_eec'],
                 'wgact_plugin_options_page',
                 $section_ids['settings_name']
             );
@@ -443,7 +443,7 @@ class Admin
         );
     }
 
-    public function add_section_advanced_subsection_cookie_consent_mgmt__premium_only($section_ids)
+    public function add_section_advanced_subsection_cookie_consent_mgmt($section_ids)
     {
         $sub_section_ids = [
             'title' => 'Cookie Consent Management',
@@ -470,7 +470,7 @@ class Admin
                 'Google Consent Mode',
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ) . $this->svg_beta(),
-            [$this, 'wgact_setting_html_google_consent_mode_active__premium_only'],
+            [$this, 'wgact_setting_html_google_consent_mode_active'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
@@ -482,12 +482,12 @@ class Admin
                 'Google Consent Regions',
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ) . $this->svg_beta(),
-            [$this, 'wgact_setting_html_google_consent_regions__premium_only'],
+            [$this, 'wgact_setting_html_google_consent_regions'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
 
-        if((new Environment_Check())->is_borlabs_cookie_active()){
+        if ((new Environment_Check())->is_borlabs_cookie_active()) {
             // add fields for the Borlabs support
             add_settings_field(
                 'wgact_setting_borlabs_support',
@@ -495,7 +495,7 @@ class Admin
                     'Borlabs support',
                     'woocommerce-google-adwords-conversion-tracking-tag'
                 ) . $this->svg_beta(),
-                [$this, 'wgact_setting_html_borlabs_support__premium_only'],
+                [$this, 'wgact_setting_html_borlabs_support'],
                 'wgact_plugin_options_page',
                 $section_ids['settings_name']
             );
@@ -508,13 +508,13 @@ class Admin
                 'Cookiebot support',
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ) . $this->svg_beta(),
-            [$this, 'wgact_setting_html_cookiebot_support__premium_only'],
+            [$this, 'wgact_setting_html_cookiebot_support'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
     }
 
-    public function add_section_advanced_subsection_facebook__premium_only($section_ids)
+    public function add_section_advanced_subsection_facebook($section_ids)
     {
         $sub_section_ids = [
             'title' => 'Facebook',
@@ -542,7 +542,7 @@ class Admin
                 'Facebook microdata',
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ) . $this->svg_beta(),
-            [$this, 'wgact_setting_html_facebook_microdata__premium_only'],
+            [$this, 'wgact_setting_html_facebook_microdata'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
@@ -653,15 +653,15 @@ class Admin
             'wgact_plugin_beta_section'
         );
 
-        if (wga_fs()->is__premium_only()) {
+        if (wga_fs()->is__premium_only() || $this->pro_version_demo_active()) {
             // google_business_vertical
             add_settings_field(
                 'wgact_plugin_option_google_business_vertical',
                 esc_html__(
                     'Google Business Vertical',
                     'woocommerce-google-adwords-conversion-tracking-tag'
-                ),
-                [$this, 'wgact_plugin_option_google_business_vertical__premium_only'],
+                ) . $this->svg_pro_feature(),
+                [$this, 'wgact_plugin_option_google_business_vertical'],
                 'wgact_plugin_options_page',
                 'wgact_plugin_beta_section'
             );
@@ -771,27 +771,47 @@ class Admin
                 submit_button();
                 ?>
 
-            </form>
 
-
-            <div class="developer-banner">
-                <div>
+                <div class="developer-banner">
+                    <div>
                         <span>
-						<?php
-                        /* translators: 'Wolf+Bär' needs to always stay the same*/
-                        esc_html_e('Profit Driven Marketing by Wolf+Bär', 'woocommerce-google-adwords-conversion-tracking-tag');
-                        ?>
-					</span>
-                    <span style="float: right; padding-left: 20px">
-							<?php
-                            esc_html_e('Visit us here:', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
-                        <a href="https://wolfundbaer.ch/<?php
-                        echo $this->get_link_locale() ?>/?utm_source=plugin&utm_medium=banner&utm_campaign=wgact_plugin"
-                           target="_blank">https://wolfundbaer.ch
-						</a>
-					</span>
+                            <?php
+                            /* translators: 'Wolf+Bär' needs to always stay the same*/
+                            esc_html_e('Profit Driven Marketing by Wolf+Bär', 'woocommerce-google-adwords-conversion-tracking-tag');
+                            ?>
+                        </span>
+
+                        <span style="float: right; padding-left: 20px">
+                            <?php esc_html_e('Visit us here:', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+                            <a href="https://wolfundbaer.ch/<?php
+                            echo $this->get_link_locale() ?>/?utm_source=plugin&utm_medium=banner&utm_campaign=wgact_plugin"
+                               target="_blank">https://wolfundbaer.ch
+                            </a>
+					    </span>
+
+                        <?php if (!wga_fs()->is__premium_only()) : ?>
+
+                            <span style="float: right; padding-left: 20px">
+                                <span style="padding-right: 6px">
+                                    Enable Pro version demo features
+                                </span>
+                                <label class="switch" id="wgact_pro_version_demo">
+
+                                    <input type='hidden' value='0'
+                                           name='wgact_plugin_options[general][pro_version_demo]'>
+                                    <input type="checkbox" value='1'
+                                           name='wgact_plugin_options[general][pro_version_demo]'
+                                    <?php checked($this->options['general']['pro_version_demo']); ?>
+                                    />
+                                    <span class="slider round"></span>
+                                </label>
+                            </span>
+
+                        <?php endif; ?>
+                    </div>
                 </div>
-            </div>
+
+            </form>
         </div>
         <?php
     }
@@ -912,9 +932,7 @@ class Admin
                 <a href="https://wolfundbaer.ch/<?php
                 echo $this->get_link_locale() ?>/?utm_source=plugin&utm_medium=banner&utm_campaign=wgact_plugin"
                    target="_blank">https://wolfundbaer.ch</a>
-
             </div>
-
         </div>
         <?php
     }
@@ -986,31 +1004,34 @@ class Admin
         echo '&nbsp;<i>765432112345678</i>';
     }
 
-    public function wgact_option_html_bing_uet_tag_id__premium_only()
+    public function wgact_option_html_bing_uet_tag_id()
     {
-        echo "<input id='wgact_plugin_bing_uet_tag_id' name='wgact_plugin_options[bing][uet_tag_id]' size='40' type='text' value='{$this->options['bing']['uet_tag_id']}' />";
+        echo "<input id='wgact_plugin_bing_uet_tag_id' name='wgact_plugin_options[bing][uet_tag_id]' size='40' type='text' value='{$this->options['bing']['uet_tag_id']}' {$this->disable_if_demo()} />";
         echo $this->get_status_icon($this->options['bing']['uet_tag_id']);
         echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=microsoft-advertising-uet-tag-id#/pixels/microsoft-advertising?id=setting-up-the-uet-tag');
+        echo $this->svg_pro_feature();
         echo '<br><br>';
         esc_html_e('The Microsoft Advertising UET tag ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo '&nbsp;<i>12345678</i>';
     }
 
-    public function wgact_option_html_twitter_pixel_id__premium_only()
+    public function wgact_option_html_twitter_pixel_id()
     {
-        echo "<input id='wgact_plugin_twitter_pixel_id' name='wgact_plugin_options[twitter][pixel_id]' size='40' type='text' value='{$this->options['twitter']['pixel_id']}' />";
+        echo "<input id='wgact_plugin_twitter_pixel_id' name='wgact_plugin_options[twitter][pixel_id]' size='40' type='text' value='{$this->options['twitter']['pixel_id']}' {$this->disable_if_demo()} />";
         echo $this->get_status_icon($this->options['twitter']['pixel_id']);
 //        echo $this->get_documentation_html('/wgact/#/bing');
+        echo $this->svg_pro_feature();
         echo '<br><br>';
         esc_html_e('The Twitter pixel ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo '&nbsp;<i>abcde</i>';
     }
 
-    public function wgact_option_html_pinterest_pixel_id__premium_only()
+    public function wgact_option_html_pinterest_pixel_id()
     {
-        echo "<input id='wgact_plugin_pinterest_pixel_id' name='wgact_plugin_options[pinterest][pixel_id]' size='40' type='text' value='{$this->options['pinterest']['pixel_id']}' />";
+        echo "<input id='wgact_plugin_pinterest_pixel_id' name='wgact_plugin_options[pinterest][pixel_id]' size='40' type='text' value='{$this->options['pinterest']['pixel_id']}' {$this->disable_if_demo()} />";
         echo $this->get_status_icon($this->options['pinterest']['pixel_id']);
 //        echo $this->get_documentation_html('/wgact/#/bing');
+        echo $this->svg_pro_feature();
         echo '<br><br>';
         esc_html_e('The Pinterest pixel ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo '&nbsp;<i>1234567890123</i>';
@@ -1092,7 +1113,7 @@ class Admin
         <?php
     }
 
-    public function wgact_setting_html_google_consent_mode_active__premium_only()
+    public function wgact_setting_html_google_consent_mode_active()
     {
         // adding the hidden input is a hack to make WordPress save the option with the value zero,
         // instead of not saving it and remove that array key entirely
@@ -1102,19 +1123,20 @@ class Admin
             <input type='hidden' value='0' name='wgact_plugin_options[google][consent_mode][active]'>
             <input type='checkbox' id='wgact_setting_google_consent_mode_active'
                    name='wgact_plugin_options[google][consent_mode][active]'
-                   value='1' <?php
-            checked($this->options['google']['consent_mode']['active']); ?> />
-            <?php
-            esc_html_e('Enable Google consent mode with standard settings', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+                   value='1'
+                <?php checked($this->options['google']['consent_mode']['active']); ?>
+                <?php echo $this->disable_if_demo() ?>
+            />
+            <?php esc_html_e('Enable Google consent mode with standard settings', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
         </label>
         <?php
         echo $this->get_status_icon($this->options['google']['consent_mode']['active'], true, true); ?>
         <?php
-        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-consent-mode#/consent-mgmt/google-consent-mode'); ?>
-        <?php
+        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-consent-mode#/consent-mgmt/google-consent-mode');
+        echo $this->svg_pro_feature();
     }
 
-    public function wgact_setting_html_google_consent_regions__premium_only()
+    public function wgact_setting_html_google_consent_regions()
     {
         // https://semantic-ui.com/modules/dropdown.html#multiple-selection
         // https://developer.woocommerce.com/2017/08/08/selectwoo-an-accessible-replacement-for-select2/
@@ -1123,7 +1145,9 @@ class Admin
         <select id="wgact_setting_google_consent_regions" multiple="multiple"
                 name="wgact_plugin_options[google][consent_mode][regions][]"
                 style="width:350px" data-placeholder="Choose countries&hellip;" aria-label="Country"
-                class="wc-enhanced-select">
+                class="wc-enhanced-select"
+                <?php echo $this->disable_if_demo() ?>
+        >
             <?php foreach ($this->get_consent_mode_regions() as $region_code => $region_name) : ?>
                 <option value="<?php echo $region_code ?>" <?php echo in_array($region_code, $this->options['google']['consent_mode']['regions']) ? 'selected' : ''; ?>><?php echo $region_name ?></option>
             <?php endforeach; ?>
@@ -1136,6 +1160,7 @@ class Admin
         </script>
         <?php
         echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-consent-mode-regions#/consent-mgmt/google-consent-mode?id=regions');
+        echo $this->svg_pro_feature();
         ?>
         <p>
             <span class="dashicons dashicons-info"></span>
@@ -1146,7 +1171,7 @@ class Admin
 
     }
 
-    public function wgact_setting_html_google_analytics_eec__premium_only()
+    public function wgact_setting_html_google_analytics_eec()
     {
         // adding the hidden input is a hack to make WordPress save the option with the value zero,
         // instead of not saving it and remove that array key entirely
@@ -1156,14 +1181,16 @@ class Admin
             <input type='hidden' value='0' name='wgact_plugin_options[google][analytics][eec]'>
             <input type='checkbox' id='wgact_setting_google_analytics_eec'
                    name='wgact_plugin_options[google][analytics][eec]'
-                   value='1' <?php
-            checked($this->options['google']['analytics']['eec']); ?> />
+                   value='1'
+                <?php checked($this->options['google']['analytics']['eec']); ?>
+                <?php echo $this->disable_if_demo() ?>
+            />
             <?php
             esc_html_e('Enable Google Analytics enhanced e-commerce', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
         </label>
         <?php
-        echo $this->get_status_icon($this->options['google']['analytics']['eec'], $this->options['google']['analytics']['universal']['property_id'] || $this->options['google']['analytics']['ga4']['measurement_id'], true); ?>
-        <?php
+        echo $this->get_status_icon($this->options['google']['analytics']['eec'], $this->options['google']['analytics']['universal']['property_id'] || $this->options['google']['analytics']['ga4']['measurement_id'], true);
+        echo $this->svg_pro_feature();
 //        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-consent-mode#/consent-mgmt/google-consent-mode');
         ?>
         <?php
@@ -1202,13 +1229,14 @@ class Admin
         }
     }
 
-    public function wgact_setting_html_borlabs_support__premium_only()
+    public function wgact_setting_html_borlabs_support()
     {
         esc_html_e('Borlabs detected. Automatic support is:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo $this->get_status_icon(true, true, true);
+        echo $this->svg_pro_feature();
     }
 
-    public function wgact_setting_html_cookiebot_support__premium_only()
+    public function wgact_setting_html_cookiebot_support()
     {
         // adding the hidden input is a hack to make WordPress save the option with the value zero,
         // instead of not saving it and remove that array key entirely
@@ -1218,13 +1246,15 @@ class Admin
             <input type='hidden' value='0' name='wgact_plugin_options[shop][cookie_consent_mgmt][cookiebot][active]'>
             <input type='checkbox' id='wgact_setting_cookiebot_active'
                    name='wgact_plugin_options[shop][cookie_consent_mgmt][cookiebot][active]'
-                   value='1' <?php
-            checked($this->options['shop']['cookie_consent_mgmt']['cookiebot']['active']); ?> />
+                   value='1'
+                <?php checked($this->options['shop']['cookie_consent_mgmt']['cookiebot']['active']); ?>
+                <?php echo $this->disable_if_demo() ?>
+            />
             <?php
             esc_html_e('Enable Cookiebot settings', 'woocommerce-google-adwords-conversion-tracking-tag'); ?></label>
         <?php
         echo $this->get_status_icon($this->options['shop']['cookie_consent_mgmt']['cookiebot']['active'], $this->options['google']['consent_mode']['active'], true);
-
+        echo $this->svg_pro_feature();
         if ($this->options['shop']['cookie_consent_mgmt']['cookiebot']['active'] && !$this->options['google']['consent_mode']['active']) {
             echo '<p></p><span class="dashicons dashicons-info"></span>';
             esc_html_e('You need to activate the Google consent mode', 'woocommerce-google-adwords-conversion-tracking-tag');
@@ -1232,7 +1262,7 @@ class Admin
         }
     }
 
-    public function wgact_setting_html_facebook_microdata__premium_only()
+    public function wgact_setting_html_facebook_microdata()
     {
         // adding the hidden input is a hack to make WordPress save the option with the value zero,
         // instead of not saving it and remove that array key entirely
@@ -1242,13 +1272,16 @@ class Admin
             <input type='hidden' value='0' name='wgact_plugin_options[facebook][microdata]'>
             <input type='checkbox' id='wgact_setting_facebook_microdata_active'
                    name='wgact_plugin_options[facebook][microdata]'
-                   value='1' <?php
-            checked($this->options['facebook']['microdata']); ?> />
+                   value='1'
+                <?php checked($this->options['facebook']['microdata']); ?>
+                <?php echo $this->disable_if_demo() ?>
+            />
             <?php
             esc_html_e('Enable Facebook product microdata output', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
         </label>
         <?php
         echo $this->get_status_icon($this->options['facebook']['microdata'], $this->options['facebook']['pixel_id'], true);
+        echo $this->svg_pro_feature();
         if ($this->options['facebook']['microdata'] && !$this->options['facebook']['pixel_id']) {
             echo '<p></p><span class="dashicons dashicons-info"></span>';
             esc_html_e('You need to activate the Facebook pixel', 'woocommerce-google-adwords-conversion-tracking-tag');
@@ -1410,57 +1443,78 @@ class Admin
         <?php
     }
 
-    public function wgact_plugin_option_google_business_vertical__premium_only()
+    public function wgact_plugin_option_google_business_vertical()
     {
         ?>
         <label>
             <input type='radio' id='wgact_plugin_google_business_vertical_0'
                    name='wgact_plugin_options[google][ads][google_business_vertical]'
-                   value='0' <?php
-            echo(checked(0, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php
-            esc_html_e('Retail', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
+                   value='0'
+                <?php echo(checked(0, $this->options['google']['ads']['google_business_vertical'], false)) ?>
+                <?php echo $this->disable_if_demo(); ?>
+            />
+            <?php esc_html_e('Retail', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        </label>
         <br>
         <label>
             <input type='radio' id='wgact_plugin_google_business_vertical_1'
                    name='wgact_plugin_options[google][ads][google_business_vertical]'
-                   value='1' <?php
-            echo(checked(1, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php
-            esc_html_e('Education', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
+                   value='1'
+                <?php echo(checked(1, $this->options['google']['ads']['google_business_vertical'], false)) ?>
+                <?php echo $this->disable_if_demo(); ?>
+            />
+            <?php esc_html_e('Education', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        </label>
         <br>
         <label>
             <input type='radio' id='wgact_plugin_google_business_vertical_3'
                    name='wgact_plugin_options[google][ads][google_business_vertical]'
-                   value='3' <?php
-            echo(checked(3, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php
-            esc_html_e('Hotels and rentals', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
+                   value='3'
+                <?php echo(checked(3, $this->options['google']['ads']['google_business_vertical'], false)) ?>
+                <?php echo $this->disable_if_demo(); ?>
+            />
+            <?php esc_html_e('Hotels and rentals', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        </label>
         <br>
         <label>
             <input type='radio' id='wgact_plugin_google_business_vertical_4'
                    name='wgact_plugin_options[google][ads][google_business_vertical]'
-                   value='4' <?php
-            echo(checked(4, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php
-            esc_html_e('Jobs', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
+                   value='4'
+                <?php echo(checked(4, $this->options['google']['ads']['google_business_vertical'], false)) ?>
+                <?php echo $this->disable_if_demo(); ?>
+            />
+            <?php esc_html_e('Jobs', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        </label>
         <br>
         <label>
             <input type='radio' id='wgact_plugin_google_business_vertical_5'
                    name='wgact_plugin_options[google][ads][google_business_vertical]'
-                   value='5' <?php
-            echo(checked(5, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php
-            esc_html_e('Local deals', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
+                   value='5'
+                <?php echo(checked(5, $this->options['google']['ads']['google_business_vertical'], false)) ?>
+                <?php echo $this->disable_if_demo(); ?>
+            />
+            <?php esc_html_e('Local deals', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        </label>
         <br>
         <label>
             <input type='radio' id='wgact_plugin_google_business_vertical_6'
                    name='wgact_plugin_options[google][ads][google_business_vertical]'
-                   value='6' <?php
-            echo(checked(6, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php
-            esc_html_e('Real estate', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
+                   value='6'
+                <?php echo(checked(6, $this->options['google']['ads']['google_business_vertical'], false)) ?>
+                <?php echo $this->disable_if_demo(); ?>
+            />
+            <?php esc_html_e('Real estate', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        </label>
         <br>
         <label>
             <input type='radio' id='wgact_plugin_google_business_vertical_8'
                    name='wgact_plugin_options[google][ads][google_business_vertical]'
-                   value='8' <?php
-            echo(checked(8, $this->options['google']['ads']['google_business_vertical'], false)) ?> ><?php
-            esc_html_e('Custom', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
+                   value='8'
+                <?php echo(checked(8, $this->options['google']['ads']['google_business_vertical'], false)) ?>
+                <?php echo $this->disable_if_demo(); ?>
+            />
+            <?php esc_html_e('Custom', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+        </label>
         <br>
         <?php
     }
@@ -1604,6 +1658,23 @@ class Admin
         return '<svg height="16" style="vertical-align: middle; margin-left: 8px; margin-bottom: 1px" viewBox="0 0 1104 200" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2"><path d="M1096.11 27.322c0-10.353-8.404-18.757-18.757-18.757H26.649c-10.353 0-18.757 8.404-18.757 18.757v144.752c0 10.353 8.404 18.758 18.757 18.758h1050.704c10.353 0 18.757-8.405 18.757-18.758V27.322z" fill="none"/><path d="M1096.11 27.322c0-10.353-8.404-18.757-18.757-18.757H26.649c-10.353 0-18.757 8.404-18.757 18.757v144.752c0 10.353 8.404 18.758 18.757 18.758h1050.704c10.353 0 18.757-8.405 18.757-18.758V27.322zm-10 0v144.752c0 4.833-3.924 8.758-8.757 8.758H26.649c-4.833 0-8.757-3.925-8.757-8.758V27.322c0-4.833 3.924-8.757 8.757-8.757h1050.704c4.833 0 8.757 3.924 8.757 8.757z" fill="#fab32a"/><g><text font-family="\'LucidaGrande\',\'Lucida Grande\',sans-serif" font-weight="500" font-size="142.259" fill="#fab32a" transform="translate(50.412 141.122)">partially active</text></g></svg>';
     }
 
+    private function svg_pro_feature(): string
+    {
+        if (!wga_fs()->is__premium_only() && $this->options['general']['pro_version_demo']) {
+            return '<svg height="28" style="vertical-align: top; margin-left: 8px; margin-bottom: 1px"  viewBox="0 0 830 200"
+    xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
+    <path d="M822.793 34.281c0-14.148-11.488-25.636-25.638-25.636H32.843c-14.149 0-25.637 11.488-25.637 25.636V165.72c0 14.15 11.488 25.637 25.637 25.637h764.312c14.15 0 25.638-11.487 25.638-25.637V34.28z" fill="none"/>
+    <path d="M822.793 34.281c0-14.148-11.488-25.636-25.638-25.636H32.843c-14.149 0-25.637 11.488-25.637 25.636V165.72c0 14.15 11.488 25.637 25.637 25.637h764.312c14.15 0 25.638-11.487 25.638-25.637V34.28zm-10 0V165.72c0 8.63-7.006 15.635-15.638 15.635H32.843c-8.63 0-15.636-7.005-15.636-15.635V34.28c0-8.63 7.007-15.635 15.636-15.635h764.312c8.632 0 15.639 7.005 15.639 15.635z" fill="#18b208"/>
+    <g>
+        <text font-family="\'LucidaGrande\',\'Lucida Grande\',sans-serif" font-weight="500" font-size="144.709" fill="#18b208" transform="matrix(.9989 0 0 .98128 15.867 150.442)">Pro Feature</text>
+    </g>
+</svg>';
+        } else {
+            return '';
+        }
+
+    }
+
     private function get_status_icon($status, $requirements = true, $inactive_silent = false): string
     {
         if ($status && $requirements) {
@@ -1614,6 +1685,15 @@ class Admin
             return $this->svg_inactive();
         }
         return '';
+    }
+
+    private function disable_if_demo(): string
+    {
+        if (!wga_fs()->is__premium_only() && $this->options['general']['pro_version_demo']) {
+            return 'disabled';
+        } else {
+            return '';
+        }
     }
 
     // validate the options
@@ -2169,5 +2249,14 @@ class Admin
             'ZM'    => 'Zambia',
             'ZW'    => 'Zimbabwe',
         ];
+    }
+
+    private function pro_version_demo_active(): bool
+    {
+        if ($this->options['general']['pro_version_demo']) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

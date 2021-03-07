@@ -125,6 +125,7 @@ class Pixel_Manager
 
             $product_id = get_the_ID();
             $product    = wc_get_product($product_id);
+//            $product    = wc_get_product(645645645);
 
             if (is_bool($product)) {
 //               error_log( 'WooCommerce detects the page ID ' . $product_id . ' as product, but when invoked by wc_get_product( ' . $product_id . ' ) it returns no product object' );

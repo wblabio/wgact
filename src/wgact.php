@@ -5,7 +5,7 @@
  * Author:       Wolf+Bär Agency
  * Plugin URI:   https://wordpress.org/plugins/woocommerce-google-adwords-conversion-tracking-tag/
  * Author URI:   https://wolfundbaer.ch
- * Version:      1.8.18
+ * Version:      1.8.19
  * License:      GPLv2 or later
  * Text Domain:  woocommerce-google-adwords-conversion-tracking-tag
  * WC requires at least: 2.6
@@ -61,11 +61,11 @@ if (function_exists('wga_fs')) {
                     // If your plugin is a serviceware, set this option to false.
                     'has_premium_version' => true,
                     'has_addons'          => false,
-                    'has_paid_plans'      => false,
-//                    'trial'               => [
-//                        'days'               => 14,
-//                        'is_require_payment' => true,
-//                    ],
+                    'has_paid_plans'      => true,
+                    'trial'               => [
+                        'days'               => 14,
+                        'is_require_payment' => true,
+                    ],
                     'menu'                => [
                         'slug'           => 'wgact',
                         'override_exact' => true,
@@ -307,6 +307,7 @@ if (function_exists('wga_fs')) {
                 'general' => [
                     'variations_output' => 1,
                     'maximum_compatibility_mode' => 0,
+                    'pro_version_demo' => 0,
                 ],
                 'db_version' => WGACT_DB_VERSION,
             ];

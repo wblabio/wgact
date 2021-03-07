@@ -6,5 +6,8 @@ jQuery(function(){
         document.execCommand('copy');
     });
 
+    jQuery("#wgact_pro_version_demo").on('click', function () {
+        jQuery("#submit").click();
+    });
 });
 
