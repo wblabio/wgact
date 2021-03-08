@@ -1254,7 +1254,7 @@ class Admin
                 {$this->disable_if_demo()}
                 />";
         echo $this->get_status_icon($this->options['google']['ads']['phone_conversion_number']);
-//        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=hotjar-site-id#/pixels/hotjar');
+        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-ads-phone-conversion-number#/pixels/google-ads?id=phone-conversion-number');
         echo $this->svg_pro_feature();
         echo '<br><br>';
         esc_html_e('The Google Ads phone conversion number must be in the same format as on the website.', 'woocommerce-google-adwords-conversion-tracking-tag');
