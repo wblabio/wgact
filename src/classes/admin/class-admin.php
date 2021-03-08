@@ -252,7 +252,7 @@ class Admin
                 esc_html__(
                     'Microsoft Advertising UET tag ID',
                     'woocommerce-google-adwords-conversion-tracking-tag'
-                ) . $this->svg_beta(),
+                ),
                 [$this, 'wgact_option_html_bing_uet_tag_id'],
                 'wgact_plugin_options_page',
                 $section_ids['settings_name']
@@ -289,7 +289,7 @@ class Admin
             esc_html__(
                 'Hotjar site ID',
                 'woocommerce-google-adwords-conversion-tracking-tag'
-            ) . $this->svg_beta(),
+            ),
             [$this, 'wgact_option_html_hotjar_site_id'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
@@ -434,9 +434,9 @@ class Admin
         add_settings_field(
             'wgact_setting_google_analytics_link_attribution',
             esc_html__(
-                'Link Attribution',
+                'Enhanced Link Attribution',
                 'woocommerce-google-adwords-conversion-tracking-tag'
-            ) . $this->svg_beta(),
+            ),
             [$this, 'wgact_setting_html_google_analytics_link_attribution'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
@@ -1214,7 +1214,7 @@ class Admin
                    value='1' <?php
             checked($this->options['google']['analytics']['link_attribution']); ?> />
             <?php
-            esc_html_e('Enable Google Analytics link attribution', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+            esc_html_e('Enable Google Analytics enhanced link attribution', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
         </label>
         <?php
         echo $this->get_status_icon($this->options['google']['analytics']['link_attribution'], $this->options['google']['analytics']['universal']['property_id'] || $this->options['google']['analytics']['ga4']['measurement_id'], true); ?>

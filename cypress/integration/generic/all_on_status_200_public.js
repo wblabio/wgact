@@ -106,6 +106,10 @@ describe('status 200 public', () => {
         cy.visit('/sample-page/')
     })
 
+    it('visit WC shortcode test page', () => {
+        cy.visit('/shortcode-test/')
+    })
+
     // it('visit WC post page', () =>{
     //     cy.visit('/2019/12/13/hello-world/')
     // })

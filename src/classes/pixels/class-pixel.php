@@ -30,7 +30,7 @@ class Pixel
         $this->options     = $options;
         $this->options_obj = $options_obj;
 
-        $this->order_total_logic   = $this->options['shop']['order_total_logic'];
+        $this->order_total_logic = $this->options['shop']['order_total_logic'];
 //        $this->add_cart_data       = $this->options['google']['ads']['add_cart_data'];
         $this->add_cart_data       = $this->options['google']['ads']['aw_merchant_id'] ? true : false;
         $this->aw_merchant_id      = $this->options['google']['ads']['aw_merchant_id'];
@@ -40,7 +40,6 @@ class Pixel
         $this->product_identifier  = $this->options['google']['ads']['product_identifier'];
         $this->gtag_deactivation   = $this->options['google']['gtag']['deactivation'];
     }
-
 
 
     // get an array with all product categories
@@ -114,6 +113,15 @@ class Pixel
             } else {
                 return (string)$product_id;
             }
+        }
+    }
+
+    protected function is_google_ads_active(): bool
+    {
+        if ($this->options_obj->google->ads->conversion_id && $this->options_obj->google->ads->conversion_label) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

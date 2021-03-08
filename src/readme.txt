@@ -106,6 +106,7 @@ You can send the link to the front page of your shop too if you think it would b
 = 1.8.19 =
 
 * New: Added Pro feature demo mode
+* New: Added shortcodes for tracking leads and similar conversions
 
 = 1.8.18 =
 

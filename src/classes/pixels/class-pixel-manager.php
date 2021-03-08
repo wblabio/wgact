@@ -61,6 +61,8 @@ class Pixel_Manager
                 $this->inject_body_pixels();
             });
         }
+
+        new Shortcodes($this->options, $this->options_obj);
     }
 
     public function ajax_purchase_pixels_fired_handler__premium_only()
