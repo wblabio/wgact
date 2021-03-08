@@ -19,8 +19,8 @@ class Shortcodes extends Pixel
     {
         $shortcode_attributes = shortcode_atts([
             'pixel'                 => 'all',
-            'conversion-id'         => $this->options_obj->google->ads->conversion_id,
-            'conversion-label'      => '',
+            'gads-conversion-id'    => $this->options_obj->google->ads->conversion_id,
+            'gads-conversion-label' => '',
             'fbc-event'             => 'Lead',
             'twc-event'             => 'CompleteRegistration',
             'pinc-event'            => 'lead',
@@ -55,7 +55,7 @@ class Shortcodes extends Pixel
         ?>
 
         <script>
-            gtag('event', 'conversion', {'send_to': 'AW-<?php echo $shortcode_attributes['conversion-id'] ?>/<?php echo $shortcode_attributes['conversion-label'] ?>'});
+            gtag('event', 'conversion', {'send_to': 'AW-<?php echo $shortcode_attributes['gads-conversion-id'] ?>/<?php echo $shortcode_attributes['gads-conversion-label'] ?>'});
         </script>
         <?php
     }
@@ -114,8 +114,8 @@ class Shortcodes extends Pixel
             window.uetq = window.uetq || [];
             window.uetq.push('event', '<?php echo $shortcode_attributes['ms-ads-event'] ?>', {
                 'event_category': '<?php echo $shortcode_attributes['ms-ads-event-category'] ?>',
-                'event_label': '<?php echo $shortcode_attributes['ms-ads-event-label'] ?>',
-                'event_value': '<?php echo $shortcode_attributes['ms-ads-event-value'] ?>'
+                'event_label'   : '<?php echo $shortcode_attributes['ms-ads-event-label'] ?>',
+                'event_value'   : '<?php echo $shortcode_attributes['ms-ads-event-value'] ?>'
             });
         </script>
         <?php

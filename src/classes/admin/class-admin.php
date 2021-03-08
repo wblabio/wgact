@@ -441,6 +441,20 @@ class Admin
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
+
+        if (wga_fs()->is__premium_only() || $this->pro_version_demo_active()) {
+            // add fields for the Google Ads phone conversion number
+            add_settings_field(
+                'wgact_setting_google_ads_phone_conversion_number',
+                esc_html__(
+                    'Google Ads phone conversion number',
+                    'woocommerce-google-adwords-conversion-tracking-tag'
+                ),
+                [$this, 'wgact_setting_html_google_ads_phone_conversion_number'],
+                'wgact_plugin_options_page',
+                $section_ids['settings_name']
+            );
+        }
     }
 
     public function add_section_advanced_subsection_cookie_consent_mgmt($section_ids)
@@ -1146,7 +1160,7 @@ class Admin
                 name="wgact_plugin_options[google][consent_mode][regions][]"
                 style="width:350px" data-placeholder="Choose countries&hellip;" aria-label="Country"
                 class="wc-enhanced-select"
-                <?php echo $this->disable_if_demo() ?>
+            <?php echo $this->disable_if_demo() ?>
         >
             <?php foreach ($this->get_consent_mode_regions() as $region_code => $region_name) : ?>
                 <option value="<?php echo $region_code ?>" <?php echo in_array($region_code, $this->options['google']['consent_mode']['regions']) ? 'selected' : ''; ?>><?php echo $region_name ?></option>
@@ -1227,6 +1241,23 @@ class Admin
             esc_html_e('You need to activate at least Google Analytics UA or Google Analytics 4', 'woocommerce-google-adwords-conversion-tracking-tag');
             echo '</p><br>';
         }
+    }
+
+    public function wgact_setting_html_google_ads_phone_conversion_number()
+    {
+        echo "<input 
+                id='wgact_plugin_google_ads_phone_conversion_number' 
+                name='wgact_plugin_options[google][ads][phone_conversion_number]' 
+                size='40' 
+                type='text' 
+                value='{$this->options['google']['ads']['phone_conversion_number']}' 
+                {$this->disable_if_demo()}
+                />";
+        echo $this->get_status_icon($this->options['google']['ads']['phone_conversion_number']);
+//        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=hotjar-site-id#/pixels/hotjar');
+        echo $this->svg_pro_feature();
+        echo '<br><br>';
+        esc_html_e('The Google Ads phone conversion number must be in the same format as on the website.', 'woocommerce-google-adwords-conversion-tracking-tag');
     }
 
     public function wgact_setting_html_borlabs_support()

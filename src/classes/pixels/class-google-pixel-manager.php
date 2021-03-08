@@ -87,6 +87,22 @@ class Google_Pixel_Manager extends Google_Pixel
             </script>
             <?php
         }
+
+        if ($this->is_google_ads_active() && $this->options_obj->google->ads->phone_conversion_number) {
+               $this->inject_phone_conversion_number_html__premium_only();
+        }
+    }
+
+    private function inject_phone_conversion_number_html__premium_only()
+    {
+        ?>
+
+        <script>
+            gtag('config', 'AW-<?php echo $this->options_obj->google->ads->conversion_id ?>/<?php echo $this->options_obj->google->ads->conversion_label ?>', {
+                'phone_conversion_number': '<?php echo $this->options_obj->google->ads->phone_conversion_number ?>'
+            });
+        </script>
+        <?php
     }
 
     public function inject_product_category()

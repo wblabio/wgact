@@ -256,16 +256,17 @@ if (function_exists('wga_fs')) {
                         'aw_merchant_id'           => '',
                         'product_identifier'       => 0,
                         'google_business_vertical' => 0,
-                        'dynamic_remarketing'      => 0
+                        'dynamic_remarketing'      => 0,
+                        'phone_conversion_number'  => '',
                     ],
                     'analytics'    => [
-                        'universal' => [
+                        'universal'        => [
                             'property_id' => '',
                         ],
-                        'ga4'       => [
+                        'ga4'              => [
                             'measurement_id' => '',
                         ],
-                        'eec' => 0,
+                        'eec'              => 0,
                         'link_attribution' => 0,
                     ],
                     'optimize'     => [
@@ -275,7 +276,7 @@ if (function_exists('wga_fs')) {
                         'deactivation' => 0,
                     ],
                     'consent_mode' => [
-                        'active' => 0,
+                        'active'  => 0,
                         'regions' => [],
                     ],
                 ],
@@ -304,10 +305,10 @@ if (function_exists('wga_fs')) {
                     ],
                     'order_deduplication' => 1
                 ],
-                'general' => [
-                    'variations_output' => 1,
+                'general'    => [
+                    'variations_output'          => 1,
                     'maximum_compatibility_mode' => 0,
-                    'pro_version_demo' => 0,
+                    'pro_version_demo'           => 0,
                 ],
                 'db_version' => WGACT_DB_VERSION,
             ];
