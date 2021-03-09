@@ -183,6 +183,8 @@ class Google_Pixel_Manager extends Google_Pixel
             'link_attribution' => $this->options_obj->google->analytics->link_attribution ? 'true' : 'false', // must be a string for correct output
         ];
 
+        $analytics_parameters = apply_filters('woopt_pm_analytics_parameters', $id, $analytics_parameters);
+
         if ('ads' === $channel) {
             return "gtag('config', 'AW-" . $id . "');" . PHP_EOL;
         } elseif ('analytics') {
