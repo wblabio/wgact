@@ -9,7 +9,7 @@
  * License:      GPLv2 or later
  * Text Domain:  woocommerce-google-adwords-conversion-tracking-tag
  * WC requires at least: 2.6
- * WC tested up to: 5.0
+ * WC tested up to: 5.1
  *
  * @fs_premium_only /classes/pixels/class-bing.php, /classes/pixels/class-twitter.php, /classes/pixels/class-pinterest.php, /classes/pixels/class-facebook-microdata.php, /classes/pixels/class-google-enhanced-ecommerce.php
  *
