@@ -64,33 +64,19 @@ class Google_Pixel_Manager extends Google_Pixel
         <?php
 
         if ($this->options_obj->google->consent_mode->active && (new Environment_Check())->is_borlabs_cookie_active()) {
-            ?>
-
-            <script>
-                (function updateGoogleConsentMode() {
-                    if (typeof BorlabsCookie == "undefined" || typeof gtag == "undefined") {
-                        window.setTimeout(updateGoogleConsentMode, 50);
-                    } else {
-                        if (window.BorlabsCookie.checkCookieGroupConsent('statistics')) {
-                            gtag('consent', 'update', {
-                                'analytics_storage': 'granted'
-                            });
-                        }
-
-                        if (window.BorlabsCookie.checkCookieGroupConsent('marketing')) {
-                            gtag('consent', 'update', {
-                                'ad_storage': 'granted'
-                            });
-                        }
-                    }
-                })();
-            </script>
-            <?php
+           $this->inject_borlabs_consent_mode_update();
         }
 
         if ($this->is_google_ads_active() && $this->options_obj->google->ads->phone_conversion_number) {
                $this->inject_phone_conversion_number_html__premium_only();
         }
+        
+        $this->inject_product_data_layer();
+    }
+
+    private function inject_product_data_layer()
+    {
+        
     }
 
     private function inject_phone_conversion_number_html__premium_only()
@@ -101,6 +87,32 @@ class Google_Pixel_Manager extends Google_Pixel
             gtag('config', 'AW-<?php echo $this->options_obj->google->ads->conversion_id ?>/<?php echo $this->options_obj->google->ads->conversion_label ?>', {
                 'phone_conversion_number': '<?php echo $this->options_obj->google->ads->phone_conversion_number ?>'
             });
+        </script>
+        <?php
+    }
+
+    private function inject_borlabs_consent_mode_update()
+    {
+        ?>
+
+        <script>
+            (function updateGoogleConsentMode() {
+                if (typeof BorlabsCookie == "undefined" || typeof gtag == "undefined") {
+                    window.setTimeout(updateGoogleConsentMode, 50);
+                } else {
+                    if (window.BorlabsCookie.checkCookieGroupConsent('statistics')) {
+                        gtag('consent', 'update', {
+                            'analytics_storage': 'granted'
+                        });
+                    }
+
+                    if (window.BorlabsCookie.checkCookieGroupConsent('marketing')) {
+                        gtag('consent', 'update', {
+                            'ad_storage': 'granted'
+                        });
+                    }
+                }
+            })();
         </script>
         <?php
     }
