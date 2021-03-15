@@ -36,4 +36,23 @@ trait Trait_Product
             return '';
         }
     }
+
+    // get an array with all product categories
+    public function get_product_category($product_id): array
+    {
+        $prod_cats        = get_the_terms($product_id, 'product_cat');
+        $prod_cats_output = [];
+
+        // only continue with the loop if one or more product categories have been set for the product
+        if (!empty($prod_cats)) {
+            foreach ((array)$prod_cats as $key) {
+                array_push($prod_cats_output, $key->name);
+            }
+
+            // apply filter to the $prod_cats_output array
+            $prod_cats_output = apply_filters('wgact_filter', $prod_cats_output, 'prod_cats_output');
+        }
+
+        return $prod_cats_output;
+    }
 }

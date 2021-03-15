@@ -50,6 +50,9 @@ class Pixel_Manager
         if (wga_fs()->is__premium_only()) {
             add_action('wp_ajax_wgact_purchase_pixels_fired', [$this, 'ajax_purchase_pixels_fired_handler__premium_only']);
             add_action('wp_ajax_nopriv_wgact_purchase_pixels_fired', [$this, 'ajax_purchase_pixels_fired_handler__premium_only']);
+
+            add_action('wp_ajax_wooptpm_get_cart_items', [$this, 'ajax_wooptpm_get_cart_items__premium_only']);
+            add_action('wp_ajax_nopriv_wooptpm_get_cart_items', [$this, 'ajax_wooptpm_get_cart_items__premium_only']);
         }
 
         add_action('wp_head', function () {
@@ -65,6 +68,60 @@ class Pixel_Manager
         new Shortcodes($this->options, $this->options_obj);
     }
 
+    public function ajax_wooptpm_get_cart_items__premium_only()
+    {
+        global $woocommerce;
+
+        $cart_items = $woocommerce->cart->get_cart();
+
+        $data = [];
+
+        foreach ($cart_items as $cart_item => $value) {
+
+//            error_log('qty: ' . $value['quantity']);
+
+//            error_log(print_r($value['data'], true));
+
+
+
+
+            $product = wc_get_product($value['data']->get_id());
+
+            $data['cart_item_keys'][$cart_item] = [
+                'id' => $product->get_id(),
+                'is_variation' => false,
+            ];
+
+            $data['cart'][$product->get_id()] = [
+                'id'           => $product->get_id(),
+                'name'         => $product->get_name(),
+                //                'list_name'     => '',
+                'brand'        => $this->get_brand_name($product->get_id()),
+                'category'     => $this->get_product_category($product->get_id()),
+                //                'variant'       => '',
+                //                'list_position' => '',
+                'quantity'     => $value['quantity'],
+                'price'        => $product->get_price(),
+                'is_variation' => false,
+            ];
+//            error_log('id: ' . $product->get_id());
+//            error_log('type: ' . $product->get_type());
+
+            if ($product->is_type('variation')) {
+//                error_log('is variation');
+                $data['cart'][$product->get_id()]['parent_id']    = $product->get_parent_id();
+                $data['cart'][$product->get_id()]['is_variation'] = true;
+
+                $data['cart_item_keys'][$cart_item]['parent_id'] = $product->get_parent_id();
+                $data['cart_item_keys'][$cart_item]['is_variation'] = true;
+            }
+        }
+
+//        error_log(print_r($data, true));
+
+        wp_send_json($data);
+    }
+
     public function ajax_purchase_pixels_fired_handler__premium_only()
     {
         $order_id = $_POST['order_id'];
@@ -78,6 +135,9 @@ class Pixel_Manager
         if (wga_fs()->is__premium_only()) {
             wp_enqueue_script('front-end-scripts-premium-only', plugin_dir_url(__DIR__) . '../js/public/wgact__premium_only.js', [], WGACT_CURRENT_VERSION, false);
             wp_localize_script('front-end-scripts-premium-only', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
+
+            wp_enqueue_script('eec', plugin_dir_url(__DIR__) . '../js/public/eec__premium_only.js', [], WGACT_CURRENT_VERSION, false);
+            wp_localize_script('eec', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
         }
     }
 

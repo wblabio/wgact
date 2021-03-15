@@ -64,19 +64,186 @@ class Google_Pixel_Manager extends Google_Pixel
         <?php
 
         if ($this->options_obj->google->consent_mode->active && (new Environment_Check())->is_borlabs_cookie_active()) {
-           $this->inject_borlabs_consent_mode_update();
+            $this->inject_borlabs_consent_mode_update();
         }
 
         if ($this->is_google_ads_active() && $this->options_obj->google->ads->phone_conversion_number) {
-               $this->inject_phone_conversion_number_html__premium_only();
+            $this->inject_phone_conversion_number_html__premium_only();
         }
-        
-        $this->inject_product_data_layer();
+
+        $this->inject_data_layer_init();
+        $this->inject_data_layer_shop();
+        $this->inject_data_layer_product();
+        $this->inject_data_layer_pixels();
     }
 
-    private function inject_product_data_layer()
+    private function inject_data_layer_pixels()
     {
-        
+        ?>
+
+        <script>
+            wooptpmDataLayer['pixels'] = {
+                'dynamic_remarketing': true,
+            };
+        </script>
+        <?php
+    }
+
+    private function inject_data_layer_init()
+    {
+        ?>
+        <script>
+            window.wooptpmDataLayer = window.wooptpmDataLayer || [];
+            // window.wooptpmDataLayer['cart'] = window.wooptpmDataLayer['cart'] || {};
+        </script>
+
+        <?php
+    }
+
+    private function inject_data_layer_shop()
+    {
+        $data = [];
+
+        if (is_product_category()) {
+            $data['list_name'] = 'Product Category';
+            $data['page_type'] = 'product_category';
+        } elseif (is_product_tag()) {
+            $data['list_name'] = 'Product Tag';
+            $data['page_type'] = 'product_tag';
+        } elseif (is_search()) {
+            $data['list_name'] = 'Product Search';
+            $data['page_type'] = 'search';
+        } elseif (is_shop()) {
+            $data['list_name'] = 'Shop';
+            $data['page_type'] = 'product_shop';
+        } elseif (is_product()) {
+            $data['page_type'] = 'product';
+
+            $product_id           = get_the_ID();
+            $product              = wc_get_product($product_id);
+            $data['product_type'] = $product->get_type();
+        } elseif (is_cart()) {
+            $data['list_name'] = '';
+            $data['page_type'] = 'cart';
+        } else {
+            $data['list_name'] = '';
+        }
+
+
+        ?>
+
+        <script>
+            wooptpmDataLayer['shop'] = <?php echo json_encode($data) ?>;
+        </script>
+        <?php
+    }
+
+    private function inject_data_layer_product()
+    {
+        global $wp_query, $woocommerce;
+
+        if (is_shop() || is_product_category() || is_product_tag() || is_search()) {
+
+            $product_ids = [];
+            $posts       = $wp_query->posts;
+            foreach ($posts as $key => $post) {
+                if ($post->post_type == 'product') {
+                    array_push($product_ids, $post->ID);
+                }
+            }
+
+            ?>
+
+            <script>
+                wooptpmDataLayer['visible_products'] = <?php echo json_encode($this->eec_get_visible_products($product_ids)) ?>;
+            </script>
+            <?php
+        } elseif (is_cart()) {
+            $visible_product_ids = [];
+            $upsell_product_ids  = [];
+
+            $items = $woocommerce->cart->get_cart();
+            foreach ($items as $item => $values) {
+                array_push($visible_product_ids, $values['data']->get_id());
+                $product                   = wc_get_product($values['data']->get_id());
+                $single_product_upsell_ids = $product->get_upsell_ids();
+//                error_log(print_r($single_product_upsell_ids,true));
+
+                foreach ($single_product_upsell_ids as $item => $value) {
+//                    error_log('item ' . $item);
+//                    error_log('value' . $value);
+
+                    if (!in_array($value, $upsell_product_ids, true)) {
+                        array_push($upsell_product_ids, $value);
+                    }
+                }
+            }
+
+//            error_log(print_r($upsell_product_ids,true));
+
+            ?>
+
+            <script>
+                wooptpmDataLayer['visible_products'] = <?php echo json_encode($this->eec_get_visible_products($visible_product_ids)) ?>;
+                wooptpmDataLayer['upsell_products'] = <?php echo json_encode($this->eec_get_visible_products($upsell_product_ids)) ?>;
+            </script>
+            <?php
+        } elseif (is_product()) {
+
+            $product            = wc_get_product(get_the_ID());
+
+            $visible_product_ids = [];
+            array_push($visible_product_ids, get_the_ID());
+
+            $related_products = wc_get_related_products(get_the_ID());
+            foreach ($related_products as $item => $value) {
+                array_push($visible_product_ids, $value);
+            }
+
+            $upsell_product_ids = $product->get_upsell_ids();
+            foreach ($upsell_product_ids as $item => $value) {
+                array_push($visible_product_ids, $value);
+            }
+//            error_log(print_r($visible_product_ids, true));
+
+            if ($product->get_type() === 'grouped'){
+                $visible_product_ids = array_merge($visible_product_ids, $product->get_children());
+            }
+
+            ?>
+
+            <script>
+                wooptpmDataLayer['visible_products'] = <?php echo json_encode($this->eec_get_visible_products($visible_product_ids)) ?>;
+            </script>
+            <?php
+        }
+    }
+
+    private function eec_get_visible_products($product_ids): array
+    {
+        $data = [];
+
+        $position = 1;
+
+        foreach ($product_ids as $key => $product_id) {
+
+            $product = wc_get_product($product_id);
+
+            $data[$product->get_id()] = [
+                'id'       => (string)$product->get_id(),
+                'sku'      => (string)$product->get_sku(),
+                'name'     => (string)$product->get_name(),
+                'price'    => (string)$product->get_price(),
+                'brand'    => $this->get_brand_name($product->get_id()),
+                'category' => (array)$this->get_product_category($product->get_id()),
+                // 'variant'  => '',
+                'quantity' => (int)1,
+                'position' => (int)$position,
+            ];
+            $position++;
+        }
+
+        return $data;
     }
 
     private function inject_phone_conversion_number_html__premium_only()

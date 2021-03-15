@@ -48,7 +48,14 @@ describe('purchase', () => {
         // add grouped product
         cy.visit('/product/logo-collection/')
             .get('.input-text.qty')
-                .type('1')
+                .eq(0)
+                .type('7')
+            .get('.input-text.qty')
+                .eq(1)
+                .type('8')
+            .get('.input-text.qty')
+                .eq(2)
+                .type('9')
         cy.contains('Add to cart')
             .click()
 

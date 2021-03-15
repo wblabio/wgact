@@ -54,6 +54,12 @@ class Google_Ads extends Google_Pixel
 
     public function inject_product($product_id_compiled, $product, $product_attributes)
     {
+//global $wp_query;
+//        error_log(print_r($related_products, true));
+//        error_log(print_r(wc_get_related_products($product->get_id()), true));
+//                error_log(print_r($wp_query, true));
+
+
         if ($this->is_dynamic_remarketing_active()) {
 
             $product_details = $this->get_gads_formatted_product_details_from_product_id($product->get_id());
