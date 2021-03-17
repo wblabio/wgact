@@ -52,7 +52,7 @@ class Debug_info {
         $last_order_id = $this->get_last_order_id();
 //		echo('last order: ' . $last_order_id . PHP_EOL);
         $last_order = new WC_Order(wc_get_order($last_order_id));
-        $html       .= 'Last order URL: ' . $last_order->get_checkout_order_received_url() . PHP_EOL;
+        $html       .= 'Last order URL: ' . $last_order->get_checkout_order_received_url() . '&nodedupe' . PHP_EOL;
 
 
         $html .= PHP_EOL . '## Theme ##' . PHP_EOL . PHP_EOL;
