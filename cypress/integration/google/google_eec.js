@@ -103,7 +103,15 @@ describe('status 200 public', () => {
         // add grouped product
         cy.visit('/product/logo-collection/')
             .get('.input-text.qty')
-            .type('1')
+                .eq(0)
+                .type('3')
+            .get('.input-text.qty')
+                .eq(1)
+                .type('4')
+            .get('.input-text.qty')
+                .eq(2)
+                .type('5')
+
         cy.contains('Add to cart')
             .click()
 
@@ -114,8 +122,17 @@ describe('status 200 public', () => {
 
         cy.get('.woocommerce-mini-cart-item')
             .get('.remove_from_cart_button')
-            .click({force:true})
-            .wait(400)
+                .eq(0)
+                .click({force:true})
+                .wait(400)
+            .get('.remove_from_cart_button')
+                .eq(0)
+                .click({force:true})
+                .wait(400)
+            .get('.remove_from_cart_button')
+                .eq(0)
+                .click({force:true})
+                .wait(400)
     })
 
     // it('ado to cart WC product page: external product', () => {
