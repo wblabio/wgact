@@ -85,7 +85,7 @@ class Pixel_Manager
             $product = wc_get_product($value['data']->get_id());
 
             $data['cart_item_keys'][$cart_item] = [
-                'id' => $product->get_id(),
+                'id'           => $product->get_id(),
                 'is_variation' => false,
             ];
 
@@ -109,7 +109,7 @@ class Pixel_Manager
                 $data['cart'][$product->get_id()]['parent_id']    = $product->get_parent_id();
                 $data['cart'][$product->get_id()]['is_variation'] = true;
 
-                $data['cart_item_keys'][$cart_item]['parent_id'] = $product->get_parent_id();
+                $data['cart_item_keys'][$cart_item]['parent_id']    = $product->get_parent_id();
                 $data['cart_item_keys'][$cart_item]['is_variation'] = true;
             }
         }
@@ -198,7 +198,10 @@ class Pixel_Manager
                 if ($this->query_string_contains_all_variation_attributes($product)) {
                     // get variation product
                     $product_id = $this->get_variation_from_query_string($product_id, $product);
-                    $product    = wc_get_product($product_id);
+
+                    if (!is_bool(wc_get_product($product_id))) {
+                        $product = wc_get_product($product_id);
+                    }
                 }
             }
 
@@ -246,10 +249,10 @@ class Pixel_Manager
                 $conversion_prevention = apply_filters('wgact_conversion_prevention', $conversion_prevention, $order);
 
                 if ($this->is_nodedupe_parameter_set() ||
-                        (!$order->has_status('failed') &&
+                    (!$order->has_status('failed') &&
                         !current_user_can('edit_others_pages') &&
                         $conversion_prevention == false &&
-                            (!$this->options['shop']['order_deduplication'] ||
+                        (!$this->options['shop']['order_deduplication'] ||
                             get_post_meta($order->get_id(), '_WGACT_conversion_pixel_fired', true) != true))) {
 
                     $this->increase_conversion_count_for_ratings();
@@ -385,7 +388,7 @@ class Pixel_Manager
     {
         ?>
         <script>
-            let wgact_order_deduplication = <?php echo ($this->options['shop']['order_deduplication'] && ! $this->is_nodedupe_parameter_set()) ? 'true' : 'false' ?>;
+            let wgact_order_deduplication = <?php echo ($this->options['shop']['order_deduplication'] && !$this->is_nodedupe_parameter_set()) ? 'true' : 'false' ?>;
         </script>
         <?php
     }
@@ -476,7 +479,7 @@ class Pixel_Manager
 
     private function is_nodedupe_parameter_set(): bool
     {
-        if(isset($_GET["nodedupe"])) {
+        if (isset($_GET["nodedupe"])) {
             return true;
         } else {
             return false;
