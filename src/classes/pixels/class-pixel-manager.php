@@ -82,9 +82,6 @@ class Pixel_Manager
 
 //            error_log(print_r($value['data'], true));
 
-
-
-
             $product = wc_get_product($value['data']->get_id());
 
             $data['cart_item_keys'][$cart_item] = [
@@ -189,11 +186,6 @@ class Pixel_Manager
             $product    = wc_get_product($product_id);
 //            $product    = wc_get_product(645645645);
 
-            if (is_bool($product)) {
-//               error_log( 'WooCommerce detects the page ID ' . $product_id . ' as product, but when invoked by wc_get_product( ' . $product_id . ' ) it returns no product object' );
-                return;
-            }
-
             $product_attributes = [
                 'brand' => $this->get_brand_name($product_id),
             ];
@@ -210,6 +202,10 @@ class Pixel_Manager
                 }
             }
 
+            if (is_bool($product)) {
+//               error_log( 'WooCommerce detects the page ID ' . $product_id . ' as product, but when invoked by wc_get_product( ' . $product_id . ' ) it returns no product object' );
+                return;
+            }
 
             $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku());
 

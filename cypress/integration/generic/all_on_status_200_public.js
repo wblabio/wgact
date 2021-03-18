@@ -90,6 +90,10 @@ describe('status 200 public', () => {
         cy.visit(Cypress.env('purchase_confirmation_url'))
     })
 
+    it('visit WC purchase confirmation page with nodedupe parameter', () => {
+        cy.visit(Cypress.env('purchase_confirmation_url') + '&nodedupe')
+    })
+
     it('visit WC purchase confirmation page twice, checking deduping', () => {
         cy.visit(Cypress.env('purchase_confirmation_url'))
         cy.wait(4000);

@@ -110,6 +110,7 @@ You can send the link to the front page of your shop too if you think it would b
 * New: Added Google Analytics eec product add_to_cart and remove_from_cart events
 [//]: # fs_premium_only_end
 * New: Added output of related up- and cross-sell product view_item_list list events for Google Ads dynamic remarketing
+* New: Added &nodedupe URL parameter for testing the order confirmation page
 
 = 1.8.20 =
 

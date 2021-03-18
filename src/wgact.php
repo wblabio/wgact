@@ -77,7 +77,7 @@ if (function_exists('wga_fs')) {
                     ],
                     // Set the SDK to work in a sandbox mode (for development & testing).
                     // IMPORTANT: MAKE SURE TO REMOVE SECRET KEY BEFORE DEPLOYMENT.
-                    'secret_key'          => 'sk_Mf9Be;uQ%dP8:i#M?Zzwm9texPfz}',
+                    'secret_key'          => 'sk_2t^o~F$B}(lo>en:M2TlvgTV@6ltK',
                 ]);
             }
 
