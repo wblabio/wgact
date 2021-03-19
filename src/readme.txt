@@ -111,6 +111,7 @@ You can send the link to the front page of your shop too if you think it would b
 [//]: # fs_premium_only_end
 * New: Added output of related up- and cross-sell product view_item_list list events for Google Ads dynamic remarketing
 * New: Added &nodedupe URL parameter for testing the order confirmation page
+* Tweak: Build in a fallback for misconfigured variable products that trigger an "Error: Call to a member function get_sku() on bool"
 
 = 1.8.20 =
 

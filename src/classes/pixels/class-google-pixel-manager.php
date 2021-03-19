@@ -119,8 +119,7 @@ class Google_Pixel_Manager extends Google_Pixel
         } elseif (is_product()) {
             $data['page_type'] = 'product';
 
-            $product_id           = get_the_ID();
-            $product              = wc_get_product($product_id);
+            $product              = wc_get_product();
             $data['product_type'] = $product->get_type();
         } elseif (is_cart()) {
             $data['list_name'] = '';
@@ -185,17 +184,17 @@ class Google_Pixel_Manager extends Google_Pixel
 
             <script>
                 wooptpmDataLayer['visible_products'] = <?php echo json_encode($this->eec_get_visible_products($visible_product_ids)) ?>;
-                wooptpmDataLayer['upsell_products'] = <?php echo json_encode($this->eec_get_visible_products($upsell_product_ids)) ?>;
+                wooptpmDataLayer['upsell_products']  = <?php echo json_encode($this->eec_get_visible_products($upsell_product_ids)) ?>;
             </script>
             <?php
         } elseif (is_product()) {
 
-            $product            = wc_get_product(get_the_ID());
+            $product = wc_get_product();
 
             $visible_product_ids = [];
-            array_push($visible_product_ids, get_the_ID());
+            array_push($visible_product_ids, $product->get_id());
 
-            $related_products = wc_get_related_products(get_the_ID());
+            $related_products = wc_get_related_products($product->get_id());
             foreach ($related_products as $item => $value) {
                 array_push($visible_product_ids, $value);
             }
@@ -206,7 +205,7 @@ class Google_Pixel_Manager extends Google_Pixel
             }
 //            error_log(print_r($visible_product_ids, true));
 
-            if ($product->get_type() === 'grouped'){
+            if ($product->get_type() === 'grouped') {
                 $visible_product_ids = array_merge($visible_product_ids, $product->get_children());
             }
 

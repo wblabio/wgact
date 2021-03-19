@@ -182,9 +182,8 @@ class Pixel_Manager
 
         } elseif (is_product() && (!isset($_POST['add-to-cart']))) {
 
-            $product_id = get_the_ID();
-            $product    = wc_get_product($product_id);
-//            $product    = wc_get_product(645645645);
+            $product = wc_get_product();
+            $product_id = $product->get_id();
 
             $product_attributes = [
                 'brand' => $this->get_brand_name($product_id),
@@ -199,16 +198,19 @@ class Pixel_Manager
                     // get variation product
                     $product_id = $this->get_variation_from_query_string($product_id, $product);
 
+                    // In case a variable product is misconfigured, wc_get_product($product_id) will not
+                    // get a product but a bool. So we need to test it and only run it if
+                    // we actually get a product. Basically we fall back to the parent product.
                     if (!is_bool(wc_get_product($product_id))) {
                         $product = wc_get_product($product_id);
                     }
                 }
             }
 
-            if (is_bool($product)) {
-//               error_log( 'WooCommerce detects the page ID ' . $product_id . ' as product, but when invoked by wc_get_product( ' . $product_id . ' ) it returns no product object' );
-                return;
-            }
+//            if (is_bool($product)) {
+////               error_log( 'WooCommerce detects the page ID ' . $product_id . ' as product, but when invoked by wc_get_product( ' . $product_id . ' ) it returns no product object' );
+//                return;
+//            }
 
             $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku());
 
