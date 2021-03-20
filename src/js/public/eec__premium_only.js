@@ -75,7 +75,7 @@ jQuery(function () {
         // console.log('test x');
         // alert('test');
         // try {
-        if(wooptpmDataLayer.shop.product_type !== 'grouped'){
+        if (wooptpmDataLayer.shop.product_type !== 'grouped') {
 
             let productId = null;
 
@@ -98,8 +98,8 @@ jQuery(function () {
                 addProductToCart(productId, quantity);
             }
         } else {
-            jQuery('.woocommerce-grouped-product-list-item').each(function (){
-                let quantity = jQuery(this).find('.input-text.qty').val();
+            jQuery('.woocommerce-grouped-product-list-item').each(function () {
+                let quantity  = jQuery(this).find('.input-text.qty').val();
                 let classes   = jQuery(this).attr('class');
                 let regex     = /(?<=post-)\d+/gm;
                 let productId = classes.match(regex)[0];
@@ -111,6 +111,23 @@ jQuery(function () {
         //     console.log('woopt-pm error: couldn\'t execute add_to_cart script');
         //     console.log(e);
         // }
+    });
+
+    // if someone clicks anywhere on a custom /?add-to-cart=123 link
+    // trigger the add to cart event
+    jQuery(document).one('click', function (e) {
+
+        if (jQuery(this)[0].URL) {
+
+            let href         = new URL(jQuery(this)[0].URL);
+            let searchParams = new URLSearchParams(href.search);
+
+            if (searchParams.has('add-to-cart')) {
+
+                let productId = searchParams.get('add-to-cart');
+                addProductToCart(productId, 1);
+            }
+        }
     });
 });
 
@@ -294,4 +311,36 @@ function addProductToCart(productId, quantity, variationId = null) {
             };
         }
     }
+}
+
+jQuery(function () {
+
+    // begin_checkout event
+
+    jQuery(document).one('click', '.checkout-button, .cart-checkout-button, .button.checkout', function (e) {
+
+        gtag('event', 'begin_checkout', {
+            "items": getCartItems()
+        });
+    });
+});
+
+function getCartItems() {
+    let data = [];
+
+    for (const [productId, product] of Object.entries(wooptpmDataLayer.cart)) {
+
+        data.push({
+            'id'  : product.id,
+            'name': product.name,
+            // 'list_name': '',
+            'brand'   : product.brand,
+            'category': product.category,
+            // 'variant'      : product.variant,
+            // 'list_position': 1,
+            'quantity': product.quantity,
+            'price'   : product.price
+        });
+    }
+    return data;
 }

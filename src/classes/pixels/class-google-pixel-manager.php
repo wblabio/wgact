@@ -232,7 +232,7 @@ class Google_Pixel_Manager extends Google_Pixel
                 'id'       => (string)$product->get_id(),
                 'sku'      => (string)$product->get_sku(),
                 'name'     => (string)$product->get_name(),
-                'price'    => (string)$product->get_price(),
+                'price'    => (int)$product->get_price(),
                 'brand'    => $this->get_brand_name($product->get_id()),
                 'category' => (array)$this->get_product_category($product->get_id()),
                 // 'variant'  => '',

@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, conversion tracking, dynamic retargeting, remarke
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 7.2
-Stable tag: 1.8.21
+Stable tag: 1.8.22
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,16 @@ You can send the link to the front page of your shop too if you think it would b
 1. Settings page
 
 == Changelog ==
+
+= 1.8.21 =
+
+[//]: # fs_premium_only_begin
+* New: Added Google Analytics eec begin_checkout event
+[//]: # fs_premium_only_end
+[//]: # fs_premium_only_begin
+* Tweak: Added Google Analytics eec add_to_cart event for all /?add-to-cart=123 link clicks
+[//]: # fs_premium_only_end
+* Fix: Under some circumstances rating_done is not set in the wgact_ratings option. This fix adds this default option.
 
 = 1.8.21 =
 

@@ -78,7 +78,20 @@ class Ask_For_Rating {
 			$this->conversions_count = $wgact_ratings['conversions_count'];
 //		    error_log('conversion count: ' . $wgact_ratings['conversions_count'] );
 
-//            if(false === $wgact_ratings['rating_done'] && $this->conversions_count > $wgact_ratings['rating_threshold'] ){
+            // in rare cases this option has not been set
+            // in those cases we set it to avoid further errors
+            if(! isset($wgact_ratings['rating_done'])){
+                $wgact_ratings['rating_done'] = false;
+                update_option($this->option_name, $wgact_ratings);
+            }
+
+            // in rare cases this option has not been set
+            // in those cases we set it to avoid further errors
+            if(! isset($wgact_ratings['rating_threshold'])){
+                $wgact_ratings['rating_threshold'] = 10;
+                update_option($this->option_name, $wgact_ratings);
+            }
+
             if((false === $wgact_ratings['rating_done'] && $this->conversions_count > $wgact_ratings['rating_threshold']) || ( defined( 'WGACT_ALWAYS_AKS_FOR_RATING' ) && true === WGACT_ALWAYS_AKS_FOR_RATING )){
 
 		            $this->ask_for_rating_notices($this->conversions_count);

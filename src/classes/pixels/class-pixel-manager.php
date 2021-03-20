@@ -90,15 +90,14 @@ class Pixel_Manager
             ];
 
             $data['cart'][$product->get_id()] = [
-                'id'           => $product->get_id(),
-                'name'         => $product->get_name(),
+                'id'           => (string)$product->get_id(),
+                'name'         => (string)$product->get_name(),
                 //                'list_name'     => '',
-                'brand'        => $this->get_brand_name($product->get_id()),
-                'category'     => $this->get_product_category($product->get_id()),
+                'brand'        => (string)$this->get_brand_name($product->get_id()),
                 //                'variant'       => '',
                 //                'list_position' => '',
-                'quantity'     => $value['quantity'],
-                'price'        => $product->get_price(),
+                'quantity'     => (int)$value['quantity'],
+                'price'        => (int)$product->get_price(),
                 'is_variation' => false,
             ];
 //            error_log('id: ' . $product->get_id());
@@ -106,11 +105,15 @@ class Pixel_Manager
 
             if ($product->is_type('variation')) {
 //                error_log('is variation');
-                $data['cart'][$product->get_id()]['parent_id']    = $product->get_parent_id();
+                $data['cart'][$product->get_id()]['parent_id']    = (string)$product->get_parent_id();
                 $data['cart'][$product->get_id()]['is_variation'] = true;
+                $data['cart'][$product->get_id()]['category'] = $this->get_product_category($product->get_parent_id());
 
-                $data['cart_item_keys'][$cart_item]['parent_id']    = $product->get_parent_id();
+
+                $data['cart_item_keys'][$cart_item]['parent_id']    = (string)$product->get_parent_id();
                 $data['cart_item_keys'][$cart_item]['is_variation'] = true;
+            } else {
+                $data['cart'][$product->get_id()]['category'] = $this->get_product_category($product->get_id());
             }
         }
 
@@ -182,7 +185,7 @@ class Pixel_Manager
 
         } elseif (is_product() && (!isset($_POST['add-to-cart']))) {
 
-            $product = wc_get_product();
+            $product    = wc_get_product();
             $product_id = $product->get_id();
 
             $product_attributes = [
