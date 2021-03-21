@@ -57,8 +57,8 @@ class Google_Pixel_Manager extends Google_Pixel
             <?php echo $this->options_obj->google->ads->conversion_id ? $this->gtag_config($conversion_id, 'ads') : PHP_EOL; ?>
             <?php endforeach; ?>
 
-            <?php echo $this->options_obj->google->analytics->universal->property_id ? $this->gtag_config($this->options_obj->google->analytics->universal->property_id, 'analytics') . PHP_EOL : PHP_EOL; ?>
-            <?php echo $this->options_obj->google->analytics->ga4->measurement_id ? $this->gtag_config($this->options_obj->google->analytics->ga4->measurement_id, 'analytics') : PHP_EOL; ?>
+            <?php echo $this->options_obj->google->analytics->universal->property_id ? $this->gtag_config($this->options_obj->google->analytics->universal->property_id, 'ga_ua') . PHP_EOL : PHP_EOL; ?>
+            <?php echo $this->options_obj->google->analytics->ga4->measurement_id ? $this->gtag_config($this->options_obj->google->analytics->ga4->measurement_id, 'ga_4') : PHP_EOL; ?>
 
         </script>
         <?php
@@ -356,17 +356,20 @@ class Google_Pixel_Manager extends Google_Pixel
 
     protected function gtag_config($id, $channel = ''): string
     {
-        $analytics_parameters = [
-            'anonymize_ip'     => 'true', // must be a string for correct output
-            'link_attribution' => $this->options_obj->google->analytics->link_attribution ? 'true' : 'false', // must be a string for correct output
-        ];
-
-        $analytics_parameters = apply_filters('woopt_pm_analytics_parameters', $analytics_parameters, $id);
-
         if ('ads' === $channel) {
             return "gtag('config', 'AW-" . $id . "');" . PHP_EOL;
-        } elseif ('analytics') {
-            return "gtag('config', '" . $id . "', " . json_encode($analytics_parameters) . ");";
+        } elseif ('ga_ua'=== $channel) {
+
+            $ga_ua_parameters = [
+                'anonymize_ip'     => 'true', // must be a string for correct output
+                'link_attribution' => $this->options_obj->google->analytics->link_attribution ? 'true' : 'false', // must be a string for correct output
+            ];
+
+            $ga_ua_parameters = apply_filters('woopt_pm_analytics_parameters', $ga_ua_parameters, $id);
+
+            return "gtag('config', '" . $id . "', " . json_encode($ga_ua_parameters) . ");";
+        } elseif ('ga_4'=== $channel) {
+            return "gtag('config', '" . $id . "');";
         }
     }
 

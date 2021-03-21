@@ -5,6 +5,7 @@ namespace WGACT\Classes\Pixels;
 use stdClass;
 use WC_Order;
 use WGACT\Classes\Admin\Environment_Check;
+use WC_Order_Refund;
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
@@ -35,6 +36,13 @@ class Pixel_Manager
 
         $this->facebook_active = !empty($this->options_obj->facebook->pixel_id);
         $this->google_active   = $this->google_active();
+
+        if($this->options_obj->google->analytics->eec) {
+
+            add_action('woocommerce_order_refunded', [$this, 'eec_action_woocommerce_order_refunded'], 10, 2);
+            add_action('wp_footer', [$this, 'process_refund_to_frontend']);
+            add_action('admin_footer', [$this, 'process_refund_to_frontend']);
+        }
 
         if ($this->options_obj->general->maximum_compatibility_mode) (new Environment_Check())->enable_maximum_compatibility_mode();
 
@@ -488,6 +496,51 @@ class Pixel_Manager
             return true;
         } else {
             return false;
+        }
+    }
+
+    public function eec_action_woocommerce_order_refunded($order_id, $refund_id)
+    {
+        // safe refund task into database
+        update_post_meta($refund_id, 'wooptpm_refund_processed', false);
+    }
+
+    /**
+     * Processes all prepared refunds in post_meta and outputs them on the frontend into the dataLayer.
+     * We only process this on the frontend since the output on is_order_received_page has a higher chance to get
+     * processed properly through GTM.
+     */
+    public function process_refund_to_frontend()
+    {
+        global $wpdb;
+
+        // the following condition is to limit running the following script and potentially overload the server
+        if (is_admin() || is_order_received_page()) {
+
+            $sql = "SELECT meta_id, post_id FROM wp_postmeta WHERE meta_key = 'wooptpm_refund_processed' AND `meta_value` = false";
+
+            $results = $wpdb->get_results($sql);
+
+            foreach ($results as $result) {
+
+                $refund   = new WC_Order_Refund($result->post_id);
+                $order_id = $refund->get_parent_id();
+
+                $refund_items = $refund->get_items();
+
+                $dataLayer_refund_items = [];
+                foreach ($refund_items as $refund_item) {
+
+                    $dataLayer_refund_items[] = [
+                        'id'       => $refund_item->get_product_id(),
+                        'quantity' => $refund_item->get_quantity()
+                    ];
+                }
+
+                $this->output_refund_to_frontend($order_id, $dataLayer_refund_items);
+
+                update_post_meta($result->post_id, 'wooptpm_refund_processed', true);
+            }
         }
     }
 }
