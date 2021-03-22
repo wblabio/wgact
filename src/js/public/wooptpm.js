@@ -38,8 +38,8 @@ wooptpm = function () {
             }
         }
 
-        if (typeof wgactStoreOrderIdOnServer === 'function' && wgact_order_deduplication) {
-            wgactStoreOrderIdOnServer(orderId);
+        if (typeof wooptpmStoreOrderIdOnServer === 'function' && wgact_order_deduplication) {
+            wooptpmStoreOrderIdOnServer(orderId);
         }
     }
 

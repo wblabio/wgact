@@ -1,4 +1,4 @@
-function wgactStoreOrderIdOnServer(orderId) {
+function wooptpmStoreOrderIdOnServer(orderId) {
 
     // save the state in the database
     let data = {
