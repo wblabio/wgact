@@ -134,7 +134,7 @@ class Google_Ads extends Google_Pixel
             <?php
         }
 
-        if ($this->add_cart_data == true && $this->conversion_id && $this->conversion_label ) {
+        if ($this->add_cart_data == true && $this->conversion_id && $this->conversion_label) {
             ?>
 
             <script>
@@ -162,11 +162,15 @@ class Google_Ads extends Google_Pixel
 
                 $item_details = [];
 
-                $product                                  = wc_get_product($post->ID);
-                $item_details['id']                       = $this->get_compiled_product_id($post->ID, $product->get_sku());
-                $item_details['google_business_vertical'] = $this->google_business_vertical;
+                $product = wc_get_product($post->ID);
 
-                array_push($items, $item_details);
+                // only continue if WC retrieves a valid product
+                if (!is_bool($product)) {
+                    $item_details['id']                       = $this->get_compiled_product_id($post->ID, $product->get_sku());
+                    $item_details['google_business_vertical'] = $this->google_business_vertical;
+
+                    array_push($items, $item_details);
+                }
             }
         }
 

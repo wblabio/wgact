@@ -1,4 +1,4 @@
-describe('status 200 public', () => {
+describe('Google Analytics eec events', () => {
 
     const wgact_options_preset = 'all-pixels-enabled.json';
     // const wgact_options_preset_conversion_cart_data_off     = 'all-pixels-enabled_conversion-cart-data-off.json';

@@ -37,7 +37,7 @@ class Pixel_Manager
         $this->facebook_active = !empty($this->options_obj->facebook->pixel_id);
         $this->google_active   = $this->google_active();
 
-        if($this->options_obj->google->analytics->eec) {
+        if ($this->options_obj->google->analytics->eec) {
 
             add_action('woocommerce_order_refunded', [$this, 'eec_action_woocommerce_order_refunded'], 10, 2);
             add_action('wp_footer', [$this, 'process_refund_to_frontend']);
@@ -115,7 +115,7 @@ class Pixel_Manager
 //                error_log('is variation');
                 $data['cart'][$product->get_id()]['parent_id']    = (string)$product->get_parent_id();
                 $data['cart'][$product->get_id()]['is_variation'] = true;
-                $data['cart'][$product->get_id()]['category'] = $this->get_product_category($product->get_parent_id());
+                $data['cart'][$product->get_id()]['category']     = $this->get_product_category($product->get_parent_id());
 
 
                 $data['cart_item_keys'][$cart_item]['parent_id']    = (string)$product->get_parent_id();
@@ -433,9 +433,11 @@ class Pixel_Manager
 
             $product = wc_get_product($product_id);
 
-            $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku());
-
-            array_push($order_items_array, $product_id_compiled);
+            // only continue if WC retrieves a valid product
+            if (!is_bool($product)) {
+                $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku());
+                array_push($order_items_array, $product_id_compiled);
+            }
         }
 
         return $order_items_array;

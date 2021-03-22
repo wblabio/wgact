@@ -1,4 +1,4 @@
-describe('status 200 public', () => {
+describe('Google init gtag', () => {
 
     const wgact_options_preset = 'all-pixels-enabled.json';
     // const wgact_options_preset_conversion_cart_data_off     = 'all-pixels-enabled_conversion-cart-data-off.json';
@@ -27,7 +27,6 @@ describe('status 200 public', () => {
         cy.contains('Warning')
             .should('not.exist')
     })
-
 
     // https://github.com/cypress-io/cypress/issues/897
     it('check if GA UA and GA 4 have been loaded successfully', () => {

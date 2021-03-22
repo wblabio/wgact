@@ -1,4 +1,4 @@
-describe('check minimum dev requirements', () => {
+describe('Google Analytics standard e-commerce', () => {
 
     const wgact_options_preset = 'GA-standard-ecommerce.json';
 
@@ -31,5 +31,4 @@ describe('check minimum dev requirements', () => {
     it('visit WC purchase confirmation page', () =>{
         cy.visit(Cypress.env('purchase_confirmation_url'))
     })
-
 })

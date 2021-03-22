@@ -94,65 +94,12 @@ wgact = function () {
 
 }();
 
-// fire view_item_list on product page to add related, upsell and cross-sell items to the remarketing list
 jQuery(function () {
 
-    if (wooptpmDataLayer.pixels && wooptpmDataLayer.pixels.dynamic_remarketing && wooptpmDataLayer.shop.page_type === 'product') {
-
-        // reduce wooptpmDataLayer.visible_products to only the ones displayed on the front-end
-
-        for (const [key, value] of Object.entries(wooptpmDataLayer.visible_products)) {
-
-            if( ! jQuery('.post-' + key)[0]){
-                delete wooptpmDataLayer.visible_products[key];
-            }
-        }
-
-        // create gtag object with all wooptpmDataLayer.visible_products and fire
-        gtag('event', 'view_item_list', {
-            "items": [get_view_item_products(wooptpmDataLayer.visible_products)]
-        });
-    }
-});
-
-// fire view_item_list on cart page to add related, upsell items to the remarketing list
-jQuery(function () {
-
-    if (wooptpmDataLayer.pixels && wooptpmDataLayer.pixels.dynamic_remarketing && wooptpmDataLayer.shop.page_type === 'cart') {
-
-        // create gtag object with all wooptpmDataLayer.visible_products and fire
-        gtag('event', 'view_item_list', {
-            "items": [get_view_item_products(wooptpmDataLayer.upsell_products)]
-        });
-    }
-});
-
-function get_view_item_products(productList) {
-
-    let data = [];
-
-    for (const [key, value] of Object.entries(productList)) {
-
-        data.push({
-            'id'      : value['id'],
-            'name'    : value['name'],
-            'brand'   : value['brand'],
-            'category': value['category'],
-            // 'list_position': '', // probably doesn't make much sense on the product page
-            'quantity': 1,
-            'price'   : value['price'],
-            // 'list_name'    : '' // probably doesn't make much sense on the product page
-        });
-
-    }
-    // console.log(data);
-    return data;
-}
-
-jQuery(function () {
+    // populate the wooptpmDataLayer with the cart items
+    get_cart_items_from_back_end();
 
     // remove_from_cart event
-
     jQuery(document).on('click', '.remove_from_cart_button, .remove', function (e) {
 
         let cartItemKey;
@@ -168,52 +115,8 @@ jQuery(function () {
             removeProductFromCartTrigger(null, null, jQuery(this).data('product_id'));
         }
     });
-});
-
-function removeProductFromCartTrigger(cartItemKey, quantityToRemove = null, productId = null) {
-
-    if (productId == null) {
-        productId = wooptpmDataLayer['cart_item_keys'][cartItemKey]['id'];
-    }
-
-    let quantity;
-
-    if (quantityToRemove == null) {
-        quantity = wooptpmDataLayer['cart'][productId]['quantity'];
-    } else {
-        quantity = quantityToRemove;
-    }
-
-    // alert ('product_id: ' + productId + ' | qty: ' + quantity);
-
-    let data = {
-        "id"  : productId.toString(),
-        "name": wooptpmDataLayer['cart'][productId]['name'],
-        // "list_name": wooptpmDataLayer['shop']['list_name'], // doesn't make sense on mini_cart
-        "brand"   : wooptpmDataLayer['cart'][productId]['brand'],
-        "category": wooptpmDataLayer['cart'][productId]['category'],
-        // "variant": "Black",
-        // "list_position": wooptpmDataLayer['cart'][productId]['position'], // doesn't make sense on mini_cart
-        "quantity": quantity,
-        "price"   : wooptpmDataLayer['cart'][productId]['price']
-    };
-
-    jQuery(document).trigger('wooptpmRemoveFromCart', data);
-
-    if (quantityToRemove == null) {
-        delete wooptpmDataLayer['cart'][productId];
-        if (cartItemKey) {
-            delete wooptpmDataLayer['cart_item_keys'][cartItemKey];
-        }
-    } else {
-        wooptpmDataLayer['cart'][productId]['quantity'] = wooptpmDataLayer['cart'][productId]['quantity'] - quantity;
-    }
-}
-
-jQuery(function () {
 
     // add_to_cart event
-
     jQuery(document).on('click', '.ajax_add_to_cart, .single_add_to_cart_button', function (e) {
 
         // console.log('test x');
@@ -267,7 +170,156 @@ jQuery(function () {
             }
         }
     });
+
+
+    // select_content event
+    // only allow the script to be fired on the following pages
+    let allowed_pages = ['shop', 'product_category', 'product_tag', 'search', 'product_shop'];
+
+    if (allowed_pages.includes(wooptpmDataLayer['shop']['page_type'])) {
+
+        jQuery(document).on('click', '.woocommerce-LoopProduct-link', function (e) {
+
+            let name      = jQuery(this).closest('.product');
+            let classes   = name.attr('class');
+            let regex     = /(?<=post-)\d+/gm;
+            let productId = classes.match(regex)[0];
+
+            let data = {
+                "id"       : productId.toString(),
+                "name"     : wooptpmDataLayer['visible_products'][productId]['name'],
+                "list_name": wooptpmDataLayer['shop']['list_name'],
+                "brand"    : wooptpmDataLayer['visible_products'][productId]['brand'],
+                "category" : wooptpmDataLayer['visible_products'][productId]['category'],
+                // "variant": "Black",
+                "list_position": wooptpmDataLayer['visible_products'][productId]['position'],
+                "quantity"     : 1,
+                "price"        : wooptpmDataLayer['visible_products'][productId]['price']
+            };
+
+            jQuery(document).trigger('wooptpmSelectContent', data);
+        });
+    }
+
+    // begin_checkout event
+    jQuery(document).one('click', '.checkout-button, .cart-checkout-button, .button.checkout', function (e) {
+
+        jQuery(document).trigger('wooptpmBeginCheckout', getCartItems());
+    });
+
+    // set_checkout_option event
+    // track checkout option event: entered valid billing email
+    jQuery(document).on('input', '#billing_email', function () {
+
+        if (isEmail(jQuery(this).val())) {
+            fireCheckoutOption(2);
+        }
+    });
+
+    // track checkout option event: purchase click
+    let payment_method_selected = false;
+
+    jQuery(document).on('click', '.wc_payment_methods', function () {
+
+        fireCheckoutOption(3, jQuery("input[name='payment_method']:checked").val());
+        payment_method_selected = true;
+    });
+
+    // track checkout option event: purchase click
+    jQuery(document).one('click', '#place_order', function () {
+
+        if (payment_method_selected === false) {
+
+            fireCheckoutOption(3, jQuery("input[name='payment_method']:checked").val());
+        }
+
+        fireCheckoutOption(4);
+    });
+
+    // update cart event
+    jQuery(document).on('click', "[name='update_cart']", function (e) {
+
+        jQuery('.cart_item').each(function () {
+            let href         = new URL(jQuery(this).find('.remove').attr('href'));
+            let searchParams = new URLSearchParams(href.search);
+            let cartItemKey  = searchParams.get('remove_item');
+            // alert('cart_item_key: ' + cartItemKey);
+            let productId    = wooptpmDataLayer['cart_item_keys'][cartItemKey]['id'];
+
+            let quantity = jQuery(this).find('.qty').val();
+
+            // alert ('quantity: ' + quantity);
+
+            if (quantity == 0) {
+                removeProductFromCartTrigger(cartItemKey);
+            } else if (quantity < wooptpmDataLayer['cart'][productId]['quantity']) {
+                removeProductFromCartTrigger(cartItemKey, wooptpmDataLayer['cart'][productId]['quantity'] - quantity);
+            } else if (quantity > wooptpmDataLayer['cart'][productId]['quantity']) {
+                addProductToCart(productId, quantity - wooptpmDataLayer['cart'][productId]['quantity']);
+            }
+        });
+    });
 });
+
+function getCartItems() {
+    let data = [];
+
+    for (const [productId, product] of Object.entries(wooptpmDataLayer.cart)) {
+
+        data.push({
+            'id'  : product.id,
+            'name': product.name,
+            // 'list_name': '',
+            'brand'   : product.brand,
+            'category': product.category,
+            // 'variant'      : product.variant,
+            // 'list_position': 1,
+            'quantity': product.quantity,
+            'price'   : product.price
+        });
+    }
+
+    return data;
+}
+
+
+function isEmail(email) {
+    // https://emailregex.com/
+    let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return regex.test(email);
+}
+
+function fireCheckoutOption(step, checkout_option = null, value = null) {
+
+    let data = {
+        'step'           : step,
+        'checkout_option': checkout_option,
+        'value'          : value
+    };
+
+    jQuery(document).trigger('wooptpmFireCheckoutOption', data);
+}
+
+function get_cart_items_from_back_end() {
+    // get all cart items from the backend
+
+    let data = {
+        'action': 'wooptpm_get_cart_items',
+    };
+
+    jQuery.ajax(
+        {
+            type    : "get",
+            dataType: "json",
+            url     : ajax_object.ajax_url,
+            data    : data,
+            success : function (cart_items) {
+                // save all cart items into wooptpmDataLayer
+                wooptpmDataLayer['cart']           = cart_items['cart'];
+                wooptpmDataLayer['cart_item_keys'] = cart_items['cart_item_keys'];
+            }
+        });
+}
 
 function addProductToCart(productId, quantity, variationId = null) {
 
@@ -341,172 +393,64 @@ function addProductToCart(productId, quantity, variationId = null) {
     }
 }
 
-jQuery(function () {
+function get_view_item_products(productList) {
 
-    get_cart_items_from_back_end();
-});
-
-function get_cart_items_from_back_end() {
-    // get all cart items from the backend
-
-    let data = {
-        'action': 'wooptpm_get_cart_items',
-    };
-
-    jQuery.ajax(
-        {
-            type    : "get",
-            dataType: "json",
-            url     : ajax_object.ajax_url,
-            data    : data,
-            success : function (cart_items) {
-                // save all cart items into wooptpmDataLayer
-                wooptpmDataLayer['cart']           = cart_items['cart'];
-                wooptpmDataLayer['cart_item_keys'] = cart_items['cart_item_keys'];
-            }
-        });
-}
-
-jQuery(function () {
-
-    // select_content event
-
-    // only allow the script to be fired on the following pages
-    let allowed_pages = ['shop', 'product_category', 'product_tag', 'search'];
-
-    if (allowed_pages.includes(wooptpmDataLayer['shop']['page_type'])) {
-
-        jQuery('.product').on('click', function (e) {
-
-            let name      = jQuery(this).closest('.product');
-            let classes   = name.attr('class');
-            let regex     = /(?<=post-)\d+/gm;
-            let productId = classes.match(regex)[0];
-
-            let data = {
-                "id"       : productId.toString(),
-                "name"     : wooptpmDataLayer['visible_products'][productId]['name'],
-                "list_name": wooptpmDataLayer['shop']['list_name'],
-                "brand"    : wooptpmDataLayer['visible_products'][productId]['brand'],
-                "category" : wooptpmDataLayer['visible_products'][productId]['category'],
-                // "variant": "Black",
-                "list_position": wooptpmDataLayer['visible_products'][productId]['position'],
-                "quantity"     : 1,
-                "price"        : wooptpmDataLayer['visible_products'][productId]['price']
-            };
-
-            jQuery(document).trigger('wooptpmSelectContent', data);
-        });
-    }
-});
-
-jQuery(function () {
-
-    // begin_checkout event
-
-    jQuery(document).one('click', '.checkout-button, .cart-checkout-button, .button.checkout', function (e) {
-
-        jQuery(document).trigger('wooptpmBeginCheckout', getCartItems());
-    });
-});
-
-function getCartItems() {
     let data = [];
 
-    for (const [productId, product] of Object.entries(wooptpmDataLayer.cart)) {
+    for (const [key, value] of Object.entries(productList)) {
 
         data.push({
-            'id'  : product.id,
-            'name': product.name,
-            // 'list_name': '',
-            'brand'   : product.brand,
-            'category': product.category,
-            // 'variant'      : product.variant,
-            // 'list_position': 1,
-            'quantity': product.quantity,
-            'price'   : product.price
+            'id'      : value['id'],
+            'name'    : value['name'],
+            'brand'   : value['brand'],
+            'category': value['category'],
+            // 'list_position': '', // probably doesn't make much sense on the product page
+            'quantity': 1,
+            'price'   : value['price'],
+            // 'list_name'    : '' // probably doesn't make much sense on the product page
         });
-    }
 
+    }
+    // console.log(data);
     return data;
 }
 
+function removeProductFromCartTrigger(cartItemKey, quantityToRemove = null, productId = null) {
 
-function isEmail(email) {
-    // https://emailregex.com/
-    let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return regex.test(email);
-}
+    if (productId == null) {
+        productId = wooptpmDataLayer['cart_item_keys'][cartItemKey]['id'];
+    }
 
-function fireCheckoutOption(step, checkout_option = null, value = null) {
+    let quantity;
+
+    if (quantityToRemove == null) {
+        quantity = wooptpmDataLayer['cart'][productId]['quantity'];
+    } else {
+        quantity = quantityToRemove;
+    }
+
+    // alert ('product_id: ' + productId + ' | qty: ' + quantity);
 
     let data = {
-        'step': step,
-        'checkout_option': checkout_option,
-        'value': value
+        "id"  : productId.toString(),
+        "name": wooptpmDataLayer['cart'][productId]['name'],
+        // "list_name": wooptpmDataLayer['shop']['list_name'], // doesn't make sense on mini_cart
+        "brand"   : wooptpmDataLayer['cart'][productId]['brand'],
+        "category": wooptpmDataLayer['cart'][productId]['category'],
+        // "variant": "Black",
+        // "list_position": wooptpmDataLayer['cart'][productId]['position'], // doesn't make sense on mini_cart
+        "quantity": quantity,
+        "price"   : wooptpmDataLayer['cart'][productId]['price']
     };
 
-    jQuery(document).trigger('wooptpmFireCheckoutOption', data);
+    jQuery(document).trigger('wooptpmRemoveFromCart', data);
+
+    if (quantityToRemove == null) {
+        delete wooptpmDataLayer['cart'][productId];
+        if (cartItemKey) {
+            delete wooptpmDataLayer['cart_item_keys'][cartItemKey];
+        }
+    } else {
+        wooptpmDataLayer['cart'][productId]['quantity'] = wooptpmDataLayer['cart'][productId]['quantity'] - quantity;
+    }
 }
-
-jQuery(function () {
-
-    // set_checkout_option event
-
-    // track checkout option event: entered valid billing email
-    jQuery(document).on('input', '#billing_email', function () {
-
-        if (isEmail(jQuery(this).val())) {
-            fireCheckoutOption(2);
-        }
-    });
-
-    // track checkout option event: purchase click
-    let payment_method_selected = false;
-
-    jQuery(document).on('click', '.wc_payment_methods', function () {
-
-        fireCheckoutOption(3, jQuery("input[name='payment_method']:checked").val());
-        payment_method_selected = true;
-    });
-
-    // track checkout option event: purchase click
-    jQuery(document).one('click', '#place_order', function () {
-
-        if (payment_method_selected === false) {
-
-            fireCheckoutOption(3, jQuery("input[name='payment_method']:checked").val());
-        }
-
-        fireCheckoutOption(4);
-    });
-});
-
-
-jQuery(function () {
-
-    // update cart event
-
-    jQuery(document).on('click', "[name='update_cart']", function (e) {
-
-        jQuery('.cart_item').each(function () {
-            let href         = new URL(jQuery(this).find('.remove').attr('href'));
-            let searchParams = new URLSearchParams(href.search);
-            let cartItemKey  = searchParams.get('remove_item');
-            // alert('cart_item_key: ' + cartItemKey);
-            let productId    = wooptpmDataLayer['cart_item_keys'][cartItemKey]['id'];
-
-            let quantity = jQuery(this).find('.qty').val();
-
-            // alert ('quantity: ' + quantity);
-
-            if (quantity == 0) {
-                removeProductFromCartTrigger(cartItemKey);
-            } else if (quantity < wooptpmDataLayer['cart'][productId]['quantity']) {
-                removeProductFromCartTrigger(cartItemKey, wooptpmDataLayer['cart'][productId]['quantity'] - quantity);
-            } else if (quantity > wooptpmDataLayer['cart'][productId]['quantity']) {
-                addProductToCart(productId, quantity - wooptpmDataLayer['cart'][productId]['quantity']);
-            }
-        });
-    });
-});

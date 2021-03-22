@@ -165,17 +165,22 @@ class Google_Pixel_Manager extends Google_Pixel
             foreach ($items as $item => $values) {
                 array_push($visible_product_ids, $values['data']->get_id());
                 $product                   = wc_get_product($values['data']->get_id());
-                $single_product_upsell_ids = $product->get_upsell_ids();
+
+                // only continue if WC retrieves a valid product
+                if(!is_bool($product)) {
+                    $single_product_upsell_ids = $product->get_upsell_ids();
 //                error_log(print_r($single_product_upsell_ids,true));
 
-                foreach ($single_product_upsell_ids as $item => $value) {
+                    foreach ($single_product_upsell_ids as $item => $value) {
 //                    error_log('item ' . $item);
 //                    error_log('value' . $value);
 
-                    if (!in_array($value, $upsell_product_ids, true)) {
-                        array_push($upsell_product_ids, $value);
+                        if (!in_array($value, $upsell_product_ids, true)) {
+                            array_push($upsell_product_ids, $value);
+                        }
                     }
                 }
+
             }
 
 //            error_log(print_r($upsell_product_ids,true));
@@ -228,18 +233,21 @@ class Google_Pixel_Manager extends Google_Pixel
 
             $product = wc_get_product($product_id);
 
-            $data[$product->get_id()] = [
-                'id'       => (string)$product->get_id(),
-                'sku'      => (string)$product->get_sku(),
-                'name'     => (string)$product->get_name(),
-                'price'    => (int)$product->get_price(),
-                'brand'    => $this->get_brand_name($product->get_id()),
-                'category' => (array)$this->get_product_category($product->get_id()),
-                // 'variant'  => '',
-                'quantity' => (int)1,
-                'position' => (int)$position,
-            ];
-            $position++;
+            // only continue if WC retrieves a valid product
+            if(!is_bool($product)) {
+                $data[$product->get_id()] = [
+                    'id'       => (string)$product->get_id(),
+                    'sku'      => (string)$product->get_sku(),
+                    'name'     => (string)$product->get_name(),
+                    'price'    => (int)$product->get_price(),
+                    'brand'    => $this->get_brand_name($product->get_id()),
+                    'category' => (array)$this->get_product_category($product->get_id()),
+                    // 'variant'  => '',
+                    'quantity' => (int)1,
+                    'position' => (int)$position,
+                ];
+                $position++;
+            }
         }
 
         return $data;
