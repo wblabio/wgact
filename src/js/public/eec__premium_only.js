@@ -13,7 +13,7 @@ jQuery(function () {
 
         // create gtag object with all wooptpmDataLayer.visible_products and fire
         gtag('event', 'view_item_list', {
-            "items": [get_view_item_products(wooptpmDataLayer.visible_products)]
+            "items": [wooptpm.getViewItemProducts(wooptpmDataLayer.visible_products)]
         });
     }
 
@@ -22,7 +22,7 @@ jQuery(function () {
 
         // create gtag object with all wooptpmDataLayer.visible_products and fire
         gtag('event', 'view_item_list', {
-            "items": [get_view_item_products(wooptpmDataLayer.upsell_products)]
+            "items": [wooptpm.getViewItemProducts(wooptpmDataLayer.upsell_products)]
         });
     }
 
