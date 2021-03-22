@@ -82,7 +82,7 @@ class Bing extends Pixel
         ?>
 
         <script>
-            if ((typeof wgact !== "undefined") && !wgact.isOrderIdStored(<?php echo $order->get_id() ?>)) {
+            if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_id() ?>)) {
                 window.uetq = window.uetq || [];
                 window.uetq.push('event', 'purchase', {
                     'ecomm_pagetype': 'purchase',

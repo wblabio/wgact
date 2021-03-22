@@ -70,7 +70,7 @@ class Twitter extends Pixel
         ?>
 
         <script>
-            if ((typeof wgact !== "undefined") && !wgact.isOrderIdStored(<?php echo $order->get_id() ?>)) {
+            if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_id() ?>)) {
                 twq('track', 'Purchase', {
                     value       : '<?php echo $order_total ?>',
                     currency    : '<?php echo $order->get_currency() ?>',

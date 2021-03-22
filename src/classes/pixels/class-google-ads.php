@@ -225,7 +225,7 @@ class Google_Ads extends Google_Pixel
         ?>
 
         <script>
-            if ((typeof wgact !== "undefined") && !wgact.isOrderIdStored(<?php echo $order->get_id() ?>)) {
+            if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_id() ?>)) {
                 gtag('event', 'purchase', {
                     'send_to': <?php echo json_encode($this->get_google_ads_conversion_ids()) ?>,
                     'value'  : <?php echo $order_total; ?>,

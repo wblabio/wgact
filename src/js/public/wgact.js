@@ -1,4 +1,4 @@
-wgact = function () {
+wooptpm = function () {
 
     const wgactDeduper = {
         keyName          : '_wgact_order_ids',

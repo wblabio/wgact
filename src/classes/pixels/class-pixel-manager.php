@@ -387,8 +387,8 @@ class Pixel_Manager
         <script>
             jQuery(function () {
                 setTimeout(function () {
-                    if (typeof wgact !== "undefined") {
-                        wgact.writeOrderIdToStorage(<?php echo $order_id ?>);
+                    if (typeof wooptpm !== "undefined") {
+                        wooptpm.writeOrderIdToStorage(<?php echo $order_id ?>);
                     }
                 }, <?php echo $this->transaction_deduper_timeout ?>);
             });

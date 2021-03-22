@@ -79,7 +79,7 @@ class Facebook_Browser_Pixel extends Pixel
         ?>
 
         <script>
-            if ((typeof wgact !== "undefined") && !wgact.isOrderIdStored(<?php echo $order->get_id() ?>)) {
+            if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_id() ?>)) {
                 fbq('track', 'Purchase', {
                     'content_type': 'product',
                     'content_ids' : <?php echo json_encode($order_item_ids) ?>,
