@@ -1,11 +1,10 @@
-wooptpm = function () {
-
+(function( wooptpm, $, undefined ) {
     const wgactDeduper = {
         keyName          : '_wgact_order_ids',
         cookieExpiresDays: 365
     };
 
-    function writeOrderIdToStorage(orderId, expireDays = 365) {
+    wooptpm.writeOrderIdToStorage = function (orderId, expireDays = 365) {
 
         // save the order ID in the browser storage
 
@@ -38,8 +37,8 @@ wooptpm = function () {
             }
         }
 
-        if (typeof wooptpmStoreOrderIdOnServer === 'function' && wgact_order_deduplication) {
-            wooptpmStoreOrderIdOnServer(orderId);
+        if (typeof wooptpm.storeOrderIdOnServer === 'function' && wgact_order_deduplication) {
+            wooptpm.storeOrderIdOnServer(orderId);
         }
     }
 
@@ -63,7 +62,7 @@ wooptpm = function () {
         return key !== "";
     }
 
-    function isOrderIdStored(orderId) {
+    wooptpm.isOrderIdStored = function (orderId) {
 
         if (wgact_order_deduplication) {
             if (!window.Storage) {
@@ -87,13 +86,13 @@ wooptpm = function () {
         }
     }
 
-    function isEmail(email) {
+    wooptpm.isEmail = function (email) {
         // https://emailregex.com/
         let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return regex.test(email);
     }
 
-    function removeProductFromCart(cartItemKey, quantityToRemove = null, productId = null) {
+    wooptpm.removeProductFromCart = function (cartItemKey, quantityToRemove = null, productId = null) {
 
         if (productId == null) {
             productId = wooptpmDataLayer['cart_item_keys'][cartItemKey]['id'];
@@ -133,7 +132,7 @@ wooptpm = function () {
         }
     }
 
-    function getViewItemProducts(productList) {
+    wooptpm.getViewItemProducts = function (productList) {
 
         let data = [];
 
@@ -155,7 +154,7 @@ wooptpm = function () {
         return data;
     }
 
-    function addProductToCart(productId, quantity, variationId = null) {
+    wooptpm.addProductToCart = function (productId, quantity, variationId = null) {
 
         // alert('productId: ' + productId + ' | qty: ' + quantity);
 
@@ -227,7 +226,7 @@ wooptpm = function () {
         }
     }
 
-    function getCartItemsFromBackEnd() {
+    wooptpm.getCartItemsFromBackEnd = function () {
         // get all cart items from the backend
 
         let data = {
@@ -248,7 +247,7 @@ wooptpm = function () {
             });
     }
 
-    function fireCheckoutOption(step, checkout_option = null, value = null) {
+    wooptpm.fireCheckoutOption = function (step, checkout_option = null, value = null) {
 
         let data = {
             'step'           : step,
@@ -259,7 +258,7 @@ wooptpm = function () {
         jQuery(document).trigger('wooptpmFireCheckoutOption', data);
     }
 
-    function getCartItems() {
+    wooptpm.getCartItems = function () {
         let data = [];
 
         for (const [productId, product] of Object.entries(wooptpmDataLayer.cart)) {
@@ -280,19 +279,19 @@ wooptpm = function () {
         return data;
     }
 
-    return {
-        writeOrderIdToStorage  : writeOrderIdToStorage,
-        isOrderIdStored        : isOrderIdStored,
-        isEmail                : isEmail,
-        removeProductFromCart  : removeProductFromCart,
-        getViewItemProducts    : getViewItemProducts,
-        addProductToCart       : addProductToCart,
-        getCartItemsFromBackEnd: getCartItemsFromBackEnd,
-        fireCheckoutOption     : fireCheckoutOption,
-        getCartItems           : getCartItems
-    }
+    // return {
+        // writeOrderIdToStorage  : writeOrderIdToStorage,
+        // isOrderIdStored        : isOrderIdStored,
+        // isEmail                : isEmail,
+        // removeProductFromCart  : removeProductFromCart,
+        // getViewItemProducts    : getViewItemProducts,
+        // addProductToCart       : addProductToCart,
+        // getCartItemsFromBackEnd: getCartItemsFromBackEnd,
+        // fireCheckoutOption     : fireCheckoutOption,
+        // getCartItems           : getCartItems
+    // }
 
-}();
+}( window.wooptpm = window.wooptpm || {}, jQuery ));
 
 jQuery(function () {
 
