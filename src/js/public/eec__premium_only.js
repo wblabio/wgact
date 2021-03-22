@@ -51,6 +51,8 @@ jQuery(function () {
     jQuery(document).on('wooptpmAddToCart', function (event, data) {
 
         // console.log('firing google add_to_cart event');
+        // alert('firing google add_to_cart event');
+
         // console.log(data);
 
         gtag('event', 'add_to_cart', {

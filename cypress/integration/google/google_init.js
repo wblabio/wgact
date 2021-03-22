@@ -1,6 +1,6 @@
 describe('status 200 public', () => {
 
-    const wgact_options_preset                              = 'all-pixels-enabled.json';
+    const wgact_options_preset = 'all-pixels-enabled.json';
     // const wgact_options_preset_conversion_cart_data_off     = 'all-pixels-enabled_conversion-cart-data-off.json';
     // const wgact_options_preset_cookie_consent_fully_enabled = 'all-pixels-enabled_cookie-consent-fully-enabled.json';
 
@@ -28,17 +28,19 @@ describe('status 200 public', () => {
             .should('not.exist')
     })
 
-    it('check if gtag has been loaded successfully', () => {
-        cy.visit('/')
-        cy.window().its('gtag').should('exist')
-        cy.window().its('gaGlobal').should('exist')
-        cy.window().its('ga').should('exist')
-    })
 
+    // https://github.com/cypress-io/cypress/issues/897
     it('check if GA UA and GA 4 have been loaded successfully', () => {
         cy.visit('/')
-        cy.window().its('gaGlobal').should('exist')
-        cy.window().its('ga').should('exist')
-    })
+        cy.window().then((win) => {
+            // cy.log(win.ga.getAll()[0].get('trackingId'))
 
+            expect(win.ga.getAll()[0].get('trackingId')).to.equal('UA-39746956-9')
+            expect(win.google_tag_manager['UA-39746956-9'].dataLayer.name).to.equal('dataLayer')
+            expect(win.google_tag_manager['G-YQBXCRGVLT'].dataLayer.name).to.equal('dataLayer')
+
+            // expect(win.google_tag_manager['UA-39746956-9']).should('exist')
+            // cy.window().should('have.property', 'google_tag_manager[\'UA-39746956-9\']')
+        })
+    })
 })
