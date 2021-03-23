@@ -61,17 +61,7 @@ class Facebook_Browser_Pixel extends Pixel
 
     public function inject_cart($cart, $cart_total)
     {
-        ?>
-        <script>
-            fbq('track', 'AddToCart', {
-                'content_name': 'Shopping Cart',
-                'content_type': 'product',
-                'content_ids' : <?php echo json_encode($this->get_cart_ids($cart)) ?>,
-                'currency'    : '<?php echo $this->options_obj->shop->currency ?>',
-                'value'       : <?php echo $cart_total . PHP_EOL ?>
-            });
-        </script>
-        <?php
+        // AddToCart event is triggered in front-end event layer
     }
 
     public function inject_order_received_page($order, $order_total, $order_item_ids)

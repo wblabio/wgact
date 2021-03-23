@@ -161,6 +161,8 @@ class Google_Pixel_Manager extends Google_Pixel
             $data['list_name'] = '';
         }
 
+        $data['currency'] = get_woocommerce_currency();
+
 
         ?>
 

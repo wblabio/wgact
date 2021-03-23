@@ -1,4 +1,4 @@
-(function( wooptpm, $, undefined ) {
+(function (wooptpm, $, undefined) {
     const wgactDeduper = {
         keyName          : '_wgact_order_ids',
         cookieExpiresDays: 365
@@ -175,7 +175,8 @@
             // "variant": "Black",
             "list_position": wooptpmDataLayer['visible_products'][productId]['position'],
             "quantity"     : quantity,
-            "price"        : wooptpmDataLayer['visible_products'][productId]['price']
+            "price"        : wooptpmDataLayer['visible_products'][productId]['price'],
+            "currency"     : wooptpmDataLayer.shop.currency
         };
 
         jQuery(document).trigger('wooptpmAddToCart', data);
@@ -280,18 +281,18 @@
     }
 
     // return {
-        // writeOrderIdToStorage  : writeOrderIdToStorage,
-        // isOrderIdStored        : isOrderIdStored,
-        // isEmail                : isEmail,
-        // removeProductFromCart  : removeProductFromCart,
-        // getViewItemProducts    : getViewItemProducts,
-        // addProductToCart       : addProductToCart,
-        // getCartItemsFromBackEnd: getCartItemsFromBackEnd,
-        // fireCheckoutOption     : fireCheckoutOption,
-        // getCartItems           : getCartItems
+    // writeOrderIdToStorage  : writeOrderIdToStorage,
+    // isOrderIdStored        : isOrderIdStored,
+    // isEmail                : isEmail,
+    // removeProductFromCart  : removeProductFromCart,
+    // getViewItemProducts    : getViewItemProducts,
+    // addProductToCart       : addProductToCart,
+    // getCartItemsFromBackEnd: getCartItemsFromBackEnd,
+    // fireCheckoutOption     : fireCheckoutOption,
+    // getCartItems           : getCartItems
     // }
 
-}( window.wooptpm = window.wooptpm || {}, jQuery ));
+}(window.wooptpm = window.wooptpm || {}, jQuery));
 
 jQuery(function () {
 

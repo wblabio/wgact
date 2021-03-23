@@ -55,6 +55,8 @@ class Pixel_Manager
 
         add_action('wp_enqueue_scripts', [$this, 'wooptpm_front_end_scripts']);
         if ($this->is_google_ads_active()) add_action('wp_enqueue_scripts', [$this, 'wooptpm_google_ads_front_end_scripts']);
+        if ($this->options_obj->facebook->pixel_id) add_action('wp_enqueue_scripts', [$this, 'wooptpm_facebook_front_end_scripts']);
+
 
         if (wga_fs()->is__premium_only()) {
             add_action('wp_ajax_wgact_purchase_pixels_fired', [$this, 'ajax_purchase_pixels_fired_handler__premium_only']);
@@ -156,6 +158,11 @@ class Pixel_Manager
         wp_enqueue_script('google-ads', plugin_dir_url(__DIR__) . '../js/public/google_ads.js', [], WGACT_CURRENT_VERSION, false);
     }
 
+    public function wooptpm_facebook_front_end_scripts()
+    {
+        wp_enqueue_script('facebook', plugin_dir_url(__DIR__) . '../js/public/facebook.js', [], WGACT_CURRENT_VERSION, false);
+    }
+
     public function inject_head_pixels()
     {
         global $woocommerce;
@@ -167,6 +174,7 @@ class Pixel_Manager
         echo PHP_EOL . '<!-- START woopt Pixel Manager -->' . PHP_EOL;
 
         $this->inject_wgact_order_deduplication_script();
+
 
         if ($this->google_active) (new Google_Pixel_Manager($this->options, $this->options_obj))->inject_everywhere();
         if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_everywhere();
