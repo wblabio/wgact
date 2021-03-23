@@ -53,7 +53,8 @@ class Pixel_Manager
             (new Environment_Check())->enable_maximum_compatibility_mode_yoast_seo();
         }
 
-        add_action('wp_enqueue_scripts', [$this, 'wgact_front_end_scripts']);
+        add_action('wp_enqueue_scripts', [$this, 'wooptpm_front_end_scripts']);
+        if ($this->is_google_ads_active()) add_action('wp_enqueue_scripts', [$this, 'wooptpm_google_ads_front_end_scripts']);
 
         if (wga_fs()->is__premium_only()) {
             add_action('wp_ajax_wgact_purchase_pixels_fired', [$this, 'ajax_purchase_pixels_fired_handler__premium_only']);
@@ -137,8 +138,9 @@ class Pixel_Manager
         wp_die(); // this is required to terminate immediately and return a proper response
     }
 
-    public function wgact_front_end_scripts()
+    public function wooptpm_front_end_scripts()
     {
+
         wp_enqueue_script('front-end-scripts', plugin_dir_url(__DIR__) . '../js/public/wooptpm.js', [], WGACT_CURRENT_VERSION, false);
         if (wga_fs()->is__premium_only()) {
             wp_enqueue_script('front-end-scripts-premium-only', plugin_dir_url(__DIR__) . '../js/public/wooptpm__premium_only.js', [], WGACT_CURRENT_VERSION, false);
@@ -147,6 +149,11 @@ class Pixel_Manager
             wp_enqueue_script('eec', plugin_dir_url(__DIR__) . '../js/public/eec__premium_only.js', [], WGACT_CURRENT_VERSION, false);
             wp_localize_script('eec', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
         }
+    }
+
+    public function wooptpm_google_ads_front_end_scripts()
+    {
+        wp_enqueue_script('google-ads', plugin_dir_url(__DIR__) . '../js/public/google_ads.js', [], WGACT_CURRENT_VERSION, false);
     }
 
     public function inject_head_pixels()

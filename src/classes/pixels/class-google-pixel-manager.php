@@ -79,11 +79,44 @@ class Google_Pixel_Manager extends Google_Pixel
 
     private function inject_data_layer_pixels()
     {
+
+//        $data = [
+//                'google' => [
+//                        'ads' => [
+//                            'dynamic_remarketing' => $this->options_obj->google->ads->dynamic_remarketing,
+//                            'conversionIds' => $this->get_google_ads_conversion_ids(),
+//                            'google_business_vertical' => $this->google_business_vertical,
+//                        ],
+//                        'analytics' => [
+//                                'universal' => [
+//                                        'property_id' => $this->options_obj->google->analytics->universal->property_id
+//                                ],
+//                                'ga4'=> [
+//                                        'measurement_id' => $this->options_obj->google->analytics->ga4->measurement_id,
+//                                ]
+//                        ]
+//                ],
+//        ];
+
         ?>
 
         <script>
             wooptpmDataLayer['pixels'] = {
-                'dynamic_remarketing': true,
+                'google': {
+                    'ads': {
+                        'dynamic_remarketing'     : <?php echo $this->options_obj->google->ads->dynamic_remarketing ?>,
+                        'conversionIds'           : <?php echo json_encode($this->get_google_ads_conversion_ids()) ?>,
+                        'google_business_vertical': '<?php echo $this->google_business_vertical ?>'
+                    },
+                    'analytics': {
+                        'universal': {
+                            'property_id': '<?php echo $this->options_obj->google->analytics->universal->property_id ?>',
+                        },
+                        'ga4': {
+                            'measurement_id': '<?php echo $this->options_obj->google->analytics->ga4->measurement_id ?>',
+                        }
+                    }
+                }
             };
         </script>
         <?php
@@ -164,10 +197,10 @@ class Google_Pixel_Manager extends Google_Pixel
             $items = $woocommerce->cart->get_cart();
             foreach ($items as $item => $values) {
                 array_push($visible_product_ids, $values['data']->get_id());
-                $product                   = wc_get_product($values['data']->get_id());
+                $product = wc_get_product($values['data']->get_id());
 
                 // only continue if WC retrieves a valid product
-                if(!is_bool($product)) {
+                if (!is_bool($product)) {
                     $single_product_upsell_ids = $product->get_upsell_ids();
 //                error_log(print_r($single_product_upsell_ids,true));
 
@@ -234,7 +267,7 @@ class Google_Pixel_Manager extends Google_Pixel
             $product = wc_get_product($product_id);
 
             // only continue if WC retrieves a valid product
-            if(!is_bool($product)) {
+            if (!is_bool($product)) {
                 $data[$product->get_id()] = [
                     'id'       => (string)$product->get_id(),
                     'sku'      => (string)$product->get_sku(),
@@ -366,7 +399,7 @@ class Google_Pixel_Manager extends Google_Pixel
     {
         if ('ads' === $channel) {
             return "gtag('config', 'AW-" . $id . "');" . PHP_EOL;
-        } elseif ('ga_ua'=== $channel) {
+        } elseif ('ga_ua' === $channel) {
 
             $ga_ua_parameters = [
                 'anonymize_ip'     => 'true', // must be a string for correct output
@@ -376,7 +409,7 @@ class Google_Pixel_Manager extends Google_Pixel
             $ga_ua_parameters = apply_filters('woopt_pm_analytics_parameters', $ga_ua_parameters, $id);
 
             return "gtag('config', '" . $id . "', " . json_encode($ga_ua_parameters) . ");";
-        } elseif ('ga_4'=== $channel) {
+        } elseif ('ga_4' === $channel) {
             return "gtag('config', '" . $id . "');";
         }
     }

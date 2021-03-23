@@ -15,6 +15,8 @@ class Google_Ads extends Google_Pixel
         parent::__construct($options, $options_obj);
     }
 
+
+
     public function inject_product_category()
     {
         global $wp_query;
@@ -78,19 +80,18 @@ class Google_Ads extends Google_Pixel
 
     public function inject_cart($cart, $cart_total)
     {
-        if ($this->is_dynamic_remarketing_active()) {
+//       if ($this->is_dynamic_remarketing_active()) {
 
             ?>
-
-            <script type="text/javascript">
-                gtag('event', 'add_to_cart', {
-                    'send_to': <?php echo json_encode($this->get_google_ads_conversion_ids()) ?>,
-                    'value'  : <?php echo $cart_total ?>,
-                    'items'  : <?php echo (json_encode($this->get_gads_formatted_cart_items($cart))) . PHP_EOL ?>
-                });
-            </script>
+<!--            <script type="text/javascript">-->
+<!--               gtag('event', 'add_to_cart', {-->
+<!--                   'send_to': --><?php //// echo json_encode($this->get_google_ads_conversion_ids()) ?><!--,-->
+<!--                    'value'  : --><?php //// echo $cart_total ?><!--,-->
+<!--                    'items'  : --><?php //// echo (json_encode($this->get_gads_formatted_cart_items($cart))) . PHP_EOL ?>
+<!--                });-->
+<!--            </script>-->
             <?php
-        }
+//        }
     }
 
     private function is_dynamic_remarketing_active(): bool

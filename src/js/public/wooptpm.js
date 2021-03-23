@@ -327,7 +327,7 @@ jQuery(function () {
             let quantity = 1;
 
             if (wooptpmDataLayer['shop']['page_type'] === 'product') {
-                quantity = jQuery('.input-text.qty').val();
+                quantity = Number(jQuery('.input-text.qty').val());
             }
 
             if (wooptpmDataLayer['shop']['page_type'] !== 'product') {
@@ -344,7 +344,7 @@ jQuery(function () {
             }
         } else {
             jQuery('.woocommerce-grouped-product-list-item').each(function () {
-                let quantity  = jQuery(this).find('.input-text.qty').val();
+                let quantity  = Number(jQuery(this).find('.input-text.qty').val());
                 let classes   = jQuery(this).attr('class');
                 let regex     = /(?<=post-)\d+/gm;
                 let productId = classes.match(regex)[0];

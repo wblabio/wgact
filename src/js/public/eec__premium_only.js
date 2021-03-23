@@ -1,7 +1,7 @@
 jQuery(function () {
 
     // fire view_item_list on product page to add related, upsell and cross-sell items to the remarketing list
-    if (wooptpmDataLayer.pixels && wooptpmDataLayer.pixels.dynamic_remarketing && wooptpmDataLayer.shop.page_type === 'product') {
+    if (wooptpmDataLayer.pixels && wooptpmDataLayer.pixels.google.ads.dynamic_remarketing && wooptpmDataLayer.shop.page_type === 'product') {
 
         // reduce wooptpmDataLayer.visible_products to only the ones displayed on the front-end
         for (const [key, value] of Object.entries(wooptpmDataLayer.visible_products)) {
@@ -13,15 +13,17 @@ jQuery(function () {
 
         // create gtag object with all wooptpmDataLayer.visible_products and fire
         gtag('event', 'view_item_list', {
+            "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
             "items": [wooptpm.getViewItemProducts(wooptpmDataLayer.visible_products)]
         });
     }
 
     // fire view_item_list on cart page to add related, upsell items to the remarketing list
-    if (wooptpmDataLayer.pixels && wooptpmDataLayer.pixels.dynamic_remarketing && wooptpmDataLayer.shop.page_type === 'cart') {
+    if (wooptpmDataLayer.pixels && wooptpmDataLayer.pixels.google.ads.dynamic_remarketing && wooptpmDataLayer.shop.page_type === 'cart') {
 
         // create gtag object with all wooptpmDataLayer.visible_products and fire
         gtag('event', 'view_item_list', {
+            "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
             "items": [wooptpm.getViewItemProducts(wooptpmDataLayer.upsell_products)]
         });
     }
@@ -34,6 +36,7 @@ jQuery(function () {
         // console.log(data);
 
         gtag('event', 'select_content', {
+            "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
             "content_type": "product",
             "items"       : [
                 {
@@ -60,6 +63,7 @@ jQuery(function () {
         // console.log(data);
 
         gtag('event', 'add_to_cart', {
+            "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
             "items": [
                 {
                     "id"       : data.id,
@@ -84,6 +88,7 @@ jQuery(function () {
         // console.log(data);
 
         gtag('event', 'remove_from_cart', {
+            "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
             "items": [
                 {
                     "id"  : data.id,
@@ -107,6 +112,7 @@ jQuery(function () {
         // console.log(data);
 
         gtag('event', 'begin_checkout', {
+            "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
             "items": data
         });
     });
@@ -118,6 +124,7 @@ jQuery(function () {
         // console.log(data);
 
         gtag('event', 'set_checkout_option', {
+            "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
             "checkout_step"  : data.step,
             "checkout_option": data.checkout_option,
             "value"          : data.value

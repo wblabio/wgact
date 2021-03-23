@@ -35,7 +35,9 @@ class Google_Enhanced_Ecommerce extends Google_Pixel
         ?>
 
         <script>
-            gtag('event', 'view_item_list', {"items": <?php echo json_encode($items) ?>});
+            gtag('event', 'view_item_list', {
+                "send_to": '<?php echo $this->options_obj->google->analytics->universal_property_id ?>',
+                "items": <?php echo json_encode($items) ?>});
         </script>
         <?php
     }
@@ -58,6 +60,7 @@ class Google_Enhanced_Ecommerce extends Google_Pixel
 
         <script>
             gtag('event', 'view_item', {
+                "send_to": '<?php echo $this->options_obj->google->analytics->universal_property_id ?>',
                 "items": [<?php echo json_encode($data) ?>]
             });
         </script>
