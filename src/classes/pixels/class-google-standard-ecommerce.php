@@ -14,11 +14,9 @@ class Google_Standard_Ecommerce extends Google_Pixel
         $order_currency = $this->get_order_currency($order);
 
         ?>
-        <script>
             if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_id() ?>)) {
                 gtag('event', 'purchase', <?php echo $this->get_event_purchase_json($order, $order_total, $order_currency, $is_new_customer, 'analytics') ?>);
             }
-        </script>
         <?php
     }
 }

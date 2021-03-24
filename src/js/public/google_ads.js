@@ -24,7 +24,7 @@ jQuery(document).on('wooptpmAddToCart', function (event, data) {
 jQuery(document).on('wooptpmSelectContent', function (event, data) {
 
     // console.log('firing google ads select_content event');
-    alert('firing google ads select_content event');
+    // alert('firing google ads select_content event');
     // console.log(data);
 
     gtag('event', 'select_content', {

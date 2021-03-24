@@ -46,7 +46,5 @@ describe('update mini-cart', () => {
         cy.visit('/shop/')
         cy.get('.site-header-cart')
             .contains('0 items')
-
     })
-
 })

@@ -2,6 +2,8 @@
 
 namespace WGACT\Classes\Pixels;
 
+use WGACT\Classes\Admin\Environment_Check;
+
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
@@ -21,6 +23,87 @@ class Google_Pixel extends Pixel
         $this->conversion_identifiers[$this->conversion_id] = $this->conversion_label;
 
         $this->conversion_identifiers = apply_filters('wgact_google_ads_conversion_identifiers', $this->conversion_identifiers);
+    }
+
+    public function inject_everywhere()
+    {
+        $this->inject_data_layer_pixels();
+
+        if ($this->options_obj->google->optimize->container_id) {
+            ?>
+
+            <script async
+                    src="https://www.googleoptimize.com/optimize.js?id=<?php echo $this->options_obj->google->optimize->container_id ?>"></script>
+            <?php
+        }
+
+        if (!$this->options_obj->google->gtag->deactivation) {
+            ?>
+
+            <script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo $this->get_gtag_id() ?>"></script>
+            <script<?php echo
+            $this->options_obj->shop->cookie_consent_mgmt->cookiebot->active ? ' data-cookieconsent="ignore"' : ''; ?>>
+
+                <?php echo $this->get_google_init_js();
+        }
+
+            foreach ($this->conversion_identifiers as $conversion_id => $conversion_label): ?>
+
+            <?php echo $this->options_obj->google->ads->conversion_id ? $this->gtag_config($conversion_id, 'ads') : PHP_EOL; ?>
+            <?php endforeach; ?>
+
+            <?php echo $this->options_obj->google->analytics->universal->property_id ? $this->gtag_config($this->options_obj->google->analytics->universal->property_id, 'ga_ua') . PHP_EOL : PHP_EOL; ?>
+            <?php echo $this->options_obj->google->analytics->ga4->measurement_id ? $this->gtag_config($this->options_obj->google->analytics->ga4->measurement_id, 'ga_4') : PHP_EOL; ?>
+
+        <?php
+
+        if ($this->options_obj->google->consent_mode->active && (new Environment_Check())->is_borlabs_cookie_active()) {
+            $this->inject_borlabs_consent_mode_update();
+        }
+
+        if ($this->is_google_ads_active() && $this->options_obj->google->ads->phone_conversion_number) {
+            $this->inject_phone_conversion_number_html__premium_only();
+        }
+
+//        $this->inject_closing_script_tag();
+    }
+
+
+
+    protected function get_google_init_js(): string
+    {
+        return "window.dataLayer = window.dataLayer || [];
+
+                function gtag() {
+                    dataLayer.push(arguments);
+                }
+        " . $this->consent_mode_gtag_html() . "
+                gtag('js', new Date());";
+    }
+
+    private function consent_mode_gtag_html(): string
+    {
+        if ($this->options_obj->google->consent_mode->active) {
+
+            $data = [
+                'ad_storage'        => 'denied',
+                'analytics_storage' => 'denied',
+                'wait_for_update'   => 500,
+            ];
+            if ($this->options_obj->google->consent_mode->regions) {
+                $data['regions'] = $this->options_obj->google->consent_mode->regions;
+            }
+            $ads_data_redaction = 'true';
+            // needs to be output as text
+            $url_passthrough = 'true';
+            // needs to be output as text
+            return "
+                gtag('consent', 'default', " . json_encode($data) . ");
+                gtag('set', 'ads_data_redaction', " . $ads_data_redaction . ");
+                gtag('set', 'url_passthrough', " . $url_passthrough . ");" . PHP_EOL;
+        } else {
+            return '';
+        }
     }
 
     protected function get_google_business_vertical($id): string
@@ -50,11 +133,11 @@ class Google_Pixel extends Pixel
         foreach ((array)$order_items as $order_item) {
 
             $product_id = $this->get_variation_or_product_id($order_item->get_data(), $this->options_obj->general->variations_output);
-            $product = wc_get_product($product_id);
+            $product    = wc_get_product($product_id);
 
             $item_details_array = [];
 
-            $item_details_array['id']       = $this->get_compiled_product_id($product_id, $product->get_sku(), $channel);
+            $item_details_array['id']       = $this->get_compiled_product_id($product_id, $product->get_sku(), $channel,'', $this->options);
             $item_details_array['quantity'] = (int)$order_item['quantity'];
             $item_details_array['price']    = (int)$product->get_price();
             if ($this->is_google_ads_active()) {
@@ -144,5 +227,81 @@ class Google_Pixel extends Pixel
             }
         }
         return $formatted_conversion_ids;
+    }
+
+    private function get_gtag_id(): string
+    {
+        if ($this->options_obj->google->analytics->universal->property_id) {
+            return $this->options_obj->google->analytics->universal->property_id;
+        } elseif ($this->options_obj->google->analytics->ga4->measurement_id) {
+            return $this->options_obj->google->analytics->ga4->measurement_id;
+        } elseif ($this->options_obj->google->ads->conversion_id) {
+            return 'AW-' . $this->options_obj->google->ads->conversion_id;
+        }
+    }
+
+
+    private function inject_data_layer_pixels()
+    {
+
+//        $data = [
+//                'google' => [
+//                        'ads' => [
+//                            'dynamic_remarketing' => $this->options_obj->google->ads->dynamic_remarketing,
+//                            'conversionIds' => $this->get_google_ads_conversion_ids(),
+//                            'google_business_vertical' => $this->google_business_vertical,
+//                        ],
+//                        'analytics' => [
+//                                'universal' => [
+//                                        'property_id' => $this->options_obj->google->analytics->universal->property_id
+//                                ],
+//                                'ga4'=> [
+//                                        'measurement_id' => $this->options_obj->google->analytics->ga4->measurement_id,
+//                                ]
+//                        ]
+//                ],
+//        ];
+
+        ?>
+
+        <script>
+            wooptpmDataLayer['pixels'] = {
+                'google': {
+                    'ads'      : {
+                        'dynamic_remarketing'     : <?php echo $this->options_obj->google->ads->dynamic_remarketing ?>,
+                        'conversionIds'           : <?php echo json_encode($this->get_google_ads_conversion_ids()) ?>,
+                        'google_business_vertical': '<?php echo $this->google_business_vertical ?>'
+                    },
+                    'analytics': {
+                        'universal': {
+                            'property_id': '<?php echo $this->options_obj->google->analytics->universal->property_id ?>',
+                        },
+                        'ga4'      : {
+                            'measurement_id': '<?php echo $this->options_obj->google->analytics->ga4->measurement_id ?>',
+                        }
+                    }
+                }
+            };
+        </script>
+        <?php
+    }
+
+    protected function gtag_config($id, $channel = ''): string
+    {
+        if ('ads' === $channel) {
+            return "gtag('config', 'AW-" . $id . "');" . PHP_EOL;
+        } elseif ('ga_ua' === $channel) {
+
+            $ga_ua_parameters = [
+                'anonymize_ip'     => 'true', // must be a string for correct output
+                'link_attribution' => $this->options_obj->google->analytics->link_attribution ? 'true' : 'false', // must be a string for correct output
+            ];
+
+            $ga_ua_parameters = apply_filters('woopt_pm_analytics_parameters', $ga_ua_parameters, $id);
+
+            return "gtag('config', '" . $id . "', " . json_encode($ga_ua_parameters) . ");";
+        } elseif ('ga_4' === $channel) {
+            return "gtag('config', '" . $id . "');";
+        }
     }
 }

@@ -7,6 +7,35 @@ describe('Google gtag events', () => {
     //     win.gtag = cy.spy().as('gtag')
     // })
 
+    // let appHasStarted
+    // function spyOnAddEventListener (win) {
+    //     // win = window object in our application
+    //     const addListener = win.EventTarget.prototype.addEventListener
+    //     win.EventTarget.prototype.addEventListener = function (name) {
+    //         if (name === 'wooptpmAddToCart') {
+    //             // web app added an event listener to the input box -
+    //             // that means the web application has started
+    //             appHasStarted = true
+    //             // restore the original event listener
+    //             win.EventTarget.prototype.addEventListener = addListener
+    //         }
+    //         return addListener.apply(this, arguments)
+    //     }
+    // }
+    //
+    // function waitForAppStart() {
+    //     // keeps rechecking "appHasStarted" variable
+    //     return new Cypress.Promise((resolve, reject) => {
+    //         const isReady = () => {
+    //             if (appHasStarted) {
+    //                 return resolve()
+    //             }
+    //             setTimeout(isReady, 0)
+    //         }
+    //         isReady()
+    //     })
+    // }
+
     const wgact_options_preset = Cypress.env('wgact_options_preset');
 
     // const wgact_options_preset_conversion_cart_data_off     = 'all-pixels-enabled_conversion-cart-data-off.json';
@@ -52,8 +81,8 @@ describe('Google gtag events', () => {
                 .click()
 
             // cy.get('@gtag').should('be.called')
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart',Cypress.sinon.match.has("send_to", "UA-39746956-9"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart',Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
 
             // cy.get('@gtag').should('be.calledOnceWith', 'event', 'add_to_cart')
 
@@ -81,8 +110,8 @@ describe('Google gtag events', () => {
 
             // cy.get('@gtag').should('be.called')
             // cy.get('@gtag').should('be.calledOnceWith', 'event', 'add_to_cart')
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart',Cypress.sinon.match.has("send_to", "UA-39746956-9"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart',Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
             // cy.get('@gtag').should('be.calledTwiceWith', 'event', 'add_to_cart')
             // cy.get('@gtag').should('be.calledWith', 'event', 'remove_from_cart')
         })
@@ -103,8 +132,8 @@ describe('Google gtag events', () => {
 
             // cy.get('@gtag').should('be.called')
             // cy.get('@gtag').should('be.calledOnceWith', 'event', 'add_to_cart')
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart',Cypress.sinon.match.has("send_to", "UA-39746956-9"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart',Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
             // cy.get('@gtag').should('be.calledTwiceWith', 'event', 'add_to_cart')
             // cy.get('@gtag').should('be.calledWith', 'event', 'remove_from_cart')
         })
@@ -125,8 +154,8 @@ describe('Google gtag events', () => {
 
             // cy.get('@gtag').should('be.called')
             // cy.get('@gtag').should('be.calledOnceWith', 'event', 'add_to_cart')
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart',Cypress.sinon.match.has("send_to", "UA-39746956-9"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart',Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
             // cy.get('@gtag').should('be.calledTwiceWith', 'event', 'add_to_cart')
             // cy.get('@gtag').should('be.calledWith', 'event', 'remove_from_cart')
         })
@@ -147,8 +176,8 @@ describe('Google gtag events', () => {
 
             // cy.get('@gtag').should('be.called')
             // cy.get('@gtag').should('be.calledOnceWith', 'event', 'add_to_cart')
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart',Cypress.sinon.match.has("send_to", "UA-39746956-9"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart',Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
             // cy.get('@gtag').should('be.calledTwiceWith', 'event', 'add_to_cart')
             // cy.get('@gtag').should('be.calledWith', 'event', 'remove_from_cart')
         })
@@ -183,7 +212,7 @@ describe('Google gtag events', () => {
 
         cy.window().then((win) => {
 
-            cy.spy(win, 'gtag').as('gtag');
+            cy.spy(win, 'gtag').as('gtag')
 
             // add grouped product
             cy.get('.input-text.qty')
@@ -203,40 +232,53 @@ describe('Google gtag events', () => {
             cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart')
             // cy.get('@gtag').should('be.calledTwiceWith', 'event', 'add_to_cart')
             // cy.get('@gtag').should('be.calledWith', 'event', 'remove_from_cart')
+
+            // cy.wait(400)
+            // cy.clearCookies()
+
         })
     })
 
     it('fire gtag remove_from_cart on /shop/ page', () => {
 
         cy.visit('/shop/')
+            .wait(100)
+
+        // cy.visit('/shop/',{
+        //     onBeforeLoad: spyOnAddEventListener
+        // }).then(waitForAppStart)
+
 
         cy.window().then((win) => {
-
-            cy.spy(win, 'gtag').as('gtag');
-
-            // add to an item to the cart
-            cy.get('.add_to_cart_button')
-                .eq(0)
-                .click()
-
-            // remove from cart
-            cy.get('[id="site-header-cart"]')
-                .trigger('mouseover')
-                .wait(200)
-
-            cy.get('.woocommerce-mini-cart-item')
-                .get('.remove_from_cart_button')
-                .click({
-                    force   : true,
-                    multiple: true
-                })
-                .wait(400)
-
-            // cy.get('@gtag').should('be.called')
-            // cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart')
-            // cy.get('@gtag').should('be.calledTwiceWith', 'event', 'add_to_cart')
-            cy.get('@gtag').should('be.calledWith', 'event', 'remove_from_cart')
+            cy.spy(win, 'gtag').as('gtag')
         })
+
+        // add to an item to the cart
+        cy.get('.add_to_cart_button')
+            .eq(0)
+            .click()
+            .then(() => {
+                cy.get('[id="site-header-cart"]')
+                    .trigger('mouseover')
+                    .should('be.visible')
+                    .get('.remove_from_cart_button')
+                    .click({
+                        force   : true,
+                        multiple: true
+                    })
+            })
+
+        // remove from cart
+        // cy.get('[id="site-header-cart"]')
+        //     .trigger('mouseover')
+        //     .should('be.visible')
+        //     .get('.remove_from_cart_button')
+        //     .click({
+        //         force   : true,
+        //         multiple: true
+        //     })
+
+        cy.get('@gtag').should('be.calledWith', 'event', 'remove_from_cart')
     })
 
     it('fire gtag remove_from_cart on /cart/ page with remove button', () => {
@@ -409,6 +451,8 @@ describe('Google gtag events', () => {
                 .eq(0)
                 .click()
 
+            cy.window().its('wooptpmDataLayer').should('have.property', 'cart')
+
             // cy.get('@gtag').should('be.calledOnceWith', 'event', 'select_content')
             cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
             cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
@@ -432,14 +476,17 @@ describe('Google gtag events', () => {
 
             cy.spy(win, 'gtag').as('gtag');
 
-            cy.get('.checkout-button')
-                .eq(0)
-                .click()
-
-            // cy.get('@gtag').should('be.calledWith', 'event', 'begin_checkout')
-            cy.get('@gtag').should('be.calledWith', 'event', 'begin_checkout', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
 
         })
+        cy.get('.checkout-button')
+            .eq(0)
+            .click()
+
+        cy.window().its('wooptpmDataLayer').should('have.property', 'cart')
+
+
+        // cy.get('@gtag').should('be.calledWith', 'event', 'begin_checkout')
+        cy.get('@gtag').should('be.calledWith', 'event', 'begin_checkout', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
     })
 
     it('fire gtag add_to_cart and remove_from_cart on /cart/ page with update button', () => {

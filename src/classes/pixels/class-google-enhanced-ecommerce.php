@@ -34,11 +34,10 @@ class Google_Enhanced_Ecommerce extends Google_Pixel
 
         ?>
 
-        <script>
             gtag('event', 'view_item_list', {
                 "send_to": '<?php echo $this->options_obj->google->analytics->universal->property_id ?>',
-                "items": <?php echo json_encode($items) ?>});
-        </script>
+                "items": <?php echo json_encode($items) . PHP_EOL ?>
+            });
         <?php
     }
 
@@ -58,18 +57,16 @@ class Google_Enhanced_Ecommerce extends Google_Pixel
 
         ?>
 
-        <script>
             gtag('event', 'view_item', {
                 "send_to": '<?php echo $this->options_obj->google->analytics->universal->property_id ?>',
                 "items": [<?php echo json_encode($data) ?>]
             });
-        </script>
         <?php
     }
 
     public function inject_cart($cart, $cart_total)
     {
-        // no function yet
+        // triggered by front-end script
     }
 
     protected function eec_appweb_get_product_details_array($product_id, $list_id, $position = null): array

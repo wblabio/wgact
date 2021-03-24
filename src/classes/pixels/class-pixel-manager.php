@@ -11,10 +11,11 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-class Pixel_Manager
+class Pixel_Manager extends Pixel_Manager_Base
 {
     use Trait_Product;
     use Trait_Google;
+    use Trait_Temp;
 
     protected $options;
     protected $options_obj;
@@ -58,6 +59,22 @@ class Pixel_Manager
         ) {
             (new Environment_Check())->enable_maximum_compatibility_mode_yoast_seo();
         }
+        /*
+         * Inject pixel snippets in head
+         */
+//        add_action('wp_head', function () {
+//            $this->inject_head_pixels();
+//        });
+
+        add_action('wp_head', function () {
+            $this->inject_woopt_opening();
+            $this->inject_wgact_order_deduplication_script();
+
+            $this->inject_data_layer_init();
+            $this->inject_data_layer_shop();
+            $this->inject_data_layer_product();
+        });
+
 
         /*
          * Initialize all pixels
@@ -68,6 +85,10 @@ class Pixel_Manager
         if ($this->options_obj->hotjar->site_id) $this->hotjar_pixel = new Hotjar();
         if ($this->options_obj->twitter->pixel_id) $this->twitter_pixel = new Twitter();
         if ($this->options_obj->pinterest->pixel_id) $this->pinterest_pixel = new Pinterest();
+
+        add_action('wp_head', function () {
+            $this->inject_woopt_closing();
+        });
 
         /*
          * Front-end script section
@@ -82,12 +103,6 @@ class Pixel_Manager
             add_action('wp_ajax_nopriv_wgact_purchase_pixels_fired', [$this, 'ajax_purchase_pixels_fired_handler__premium_only']);
         }
 
-        /*
-         * Inject pixel snippets in head
-         */
-        add_action('wp_head', function () {
-            $this->inject_head_pixels();
-        });
 
         /*
          * Inject pixel snippets after <body> tag
@@ -102,6 +117,28 @@ class Pixel_Manager
          * Process short codes
          */
         new Shortcodes($this->options, $this->options_obj);
+    }
+
+    private function inject_data_layer_init()
+    {
+        ?>
+        <script>
+            window.wooptpmDataLayer = window.wooptpmDataLayer || [];
+            window.wooptpmDataLayer['cart'] = window.wooptpmDataLayer['cart'] || {};
+        </script>
+
+        <?php
+    }
+
+
+    public function inject_woopt_opening()
+    {
+        echo PHP_EOL . '<!-- START woopt Pixel Manager -->' . PHP_EOL;
+    }
+
+    public function inject_woopt_closing()
+    {
+        echo PHP_EOL . '<!-- END woopt Pixel Manager -->' . PHP_EOL;
     }
 
     public function ajax_wooptpm_get_cart_items__premium_only()
@@ -186,8 +223,10 @@ class Pixel_Manager
 
         $this->inject_wgact_order_deduplication_script();
 
+//        $this->google_pixel_manager->inject_everywhere();
 
-        if ($this->google_active) $this->google_pixel_manager->inject_everywhere();
+
+//        if ($this->google_active) $this->google_pixel_manager->inject_everywhere();
         if ($this->facebook_active) $this->facebook_pixel_manager->inject_everywhere();
 
         if (wga_fs()->is__premium_only()) {
@@ -199,17 +238,17 @@ class Pixel_Manager
 
         if (is_product_category()) {
 
-            if ($this->google_active) $this->google_pixel_manager->inject_product_category();
+//            if ($this->google_active) $this->google_pixel_manager->inject_product_category();
             if (wga_fs()->is__premium_only()) {
                 if ($this->options_obj->bing->uet_tag_id) $this->bing_pixel->inject_product_category();
                 if ($this->options_obj->pinterest->pixel_id) $this->pinterest_pixel->inject_product_category();
             }
 
         } elseif (is_product_tag()) {
-            if ($this->google_active) $this->google_pixel_manager->inject_product_tag();
+//            if ($this->google_active) $this->google_pixel_manager->inject_product_tag();
         } elseif (is_search()) {
 
-            if ($this->google_active) $this->google_pixel_manager->inject_search();
+//            if ($this->google_active) $this->google_pixel_manager->inject_search();
             if ($this->facebook_active) $this->facebook_pixel_manager->inject_search();
             if (wga_fs()->is__premium_only()) {
                 if ($this->options_obj->bing->uet_tag_id) $this->bing_pixel->inject_search();
@@ -249,9 +288,9 @@ class Pixel_Manager
 //                return;
 //            }
 
-            $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku());
+            $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku(),'', $this->options);
 
-            if ($this->google_active) $this->google_pixel_manager->inject_product($product_id_compiled, $product, $product_attributes);
+//            if ($this->google_active) $this->google_pixel_manager->inject_product($product_id_compiled, $product, $product_attributes);
             if ($this->facebook_active) $this->facebook_pixel_manager->inject_product($product_id_compiled, $product, $product_attributes);
             if (wga_fs()->is__premium_only()) {
                 if ($this->options_obj->bing->uet_tag_id) $this->bing_pixel->inject_product($product_id_compiled, $product, $product_attributes);
@@ -260,13 +299,13 @@ class Pixel_Manager
             }
 
         } elseif ($this->is_shop_top_page()) {
-            if ($this->google_active) $this->google_pixel_manager->inject_shop_top_page();
+//            if ($this->google_active) $this->google_pixel_manager->inject_shop_top_page();
         } elseif (is_cart() && !empty($woocommerce->cart->get_cart())) {
 
             $cart       = $woocommerce->cart->get_cart();
             $cart_total = WC()->cart->get_cart_contents_total();
 
-            if ($this->google_active) $this->google_pixel_manager->inject_cart($cart, $cart_total);
+//            if ($this->google_active) $this->google_pixel_manager->inject_cart($cart, $cart_total);
             if ($this->facebook_active) $this->facebook_pixel_manager->inject_cart($cart, $cart_total);
             if (wga_fs()->is__premium_only()) {
                 if ($this->options_obj->bing->uet_tag_id) $this->bing_pixel->inject_cart($cart, $cart_total);
@@ -310,7 +349,7 @@ class Pixel_Manager
 
                     $order_item_ids = $this->get_order_item_ids($order);
 
-                    if ($this->google_active) $this->google_pixel_manager->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
+//                    if ($this->google_active) $this->google_pixel_manager->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
                     if ($this->facebook_active) $this->facebook_pixel_manager->inject_order_received_page($order, $order_total, $order_item_ids);
 
                     if (wga_fs()->is__premium_only()) {
@@ -335,93 +374,17 @@ class Pixel_Manager
         }
     }
 
-    private function get_variation_from_query_string($product_id, $product): int
-    {
-        parse_str($_SERVER['QUERY_STRING'], $query_string_attributes);
-
-        $search_variation_attributes = [];
-
-        foreach (array_keys($product->get_attributes()) as $variation_attribute => $value) {
-            $search_variation_attributes['attribute_' . $value] = $query_string_attributes['attribute_' . $value];
-        }
-
-        return $this->find_matching_product_variation_id($product_id, $search_variation_attributes);
-    }
-
-    private function find_matching_product_variation_id($product_id, $attributes): int
-    {
-        return (new \WC_Product_Data_Store_CPT())->find_matching_product_variation(
-            new \WC_Product($product_id),
-            $attributes
-        );
-    }
 
 
-    private function query_string_contains_all_variation_attributes($product): bool
-    {
-        if (!empty($_SERVER['QUERY_STRING'])) {
-            parse_str($_SERVER['QUERY_STRING'], $query_string_attributes);
 
-            foreach (array_keys($product->get_attributes()) as $variation_attribute => $value) {
-                if (!array_key_exists('attribute_' . $value, $query_string_attributes)) {
-                    return false;
-                }
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
 
-    private function is_shop_top_page(): bool
-    {
-        if (
-            !is_product() &&
-            !is_product_category() &&
-            !is_order_received_page() &&
-            !is_cart() &&
-            !is_search() &&
-            is_shop()
-        ) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
-    private function increase_conversion_count_for_ratings()
-    {
-        $ratings                      = get_option(WGACT_DB_RATINGS);
-        $ratings['conversions_count'] = $ratings['conversions_count'] + 1;
-        update_option(WGACT_DB_RATINGS, $ratings);
-    }
 
-    private function conversion_pixels_already_fired_html__premium_only()
-    {
-        ?>
 
-        <!-- The conversion pixels have not been inserted. Possible reasons: -->
-        <!--    You are logged into WooCommerce as admin or shop manager. -->
-        <!--    The order payment has failed. -->
-        <!--    The pixels have already been fired. To prevent double counting the pixels are only fired once. -->
-        <?php
-    }
 
-    private function inject_transaction_deduper_script($order_id)
-    {
-        ?>
-        <script>
-            jQuery(function () {
-                setTimeout(function () {
-                    if (typeof wooptpm !== "undefined") {
-                        wooptpm.writeOrderIdToStorage(<?php echo $order_id ?>);
-                    }
-                }, <?php echo $this->transaction_deduper_timeout ?>);
-            });
 
-        </script>
-        <?php
-    }
+
+
 
     private function inject_wgact_order_deduplication_script()
     {
@@ -448,82 +411,184 @@ class Pixel_Manager
         echo '<!--/noptimize-->' . PHP_EOL . PHP_EOL;
     }
 
-    protected function get_order_item_ids($order): array
+
+
+
+//    protected function get_compiled_product_id($product_id, $product_sku): string
+//    {
+//        // depending on setting use product IDs or SKUs
+//        if (0 == $this->options['google']['ads']['product_identifier']) {
+//            return (string)$product_id;
+//        } else if (1 == $this->options['google']['ads']['product_identifier']) {
+//            return (string)'woocommerce_gpf_' . $product_id;
+//        } else {
+//            if ($product_sku) {
+//                return (string)$product_sku;
+//            } else {
+//                return (string)$product_id;
+//            }
+//        }
+//    }
+
+
+
+
+
+    private function inject_data_layer_shop()
     {
-        $order_items       = $order->get_items();
-        $order_items_array = [];
+        $data = [];
 
-        foreach ((array)$order_items as $order_item) {
+        if (is_product_category()) {
+            $data['list_name'] = 'Product Category';
+            $data['page_type'] = 'product_category';
+        } elseif (is_product_tag()) {
+            $data['list_name'] = 'Product Tag';
+            $data['page_type'] = 'product_tag';
+        } elseif (is_search()) {
+            $data['list_name'] = 'Product Search';
+            $data['page_type'] = 'search';
+        } elseif (is_shop()) {
+            $data['list_name'] = 'Shop';
+            $data['page_type'] = 'product_shop';
+        } elseif (is_product()) {
+            $data['page_type'] = 'product';
 
-            $product_id = $this->get_variation_or_product_id($order_item->get_data(), $this->options_obj->general->variations_output);
+            $product              = wc_get_product();
+            $data['product_type'] = $product->get_type();
+        } elseif (is_cart()) {
+            $data['list_name'] = '';
+            $data['page_type'] = 'cart';
+        } else {
+            $data['list_name'] = '';
+        }
+
+        $data['currency'] = get_woocommerce_currency();
+        ?>
+
+        <script>
+            wooptpmDataLayer['shop'] = <?php echo json_encode($data) ?>;
+        </script>
+        <?php
+    }
+
+    private function inject_data_layer_product()
+    {
+        global $wp_query, $woocommerce;
+
+        if (is_shop() || is_product_category() || is_product_tag() || is_search()) {
+
+            $product_ids = [];
+            $posts       = $wp_query->posts;
+            foreach ($posts as $key => $post) {
+                if ($post->post_type == 'product') {
+                    array_push($product_ids, $post->ID);
+                }
+            }
+
+            ?>
+
+            <script>
+                wooptpmDataLayer['visible_products'] = <?php echo json_encode($this->eec_get_visible_products($product_ids)) ?>;
+            </script>
+            <?php
+        } elseif (is_cart()) {
+            $visible_product_ids = [];
+            $upsell_product_ids  = [];
+
+            $items = $woocommerce->cart->get_cart();
+            foreach ($items as $item => $values) {
+                array_push($visible_product_ids, $values['data']->get_id());
+                $product = wc_get_product($values['data']->get_id());
+
+                // only continue if WC retrieves a valid product
+                if (!is_bool($product)) {
+                    $single_product_upsell_ids = $product->get_upsell_ids();
+//                error_log(print_r($single_product_upsell_ids,true));
+
+                    foreach ($single_product_upsell_ids as $item => $value) {
+//                    error_log('item ' . $item);
+//                    error_log('value' . $value);
+
+                        if (!in_array($value, $upsell_product_ids, true)) {
+                            array_push($upsell_product_ids, $value);
+                        }
+                    }
+                }
+
+            }
+
+//            error_log(print_r($upsell_product_ids,true));
+
+            ?>
+
+            <script>
+                wooptpmDataLayer['visible_products'] = <?php echo json_encode($this->eec_get_visible_products($visible_product_ids)) ?>;
+                wooptpmDataLayer['upsell_products']  = <?php echo json_encode($this->eec_get_visible_products($upsell_product_ids)) ?>;
+            </script>
+            <?php
+        } elseif (is_product()) {
+
+            $visible_product_ids = [];
+
+            $product = wc_get_product();
+            array_push($visible_product_ids, $product->get_id());
+
+            $related_products = wc_get_related_products($product->get_id());
+            foreach ($related_products as $item => $value) {
+                array_push($visible_product_ids, $value);
+            }
+
+            $upsell_product_ids = $product->get_upsell_ids();
+            foreach ($upsell_product_ids as $item => $value) {
+                array_push($visible_product_ids, $value);
+            }
+//            error_log(print_r($visible_product_ids, true));
+
+            if ($product->get_type() === 'grouped') {
+                $visible_product_ids = array_merge($visible_product_ids, $product->get_children());
+            }
+
+            ?>
+
+            <script>
+                wooptpmDataLayer['visible_products'] = <?php echo json_encode($this->eec_get_visible_products($visible_product_ids)) ?>;
+            </script>
+            <?php
+        }
+    }
+
+    private function eec_get_visible_products($product_ids): array
+    {
+        $data = [];
+
+        $position = 1;
+
+        foreach ($product_ids as $key => $product_id) {
 
             $product = wc_get_product($product_id);
 
             // only continue if WC retrieves a valid product
             if (!is_bool($product)) {
-                $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku());
-                array_push($order_items_array, $product_id_compiled);
+                $data[$product->get_id()] = [
+                    'id'        => (string)$product->get_id(),
+                    'sku'       => (string)$product->get_sku(),
+                    'name'      => (string)$product->get_name(),
+                    'price'     => (int)$product->get_price(),
+                    'brand'     => $this->get_brand_name($product->get_id()),
+                    'category'  => (array)$this->get_product_category($product->get_id()),
+                    // 'variant'  => '',
+                    'quantity'  => (int)1,
+                    'position'  => (int)$position,
+                    'dyn_r_ids' => [
+                        'post_id' => (string)$product->get_id(),
+                        'sku'     => (string)$product->get_sku(),
+                        'gpf'     => 'woocommerce_gpf_' . (string)$product->get_id(),
+                    ]
+                ];
+                $position++;
             }
         }
 
-        return $order_items_array;
-    }
-
-
-    protected function get_compiled_product_id($product_id, $product_sku): string
-    {
-        // depending on setting use product IDs or SKUs
-        if (0 == $this->options['google']['ads']['product_identifier']) {
-            return (string)$product_id;
-        } else if (1 == $this->options['google']['ads']['product_identifier']) {
-            return (string)'woocommerce_gpf_' . $product_id;
-        } else {
-            if ($product_sku) {
-                return (string)$product_sku;
-            } else {
-                return (string)$product_id;
-            }
-        }
-    }
-
-    // https://stackoverflow.com/a/46216073/4688612
-    private function has_bought($value = 0, $order): bool
-    {
-        global $wpdb;
-
-        // Based on user ID (registered users)
-        if (is_numeric($value)) {
-            $meta_key   = '_customer_user';
-            $meta_value = $value == 0 ? (int)get_current_user_id() : (int)$value;
-        } // Based on billing email (Guest users)
-        else {
-            $meta_key   = '_billing_email';
-            $meta_value = sanitize_email($value);
-        }
-
-        $paid_order_statuses = array_map('esc_sql', wc_get_is_paid_statuses());
-
-        $count = $wpdb->get_var($wpdb->prepare("
-        SELECT COUNT(p.ID) FROM {$wpdb->prefix}posts AS p
-        INNER JOIN {$wpdb->prefix}postmeta AS pm ON p.ID = pm.post_id
-        WHERE p.post_status IN ( 'wc-" . implode("','wc-", $paid_order_statuses) . "' )
-        AND p.post_type LIKE 'shop_order'
-        AND p.ID <> {$order->get_id()}
-        AND pm.meta_key = '%s'
-        AND pm.meta_value = %s
-        LIMIT 1
-    ", $meta_key, $meta_value));
-
-        // Return a boolean value based on orders count
-        return $count > 0 ? true : false;
-    }
-
-    private function is_nodedupe_parameter_set(): bool
-    {
-        if (isset($_GET["nodedupe"])) {
-            return true;
-        } else {
-            return false;
-        }
+        return $data;
     }
 }

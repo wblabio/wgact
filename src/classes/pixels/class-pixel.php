@@ -4,6 +4,7 @@ namespace WGACT\Classes\Pixels;
 
 use stdClass;
 use WC_Geolocation;
+use WGACT\Classes\Admin\Environment_Check;
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
@@ -12,6 +13,7 @@ if (!defined('ABSPATH')) {
 class Pixel
 {
     use Trait_Product;
+    use Trait_Temp;
 
     protected $add_cart_data;
     protected $aw_merchant_id;
@@ -47,7 +49,13 @@ class Pixel
         $this->dynamic_remarketing = $this->options['google']['ads']['dynamic_remarketing'];
         $this->product_identifier  = $this->options['google']['ads']['product_identifier'];
         $this->gtag_deactivation   = $this->options['google']['gtag']['deactivation'];
+
+
     }
+
+
+
+
 
     // get an array with all cart product ids
     public function get_cart_ids($cart): array
@@ -62,7 +70,7 @@ class Pixel
             $product_id = $this->get_variation_or_product_id($cart_item, $this->options_obj->general->variations_output);
             $product    = wc_get_product($product_id);
 
-            $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku());
+            $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku(),'', $this->options);
 
             array_push($cart_items, $product_id_compiled);
         }
@@ -88,21 +96,8 @@ class Pixel
         return in_array($_SERVER['REMOTE_ADDR'], ['127.0.0.1', '::1']);
     }
 
-    protected function get_compiled_product_id($product_id, $product_sku, $channel = ''): string
-    {
-        // depending on setting use product IDs or SKUs
-        if (0 == $this->product_identifier || $channel == 'analytics') {
-            return (string)$product_id;
-        } else if (1 == $this->product_identifier) {
-            return (string)'woocommerce_gpf_' . $product_id;
-        } else {
-            if ($product_sku) {
-                return (string)$product_sku;
-            } else {
-                return (string)$product_id;
-            }
-        }
-    }
+
+
 
 
 }

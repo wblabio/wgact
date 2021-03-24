@@ -32,6 +32,7 @@ describe('Google init gtag', () => {
     // https://github.com/cypress-io/cypress/issues/897
     it('check if GA UA and GA 4 have been loaded successfully', () => {
         cy.visit('/')
+        cy.wait(100)
         cy.window().then((win) => {
             // cy.log(win.ga.getAll()[0].get('trackingId'))
 
