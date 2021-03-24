@@ -15,11 +15,11 @@ class Google_Pixel_Manager extends Google_Pixel
 
     private $gads;
 
-    public function __construct($options, $options_obj)
+    public function __construct()
     {
-        parent::__construct($options, $options_obj);
+        parent::__construct();
 
-        $this->gads = new Google_Ads($this->options, $this->options_obj);
+        $this->gads = new Google_Ads();
 
         add_action('wp_enqueue_scripts', [$this, 'google_front_end_scripts']);
 

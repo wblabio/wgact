@@ -190,7 +190,7 @@ if (function_exists('wga_fs')) {
             if ($cookie_consent->is_cookie_prevention_active() == false) {
 
                 // inject pixels
-                new Pixel_Manager($this->options);
+                new Pixel_Manager();
             }
         }
 

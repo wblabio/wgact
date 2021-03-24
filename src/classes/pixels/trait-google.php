@@ -31,6 +31,15 @@ trait Trait_Google
         }
     }
 
+//    protected function is_google_ads_active(): bool
+//    {
+//        if ($this->options_obj->google->ads->conversion_id && $this->options_obj->google->ads->conversion_label) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
+
     protected function is_google_analytics_active(): bool
     {
         if ($this->options_obj->google->analytics->universal->property_id) {

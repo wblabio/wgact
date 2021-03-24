@@ -8,6 +8,8 @@ if (!defined('ABSPATH')) {
 
 class Shortcodes extends Pixel
 {
+    use Trait_Google;
+
     public function __construct($options, $options_obj)
     {
         parent::__construct($options, $options_obj);

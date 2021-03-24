@@ -6,9 +6,9 @@
     "admin_password": "root",
     "purchase_confirmation_url": "/checkout/order-received/116/?key=wc_order_h5odZIxSD4Vgc",
     "wgact_options_presets_folder": "~/dev/PhpstormProjects/WGACT/cypress/fixtures/wgact-options-presets/",
-    "wgact_options_preset": "all-pixels-enabled.json",
-    "wgact_options_preset_conversion_cart_data_off": "all-pixels-enabled_conversion-cart-data-off.json",
-    "wgact_options_preset_cookie_consent_fully_enabled": "all-pixels-enabled_cookie-consent-fully-enabled.json",
+    "wgact_options_preset": "google_only.json",
+    "wgact_options_preset_conversion_cart_data_off": "google_only-conversion_cart_data_off.json",
+    "wgact_options_preset_cookie_consent_fully_enabled": "google_only-cookie_consent_fully_enabled.json",
     "wordpress_install_directory": "/Users/aleksandarvucenovic/dev/apps/wordpress"
   }
 }

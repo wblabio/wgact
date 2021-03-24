@@ -1,6 +1,6 @@
 describe('purchase', () => {
 
-    const wgact_options_preset = 'all-pixels-enabled.json';
+    const wgact_options_preset = Cypress.env('wgact_options_preset');
 
     // seed options into database
     before(function (){

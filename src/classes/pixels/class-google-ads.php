@@ -10,9 +10,9 @@ class Google_Ads extends Google_Pixel
 {
     protected $google_business_vertical;
 
-    public function __construct($options, $options_obj)
+    public function __construct()
     {
-        parent::__construct($options, $options_obj);
+        parent::__construct();
         add_action('wp_enqueue_scripts', [$this, 'wooptpm_google_ads_front_end_scripts']);
     }
 

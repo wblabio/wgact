@@ -5,7 +5,7 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 
 describe('update mini-cart', () => {
 
-    const wgact_options_preset = 'all-pixels-enabled.json';
+    const wgact_options_preset = Cypress.env('wgact_options_preset');
 
     // seed options into database
     before(function (){

@@ -29,12 +29,12 @@ class Pixel_Manager
     protected $twitter_pixel;
     protected $pinterest_pixel;
 
-    public function __construct($options)
+    public function __construct()
     {
         /*
          * Initialize options
          */
-        $this->options = $options;
+        $this->options = get_option(WGACT_DB_OPTIONS_NAME);
 
         $this->options_obj = json_decode(json_encode($this->options));
 
@@ -62,12 +62,12 @@ class Pixel_Manager
         /*
          * Initialize all pixels
          */
-        if ($this->google_active) $this->google_pixel_manager = new Google_Pixel_Manager($this->options, $this->options_obj);
-        if ($this->facebook_active) $this->facebook_pixel_manager = new Facebook_Pixel_Manager($this->options, $this->options_obj);
-        if ($this->options_obj->bing->uet_tag_id) $this->bing_pixel = new Bing($this->options, $this->options_obj);
-        if ($this->options_obj->hotjar->site_id) $this->hotjar_pixel = new Hotjar($this->options, $this->options_obj);
-        if ($this->options_obj->twitter->pixel_id) $this->twitter_pixel = new Twitter($this->options, $this->options_obj);
-        if ($this->options_obj->pinterest->pixel_id) $this->pinterest_pixel = new Pinterest($this->options, $this->options_obj);
+        if ($this->google_active) $this->google_pixel_manager = new Google_Pixel_Manager();
+        if ($this->facebook_active) $this->facebook_pixel_manager = new Facebook_Pixel_Manager();
+        if ($this->options_obj->bing->uet_tag_id) $this->bing_pixel = new Bing();
+        if ($this->options_obj->hotjar->site_id) $this->hotjar_pixel = new Hotjar();
+        if ($this->options_obj->twitter->pixel_id) $this->twitter_pixel = new Twitter();
+        if ($this->options_obj->pinterest->pixel_id) $this->pinterest_pixel = new Pinterest();
 
         /*
          * Front-end script section

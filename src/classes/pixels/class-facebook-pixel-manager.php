@@ -8,9 +8,9 @@ if (!defined('ABSPATH')) {
 
 class Facebook_Pixel_Manager extends Pixel
 {
-    public function __construct($options, $options_obj)
+    public function __construct()
     {
-        parent::__construct($options, $options_obj);
+        parent::__construct();
         add_action('wp_enqueue_scripts', [$this, 'wooptpm_facebook_front_end_scripts']);
     }
 

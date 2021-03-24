@@ -12,9 +12,9 @@ class Google_Pixel extends Pixel
 
     protected $conversion_identifiers;
 
-    public function __construct($options, $options_obj)
+    public function __construct()
     {
-        parent::__construct($options, $options_obj);
+        parent::__construct();
 
         $this->google_business_vertical = $this->get_google_business_vertical($this->options['google']['ads']['google_business_vertical']);
 

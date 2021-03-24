@@ -1,9 +1,8 @@
 describe('status 200 public', () => {
 
-    const wgact_options_preset                              = 'all-pixels-enabled.json';
-    const wgact_options_preset_conversion_cart_data_off     = 'all-pixels-enabled_conversion-cart-data-off.json';
-    const wgact_options_preset_cookie_consent_fully_enabled = 'all-pixels-enabled_cookie-consent-fully-enabled.json';
-
+    const wgact_options_preset = Cypress.env('wgact_options_preset');
+    const wgact_options_preset_conversion_cart_data_off     = Cypress.env('wgact_options_preset_conversion_cart_data_off');
+    const wgact_options_preset_cookie_consent_fully_enabled = Cypress.env('wgact_options_preset_cookie_consent_fully_enabled');
 
     // seed options into database
     before(function () {
