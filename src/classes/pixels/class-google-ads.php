@@ -13,9 +13,13 @@ class Google_Ads extends Google_Pixel
     public function __construct($options, $options_obj)
     {
         parent::__construct($options, $options_obj);
+        add_action('wp_enqueue_scripts', [$this, 'wooptpm_google_ads_front_end_scripts']);
     }
 
-
+    public function wooptpm_google_ads_front_end_scripts()
+    {
+        wp_enqueue_script('google-ads', plugin_dir_url(__DIR__) . '../js/public/google_ads.js', [], WGACT_CURRENT_VERSION, false);
+    }
 
     public function inject_product_category()
     {

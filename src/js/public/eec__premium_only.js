@@ -12,9 +12,11 @@ jQuery(function () {
         }
 
         // create gtag object with all wooptpmDataLayer.visible_products and fire
+        // alert('test');
+        // console.log(wooptpm.getViewItemProducts(wooptpmDataLayer.visible_products));
         gtag('event', 'view_item_list', {
             "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
-            "items": [wooptpm.getViewItemProducts(wooptpmDataLayer.visible_products)]
+            "items": wooptpm.getViewItemProducts(wooptpmDataLayer.visible_products)
         });
     }
 
@@ -24,7 +26,7 @@ jQuery(function () {
         // create gtag object with all wooptpmDataLayer.visible_products and fire
         gtag('event', 'view_item_list', {
             "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
-            "items": [wooptpm.getViewItemProducts(wooptpmDataLayer.upsell_products)]
+            "items": wooptpm.getViewItemProducts(wooptpmDataLayer.upsell_products)
         });
     }
 

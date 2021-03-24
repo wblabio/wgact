@@ -150,7 +150,8 @@ if (function_exists('wga_fs')) {
 
                 // load the options
                 $this->wgact_options_init();
-                if (isset($this->options['gads']['dynamic_remarketing']) && $this->options['gads']['dynamic_remarketing']) {
+                if (isset($this->options['google']['gads']['dynamic_remarketing']) && $this->options['google']['gads']['dynamic_remarketing']) {
+                    // make sure to disable the WGDR plugin in case we use dynamic remarketing in this plugin
                     add_filter('wgdr_third_party_cookie_prevention', '__return_true');
                 }
 

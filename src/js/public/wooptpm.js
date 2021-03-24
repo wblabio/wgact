@@ -374,7 +374,7 @@ jQuery(function () {
 
     // select_content event
     // only allow the script to be fired on the following pages
-    let allowed_pages = ['shop', 'product_category', 'product_tag', 'search', 'product_shop'];
+    let allowed_pages = ['shop', 'product_category', 'product_tag', 'search', 'product_shop', 'product'];
 
     if (allowed_pages.includes(wooptpmDataLayer['shop']['page_type'])) {
 

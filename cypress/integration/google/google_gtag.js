@@ -51,7 +51,15 @@ describe('Google gtag events', () => {
                 .click()
 
             // cy.get('@gtag').should('be.called')
-            cy.get('@gtag').should('be.calledOnceWith', 'event', 'add_to_cart')
+            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart',Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart',Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+
+            // cy.get('@gtag').should('be.calledOnceWith', 'event', 'add_to_cart')
+
+            // cy.get('@gtag').should(($gtag) => {
+            //     expect($gtag).to.have.been.calledWith('event', 'add_to_cart', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+            // })
+
             // cy.get('@gtag').should('be.calledTwiceWith', 'event', 'add_to_cart')
             // cy.get('@gtag').should('be.calledWith', 'event', 'remove_from_cart')
         })
@@ -71,7 +79,9 @@ describe('Google gtag events', () => {
                 .click()
 
             // cy.get('@gtag').should('be.called')
-            cy.get('@gtag').should('be.calledOnceWith', 'event', 'add_to_cart')
+            // cy.get('@gtag').should('be.calledOnceWith', 'event', 'add_to_cart')
+            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart',Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart',Cypress.sinon.match.has("send_to", ["AW-965183221"]))
             // cy.get('@gtag').should('be.calledTwiceWith', 'event', 'add_to_cart')
             // cy.get('@gtag').should('be.calledWith', 'event', 'remove_from_cart')
         })
@@ -91,7 +101,9 @@ describe('Google gtag events', () => {
                 .click()
 
             // cy.get('@gtag').should('be.called')
-            cy.get('@gtag').should('be.calledOnceWith', 'event', 'add_to_cart')
+            // cy.get('@gtag').should('be.calledOnceWith', 'event', 'add_to_cart')
+            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart',Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart',Cypress.sinon.match.has("send_to", ["AW-965183221"]))
             // cy.get('@gtag').should('be.calledTwiceWith', 'event', 'add_to_cart')
             // cy.get('@gtag').should('be.calledWith', 'event', 'remove_from_cart')
         })
@@ -111,7 +123,9 @@ describe('Google gtag events', () => {
                 .click()
 
             // cy.get('@gtag').should('be.called')
-            cy.get('@gtag').should('be.calledOnceWith', 'event', 'add_to_cart')
+            // cy.get('@gtag').should('be.calledOnceWith', 'event', 'add_to_cart')
+            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart',Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart',Cypress.sinon.match.has("send_to", ["AW-965183221"]))
             // cy.get('@gtag').should('be.calledTwiceWith', 'event', 'add_to_cart')
             // cy.get('@gtag').should('be.calledWith', 'event', 'remove_from_cart')
         })
@@ -131,7 +145,9 @@ describe('Google gtag events', () => {
                 .click()
 
             // cy.get('@gtag').should('be.called')
-            cy.get('@gtag').should('be.calledOnceWith', 'event', 'add_to_cart')
+            // cy.get('@gtag').should('be.calledOnceWith', 'event', 'add_to_cart')
+            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart',Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart',Cypress.sinon.match.has("send_to", ["AW-965183221"]))
             // cy.get('@gtag').should('be.calledTwiceWith', 'event', 'add_to_cart')
             // cy.get('@gtag').should('be.calledWith', 'event', 'remove_from_cart')
         })
@@ -333,7 +349,10 @@ describe('Google gtag events', () => {
                 .eq(0)
                 .click()
 
-            cy.get('@gtag').should('be.calledOnceWith', 'event', 'select_content')
+            // cy.get('@gtag').should('be.calledOnceWith', 'event', 'select_content')
+
+            cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+            cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
         })
     })
 
@@ -350,7 +369,9 @@ describe('Google gtag events', () => {
                 .eq(0)
                 .click()
 
-            cy.get('@gtag').should('be.calledOnceWith', 'event', 'select_content')
+            // cy.get('@gtag').should('be.calledOnceWith', 'event', 'select_content')
+            cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+            cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
         })
     })
 
@@ -367,7 +388,10 @@ describe('Google gtag events', () => {
                 .eq(0)
                 .click()
 
-            cy.get('@gtag').should('be.calledOnceWith', 'event', 'select_content')
+            // cy.get('@gtag').should('be.calledOnceWith', 'event', 'select_content')
+
+            cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+            cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
         })
     })
 
@@ -384,7 +408,9 @@ describe('Google gtag events', () => {
                 .eq(0)
                 .click()
 
-            cy.get('@gtag').should('be.calledOnceWith', 'event', 'select_content')
+            // cy.get('@gtag').should('be.calledOnceWith', 'event', 'select_content')
+            cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+            cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
         })
     })
 
@@ -409,7 +435,9 @@ describe('Google gtag events', () => {
                 .eq(0)
                 .click()
 
-            cy.get('@gtag').should('be.calledWith', 'event', 'begin_checkout')
+            // cy.get('@gtag').should('be.calledWith', 'event', 'begin_checkout')
+            cy.get('@gtag').should('be.calledWith', 'event', 'begin_checkout', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+
         })
     })
 
@@ -449,7 +477,8 @@ describe('Google gtag events', () => {
             cy.contains('Place order')
                 .click()
 
-            cy.get('@gtag').should('be.calledWith', 'event', 'set_checkout_option')
+            // cy.get('@gtag').should('be.calledWith', 'event', 'set_checkout_option')
+            cy.get('@gtag').should('be.calledWith', 'event', 'set_checkout_option', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
         })
     })
 })

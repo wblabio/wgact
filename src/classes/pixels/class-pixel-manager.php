@@ -22,28 +22,34 @@ class Pixel_Manager
     protected $facebook_active;
     protected $google_active;
     protected $transaction_deduper_timeout = 2000;
+    protected $google_pixel_manager;
+    protected $hotjar_pixel;
+    protected $facebook_pixel_manager;
+    protected $bing_pixel;
+    protected $twitter_pixel;
+    protected $pinterest_pixel;
 
     public function __construct($options)
     {
+        /*
+         * Initialize options
+         */
         $this->options = $options;
-
-//        error_log(print_r($options, true));
 
         $this->options_obj = json_decode(json_encode($this->options));
 
         $this->options_obj->shop->currency = new stdClass();
         $this->options_obj->shop->currency = get_woocommerce_currency();
 
+        /*
+         * Set a few states
+         */
         $this->facebook_active = !empty($this->options_obj->facebook->pixel_id);
         $this->google_active   = $this->google_active();
 
-        if ($this->options_obj->google->analytics->eec) {
-
-            add_action('woocommerce_order_refunded', [$this, 'eec_action_woocommerce_order_refunded'], 10, 2);
-            add_action('wp_footer', [$this, 'process_refund_to_frontend']);
-            add_action('admin_footer', [$this, 'process_refund_to_frontend']);
-        }
-
+        /*
+         * Compatibility modes
+         */
         if ($this->options_obj->general->maximum_compatibility_mode) (new Environment_Check())->enable_maximum_compatibility_mode();
 
         if (
@@ -53,29 +59,48 @@ class Pixel_Manager
             (new Environment_Check())->enable_maximum_compatibility_mode_yoast_seo();
         }
 
-        add_action('wp_enqueue_scripts', [$this, 'wooptpm_front_end_scripts']);
-        if ($this->is_google_ads_active()) add_action('wp_enqueue_scripts', [$this, 'wooptpm_google_ads_front_end_scripts']);
-        if ($this->options_obj->facebook->pixel_id) add_action('wp_enqueue_scripts', [$this, 'wooptpm_facebook_front_end_scripts']);
+        /*
+         * Initialize all pixels
+         */
+        if ($this->google_active) $this->google_pixel_manager = new Google_Pixel_Manager($this->options, $this->options_obj);
+        if ($this->facebook_active) $this->facebook_pixel_manager = new Facebook_Pixel_Manager($this->options, $this->options_obj);
+        if ($this->options_obj->bing->uet_tag_id) $this->bing_pixel = new Bing($this->options, $this->options_obj);
+        if ($this->options_obj->hotjar->site_id) $this->hotjar_pixel = new Hotjar($this->options, $this->options_obj);
+        if ($this->options_obj->twitter->pixel_id) $this->twitter_pixel = new Twitter($this->options, $this->options_obj);
+        if ($this->options_obj->pinterest->pixel_id) $this->pinterest_pixel = new Pinterest($this->options, $this->options_obj);
 
+        /*
+         * Front-end script section
+         */
+        add_action('wp_enqueue_scripts', [$this, 'wooptpm_front_end_scripts']);
+
+        add_action('wp_ajax_wooptpm_get_cart_items', [$this, 'ajax_wooptpm_get_cart_items__premium_only']);
+        add_action('wp_ajax_nopriv_wooptpm_get_cart_items', [$this, 'ajax_wooptpm_get_cart_items__premium_only']);
 
         if (wga_fs()->is__premium_only()) {
             add_action('wp_ajax_wgact_purchase_pixels_fired', [$this, 'ajax_purchase_pixels_fired_handler__premium_only']);
             add_action('wp_ajax_nopriv_wgact_purchase_pixels_fired', [$this, 'ajax_purchase_pixels_fired_handler__premium_only']);
-
-            add_action('wp_ajax_wooptpm_get_cart_items', [$this, 'ajax_wooptpm_get_cart_items__premium_only']);
-            add_action('wp_ajax_nopriv_wooptpm_get_cart_items', [$this, 'ajax_wooptpm_get_cart_items__premium_only']);
         }
 
+        /*
+         * Inject pixel snippets in head
+         */
         add_action('wp_head', function () {
             $this->inject_head_pixels();
         });
 
+        /*
+         * Inject pixel snippets after <body> tag
+         */
         if (did_action('wp_body_open')) {
             add_action('wp_body_open', function () {
                 $this->inject_body_pixels();
             });
         }
 
+        /*
+         * Process short codes
+         */
         new Shortcodes($this->options, $this->options_obj);
     }
 
@@ -142,25 +167,11 @@ class Pixel_Manager
 
     public function wooptpm_front_end_scripts()
     {
-
         wp_enqueue_script('front-end-scripts', plugin_dir_url(__DIR__) . '../js/public/wooptpm.js', [], WGACT_CURRENT_VERSION, false);
         if (wga_fs()->is__premium_only()) {
             wp_enqueue_script('front-end-scripts-premium-only', plugin_dir_url(__DIR__) . '../js/public/wooptpm__premium_only.js', [], WGACT_CURRENT_VERSION, false);
             wp_localize_script('front-end-scripts-premium-only', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
-
-            wp_enqueue_script('eec', plugin_dir_url(__DIR__) . '../js/public/eec__premium_only.js', [], WGACT_CURRENT_VERSION, false);
-            wp_localize_script('eec', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
         }
-    }
-
-    public function wooptpm_google_ads_front_end_scripts()
-    {
-        wp_enqueue_script('google-ads', plugin_dir_url(__DIR__) . '../js/public/google_ads.js', [], WGACT_CURRENT_VERSION, false);
-    }
-
-    public function wooptpm_facebook_front_end_scripts()
-    {
-        wp_enqueue_script('facebook', plugin_dir_url(__DIR__) . '../js/public/facebook.js', [], WGACT_CURRENT_VERSION, false);
     }
 
     public function inject_head_pixels()
@@ -176,34 +187,34 @@ class Pixel_Manager
         $this->inject_wgact_order_deduplication_script();
 
 
-        if ($this->google_active) (new Google_Pixel_Manager($this->options, $this->options_obj))->inject_everywhere();
-        if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_everywhere();
+        if ($this->google_active) $this->google_pixel_manager->inject_everywhere();
+        if ($this->facebook_active) $this->facebook_pixel_manager->inject_everywhere();
 
         if (wga_fs()->is__premium_only()) {
-            if ($this->options_obj->bing->uet_tag_id) (new Bing($this->options, $this->options_obj))->inject_everywhere();
-            if ($this->options_obj->twitter->pixel_id) (new Twitter($this->options, $this->options_obj))->inject_everywhere();
-            if ($this->options_obj->pinterest->pixel_id) (new Pinterest($this->options, $this->options_obj))->inject_everywhere();
-            if ($this->options_obj->hotjar->site_id) (new Hotjar($this->options, $this->options_obj))->inject_everywhere();
+            if ($this->options_obj->bing->uet_tag_id) $this->bing_pixel->inject_everywhere();
+            if ($this->options_obj->twitter->pixel_id) $this->twitter_pixel->inject_everywhere();
+            if ($this->options_obj->pinterest->pixel_id) $this->pinterest_pixel->inject_everywhere();
+            if ($this->options_obj->hotjar->site_id) $this->hotjar_pixel->inject_everywhere();
         }
 
         if (is_product_category()) {
 
-            if ($this->google_active) (new Google_Pixel_Manager($this->options, $this->options_obj))->inject_product_category();
+            if ($this->google_active) $this->google_pixel_manager->inject_product_category();
             if (wga_fs()->is__premium_only()) {
-                if ($this->options_obj->bing->uet_tag_id) (new Bing($this->options, $this->options_obj))->inject_product_category();
-                if ($this->options_obj->pinterest->pixel_id) (new Pinterest($this->options, $this->options_obj))->inject_product_category();
+                if ($this->options_obj->bing->uet_tag_id) $this->bing_pixel->inject_product_category();
+                if ($this->options_obj->pinterest->pixel_id) $this->pinterest_pixel->inject_product_category();
             }
 
         } elseif (is_product_tag()) {
-            if ($this->google_active) (new Google_Pixel_Manager($this->options, $this->options_obj))->inject_product_tag();
+            if ($this->google_active) $this->google_pixel_manager->inject_product_tag();
         } elseif (is_search()) {
 
-            if ($this->google_active) (new Google_Pixel_Manager($this->options, $this->options_obj))->inject_search();
-            if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_search();
+            if ($this->google_active) $this->google_pixel_manager->inject_search();
+            if ($this->facebook_active) $this->facebook_pixel_manager->inject_search();
             if (wga_fs()->is__premium_only()) {
-                if ($this->options_obj->bing->uet_tag_id) (new Bing($this->options, $this->options_obj))->inject_search();
-                if ($this->options_obj->twitter->pixel_id) (new Twitter($this->options, $this->options_obj))->inject_search();
-                if ($this->options_obj->pinterest->pixel_id) (new Pinterest($this->options, $this->options_obj))->inject_search();
+                if ($this->options_obj->bing->uet_tag_id) $this->bing_pixel->inject_search();
+                if ($this->options_obj->twitter->pixel_id) $this->twitter_pixel->inject_search();
+                if ($this->options_obj->pinterest->pixel_id) $this->pinterest_pixel->inject_search();
             }
 
         } elseif (is_product() && (!isset($_POST['add-to-cart']))) {
@@ -240,27 +251,27 @@ class Pixel_Manager
 
             $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku());
 
-            if ($this->google_active) (new Google_Pixel_Manager($this->options, $this->options_obj))->inject_product($product_id_compiled, $product, $product_attributes);
-            if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_product($product_id_compiled, $product, $product_attributes);
+            if ($this->google_active) $this->google_pixel_manager->inject_product($product_id_compiled, $product, $product_attributes);
+            if ($this->facebook_active) $this->facebook_pixel_manager->inject_product($product_id_compiled, $product, $product_attributes);
             if (wga_fs()->is__premium_only()) {
-                if ($this->options_obj->bing->uet_tag_id) (new Bing($this->options, $this->options_obj))->inject_product($product_id_compiled, $product, $product_attributes);
-                if ($this->options_obj->twitter->pixel_id) (new Twitter($this->options, $this->options_obj))->inject_product($product_id_compiled, $product, $product_attributes);
-                if ($this->options_obj->pinterest->pixel_id) (new Pinterest($this->options, $this->options_obj))->inject_product($product_id_compiled, $product, $product_attributes);
+                if ($this->options_obj->bing->uet_tag_id) $this->bing_pixel->inject_product($product_id_compiled, $product, $product_attributes);
+                if ($this->options_obj->twitter->pixel_id) $this->twitter_pixel->inject_product($product_id_compiled, $product, $product_attributes);
+                if ($this->options_obj->pinterest->pixel_id) $this->pinterest_pixel->inject_product($product_id_compiled, $product, $product_attributes);
             }
 
         } elseif ($this->is_shop_top_page()) {
-            if ($this->google_active) (new Google_Pixel_Manager($this->options, $this->options_obj))->inject_shop_top_page();
+            if ($this->google_active) $this->google_pixel_manager->inject_shop_top_page();
         } elseif (is_cart() && !empty($woocommerce->cart->get_cart())) {
 
             $cart       = $woocommerce->cart->get_cart();
             $cart_total = WC()->cart->get_cart_contents_total();
 
-            if ($this->google_active) (new Google_Pixel_Manager($this->options, $this->options_obj))->inject_cart($cart, $cart_total);
-            if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_cart($cart, $cart_total);
+            if ($this->google_active) $this->google_pixel_manager->inject_cart($cart, $cart_total);
+            if ($this->facebook_active) $this->facebook_pixel_manager->inject_cart($cart, $cart_total);
             if (wga_fs()->is__premium_only()) {
-                if ($this->options_obj->bing->uet_tag_id) (new Bing($this->options, $this->options_obj))->inject_cart($cart, $cart_total);
-                if ($this->options_obj->twitter->pixel_id) (new Twitter($this->options, $this->options_obj))->inject_cart($cart, $cart_total);
-                if ($this->options_obj->pinterest->pixel_id) (new Pinterest($this->options, $this->options_obj))->inject_cart($cart, $cart_total);
+                if ($this->options_obj->bing->uet_tag_id) $this->bing_pixel->inject_cart($cart, $cart_total);
+                if ($this->options_obj->twitter->pixel_id) $this->twitter_pixel->inject_cart($cart, $cart_total);
+                if ($this->options_obj->pinterest->pixel_id) $this->pinterest_pixel->inject_cart($cart, $cart_total);
             }
 
         } elseif (is_order_received_page()) {
@@ -299,13 +310,13 @@ class Pixel_Manager
 
                     $order_item_ids = $this->get_order_item_ids($order);
 
-                    if ($this->google_active) (new Google_Pixel_Manager($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
-                    if ($this->facebook_active) (new Facebook_Pixel_Manager($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids);
+                    if ($this->google_active) $this->google_pixel_manager->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
+                    if ($this->facebook_active) $this->facebook_pixel_manager->inject_order_received_page($order, $order_total, $order_item_ids);
 
                     if (wga_fs()->is__premium_only()) {
-                        if ($this->options_obj->bing->uet_tag_id) (new Bing($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids);
-                        if ($this->options_obj->twitter->pixel_id) (new Twitter($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids);
-                        if ($this->options_obj->pinterest->pixel_id) (new Pinterest($this->options, $this->options_obj))->inject_order_received_page($order, $order_total, $order_item_ids);
+                        if ($this->options_obj->bing->uet_tag_id) $this->bing_pixel->inject_order_received_page($order, $order_total, $order_item_ids);
+                        if ($this->options_obj->twitter->pixel_id) $this->twitter_pixel->inject_order_received_page($order, $order_total, $order_item_ids);
+                        if ($this->options_obj->pinterest->pixel_id) $this->pinterest_pixel->inject_order_received_page($order, $order_total, $order_item_ids);
                     }
 
                     $this->inject_transaction_deduper_script($order->get_id());
@@ -424,7 +435,7 @@ class Pixel_Manager
 
     private function inject_body_pixels()
     {
-//        (new Google_Pixel_Manager())->inject_google_optimize_anti_flicker_snippet();
+//        $this->google_pixel_manager->inject_google_optimize_anti_flicker_snippet();
     }
 
     private function inject_noptimize_opening_tag()
@@ -513,51 +524,6 @@ class Pixel_Manager
             return true;
         } else {
             return false;
-        }
-    }
-
-    public function eec_action_woocommerce_order_refunded($order_id, $refund_id)
-    {
-        // safe refund task into database
-        update_post_meta($refund_id, 'wooptpm_refund_processed', false);
-    }
-
-    /**
-     * Processes all prepared refunds in post_meta and outputs them on the frontend into the dataLayer.
-     * We only process this on the frontend since the output on is_order_received_page has a higher chance to get
-     * processed properly through GTM.
-     */
-    public function process_refund_to_frontend()
-    {
-        global $wpdb;
-
-        // the following condition is to limit running the following script and potentially overload the server
-        if (is_admin() || is_order_received_page()) {
-
-            $sql = "SELECT meta_id, post_id FROM wp_postmeta WHERE meta_key = 'wooptpm_refund_processed' AND `meta_value` = false";
-
-            $results = $wpdb->get_results($sql);
-
-            foreach ($results as $result) {
-
-                $refund   = new WC_Order_Refund($result->post_id);
-                $order_id = $refund->get_parent_id();
-
-                $refund_items = $refund->get_items();
-
-                $dataLayer_refund_items = [];
-                foreach ($refund_items as $refund_item) {
-
-                    $dataLayer_refund_items[] = [
-                        'id'       => $refund_item->get_product_id(),
-                        'quantity' => $refund_item->get_quantity()
-                    ];
-                }
-
-                $this->output_refund_to_frontend($order_id, $dataLayer_refund_items);
-
-                update_post_meta($result->post_id, 'wooptpm_refund_processed', true);
-            }
         }
     }
 }
