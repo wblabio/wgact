@@ -3,7 +3,6 @@
 namespace WGACT\Classes\Pixels;
 
 
-
 use stdClass;
 use WC_Order;
 use WGACT\Classes\Admin\Environment_Check;
@@ -18,6 +17,8 @@ class Pixel_Manager_Base
     use Trait_Product;
 
     protected $transaction_deduper_timeout = 2000;
+    protected $options;
+    protected $options_obj;
 
     public function __construct()
     {
@@ -43,12 +44,7 @@ class Pixel_Manager_Base
     {
         global $woocommerce;
 
-        if ((new Environment_Check())->is_autoptimize_active()) {
-            $this->inject_noptimize_opening_tag();
-        }
-
-        echo PHP_EOL . '   <!-- Google scripts -->' . PHP_EOL;
-
+        $this->inject_opening_script_tag();
 
         $this->inject_everywhere();
 
@@ -89,7 +85,7 @@ class Pixel_Manager_Base
 //                return;
 //            }
 
-            $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku(),'', $this->options);
+            $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku(), '', $this->options);
 
             $this->inject_product($product_id_compiled, $product, $product_attributes);
 //            $this->inject_product();
@@ -103,7 +99,7 @@ class Pixel_Manager_Base
             $this->inject_cart($cart, $cart_total);
         } elseif (is_order_received_page()) {
 
-            $this->is_nodedupe_parameter_set();
+//            $this->is_nodedupe_parameter_set();
 
             // get order from URL and evaluate order total
             if (isset($_GET['key'])) {
@@ -111,17 +107,7 @@ class Pixel_Manager_Base
                 $order_key = $_GET['key'];
                 $order     = new WC_Order(wc_get_order_id_by_order_key($order_key));
 
-                $conversion_prevention = false;
-                $conversion_prevention = apply_filters('wgact_conversion_prevention', $conversion_prevention, $order);
-
-                if ($this->is_nodedupe_parameter_set() ||
-                    (!$order->has_status('failed') &&
-                        !current_user_can('edit_others_pages') &&
-                        $conversion_prevention == false &&
-                        (!$this->options['shop']['order_deduplication'] ||
-                            get_post_meta($order->get_id(), '_WGACT_conversion_pixel_fired', true) != true))) {
-
-                    $this->increase_conversion_count_for_ratings();
+                if ($this->can_order_confirmation_be_processed($order)) {
 
                     if (is_user_logged_in()) {
                         $user = get_current_user_id();
@@ -140,22 +126,29 @@ class Pixel_Manager_Base
                     $this->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
 
 
-                    $this->inject_transaction_deduper_script($order->get_id());
-                } else {
-                    if (wga_fs()->is__premium_only()) {
-                        $this->conversion_pixels_already_fired_html__premium_only();
-                    }
                 }
             }
         }
 
         $this->inject_closing_script_tag();
-        echo PHP_EOL . '   <!-- END Google scripts -->' . PHP_EOL;
 
-        if ((new Environment_Check())->is_autoptimize_active()) {
-            $this->inject_noptimize_closing_tag();
+    }
+
+    protected function can_order_confirmation_be_processed($order): bool
+    {
+        $conversion_prevention = false;
+        $conversion_prevention = apply_filters('wgact_conversion_prevention', $conversion_prevention, $order);
+
+        if ($this->is_nodedupe_parameter_set() ||
+            (!$order->has_status('failed') &&
+                !current_user_can('edit_others_pages') &&
+                $conversion_prevention == false &&
+                (!$this->options['shop']['order_deduplication'] ||
+                    get_post_meta($order->get_id(), '_WGACT_conversion_pixel_fired', true) != true))) {
+            return true;
+        } else {
+            return false;
         }
-
     }
 
     public function inject_everywhere()
@@ -207,13 +200,6 @@ class Pixel_Manager_Base
         }
     }
 
-    private function increase_conversion_count_for_ratings()
-    {
-        $ratings                      = get_option(WGACT_DB_RATINGS);
-        $ratings['conversions_count'] = $ratings['conversions_count'] + 1;
-        update_option(WGACT_DB_RATINGS, $ratings);
-    }
-
     // https://stackoverflow.com/a/46216073/4688612
     protected function has_bought($value = 0, $order): bool
     {
@@ -259,27 +245,12 @@ class Pixel_Manager_Base
 
             // only continue if WC retrieves a valid product
             if (!is_bool($product)) {
-                $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku(),'', $this->options);
+                $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku(), '', $this->options);
                 array_push($order_items_array, $product_id_compiled);
             }
         }
 
         return $order_items_array;
-    }
-
-    protected function inject_transaction_deduper_script($order_id)
-    {
-        ?>
-
-            jQuery(function () {
-                setTimeout(function () {
-                    if (typeof wooptpm !== "undefined") {
-                        wooptpm.writeOrderIdToStorage(<?php echo $order_id ?>);
-                    }
-                }, <?php echo $this->transaction_deduper_timeout ?>);
-            });
-
-        <?php
     }
 
     protected function query_string_contains_all_variation_attributes($product): bool
@@ -323,10 +294,41 @@ class Pixel_Manager_Base
     {
         ?>
 
-        <!-- The conversion pixels have not been inserted. Possible reasons: -->
-        <!--    You are logged into WooCommerce as admin or shop manager. -->
-        <!--    The order payment has failed. -->
-        <!--    The pixels have already been fired. To prevent double counting the pixels are only fired once. -->
+        <!-- The conversion pixels have not been inserted. Possible reasons:
+                You are logged into WooCommerce as admin or shop manager.
+                The order payment has failed.
+                The pixels have already been fired. To prevent double counting the pixels are only fired once.
+                If you want to test the order you have two options:
+                    - Turn off order deduplication in the advanced settings
+                    - Add the '&nodedupe' parameter to the order confirmation URL like this: https://example.test/checkout/order-received/123/?key=wc_order_123abc&nodedupe
+                More info on testing: https://docs.woopt.com/wgact/#/test-order
+         -->
         <?php
+    }
+
+    private function is_shop_top_page(): bool
+    {
+        if (
+            !is_product() &&
+            !is_product_category() &&
+            !is_order_received_page() &&
+            !is_cart() &&
+            !is_search() &&
+            is_shop()
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    protected function inject_opening_script_tag()
+    {
+        echo '   <script>';
+    }
+
+    protected function inject_closing_script_tag()
+    {
+        echo '   </script>';
     }
 }

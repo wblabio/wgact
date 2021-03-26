@@ -6,8 +6,13 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-class Hotjar extends Pixel
+class Hotjar_Pixel extends Pixel
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     public function inject_everywhere()
     {
         // @formatter:off

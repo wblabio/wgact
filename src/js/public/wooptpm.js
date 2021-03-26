@@ -37,7 +37,7 @@
             }
         }
 
-        if (typeof wooptpm.storeOrderIdOnServer === 'function' && wgact_order_deduplication) {
+        if (typeof wooptpm.storeOrderIdOnServer === 'function' && wooptpmDataLayer.orderDeduplication) {
             wooptpm.storeOrderIdOnServer(orderId);
         }
     }
@@ -64,7 +64,7 @@
 
     wooptpm.isOrderIdStored = function (orderId) {
 
-        if (wgact_order_deduplication) {
+        if (wooptpmDataLayer.orderDeduplication) {
             if (!window.Storage) {
 
                 if (checkCookie()) {

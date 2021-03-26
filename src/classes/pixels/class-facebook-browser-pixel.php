@@ -13,7 +13,6 @@ class Facebook_Browser_Pixel extends Pixel
         // @formatter:off
         ?>
 
-        <script>
             !function(f,b,e,v,n,t,s)
             {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
                 n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -24,10 +23,7 @@ class Facebook_Browser_Pixel extends Pixel
                 'https://connect.facebook.net/en_US/fbevents.js');
             fbq('init', '<?php echo $this->options_obj->facebook->pixel_id ?>');
             fbq('track', 'PageView');
-        </script>
-        <noscript><img height="1" width="1" style="display:none"
-                       src="https://www.facebook.com/tr?id=<?php echo $this->options_obj->facebook->pixel_id ?>&ev=PageView&noscript=1"
-            /></noscript>
+
         <?php
         // @formatter:on
     }
@@ -36,9 +32,7 @@ class Facebook_Browser_Pixel extends Pixel
     {
         ?>
 
-        <script>
             fbq('track', 'Search');
-        </script>
         <?php
     }
 
@@ -46,7 +40,6 @@ class Facebook_Browser_Pixel extends Pixel
     {
         ?>
 
-        <script>
             fbq('track', 'ViewContent', {
                 'content_type'    : 'product',
                 'content_name'    : '<?php echo $product->get_name() ?>',
@@ -55,7 +48,6 @@ class Facebook_Browser_Pixel extends Pixel
                 'currency'        : '<?php echo $this->options_obj->shop->currency ?>',
                 'value'           : <?php echo (float)$product->get_price() . PHP_EOL ?>
             });
-        </script>
         <?php
     }
 
@@ -64,11 +56,10 @@ class Facebook_Browser_Pixel extends Pixel
         // AddToCart event is triggered in front-end event layer
     }
 
-    public function inject_order_received_page($order, $order_total, $order_item_ids)
+    public function inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer)
     {
         ?>
 
-        <script>
             if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_id() ?>)) {
                 fbq('track', 'Purchase', {
                     'content_type': 'product',
@@ -77,7 +68,6 @@ class Facebook_Browser_Pixel extends Pixel
                     'value'       : <?php echo $order_total . PHP_EOL ?>
                 });
             }
-        </script>
 
         <?php
     }

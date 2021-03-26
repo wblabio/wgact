@@ -50,11 +50,12 @@ class Facebook_Microdata extends Pixel
         ];
 
         ?>
-
+        <!-- START Facebook Microdata script -->
         <script type="application/ld+json">
             <?php echo json_encode($product_microdata) ?>
 
         </script>
+        <!-- END Facebook Microdata script -->
         <?php
     }
 

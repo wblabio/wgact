@@ -2,8 +2,6 @@
 
 namespace WGACT\Classes\Pixels;
 
-use WGACT\Classes\Admin\Environment_Check;
-
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
@@ -97,18 +95,20 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
         }
     }
 
-
-
-    private function inject_phone_conversion_number_html__premium_only()
+    protected function inject_opening_script_tag()
     {
-        ?>
+        echo PHP_EOL;
+        echo '      <!-- START Google scripts -->' . PHP_EOL;
+        echo PHP_EOL;
 
-        <script>
-            gtag('config', 'AW-<?php echo $this->options_obj->google->ads->conversion_id ?>/<?php echo $this->options_obj->google->ads->conversion_label ?>', {
-                'phone_conversion_number': '<?php echo $this->options_obj->google->ads->phone_conversion_number ?>'
-            });
-        </script>
-        <?php
+    }
+
+    protected function inject_closing_script_tag()
+    {
+        echo PHP_EOL;
+        echo '            </script>';
+        echo PHP_EOL;
+        echo '      <!-- END Google scripts -->' . PHP_EOL;
     }
 
     private function inject_borlabs_consent_mode_update()

@@ -9,14 +9,13 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-class Pinterest extends Pixel
+class Pinterest_Pixel extends Pixel
 {
     public function inject_everywhere()
     {
         // @formatter:off
         ?>
 
-        <script>
             !function(e){if(!window.pintrk){window.pintrk = function () {
                 window.pintrk.queue.push(Array.prototype.slice.call(arguments))};var
                 n=window.pintrk;n.queue=[],n.version="3.0";var
@@ -26,7 +25,6 @@ class Pinterest extends Pixel
             // pintrk('load', '1111111111111', {em: '<user_email_address>'});
             pintrk('load', '<?php echo $this->options_obj->pinterest->pixel_id ?>');
             pintrk('page');
-        </script>
         <?php
         // @formatter:on
 
@@ -35,9 +33,7 @@ class Pinterest extends Pixel
     public function inject_product_category()
     {
         ?>
-        <script>
             pintrk('track', 'viewcategory');
-        </script>
         <?php
 
     }
@@ -46,11 +42,9 @@ class Pinterest extends Pixel
     {
 
         ?>
-        <script>
             pintrk('track', 'search', {
                 search_query: '<?php echo get_search_query() ?>'
             });
-        </script>
         <?php
 
     }
@@ -59,9 +53,7 @@ class Pinterest extends Pixel
     {
         ?>
 
-        <script>
             pintrk('track', 'pagevisit');
-        </script>
         <?php
     }
 
@@ -69,13 +61,11 @@ class Pinterest extends Pixel
     {
         ?>
 
-        <script>
             pintrk('track', 'addtocart', {
                 value         : <?php echo $cart_total ?>,
                 order_quantity: <?php echo count($cart) ?>,
                 currency      : '<?php echo get_woocommerce_currency() ?>'
             });
-        </script>
 
         <?php
     }
@@ -84,7 +74,6 @@ class Pinterest extends Pixel
     {
         ?>
 
-        <script>
             if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_id() ?>)) {
                 pintrk('track', 'checkout', {
                     value         : <?php echo $order_total ?>,
@@ -94,7 +83,6 @@ class Pinterest extends Pixel
                     product_ids   : <?php echo json_encode($order_item_ids) ?>
                 });
             }
-        </script>
         <?php
     }
 }

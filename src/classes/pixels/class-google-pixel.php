@@ -32,8 +32,7 @@ class Google_Pixel extends Pixel
         if ($this->options_obj->google->optimize->container_id) {
             ?>
 
-            <script async
-                    src="https://www.googleoptimize.com/optimize.js?id=<?php echo $this->options_obj->google->optimize->container_id ?>"></script>
+            <script async src="https://www.googleoptimize.com/optimize.js?id=<?php echo $this->options_obj->google->optimize->container_id ?>"></script>
             <?php
         }
 
@@ -68,6 +67,14 @@ class Google_Pixel extends Pixel
 //        $this->inject_closing_script_tag();
     }
 
+        private function inject_phone_conversion_number_html__premium_only()
+        {
+            echo "    
+            gtag('config', 'AW-" . $this->options_obj->google->ads->conversion_id . "/" . $this->options_obj->google->ads->conversion_label . "', {
+                'phone_conversion_number': '" . $this->options_obj->google->ads->phone_conversion_number . "'
+            });";
+
+        }
 
 
     protected function get_google_init_js(): string
@@ -265,7 +272,7 @@ class Google_Pixel extends Pixel
         ?>
 
         <script>
-            wooptpmDataLayer['pixels'] = {
+            wooptpmDataLayer.pixels = {
                 'google': {
                     'ads'      : {
                         'dynamic_remarketing'     : <?php echo $this->options_obj->google->ads->dynamic_remarketing ?>,

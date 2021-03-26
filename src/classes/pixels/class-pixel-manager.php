@@ -23,12 +23,7 @@ class Pixel_Manager extends Pixel_Manager_Base
     protected $facebook_active;
     protected $google_active;
     protected $transaction_deduper_timeout = 2000;
-    protected $google_pixel_manager;
     protected $hotjar_pixel;
-    protected $facebook_pixel_manager;
-    protected $bing_pixel;
-    protected $twitter_pixel;
-    protected $pinterest_pixel;
 
     public function __construct()
     {
@@ -68,7 +63,6 @@ class Pixel_Manager extends Pixel_Manager_Base
 
         add_action('wp_head', function () {
             $this->inject_woopt_opening();
-            $this->inject_wgact_order_deduplication_script();
 
             $this->inject_data_layer_init();
             $this->inject_data_layer_shop();
@@ -79,12 +73,16 @@ class Pixel_Manager extends Pixel_Manager_Base
         /*
          * Initialize all pixels
          */
-        if ($this->google_active) $this->google_pixel_manager = new Google_Pixel_Manager();
-        if ($this->facebook_active) $this->facebook_pixel_manager = new Facebook_Pixel_Manager();
-        if ($this->options_obj->bing->uet_tag_id) $this->bing_pixel = new Bing();
-        if ($this->options_obj->hotjar->site_id) $this->hotjar_pixel = new Hotjar();
-        if ($this->options_obj->twitter->pixel_id) $this->twitter_pixel = new Twitter();
-        if ($this->options_obj->pinterest->pixel_id) $this->pinterest_pixel = new Pinterest();
+        if ($this->google_active) new Google_Pixel_Manager();
+        if ($this->facebook_active) new Facebook_Pixel_Manager();
+        if ($this->options_obj->hotjar->site_id) $this->hotjar_pixel = new Hotjar_Pixel();
+
+        if (wga_fs()->is__premium_only()) {
+            if ($this->options_obj->facebook->microdata) new Facebook_Pixel_Manager_Microdata();
+            if ($this->options_obj->bing->uet_tag_id) new Bing_Pixel_Manager();
+            if ($this->options_obj->twitter->pixel_id) new Twitter_Pixel_Manager();
+            if ($this->options_obj->pinterest->pixel_id) new Pinterest_Pixel_Manager();
+        }
 
         add_action('wp_head', function () {
             $this->inject_woopt_closing();
@@ -122,9 +120,11 @@ class Pixel_Manager extends Pixel_Manager_Base
     private function inject_data_layer_init()
     {
         ?>
+
         <script>
-            window.wooptpmDataLayer = window.wooptpmDataLayer || [];
-            window.wooptpmDataLayer['cart'] = window.wooptpmDataLayer['cart'] || {};
+            window.wooptpmDataLayer                    = window.wooptpmDataLayer || [];
+            window.wooptpmDataLayer.cart               = window.wooptpmDataLayer.cart || {};
+            window.wooptpmDataLayer.orderDeduplication = <?php echo ($this->options['shop']['order_deduplication'] && !$this->is_nodedupe_parameter_set()) ? 'true' : 'false' ?>;
         </script>
 
         <?php
@@ -133,12 +133,52 @@ class Pixel_Manager extends Pixel_Manager_Base
 
     public function inject_woopt_opening()
     {
+        if ((new Environment_Check())->is_autoptimize_active()) {
+            $this->inject_noptimize_opening_tag();
+        }
+
         echo PHP_EOL . '<!-- START woopt Pixel Manager -->' . PHP_EOL;
     }
 
     public function inject_woopt_closing()
     {
+        if ($this->options_obj->hotjar->site_id) $this->hotjar_pixel->inject_everywhere();
+
+        if (is_order_received_page()) {
+            if (isset($_GET['key'])) {
+
+                $order_key = $_GET['key'];
+                $order     = new WC_Order(wc_get_order_id_by_order_key($order_key));
+                $this->inject_transaction_deduper_script($order->get_id());
+            }
+        }
+
+        $this->increase_conversion_count_for_ratings();
+
         echo PHP_EOL . '<!-- END woopt Pixel Manager -->' . PHP_EOL;
+
+        if ((new Environment_Check())->is_autoptimize_active()) {
+            $this->inject_noptimize_closing_tag();
+        }
+    }
+
+    private function increase_conversion_count_for_ratings()
+    {
+        if (isset($_GET['key'])) {
+
+            $order_key = $_GET['key'];
+            $order     = new WC_Order(wc_get_order_id_by_order_key($order_key));
+
+            if ($this->can_order_confirmation_be_processed($order)) {
+                $ratings                      = get_option(WGACT_DB_RATINGS);
+                $ratings['conversions_count'] = $ratings['conversions_count'] + 1;
+                update_option(WGACT_DB_RATINGS, $ratings);
+
+
+            } else {
+                $this->conversion_pixels_already_fired_html__premium_only();
+            }
+        }
     }
 
     public function ajax_wooptpm_get_cart_items__premium_only()
@@ -211,228 +251,15 @@ class Pixel_Manager extends Pixel_Manager_Base
         }
     }
 
-    public function inject_head_pixels()
+    public function inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer)
     {
-        global $woocommerce;
 
-        if ((new Environment_Check())->is_autoptimize_active()) {
-            $this->inject_noptimize_opening_tag();
-        }
-
-        echo PHP_EOL . '<!-- START woopt Pixel Manager -->' . PHP_EOL;
-
-        $this->inject_wgact_order_deduplication_script();
-
-//        $this->google_pixel_manager->inject_everywhere();
-
-
-//        if ($this->google_active) $this->google_pixel_manager->inject_everywhere();
-        if ($this->facebook_active) $this->facebook_pixel_manager->inject_everywhere();
-
-        if (wga_fs()->is__premium_only()) {
-            if ($this->options_obj->bing->uet_tag_id) $this->bing_pixel->inject_everywhere();
-            if ($this->options_obj->twitter->pixel_id) $this->twitter_pixel->inject_everywhere();
-            if ($this->options_obj->pinterest->pixel_id) $this->pinterest_pixel->inject_everywhere();
-            if ($this->options_obj->hotjar->site_id) $this->hotjar_pixel->inject_everywhere();
-        }
-
-        if (is_product_category()) {
-
-//            if ($this->google_active) $this->google_pixel_manager->inject_product_category();
-            if (wga_fs()->is__premium_only()) {
-                if ($this->options_obj->bing->uet_tag_id) $this->bing_pixel->inject_product_category();
-                if ($this->options_obj->pinterest->pixel_id) $this->pinterest_pixel->inject_product_category();
-            }
-
-        } elseif (is_product_tag()) {
-//            if ($this->google_active) $this->google_pixel_manager->inject_product_tag();
-        } elseif (is_search()) {
-
-//            if ($this->google_active) $this->google_pixel_manager->inject_search();
-            if ($this->facebook_active) $this->facebook_pixel_manager->inject_search();
-            if (wga_fs()->is__premium_only()) {
-                if ($this->options_obj->bing->uet_tag_id) $this->bing_pixel->inject_search();
-                if ($this->options_obj->twitter->pixel_id) $this->twitter_pixel->inject_search();
-                if ($this->options_obj->pinterest->pixel_id) $this->pinterest_pixel->inject_search();
-            }
-
-        } elseif (is_product() && (!isset($_POST['add-to-cart']))) {
-
-            $product    = wc_get_product();
-            $product_id = $product->get_id();
-
-            $product_attributes = [
-                'brand' => $this->get_brand_name($product_id),
-            ];
-
-            if ($product->is_type('variable')) {
-                // find out if attributes have been set in the URL
-                // if not, continue
-                // if yes get the variation id and variation SKU
-
-                if ($this->query_string_contains_all_variation_attributes($product)) {
-                    // get variation product
-                    $product_id = $this->get_variation_from_query_string($product_id, $product);
-
-                    // In case a variable product is misconfigured, wc_get_product($product_id) will not
-                    // get a product but a bool. So we need to test it and only run it if
-                    // we actually get a product. Basically we fall back to the parent product.
-                    if (!is_bool(wc_get_product($product_id))) {
-                        $product = wc_get_product($product_id);
-                    }
-                }
-            }
-
-//            if (is_bool($product)) {
-////               error_log( 'WooCommerce detects the page ID ' . $product_id . ' as product, but when invoked by wc_get_product( ' . $product_id . ' ) it returns no product object' );
-//                return;
-//            }
-
-            $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku(),'', $this->options);
-
-//            if ($this->google_active) $this->google_pixel_manager->inject_product($product_id_compiled, $product, $product_attributes);
-            if ($this->facebook_active) $this->facebook_pixel_manager->inject_product($product_id_compiled, $product, $product_attributes);
-            if (wga_fs()->is__premium_only()) {
-                if ($this->options_obj->bing->uet_tag_id) $this->bing_pixel->inject_product($product_id_compiled, $product, $product_attributes);
-                if ($this->options_obj->twitter->pixel_id) $this->twitter_pixel->inject_product($product_id_compiled, $product, $product_attributes);
-                if ($this->options_obj->pinterest->pixel_id) $this->pinterest_pixel->inject_product($product_id_compiled, $product, $product_attributes);
-            }
-
-        } elseif ($this->is_shop_top_page()) {
-//            if ($this->google_active) $this->google_pixel_manager->inject_shop_top_page();
-        } elseif (is_cart() && !empty($woocommerce->cart->get_cart())) {
-
-            $cart       = $woocommerce->cart->get_cart();
-            $cart_total = WC()->cart->get_cart_contents_total();
-
-//            if ($this->google_active) $this->google_pixel_manager->inject_cart($cart, $cart_total);
-            if ($this->facebook_active) $this->facebook_pixel_manager->inject_cart($cart, $cart_total);
-            if (wga_fs()->is__premium_only()) {
-                if ($this->options_obj->bing->uet_tag_id) $this->bing_pixel->inject_cart($cart, $cart_total);
-                if ($this->options_obj->twitter->pixel_id) $this->twitter_pixel->inject_cart($cart, $cart_total);
-                if ($this->options_obj->pinterest->pixel_id) $this->pinterest_pixel->inject_cart($cart, $cart_total);
-            }
-
-        } elseif (is_order_received_page()) {
-
-            $this->is_nodedupe_parameter_set();
-
-            // get order from URL and evaluate order total
-            if (isset($_GET['key'])) {
-
-                $order_key = $_GET['key'];
-                $order     = new WC_Order(wc_get_order_id_by_order_key($order_key));
-
-                $conversion_prevention = false;
-                $conversion_prevention = apply_filters('wgact_conversion_prevention', $conversion_prevention, $order);
-
-                if ($this->is_nodedupe_parameter_set() ||
-                    (!$order->has_status('failed') &&
-                        !current_user_can('edit_others_pages') &&
-                        $conversion_prevention == false &&
-                        (!$this->options['shop']['order_deduplication'] ||
-                            get_post_meta($order->get_id(), '_WGACT_conversion_pixel_fired', true) != true))) {
-
-                    $this->increase_conversion_count_for_ratings();
-
-                    if (is_user_logged_in()) {
-                        $user = get_current_user_id();
-                    } else {
-                        $user = $order->get_billing_email();
-                    }
-                    $is_new_customer = !$this->has_bought($user, $order);
-
-                    $order_total = 0 == $this->options_obj->shop->order_total_logic ? $order->get_subtotal() - $order->get_total_discount() : $order->get_total();
-
-                    // filter to adjust the order value
-                    $order_total = apply_filters('wgact_conversion_value_filter', $order_total, $order);
-
-                    $order_item_ids = $this->get_order_item_ids($order);
-
-//                    if ($this->google_active) $this->google_pixel_manager->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
-                    if ($this->facebook_active) $this->facebook_pixel_manager->inject_order_received_page($order, $order_total, $order_item_ids);
-
-                    if (wga_fs()->is__premium_only()) {
-                        if ($this->options_obj->bing->uet_tag_id) $this->bing_pixel->inject_order_received_page($order, $order_total, $order_item_ids);
-                        if ($this->options_obj->twitter->pixel_id) $this->twitter_pixel->inject_order_received_page($order, $order_total, $order_item_ids);
-                        if ($this->options_obj->pinterest->pixel_id) $this->pinterest_pixel->inject_order_received_page($order, $order_total, $order_item_ids);
-                    }
-
-                    $this->inject_transaction_deduper_script($order->get_id());
-                } else {
-                    if (wga_fs()->is__premium_only()) {
-                        $this->conversion_pixels_already_fired_html__premium_only();
-                    }
-                }
-            }
-        }
-
-        echo PHP_EOL . '<!-- END woopt Pixel Manager -->' . PHP_EOL;
-
-        if ((new Environment_Check())->is_autoptimize_active()) {
-            $this->inject_noptimize_closing_tag();
-        }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private function inject_wgact_order_deduplication_script()
-    {
-        ?>
-        <script>
-            let wgact_order_deduplication = <?php echo ($this->options['shop']['order_deduplication'] && !$this->is_nodedupe_parameter_set()) ? 'true' : 'false' ?>;
-        </script>
-        <?php
-    }
-
 
     private function inject_body_pixels()
     {
 //        $this->google_pixel_manager->inject_google_optimize_anti_flicker_snippet();
     }
-
-    private function inject_noptimize_opening_tag()
-    {
-        echo PHP_EOL . '<!--noptimize-->';
-    }
-
-    private function inject_noptimize_closing_tag()
-    {
-        echo '<!--/noptimize-->' . PHP_EOL . PHP_EOL;
-    }
-
-
-
-
-//    protected function get_compiled_product_id($product_id, $product_sku): string
-//    {
-//        // depending on setting use product IDs or SKUs
-//        if (0 == $this->options['google']['ads']['product_identifier']) {
-//            return (string)$product_id;
-//        } else if (1 == $this->options['google']['ads']['product_identifier']) {
-//            return (string)'woocommerce_gpf_' . $product_id;
-//        } else {
-//            if ($product_sku) {
-//                return (string)$product_sku;
-//            } else {
-//                return (string)$product_id;
-//            }
-//        }
-//    }
-
-
-
-
 
     private function inject_data_layer_shop()
     {
@@ -466,7 +293,7 @@ class Pixel_Manager extends Pixel_Manager_Base
         ?>
 
         <script>
-            wooptpmDataLayer['shop'] = <?php echo json_encode($data) ?>;
+            wooptpmDataLayer.shop = <?php echo json_encode($data) ?>;
         </script>
         <?php
     }
@@ -488,7 +315,7 @@ class Pixel_Manager extends Pixel_Manager_Base
             ?>
 
             <script>
-                wooptpmDataLayer['visible_products'] = <?php echo json_encode($this->eec_get_visible_products($product_ids)) ?>;
+                wooptpmDataLayer.visible_products = <?php echo json_encode($this->eec_get_visible_products($product_ids)) ?>;
             </script>
             <?php
         } elseif (is_cart()) {
@@ -522,8 +349,8 @@ class Pixel_Manager extends Pixel_Manager_Base
             ?>
 
             <script>
-                wooptpmDataLayer['visible_products'] = <?php echo json_encode($this->eec_get_visible_products($visible_product_ids)) ?>;
-                wooptpmDataLayer['upsell_products']  = <?php echo json_encode($this->eec_get_visible_products($upsell_product_ids)) ?>;
+                wooptpmDataLayer.visible_products = <?php echo json_encode($this->eec_get_visible_products($visible_product_ids)) ?>;
+                wooptpmDataLayer.upsell_products  = <?php echo json_encode($this->eec_get_visible_products($upsell_product_ids)) ?>;
             </script>
             <?php
         } elseif (is_product()) {
@@ -551,7 +378,7 @@ class Pixel_Manager extends Pixel_Manager_Base
             ?>
 
             <script>
-                wooptpmDataLayer['visible_products'] = <?php echo json_encode($this->eec_get_visible_products($visible_product_ids)) ?>;
+                wooptpmDataLayer.visible_products = <?php echo json_encode($this->eec_get_visible_products($visible_product_ids)) ?>;
             </script>
             <?php
         }
@@ -590,5 +417,31 @@ class Pixel_Manager extends Pixel_Manager_Base
         }
 
         return $data;
+    }
+
+    protected function inject_transaction_deduper_script($order_id)
+    {
+        ?>
+
+        <script>
+            jQuery(function () {
+                setTimeout(function () {
+                    if (typeof wooptpm !== "undefined") {
+                        wooptpm.writeOrderIdToStorage(<?php echo $order_id ?>);
+                    }
+                }, <?php echo $this->transaction_deduper_timeout ?>);
+            });
+        </script>
+        <?php
+    }
+
+    private function inject_noptimize_opening_tag()
+    {
+        echo PHP_EOL . '<!--noptimize-->';
+    }
+
+    private function inject_noptimize_closing_tag()
+    {
+        echo '<!--/noptimize-->' . PHP_EOL . PHP_EOL;
     }
 }

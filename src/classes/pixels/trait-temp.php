@@ -8,22 +8,6 @@ if (!defined('ABSPATH')) {
 
 trait Trait_Temp
 {
-    private function is_shop_top_page(): bool
-    {
-        if (
-            !is_product() &&
-            !is_product_category() &&
-            !is_order_received_page() &&
-            !is_cart() &&
-            !is_search() &&
-            is_shop()
-        ) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     protected function get_compiled_product_id($product_id, $product_sku, $channel = '', $options): string
     {
         // depending on setting use product IDs or SKUs
@@ -40,14 +24,5 @@ trait Trait_Temp
         }
     }
 
-    protected function inject_opening_script_tag()
-    {
-        echo '   <script>';
-    }
 
-    protected function inject_closing_script_tag()
-    {
-        echo '   </script>';
-
-    }
 }

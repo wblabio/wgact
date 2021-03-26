@@ -7,6 +7,7 @@ describe('Google gtag events', () => {
     //     win.gtag = cy.spy().as('gtag')
     // })
 
+    // https://www.cypress.io/blog/2018/02/05/when-can-the-test-start/
     // let appHasStarted
     // function spyOnAddEventListener (win) {
     //     // win = window object in our application
@@ -305,7 +306,7 @@ describe('Google gtag events', () => {
             .eq(2)
             .click()
 
-        cy.wait(200)
+        cy.wait(400)
 
         cy.visit('/cart/')
 

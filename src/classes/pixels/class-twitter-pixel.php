@@ -8,25 +8,21 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-class Twitter extends Pixel
+class Twitter_Pixel extends Pixel
 {
     public function inject_everywhere()
     {
         // @formatter:off
         ?>
 
-        <script>
             !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);
             },s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='//static.ads-twitter.com/uwt.js',
                 a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');
             twq('init','<?php echo $this->options_obj->twitter->pixel_id ?>');
-        </script>
 
         <?php if(!is_order_received_page()): ?>
 
-        <script>
             twq('track','PageView');
-        </script>
         <?php endif; ?>
         <?php
         // @formatter:on
@@ -37,9 +33,7 @@ class Twitter extends Pixel
     {
         ?>
 
-        <script>
             twq('track', 'Search');
-        </script>
         <?php
     }
 
@@ -47,9 +41,7 @@ class Twitter extends Pixel
     {
         ?>
 
-        <script>
             twq('track', 'ViewContent');
-        </script>
         <?php
     }
 
@@ -57,9 +49,7 @@ class Twitter extends Pixel
     {
         ?>
 
-        <script>
             twq('track', 'AddToCart');
-        </script>
         <?php
     }
 
@@ -69,7 +59,6 @@ class Twitter extends Pixel
 
         ?>
 
-        <script>
             if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_id() ?>)) {
                 twq('track', 'Purchase', {
                     value       : '<?php echo $order_total ?>',
@@ -81,7 +70,6 @@ class Twitter extends Pixel
                 });
             }
 
-        </script>
         <?php
     }
 }
