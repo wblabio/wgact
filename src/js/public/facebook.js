@@ -8,7 +8,7 @@ jQuery(document).on('wooptpmAddToCart', function (event, data) {
     fbq('track', 'AddToCart', {
         'content_type': 'product',
         'content_name': data.name,
-        'content_ids' : data.id,
+        'content_ids' : data.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
         'value'       : data.quantity * data.price,
         'currency'    : data.currency,
     });

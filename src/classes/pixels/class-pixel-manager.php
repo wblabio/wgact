@@ -412,11 +412,14 @@ class Pixel_Manager extends Pixel_Manager_Base
                     'position'  => (int)$position,
                     'dyn_r_ids' => [
                         'post_id' => (string)$product->get_id(),
-                        'sku'     => (string)$product->get_sku(),
+                        'sku'     => (string) $product->get_sku() ? $product->get_sku() : $product->get_id(),
                         'gpf'     => 'woocommerce_gpf_' . (string)$product->get_id(),
                     ]
                 ];
                 $position++;
+
+                // if you want to add a custom dyn_r_id for each product
+                $data[$product->get_id()]['dyn_r_ids'] = apply_filters('wooptpm_dyn_r_product_ids', $data[$product->get_id()]['dyn_r_ids'], $product);
             }
         }
 

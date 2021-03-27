@@ -1,7 +1,7 @@
 jQuery(function () {
 
     // fire view_item_list on product page to add related, upsell and cross-sell items to the remarketing list
-    if (wooptpmDataLayer.pixels && wooptpmDataLayer.pixels.google.ads.dynamic_remarketing && wooptpmDataLayer.shop.page_type === 'product') {
+    if (wooptpmDataLayer.pixels && wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.status && wooptpmDataLayer.shop.page_type === 'product') {
 
         // reduce wooptpmDataLayer.visible_products to only the ones displayed on the front-end
         for (const [key, value] of Object.entries(wooptpmDataLayer.visible_products)) {
@@ -21,7 +21,7 @@ jQuery(function () {
     }
 
     // fire view_item_list on cart page to add related, upsell items to the remarketing list
-    if (wooptpmDataLayer.pixels && wooptpmDataLayer.pixels.google.ads.dynamic_remarketing && wooptpmDataLayer.shop.page_type === 'cart') {
+    if (wooptpmDataLayer.pixels && wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.status && wooptpmDataLayer.shop.page_type === 'cart') {
 
         // create gtag object with all wooptpmDataLayer.visible_products and fire
         gtag('event', 'view_item_list', {

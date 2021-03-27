@@ -19,7 +19,6 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
     private $google_analytics_ua_eec_pixel;
     private $google_analytics_4_eec_pixel;
 
-
     public function __construct()
     {
         parent::__construct();
@@ -110,7 +109,6 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
             }
         }
     }
-
 
     public function inject_product_category()
     {

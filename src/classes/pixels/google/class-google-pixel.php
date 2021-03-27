@@ -268,7 +268,10 @@ class Google_Pixel extends Pixel
         $data = [
             'google' => [
                 'ads'       => [
-                    'dynamic_remarketing'      => $this->options_obj->google->ads->dynamic_remarketing,
+                    'dynamic_remarketing'      => [
+                        'status'  => $this->options_obj->google->ads->dynamic_remarketing,
+                        'id_type' => $this->get_dynamic_remarketing_id_type()
+                    ],
                     'conversionIds'            => $this->get_google_ads_conversion_ids(),
                     'google_business_vertical' => $this->google_business_vertical,
                 ],
@@ -283,12 +286,26 @@ class Google_Pixel extends Pixel
             ],
         ];
 
+        // if you want to change the dyn_r_id type for Google programmatically
+        $data['google']['ads']['dynamic_remarketing']['id_type'] = apply_filters('wooptpm_dyn_r_google_id_type', $data['google']['ads']['dynamic_remarketing']['id_type']);
+
         ?>
 
         <script>
             wooptpmDataLayer.pixels = <?php echo json_encode($data) ?>
         </script>
         <?php
+    }
+
+    private function get_dynamic_remarketing_id_type (): string
+    {
+        if($this->options_obj->google->ads->product_identifier == 0) {
+            return 'post_id';
+        } elseif ($this->options_obj->google->ads->product_identifier == 1) {
+            return 'gpf';
+        } elseif ($this->options_obj->google->ads->product_identifier == 2) {
+            return 'sku';
+        }
     }
 
     protected function gtag_config($id, $channel = ''): string
@@ -312,7 +329,6 @@ class Google_Pixel extends Pixel
 
     private function inject_borlabs_consent_mode_update(): string
     {
-
         return "
                 (function updateGoogleConsentMode() {
                     if (typeof BorlabsCookie == 'undefined' || typeof gtag == 'undefined') {
@@ -331,6 +347,5 @@ class Google_Pixel extends Pixel
                         }
                     }
                 })();" . PHP_EOL;
-
     }
 }

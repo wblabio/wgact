@@ -168,6 +168,7 @@
 
         let data = {
             "id"       : id.toString(),
+            "dyn_r_ids": wooptpmDataLayer['visible_products'][productId]['dyn_r_ids'],
             "name"     : wooptpmDataLayer['visible_products'][productId]['name'],
             "list_name": wooptpmDataLayer['shop']['list_name'], // maybe remove if in cart
             "brand"    : wooptpmDataLayer['visible_products'][productId]['brand'],
@@ -204,24 +205,26 @@
 
                 wooptpmDataLayer['cart'] = {
                     [id]: {
-                        'id'      : id,
-                        'name'    : wooptpmDataLayer['visible_products'][productId]['name'],
-                        'brand'   : wooptpmDataLayer['visible_products'][productId]['brand'],
-                        'category': wooptpmDataLayer['visible_products'][productId]['category'],
-                        'quantity': quantity,
-                        'price'   : wooptpmDataLayer['visible_products'][productId]['price']
+                        'id'       : id,
+                        'dyn_r_ids': wooptpmDataLayer['visible_products'][productId]['dyn_r_ids'],
+                        'name'     : wooptpmDataLayer['visible_products'][productId]['name'],
+                        'brand'    : wooptpmDataLayer['visible_products'][productId]['brand'],
+                        'category' : wooptpmDataLayer['visible_products'][productId]['category'],
+                        'quantity' : quantity,
+                        'price'    : wooptpmDataLayer['visible_products'][productId]['price']
                     }
                 };
 
             } else {
 
                 wooptpmDataLayer.cart[id] = {
-                    'id'      : id,
-                    'name'    : wooptpmDataLayer['visible_products'][productId]['name'],
-                    'brand'   : wooptpmDataLayer['visible_products'][productId]['brand'],
-                    'category': wooptpmDataLayer['visible_products'][productId]['category'],
-                    'quantity': quantity,
-                    'price'   : wooptpmDataLayer['visible_products'][productId]['price']
+                    'id'       : id,
+                    'dyn_r_ids': wooptpmDataLayer['visible_products'][productId]['dyn_r_ids'],
+                    'name'     : wooptpmDataLayer['visible_products'][productId]['name'],
+                    'brand'    : wooptpmDataLayer['visible_products'][productId]['brand'],
+                    'category' : wooptpmDataLayer['visible_products'][productId]['category'],
+                    'quantity' : quantity,
+                    'price'    : wooptpmDataLayer['visible_products'][productId]['price']
                 };
             }
         }
@@ -265,8 +268,9 @@
         for (const [productId, product] of Object.entries(wooptpmDataLayer.cart)) {
 
             data.push({
-                'id'  : product.id,
-                'name': product.name,
+                'id'       : product.id,
+                'dyn_r_ids': product.dyn_r_ids,
+                'name'     : product.name,
                 // 'list_name': '',
                 'brand'   : product.brand,
                 'category': product.category,
@@ -386,15 +390,16 @@ jQuery(function () {
             let productId = classes.match(regex)[0];
 
             let data = {
-                "id"       : productId.toString(),
-                "name"     : wooptpmDataLayer['visible_products'][productId]['name'],
-                "list_name": wooptpmDataLayer['shop']['list_name'],
-                "brand"    : wooptpmDataLayer['visible_products'][productId]['brand'],
-                "category" : wooptpmDataLayer['visible_products'][productId]['category'],
+                'id'       : productId.toString(),
+                'dyn_r_ids': wooptpmDataLayer['visible_products'][productId]['dyn_r_ids'],
+                'name'     : wooptpmDataLayer['visible_products'][productId]['name'],
+                'list_name': wooptpmDataLayer['shop']['list_name'],
+                'brand'    : wooptpmDataLayer['visible_products'][productId]['brand'],
+                'category' : wooptpmDataLayer['visible_products'][productId]['category'],
                 // "variant": "Black",
-                "list_position": wooptpmDataLayer['visible_products'][productId]['position'],
-                "quantity"     : 1,
-                "price"        : wooptpmDataLayer['visible_products'][productId]['price']
+                'list_position': wooptpmDataLayer['visible_products'][productId]['position'],
+                'quantity'     : 1,
+                'price'        : wooptpmDataLayer['visible_products'][productId]['price']
             };
 
             jQuery(document).trigger('wooptpmSelectContent', data);
