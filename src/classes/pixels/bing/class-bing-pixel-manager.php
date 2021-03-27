@@ -1,6 +1,8 @@
 <?php
 
-namespace WGACT\Classes\Pixels;
+namespace WGACT\Classes\Pixels\Bing;
+
+use WGACT\Classes\Pixels\Pixel_Manager_Base;
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
@@ -32,9 +34,9 @@ class Bing_Pixel_Manager extends Pixel_Manager_Base
         $this->bing_pixel->inject_search();
     }
 
-    public function inject_product($product_id, $product, $product_attributes)
+    public function inject_product($product, $product_attributes)
     {
-        $this->bing_pixel->inject_product($product_id, $product, $product_attributes);
+        $this->bing_pixel->inject_product($product, $product_attributes);
     }
 
     public function inject_cart($cart, $cart_total)

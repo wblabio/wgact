@@ -1,24 +1,25 @@
 <?php
 
-namespace WGACT\Classes\Pixels;
+namespace WGACT\Classes\Pixels\Google;
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-class Google_Ads extends Google_Pixel
+class Google_Ads_Pixel extends Google_Pixel
 {
     protected $google_business_vertical;
 
     public function __construct()
     {
         parent::__construct();
+
         add_action('wp_enqueue_scripts', [$this, 'wooptpm_google_ads_front_end_scripts']);
     }
 
     public function wooptpm_google_ads_front_end_scripts()
     {
-        wp_enqueue_script('google-ads', plugin_dir_url(__DIR__) . '../js/public/google_ads.js', [], WGACT_CURRENT_VERSION, false);
+        wp_enqueue_script('google-ads', plugin_dir_url(__DIR__) . '../../js/public/google_ads.js', [], WGACT_CURRENT_VERSION, false);
     }
 
     public function inject_product_category()
@@ -53,7 +54,7 @@ class Google_Ads extends Google_Pixel
         }
     }
 
-    public function inject_product($product_id_compiled, $product, $product_attributes)
+    public function inject_product($product, $product_attributes)
     {
 //global $wp_query;
 //        error_log(print_r($related_products, true));
@@ -66,11 +67,11 @@ class Google_Ads extends Google_Pixel
             $product_details = $this->get_gads_formatted_product_details_from_product_id($product->get_id());
             ?>
 
-            gtag('event', 'view_item', {
-                'send_to': <?php echo json_encode($this->get_google_ads_conversion_ids()) ?>,
-                'value'  : <?php echo $product_details['price'] ?>,
-                'items'  : [<?php echo(json_encode($product_details)) ?>]
-            });
+                gtag('event', 'view_item', {
+                    'send_to': <?php echo json_encode($this->get_google_ads_conversion_ids()) ?>,
+                    'value'  : <?php echo $product_details['price'] ?>,
+                    'items'  : [<?php echo(json_encode($product_details)) ?>]
+                });
             <?php
         }
     }
@@ -125,10 +126,6 @@ class Google_Ads extends Google_Pixel
                 gtag('event', 'purchase', <?php echo $this->get_event_purchase_json($order, $order_total, $order_currency, $is_new_customer, 'ads') ?>);
             <?php
         }
-
-        ?>
-
-        <?php
     }
 
 

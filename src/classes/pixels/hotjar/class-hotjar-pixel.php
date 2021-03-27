@@ -1,6 +1,8 @@
 <?php
 
-namespace WGACT\Classes\Pixels;
+namespace WGACT\Classes\Pixels\Hotjar;
+
+use WGACT\Classes\Pixels\Pixel;
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly

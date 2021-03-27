@@ -109,12 +109,16 @@ You can send the link to the front page of your shop too if you think it would b
 * New: Added Google Analytics eec begin_checkout event
 * New: Added Google Analytics eec set_checkout_option events
 * New: Added Google Analytics eec refund events
+* New: Added initial GA 4 eec events (needs more tweaking though)
 [//]: # fs_premium_only_end
 [//]: # fs_premium_only_begin
 * Tweak: Added Google Analytics eec add_to_cart event for all /?add-to-cart=123 link clicks
 [//]: # fs_premium_only_end
 * Tweak: Partially decoupled pixels from pixel manager
 * Tweak: Refactored browser e-commerce events into pubsub
+[//]: # fs_premium_only_begin
+* Fix: Added proper phone conversion label
+[//]: # fs_premium_only_end
 * Fix: Under some circumstances rating_done is not set in the wgact_ratings option. This fix adds this default option.
 * Fix: Fixed the GA 4 config command
 

@@ -1,15 +1,20 @@
 <?php
 
 
-namespace WGACT\Classes\Pixels;
+namespace WGACT\Classes\Pixels\Google;
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-class Google_Enhanced_Ecommerce extends Google_Pixel
+class Google_Analytics_UA_EEC_Pixel extends Google_Analytics
 {
     use Trait_Google;
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     public function inject_product_list_object($list_id)
     {
@@ -34,21 +39,21 @@ class Google_Enhanced_Ecommerce extends Google_Pixel
 
         ?>
 
-            gtag('event', 'view_item_list', {
-                "send_to": '<?php echo $this->options_obj->google->analytics->universal->property_id ?>',
-                "items": <?php echo json_encode($items) . PHP_EOL ?>
-            });
+                gtag('event', 'view_item_list', {
+                    "send_to": '<?php echo $this->options_obj->google->analytics->universal->property_id ?>',
+                    "items": <?php echo json_encode($items) . PHP_EOL ?>
+                });
         <?php
     }
 
-    public function inject_product($product_id, $product, $product_attributes)
+    public function inject_product($product, $product_attributes)
     {
         $data = [
-            'id'            => $product_id,
+            'id'            => $product->get_id(),
             'name'          => (string)$product->get_name(),
             //            'list_name'     => 'Search Results',  // should probably be empty
-            'brand'         => (string)$this->get_brand_name($product_id),
-            'category'      => $this->get_product_category($product_id),
+            'brand'         => (string)$product_attributes['brand'],
+            'category'      => $this->get_product_category($product->get_id()),
             //            'variant'       => 'Black',
             'list_position' => 1,
             'quantity'      => 1,
@@ -57,10 +62,10 @@ class Google_Enhanced_Ecommerce extends Google_Pixel
 
         ?>
 
-            gtag('event', 'view_item', {
-                "send_to": '<?php echo $this->options_obj->google->analytics->universal->property_id ?>',
-                "items": [<?php echo json_encode($data) ?>]
-            });
+                gtag('event', 'view_item', {
+                    "send_to": '<?php echo $this->options_obj->google->analytics->universal->property_id ?>',
+                    "items": [<?php echo json_encode($data) ?>]
+                });
         <?php
     }
 
@@ -102,7 +107,6 @@ class Google_Enhanced_Ecommerce extends Google_Pixel
 
     protected function get_list_suffix(): string
     {
-
         $list_suffix = '';
 
         if (is_product_category()) {
@@ -120,7 +124,6 @@ class Google_Enhanced_Ecommerce extends Google_Pixel
 
     protected function add_parent_category_name($category, $list_suffix)
     {
-
         if ($category->parent > 0) {
 
             $parent_category = get_term_by('id', $category->parent, 'product_cat');
@@ -131,24 +134,16 @@ class Google_Enhanced_Ecommerce extends Google_Pixel
         return $list_suffix;
     }
 
-    protected function get_list_name_by_current_page_type($list_id): string
-    {
-        $list_names = [
-            'add_payment_method_page' => 'Add Payment Method page',
-            'cart'                    => 'Cart',
-            'checkout'                => 'Checkout Page',
-            'checkout_pay_page'       => 'Checkout Pay Page',
-            'front_page'              => 'Front Page',
-            'order_received_page'     => 'Order Received Page',
-            'product'                 => 'Product',
-            'product_category'        => 'Product Category',
-            'product_detail'          => 'Product Detail',
-            'product_tag'             => 'Product Tag',
-            'product_taxonomy'        => 'Product Taxonomy',
-            'search'                  => 'Search Page',
-            'shop'                    => 'Shop Page',
-        ];
 
-        return $list_names[$list_id];
+    public function inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer)
+    {
+        $order_currency = $this->get_order_currency($order);
+
+        ?>
+
+                if  ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_id() ?>)) {
+                  gtag('event', 'purchase', <?php echo $this->get_event_purchase_json($order, $order_total, $order_currency, $is_new_customer, 'ga_ua') ?>);
+                }
+        <?php
     }
 }

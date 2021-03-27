@@ -1,6 +1,8 @@
 <?php
 
-namespace WGACT\Classes\Pixels;
+namespace WGACT\Classes\Pixels\Twitter;
+
+use WGACT\Classes\Pixels\Pixel_Manager_Base;
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
@@ -27,9 +29,9 @@ class Twitter_Pixel_Manager extends Pixel_Manager_Base
         $this->twitter_pixel->inject_search();
     }
 
-    public function inject_product($product_id, $product, $product_attributes)
+    public function inject_product($product, $product_attributes)
     {
-        $this->twitter_pixel->inject_product($product_id, $product, $product_attributes);
+        $this->twitter_pixel->inject_product($product, $product_attributes);
     }
 
     public function inject_cart($cart, $cart_total)

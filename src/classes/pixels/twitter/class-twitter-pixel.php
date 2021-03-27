@@ -2,7 +2,9 @@
 
 // TODO check if more values can be passed to product and cart pages
 
-namespace WGACT\Classes\Pixels;
+namespace WGACT\Classes\Pixels\Twitter;
+
+use WGACT\Classes\Pixels\Pixel;
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
@@ -18,8 +20,8 @@ class Twitter_Pixel extends Pixel
             !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);
             },s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='//static.ads-twitter.com/uwt.js',
                 a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');
-            twq('init','<?php echo $this->options_obj->twitter->pixel_id ?>');
 
+            twq('init','<?php echo $this->options_obj->twitter->pixel_id ?>');
         <?php if(!is_order_received_page()): ?>
 
             twq('track','PageView');
@@ -37,7 +39,7 @@ class Twitter_Pixel extends Pixel
         <?php
     }
 
-    public function inject_product($product_id, $product, $product_attributes)
+    public function inject_product($product, $product_attributes)
     {
         ?>
 

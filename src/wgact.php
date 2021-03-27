@@ -11,7 +11,7 @@
  * WC requires at least: 2.6
  * WC tested up to: 5.1
  *
- * @fs_premium_only /classes/pixels/class-bing.php, /classes/pixels/class-twitter.php, /classes/pixels/class-pinterest.php, /classes/pixels/class-facebook-microdata.php, /classes/pixels/class-google-enhanced-ecommerce.php
+ * @fs_premium_only /classes/pixels/bing/, /classes/pixels/twitter/, /classes/pixels/pinterest/, /classes/pixels/facebook/class-facebook-microdata.php, /classes/pixels/google/class-google-analytics-4-eec-pixel.php, /classes/pixels/google/class-google-analytics-ua-eec-pixel.php
  *
  **/
 
@@ -259,6 +259,7 @@ if (function_exists('wga_fs')) {
                         'google_business_vertical' => 0,
                         'dynamic_remarketing'      => 0,
                         'phone_conversion_number'  => '',
+                        'phone_conversion_label'   => '',
                     ],
                     'analytics'    => [
                         'universal'        => [

@@ -13,7 +13,6 @@ if (!defined('ABSPATH')) {
 class Pixel
 {
     use Trait_Product;
-    use Trait_Temp;
 
     protected $add_cart_data;
     protected $aw_merchant_id;
@@ -49,13 +48,7 @@ class Pixel
         $this->dynamic_remarketing = $this->options['google']['ads']['dynamic_remarketing'];
         $this->product_identifier  = $this->options['google']['ads']['product_identifier'];
         $this->gtag_deactivation   = $this->options['google']['gtag']['deactivation'];
-
-
     }
-
-
-
-
 
     // get an array with all cart product ids
     public function get_cart_ids($cart): array
@@ -95,9 +88,4 @@ class Pixel
     {
         return in_array($_SERVER['REMOTE_ADDR'], ['127.0.0.1', '::1']);
     }
-
-
-
-
-
 }

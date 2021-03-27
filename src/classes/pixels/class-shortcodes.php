@@ -2,6 +2,8 @@
 
 namespace WGACT\Classes\Pixels;
 
+use WGACT\Classes\Pixels\Google\Trait_Google;
+
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }

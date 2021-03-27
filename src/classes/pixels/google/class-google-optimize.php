@@ -1,6 +1,6 @@
 <?php
 
-namespace WGACT\Classes\Pixels;
+namespace WGACT\Classes\Pixels\Google;
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly

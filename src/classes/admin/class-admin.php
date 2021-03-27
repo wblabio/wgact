@@ -454,6 +454,18 @@ class Admin
                 'wgact_plugin_options_page',
                 $section_ids['settings_name']
             );
+
+            // add fields for the Google Ads phone conversion label
+            add_settings_field(
+                'wgact_setting_google_ads_phone_conversion_label',
+                esc_html__(
+                    'Google Ads phone conversion label',
+                    'woocommerce-google-adwords-conversion-tracking-tag'
+                ),
+                [$this, 'wgact_setting_html_google_ads_phone_conversion_label'],
+                'wgact_plugin_options_page',
+                $section_ids['settings_name']
+            );
         }
     }
 
@@ -1260,6 +1272,23 @@ class Admin
         esc_html_e('The Google Ads phone conversion number must be in the same format as on the website.', 'woocommerce-google-adwords-conversion-tracking-tag');
     }
 
+    public function wgact_setting_html_google_ads_phone_conversion_label()
+    {
+        echo "<input 
+                id='wgact_plugin_google_ads_phone_conversion_label' 
+                name='wgact_plugin_options[google][ads][phone_conversion_label]' 
+                size='40' 
+                type='text' 
+                value='{$this->options['google']['ads']['phone_conversion_label']}' 
+                {$this->disable_if_demo()}
+                />";
+        echo $this->get_status_icon($this->options['google']['ads']['phone_conversion_label']);
+        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-ads-phone-conversion-number#/pixels/google-ads?id=phone-conversion-number');
+        echo $this->svg_pro_feature();
+        echo '<br><br>';
+//        esc_html_e('The Google Ads phone conversion label must be in the same format as on the website.', 'woocommerce-google-adwords-conversion-tracking-tag');
+    }
+
     public function wgact_setting_html_borlabs_support()
     {
         esc_html_e('Borlabs detected. Automatic support is:', 'woocommerce-google-adwords-conversion-tracking-tag');
@@ -1760,6 +1789,14 @@ class Admin
         if (isset($input['google']['ads']['conversion_label'])) {
             if (!$this->is_gads_conversion_label($input['google']['ads']['conversion_label'])) {
                 $input['google']['ads']['conversion_label'] = isset($this->options['google']['ads']['conversion_label']) ? $this->options['google']['ads']['conversion_label'] : '';
+                add_settings_error('wgact_plugin_options', 'invalid-conversion-label', esc_html__('You have entered an invalid conversion label.', 'woocommerce-google-adwords-conversion-tracking-tag'));
+            }
+        }
+
+        // validate ['google]['ads']['phone_conversion_label']
+        if (isset($input['google']['ads']['phone_conversion_label'])) {
+            if (!$this->is_gads_conversion_label($input['google']['ads']['phone_conversion_label'])) {
+                $input['google']['ads']['phone_conversion_label'] = isset($this->options['google']['ads']['phone_conversion_label']) ? $this->options['google']['ads']['phone_conversion_label'] : '';
                 add_settings_error('wgact_plugin_options', 'invalid-conversion-label', esc_html__('You have entered an invalid conversion label.', 'woocommerce-google-adwords-conversion-tracking-tag'));
             }
         }

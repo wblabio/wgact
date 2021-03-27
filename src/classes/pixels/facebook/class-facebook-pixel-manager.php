@@ -1,6 +1,8 @@
 <?php
 
-namespace WGACT\Classes\Pixels;
+namespace WGACT\Classes\Pixels\Facebook;
+
+use WGACT\Classes\Pixels\Pixel_Manager_Base;
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
@@ -13,6 +15,7 @@ class Facebook_Pixel_Manager extends Pixel_Manager_Base
     public function __construct()
     {
         parent::__construct();
+
         add_action('wp_enqueue_scripts', [$this, 'wooptpm_facebook_front_end_scripts']);
 
         $this->facebook_browser_pixel = new Facebook_Browser_Pixel();
@@ -20,7 +23,7 @@ class Facebook_Pixel_Manager extends Pixel_Manager_Base
 
     public function wooptpm_facebook_front_end_scripts()
     {
-        wp_enqueue_script('facebook', plugin_dir_url(__DIR__) . '../js/public/facebook.js', [], WGACT_CURRENT_VERSION, false);
+        wp_enqueue_script('facebook', plugin_dir_url(__DIR__) . '../../js/public/facebook.js', [], WGACT_CURRENT_VERSION, false);
     }
 
     public function inject_everywhere()
@@ -33,9 +36,9 @@ class Facebook_Pixel_Manager extends Pixel_Manager_Base
         $this->facebook_browser_pixel->inject_search();
     }
 
-    public function inject_product($product_id, $product, $product_attributes)
+    public function inject_product($product, $product_attributes)
     {
-        $this->facebook_browser_pixel->inject_product($product_id, $product, $product_attributes);
+        $this->facebook_browser_pixel->inject_product($product, $product_attributes);
     }
 
     public function inject_cart($cart, $cart_total)
@@ -53,9 +56,7 @@ class Facebook_Pixel_Manager extends Pixel_Manager_Base
         echo PHP_EOL;
         echo '      <!-- START Facebook scripts -->' . PHP_EOL;
         echo '            <script>';
-
         echo PHP_EOL;
-
     }
 
     protected function inject_closing_script_tag()

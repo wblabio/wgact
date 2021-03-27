@@ -4,7 +4,9 @@
 // TODO https://bingadsuet.azurewebsites.net/UETDirectOnSite_ReportCustomEvents.html
 // TODO view-source:https://bingadsuet.azurewebsites.net/UETDirectOnSite_ReportCustomEvents.html
 
-namespace WGACT\Classes\Pixels;
+namespace WGACT\Classes\Pixels\Bing;
+
+use WGACT\Classes\Pixels\Pixel;
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
@@ -16,6 +18,7 @@ class Bing_Pixel extends Pixel
     {
         // @formatter:off
         ?>
+
             window.uetq = window.uetq || [];
 
             (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:"<?php echo $this->options_obj->bing->uet_tag_id ?>"};o.q=w[u],w[u]=new UET(o),w[u].push("pageLoad")},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&&s!=="loaded"&&s!=="complete"||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,"script","//bat.bing.com/bat.js","uetq");
@@ -43,13 +46,13 @@ class Bing_Pixel extends Pixel
         <?php
     }
 
-    public function inject_product($product_id, $product, $product_attributes)
+    public function inject_product($product, $product_attributes)
     {
         ?>
 
             window.uetq.push('event', '', {
                 'ecomm_pagetype': 'product',
-                'ecomm_prodid'  : '<?php echo $product_id ?>'
+                'ecomm_prodid'  : '<?php echo $product_attributes['product_id_compiled'] ?>'
             });
         <?php
     }

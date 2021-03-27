@@ -3,7 +3,9 @@
 // TODO add enhanced match email hash to uncached pages like cart and purchase confirmation page
 // TODO check if more values can be passed to product and category pages
 
-namespace WGACT\Classes\Pixels;
+namespace WGACT\Classes\Pixels\Pinterest;
+
+use WGACT\Classes\Pixels\Pixel;
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
@@ -23,6 +25,7 @@ class Pinterest_Pixel extends Pixel
                 r=document.getElementsByTagName("script")[0];
                 r.parentNode.insertBefore(t,r)}}("https://s.pinimg.com/ct/core.js");
             // pintrk('load', '1111111111111', {em: '<user_email_address>'});
+
             pintrk('load', '<?php echo $this->options_obj->pinterest->pixel_id ?>');
             pintrk('page');
         <?php
@@ -49,7 +52,7 @@ class Pinterest_Pixel extends Pixel
 
     }
 
-    public function inject_product($product_id, $product, $product_attributes)
+    public function inject_product($product, $product_attributes)
     {
         ?>
 

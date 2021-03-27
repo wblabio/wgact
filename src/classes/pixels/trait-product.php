@@ -55,4 +55,20 @@ trait Trait_Product
 
         return $prod_cats_output;
     }
+
+    protected function get_compiled_product_id($product_id, $product_sku, $channel = '', $options): string
+    {
+        // depending on setting use product IDs or SKUs
+        if (0 == $this->options['google']['ads']['product_identifier'] || $channel === 'ga_ua' || $channel === 'ga_4') {
+            return (string)$product_id;
+        } else if (1 == $this->options['google']['ads']['product_identifier']) {
+            return (string)'woocommerce_gpf_' . $product_id;
+        } else {
+            if ($product_sku) {
+                return (string)$product_sku;
+            } else {
+                return (string)$product_id;
+            }
+        }
+    }
 }

@@ -1,8 +1,11 @@
 <?php
 
-namespace WGACT\Classes\Pixels;
+namespace WGACT\Classes\Pixels\Facebook;
 
 // TODO disable Yoast SEO Open Graph wp_option: wpseo_social => opengraph => true / false
+
+use WGACT\Classes\Pixels\Pixel;
+use WGACT\Classes\Pixels\Trait_Product;
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
@@ -12,7 +15,7 @@ class Facebook_Microdata extends Pixel
 {
     use Trait_Product;
 
-    public function inject_product($product_id, $product, $product_attributes)
+    public function inject_product($product, $product_attributes)
     {
         if (wp_get_post_parent_id($product->get_id()) <> 0) {
             $parent_product_id = wp_get_post_parent_id($product->get_id());
@@ -25,7 +28,7 @@ class Facebook_Microdata extends Pixel
         $product_microdata = [
             '@context'           => 'https://schema.org',
             '@type'              => 'Product',
-            'productID'          => $product_id,
+            'productID'          => $product_attributes['product_id_compiled'],
             'name'               => $product->get_name(),
             'description'        => $this->get_description($product),
             'url'                => get_permalink(),

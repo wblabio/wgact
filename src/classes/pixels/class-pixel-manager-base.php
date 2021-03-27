@@ -13,7 +13,6 @@ if (!defined('ABSPATH')) {
 
 class Pixel_Manager_Base
 {
-    use Trait_Temp;
     use Trait_Product;
 
     protected $transaction_deduper_timeout = 2000;
@@ -85,10 +84,9 @@ class Pixel_Manager_Base
 //                return;
 //            }
 
-            $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku(), '', $this->options);
+            $product_attributes['product_id_compiled'] = $this->get_compiled_product_id($product_id, $product->get_sku(), '', $this->options);
 
-            $this->inject_product($product_id_compiled, $product, $product_attributes);
-//            $this->inject_product();
+            $this->inject_product($product, $product_attributes);
         } elseif ($this->is_shop_top_page()) {
             $this->inject_shop_top_page();
         } elseif (is_cart() && !empty($woocommerce->cart->get_cart())) {
@@ -124,14 +122,11 @@ class Pixel_Manager_Base
                     $order_item_ids = $this->get_order_item_ids($order);
 
                     $this->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
-
-
                 }
             }
         }
 
         $this->inject_closing_script_tag();
-
     }
 
     protected function can_order_confirmation_be_processed($order): bool
@@ -171,7 +166,7 @@ class Pixel_Manager_Base
 
     }
 
-    public function inject_product($product_id_compiled, $product, $product_attributes)
+    public function inject_product($product, $product_attributes)
     {
 
     }

@@ -1,6 +1,8 @@
 <?php
 
-namespace WGACT\Classes\Pixels;
+namespace WGACT\Classes\Pixels\Facebook;
+
+use WGACT\Classes\Pixels\Pixel;
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
@@ -21,9 +23,9 @@ class Facebook_Browser_Pixel extends Pixel
                 t.src=v;s=b.getElementsByTagName(e)[0];
                 s.parentNode.insertBefore(t,s)}(window, document,'script',
                 'https://connect.facebook.net/en_US/fbevents.js');
+
             fbq('init', '<?php echo $this->options_obj->facebook->pixel_id ?>');
             fbq('track', 'PageView');
-
         <?php
         // @formatter:on
     }
@@ -36,15 +38,15 @@ class Facebook_Browser_Pixel extends Pixel
         <?php
     }
 
-    public function inject_product($product_id, $product, $product_attributes)
+    public function inject_product($product, $product_attributes)
     {
         ?>
 
             fbq('track', 'ViewContent', {
                 'content_type'    : 'product',
                 'content_name'    : '<?php echo $product->get_name() ?>',
-                'content_category': <?php echo json_encode($this->get_product_category($product_id)) ?>,
-                'content_ids'     : '<?php echo $product_id ?>',
+                'content_category': <?php echo json_encode($this->get_product_category($product->get_id())) ?>,
+                'content_ids'     : '<?php echo $product_attributes['product_id_compiled'] ?>',
                 'currency'        : '<?php echo $this->options_obj->shop->currency ?>',
                 'value'           : <?php echo (float)$product->get_price() . PHP_EOL ?>
             });

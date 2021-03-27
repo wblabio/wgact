@@ -5,7 +5,14 @@ namespace WGACT\Classes\Pixels;
 use stdClass;
 use WC_Order;
 use WGACT\Classes\Admin\Environment_Check;
-use WC_Order_Refund;
+use WGACT\Classes\Pixels\Bing\Bing_Pixel_Manager;
+use WGACT\Classes\Pixels\Facebook\Facebook_Pixel_Manager;
+use WGACT\Classes\Pixels\Facebook\Facebook_Pixel_Manager_Microdata;
+use WGACT\Classes\Pixels\Google\Google_Pixel_Manager;
+use WGACT\Classes\Pixels\Google\Trait_Google;
+use WGACT\Classes\Pixels\Hotjar\Hotjar_Pixel;
+use WGACT\Classes\Pixels\Pinterest\Pinterest_Pixel_Manager;
+use WGACT\Classes\Pixels\Twitter\Twitter_Pixel_Manager;
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
@@ -15,7 +22,6 @@ class Pixel_Manager extends Pixel_Manager_Base
 {
     use Trait_Product;
     use Trait_Google;
-    use Trait_Temp;
 
     protected $options;
     protected $options_obj;
@@ -69,7 +75,6 @@ class Pixel_Manager extends Pixel_Manager_Base
             $this->inject_data_layer_product();
         });
 
-
         /*
          * Initialize all pixels
          */
@@ -100,7 +105,6 @@ class Pixel_Manager extends Pixel_Manager_Base
             add_action('wp_ajax_wgact_purchase_pixels_fired', [$this, 'ajax_purchase_pixels_fired_handler__premium_only']);
             add_action('wp_ajax_nopriv_wgact_purchase_pixels_fired', [$this, 'ajax_purchase_pixels_fired_handler__premium_only']);
         }
-
 
         /*
          * Inject pixel snippets after <body> tag
