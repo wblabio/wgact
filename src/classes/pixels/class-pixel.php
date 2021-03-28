@@ -26,6 +26,8 @@ class Pixel
     protected $product_identifier;
     protected $options;
     protected $options_obj;
+    protected $dyn_r_id_type;
+    protected $pixel_name = '';
 
     public function __construct()
     {
@@ -87,5 +89,47 @@ class Pixel
     protected function isLocalhost(): bool
     {
         return in_array($_SERVER['REMOTE_ADDR'], ['127.0.0.1', '::1']);
+    }
+
+    protected function get_dyn_r_id_type (): string
+    {
+//        $dyn_r_id_type = '';
+
+        if($this->options_obj->google->ads->product_identifier == 0) {
+            $this->dyn_r_id_type = 'post_id';
+        } elseif ($this->options_obj->google->ads->product_identifier == 1) {
+            $this->dyn_r_id_type =  'gpf';
+        } elseif ($this->options_obj->google->ads->product_identifier == 2) {
+            $this->dyn_r_id_type =  'sku';
+        }
+
+        // if you want to change the dyn_r_id type for Google programmatically
+        $this->dyn_r_id_type = apply_filters('wooptpm_dyn_r_' . $this->pixel_name . '_id_type', $this->dyn_r_id_type);
+
+        return $this->dyn_r_id_type;
+    }
+
+    protected function get_order_item_ids($order): array
+    {
+        $order_items       = $order->get_items();
+        $order_items_array = [];
+
+        foreach ((array)$order_items as $order_item) {
+
+            $product_id = $this->get_variation_or_product_id($order_item->get_data(), $this->options_obj->general->variations_output);
+
+            $product = wc_get_product($product_id);
+
+            // only continue if WC retrieves a valid product
+            if (!is_bool($product)) {
+
+                $dyn_r_ids = $this->get_dyn_r_ids($product);
+                $product_id_compiled = $dyn_r_ids[$this->get_dyn_r_id_type()];
+//                $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku(), '', $this->options);
+                array_push($order_items_array, $product_id_compiled);
+            }
+        }
+
+        return $order_items_array;
     }
 }

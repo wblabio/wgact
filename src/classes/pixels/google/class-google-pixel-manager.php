@@ -112,7 +112,7 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
 
     public function inject_product_category()
     {
-        if ($this->is_google_ads_active()) $this->google_ads_pixel->inject_product_category();
+        if ($this->is_dynamic_remarketing_active()) $this->google_ads_pixel->inject_product_list('view_item_list');
 
         if (wga_fs()->is__premium_only() && $this->options_obj->google->analytics->eec) {
 
@@ -123,6 +123,8 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
 
     public function inject_product_tag()
     {
+        if ($this->is_dynamic_remarketing_active()) $this->google_ads_pixel->inject_product_list('view_item_list');
+
         if (wga_fs()->is__premium_only() && $this->options_obj->google->analytics->eec) {
 
             if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_eec_pixel->inject_product_list_object('product_tag');
@@ -132,6 +134,8 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
 
     public function inject_shop_top_page()
     {
+        if ($this->is_dynamic_remarketing_active()) $this->google_ads_pixel->inject_product_list('view_item_list');
+
         if (wga_fs()->is__premium_only() && $this->options_obj->google->analytics->eec) {
 
             if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_eec_pixel->inject_product_list_object('shop');
@@ -141,7 +145,7 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
 
     public function inject_search()
     {
-        if ($this->is_google_ads_active()) $this->google_ads_pixel->inject_search();
+        if ($this->is_dynamic_remarketing_active()) $this->google_ads_pixel->inject_product_list('view_search_results');
 
         if (wga_fs()->is__premium_only() && $this->options_obj->google->analytics->eec) {
 
@@ -152,7 +156,7 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
 
     public function inject_product($product, $product_attributes)
     {
-        if ($this->is_google_ads_active()) $this->google_ads_pixel->inject_product($product, $product_attributes);
+        if ($this->is_dynamic_remarketing_active()) $this->google_ads_pixel->inject_product($product, $product_attributes);
 
         if (wga_fs()->is__premium_only() && $this->options_obj->google->analytics->eec) {
 
@@ -163,7 +167,7 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
 
     public function inject_cart($cart, $cart_total)
     {
-        if ($this->is_google_ads_active()) $this->google_ads_pixel->inject_cart($cart, $cart_total);
+        //  Google Ads triggered by front-end scripts
 
         if (wga_fs()->is__premium_only() && $this->options_obj->google->analytics->eec) {
 
@@ -172,16 +176,16 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
         }
     }
 
-    public function inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer)
+    public function inject_order_received_page($order, $order_total, $is_new_customer)
     {
-        if ($this->is_google_ads_active()) $this->google_ads_pixel->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
+        if ($this->is_google_ads_active()) $this->google_ads_pixel->inject_order_received_page($order, $order_total, $is_new_customer);
 
         if (!$this->options_obj->google->analytics->eec) {
-            if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_standard_pixel->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
-            if ($this->is_google_analytics_4_active()) $this->google_analytics_4_standard_pixel->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
+            if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_standard_pixel->inject_order_received_page($order, $order_total, $is_new_customer);
+            if ($this->is_google_analytics_4_active()) $this->google_analytics_4_standard_pixel->inject_order_received_page($order, $order_total, $is_new_customer);
         } else if (wga_fs()->is__premium_only()) {
-            if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_eec_pixel->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
-            if ($this->is_google_analytics_4_active()) $this->google_analytics_4_eec_pixel->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
+            if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_eec_pixel->inject_order_received_page($order, $order_total, $is_new_customer);
+            if ($this->is_google_analytics_4_active()) $this->google_analytics_4_eec_pixel->inject_order_received_page($order, $order_total, $is_new_customer);
         }
     }
 

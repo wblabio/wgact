@@ -10,10 +10,24 @@ if (!defined('ABSPATH')) {
 
 class Facebook_Browser_Pixel extends Pixel
 {
+    protected $pixel_name;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->pixel_name = 'facebook';
+    }
+
     public function inject_everywhere()
     {
         // @formatter:off
         ?>
+            wooptpmDataLayer.pixels.<?php echo $this->pixel_name ?> = {
+                'dynamic_remarketing': {
+                    'id_type': '<?php echo $this->get_dyn_r_id_type() ?>'
+                }
+            };
 
             !function(f,b,e,v,n,t,s)
             {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -46,7 +60,7 @@ class Facebook_Browser_Pixel extends Pixel
                 'content_type'    : 'product',
                 'content_name'    : '<?php echo $product->get_name() ?>',
                 'content_category': <?php echo json_encode($this->get_product_category($product->get_id())) ?>,
-                'content_ids'     : '<?php echo $product_attributes['product_id_compiled'] ?>',
+                'content_ids'     : '<?php echo $product_attributes['dyn_r_ids'][$this->get_dyn_r_id_type()] ?>',
                 'currency'        : '<?php echo $this->options_obj->shop->currency ?>',
                 'value'           : <?php echo (float)$product->get_price() . PHP_EOL ?>
             });
@@ -58,14 +72,14 @@ class Facebook_Browser_Pixel extends Pixel
         // AddToCart event is triggered in front-end event layer
     }
 
-    public function inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer)
+    public function inject_order_received_page($order, $order_total, $is_new_customer)
     {
         ?>
 
             if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_id() ?>)) {
                 fbq('track', 'Purchase', {
                     'content_type': 'product',
-                    'content_ids' : <?php echo json_encode($order_item_ids) ?>,
+                    'content_ids' : <?php echo json_encode($this->get_order_item_ids($order)) ?>,
                     'currency'    : '<?php echo $this->options_obj->shop->currency ?>',
                     'value'       : <?php echo $order_total . PHP_EOL ?>
                 });

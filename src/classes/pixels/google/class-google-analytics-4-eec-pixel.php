@@ -62,10 +62,10 @@ class Google_Analytics_4_EEC_Pixel extends Google_Analytics
 
         ?>
 
-        gtag('event', 'view_item', {
-        "send_to": '<?php echo $this->options_obj->google->analytics->universal->property_id ?>',
-        "items": [<?php echo json_encode($data) ?>]
-        });
+                gtag('event', 'view_item', {
+                    "send_to": '<?php echo $this->options_obj->google->analytics->ga4->measurement_id ?>',
+                    "items": [<?php echo json_encode($data) ?>]
+                });
         <?php
     }
 
@@ -136,7 +136,7 @@ class Google_Analytics_4_EEC_Pixel extends Google_Analytics
 
 
 
-    public function inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer)
+    public function inject_order_received_page($order, $order_total, $is_new_customer)
     {
         $order_currency = $this->get_order_currency($order);
 

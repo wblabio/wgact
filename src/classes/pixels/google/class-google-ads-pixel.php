@@ -8,6 +8,8 @@ if (!defined('ABSPATH')) {
 
 class Google_Ads_Pixel extends Google_Pixel
 {
+    use Trait_Google;
+
     protected $google_business_vertical;
 
     public function __construct()
@@ -15,6 +17,8 @@ class Google_Ads_Pixel extends Google_Pixel
         parent::__construct();
 
         add_action('wp_enqueue_scripts', [$this, 'wooptpm_google_ads_front_end_scripts']);
+
+        $this->pixel_name = 'google_ads';
     }
 
     public function wooptpm_google_ads_front_end_scripts()
@@ -22,75 +26,39 @@ class Google_Ads_Pixel extends Google_Pixel
         wp_enqueue_script('google-ads', plugin_dir_url(__DIR__) . '../../js/public/google_ads.js', [], WGACT_CURRENT_VERSION, false);
     }
 
-    public function inject_product_category()
+    public function inject_product_list($list_name)
     {
         global $wp_query;
 
-        if ($this->is_dynamic_remarketing_active()) {
+        ?>
 
-            ?>
-
-            gtag('event', 'view_item_list', {
-                'send_to': <?php echo json_encode($this->get_google_ads_conversion_ids()) ?>,
-                'items'  : <?php echo json_encode($this->get_products_from_wp_query($wp_query)) . PHP_EOL ?>
-            });
-            <?php
-        }
-    }
-
-    public function inject_search()
-    {
-        global $wp_query;
-
-        if ($this->is_dynamic_remarketing_active()) {
-
-            ?>
-
-            gtag('event', 'view_search_results',{
-                'send_to': <?php echo json_encode($this->get_google_ads_conversion_ids()) ?>,
-                'items'  : <?php echo json_encode($this->get_products_from_wp_query($wp_query)) . PHP_EOL ?>
-            });
-            <?php
-        }
+                gtag('event', '<?php echo $list_name ?>', {
+                    'send_to': <?php echo json_encode($this->get_google_ads_conversion_ids()) ?>,
+                    'items'  : <?php echo json_encode($this->get_products_from_wp_query($wp_query)) . PHP_EOL ?>
+                });
+        <?php
     }
 
     public function inject_product($product, $product_attributes)
     {
-//global $wp_query;
-//        error_log(print_r($related_products, true));
-//        error_log(print_r(wc_get_related_products($product->get_id()), true));
-//                error_log(print_r($wp_query, true));
+        $product_details = $this->get_gads_formatted_product_details_from_product_id($product->get_id());
 
-
-        if ($this->is_dynamic_remarketing_active()) {
-
-            $product_details = $this->get_gads_formatted_product_details_from_product_id($product->get_id());
-            ?>
+        ?>
 
                 gtag('event', 'view_item', {
                     'send_to': <?php echo json_encode($this->get_google_ads_conversion_ids()) ?>,
                     'value'  : <?php echo $product_details['price'] ?>,
                     'items'  : [<?php echo(json_encode($product_details)) ?>]
                 });
-            <?php
-        }
+        <?php
     }
 
     public function inject_cart($cart, $cart_total)
     {
-//       triggered by front-end script
+//       triggered by front-end scripts
     }
 
-    private function is_dynamic_remarketing_active(): bool
-    {
-        if ($this->dynamic_remarketing && $this->options_obj->google->ads->conversion_id) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer)
+    public function inject_order_received_page($order, $order_total, $is_new_customer)
     {
         $order_currency = $this->get_order_currency($order);
 
@@ -146,7 +114,10 @@ class Google_Ads_Pixel extends Google_Pixel
 
                 // only continue if WC retrieves a valid product
                 if (!is_bool($product)) {
-                    $item_details['id']                       = $this->get_compiled_product_id($post->ID, $product->get_sku(),'', $this->options);
+
+                    $dyn_r_ids = $this->get_dyn_r_ids($product);
+
+                    $item_details['id']                       = $dyn_r_ids[$this->get_dyn_r_id_type()];
                     $item_details['google_business_vertical'] = $this->google_business_vertical;
 
                     array_push($items, $item_details);
@@ -161,7 +132,9 @@ class Google_Ads_Pixel extends Google_Pixel
     {
         $product = wc_get_product($product_id);
 
-        $product_details['id']       = $this->get_compiled_product_id($product_id, $product->get_sku(),'', $this->options);
+        $dyn_r_ids = $this->get_dyn_r_ids($product);
+
+        $product_details['id']       = $dyn_r_ids[$this->get_dyn_r_id_type()];
         $product_details['category'] = $this->get_product_category($product_id);
         // $product_details['list_position'] = 1;
         $product_details['quantity']                 = 1;
@@ -186,7 +159,9 @@ class Google_Ads_Pixel extends Google_Pixel
 //            error_log('id: ' . $product_id);
             $product = wc_get_product($product_id);
 
-            $item_details['id']                       = $this->get_compiled_product_id($product_id, $product->get_sku(),'', $this->options);
+            $dyn_r_ids = $this->get_dyn_r_ids($product);
+
+            $item_details['id']                       = $dyn_r_ids[$this->get_dyn_r_id_type()];
             $item_details['quantity']                 = (int)$cart_item['quantity'];
             $item_details['price']                    = (int)$product->get_price();
             $item_details['google_business_vertical'] = $this->google_business_vertical;
@@ -204,13 +179,13 @@ class Google_Ads_Pixel extends Google_Pixel
     {
         ?>
 
-            if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_id() ?>)) {
-                gtag('event', 'purchase', {
-                    'send_to': <?php echo json_encode($this->get_google_ads_conversion_ids()) ?>,
-                    'value'  : <?php echo $order_total; ?>,
-                    'items'  : <?php echo (json_encode($this->get_formatted_order_items($order))) . PHP_EOL ?>
-                });
-            }
+                if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_id() ?>)) {
+                    gtag('event', 'purchase', {
+                        'send_to': <?php echo json_encode($this->get_google_ads_conversion_ids()) ?>,
+                        'value'  : <?php echo $order_total; ?>,
+                        'items'  : <?php echo (json_encode($this->get_formatted_order_items($order, 'ads'))) . PHP_EOL ?>
+                    });
+                }
         <?php
     }
 }

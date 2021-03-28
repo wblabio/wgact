@@ -86,6 +86,8 @@ class Pixel_Manager_Base
 
             $product_attributes['product_id_compiled'] = $this->get_compiled_product_id($product_id, $product->get_sku(), '', $this->options);
 
+            $product_attributes['dyn_r_ids'] = $this->get_dyn_r_ids($product);
+
             $this->inject_product($product, $product_attributes);
         } elseif ($this->is_shop_top_page()) {
             $this->inject_shop_top_page();
@@ -119,9 +121,7 @@ class Pixel_Manager_Base
                     // filter to adjust the order value
                     $order_total = apply_filters('wgact_conversion_value_filter', $order_total, $order);
 
-                    $order_item_ids = $this->get_order_item_ids($order);
-
-                    $this->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
+                    $this->inject_order_received_page($order, $order_total, $is_new_customer);
                 }
             }
         }
@@ -181,7 +181,7 @@ class Pixel_Manager_Base
 
     }
 
-    public function inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer)
+    public function inject_order_received_page($order, $order_total, $is_new_customer)
     {
 
     }
@@ -227,26 +227,7 @@ class Pixel_Manager_Base
         return $count > 0 ? true : false;
     }
 
-    protected function get_order_item_ids($order): array
-    {
-        $order_items       = $order->get_items();
-        $order_items_array = [];
 
-        foreach ((array)$order_items as $order_item) {
-
-            $product_id = $this->get_variation_or_product_id($order_item->get_data(), $this->options_obj->general->variations_output);
-
-            $product = wc_get_product($product_id);
-
-            // only continue if WC retrieves a valid product
-            if (!is_bool($product)) {
-                $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku(), '', $this->options);
-                array_push($order_items_array, $product_id_compiled);
-            }
-        }
-
-        return $order_items_array;
-    }
 
     protected function query_string_contains_all_variation_attributes($product): bool
     {

@@ -152,7 +152,15 @@ class Google_Pixel extends Pixel
 
             $item_details_array = [];
 
-            $item_details_array['id']       = $this->get_compiled_product_id($product_id, $product->get_sku(), $channel, '', $this->options);
+            $dyn_r_ids = $this->get_dyn_r_ids($product);
+
+            if ($channel === 'ads') {
+
+                $item_details_array['id'] = $dyn_r_ids[$this->get_dyn_r_id_type()];
+            } else {
+                $item_details_array['id'] = $product->get_id();
+            }
+
             $item_details_array['quantity'] = (int)$order_item['quantity'];
             $item_details_array['price']    = (int)$product->get_price();
             if ($this->is_google_ads_active()) {
@@ -270,7 +278,7 @@ class Google_Pixel extends Pixel
                 'ads'       => [
                     'dynamic_remarketing'      => [
                         'status'  => $this->options_obj->google->ads->dynamic_remarketing,
-                        'id_type' => $this->get_dynamic_remarketing_id_type()
+                        'id_type' => $this->get_dyn_r_id_type()
                     ],
                     'conversionIds'            => $this->get_google_ads_conversion_ids(),
                     'google_business_vertical' => $this->google_business_vertical,
@@ -286,8 +294,6 @@ class Google_Pixel extends Pixel
             ],
         ];
 
-        // if you want to change the dyn_r_id type for Google programmatically
-        $data['google']['ads']['dynamic_remarketing']['id_type'] = apply_filters('wooptpm_dyn_r_google_id_type', $data['google']['ads']['dynamic_remarketing']['id_type']);
 
         ?>
 
@@ -297,16 +303,6 @@ class Google_Pixel extends Pixel
         <?php
     }
 
-    private function get_dynamic_remarketing_id_type (): string
-    {
-        if($this->options_obj->google->ads->product_identifier == 0) {
-            return 'post_id';
-        } elseif ($this->options_obj->google->ads->product_identifier == 1) {
-            return 'gpf';
-        } elseif ($this->options_obj->google->ads->product_identifier == 2) {
-            return 'sku';
-        }
-    }
 
     protected function gtag_config($id, $channel = ''): string
     {

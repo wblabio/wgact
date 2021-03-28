@@ -13,10 +13,24 @@ if (!defined('ABSPATH')) {
 
 class Pinterest_Pixel extends Pixel
 {
+    protected $pixel_name;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->pixel_name = 'pinterest';
+    }
+
     public function inject_everywhere()
     {
         // @formatter:off
         ?>
+            wooptpmDataLayer.pixels.<?php echo $this->pixel_name ?> = {
+                'dynamic_remarketing': {
+                    'id_type': '<?php echo $this->get_dyn_r_id_type() ?>'
+                }
+            };
 
             !function(e){if(!window.pintrk){window.pintrk = function () {
                 window.pintrk.queue.push(Array.prototype.slice.call(arguments))};var
@@ -73,7 +87,7 @@ class Pinterest_Pixel extends Pixel
         <?php
     }
 
-    public function inject_order_received_page($order, $order_total, $order_item_ids)
+    public function inject_order_received_page($order, $order_total)
     {
         ?>
 
@@ -83,7 +97,7 @@ class Pinterest_Pixel extends Pixel
                     order_quantity: <?php echo count($order->get_items()) ?>,
                     currency      : '<?php echo $order->get_currency() ?>',
                     order_id      : '<?php echo $order->get_order_number(); ?>',
-                    product_ids   : <?php echo json_encode($order_item_ids) ?>
+                    product_ids   : <?php echo json_encode($this->get_order_item_ids($order)) ?>
                 });
             }
         <?php

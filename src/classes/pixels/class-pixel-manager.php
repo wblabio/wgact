@@ -30,6 +30,7 @@ class Pixel_Manager extends Pixel_Manager_Base
     protected $google_active;
     protected $transaction_deduper_timeout = 2000;
     protected $hotjar_pixel;
+    protected $dyn_r_ids;
 
     public function __construct()
     {
@@ -255,7 +256,7 @@ class Pixel_Manager extends Pixel_Manager_Base
         }
     }
 
-    public function inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer)
+    public function inject_order_received_page($order, $order_total, $is_new_customer)
     {
 
     }
@@ -400,6 +401,9 @@ class Pixel_Manager extends Pixel_Manager_Base
 
             // only continue if WC retrieves a valid product
             if (!is_bool($product)) {
+
+                $this->dyn_r_ids = $this->get_dyn_r_ids($product);
+
                 $data[$product->get_id()] = [
                     'id'        => (string)$product->get_id(),
                     'sku'       => (string)$product->get_sku(),
@@ -410,21 +414,16 @@ class Pixel_Manager extends Pixel_Manager_Base
                     // 'variant'  => '',
                     'quantity'  => (int)1,
                     'position'  => (int)$position,
-                    'dyn_r_ids' => [
-                        'post_id' => (string)$product->get_id(),
-                        'sku'     => (string) $product->get_sku() ? $product->get_sku() : $product->get_id(),
-                        'gpf'     => 'woocommerce_gpf_' . (string)$product->get_id(),
-                    ]
+                    'dyn_r_ids' => $this->dyn_r_ids,
                 ];
                 $position++;
-
-                // if you want to add a custom dyn_r_id for each product
-                $data[$product->get_id()]['dyn_r_ids'] = apply_filters('wooptpm_dyn_r_product_ids', $data[$product->get_id()]['dyn_r_ids'], $product);
             }
         }
 
         return $data;
     }
+
+
 
     protected function inject_transaction_deduper_script($order_id)
     {

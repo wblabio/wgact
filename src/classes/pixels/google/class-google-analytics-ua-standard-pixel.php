@@ -14,7 +14,7 @@ class Google_Analytics_UA_Standard_Pixel extends Google_Analytics
         parent::__construct();
     }
 
-    public function inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer)
+    public function inject_order_received_page($order, $order_total, $is_new_customer)
     {
         $order_currency = $this->get_order_currency($order);
 

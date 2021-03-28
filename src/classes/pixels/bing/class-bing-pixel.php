@@ -14,10 +14,24 @@ if (!defined('ABSPATH')) {
 
 class Bing_Pixel extends Pixel
 {
+    protected $pixel_name;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->pixel_name = 'bing';
+    }
+
     public function inject_everywhere()
     {
         // @formatter:off
         ?>
+            wooptpmDataLayer.pixels.<?php echo $this->pixel_name ?> = {
+                'dynamic_remarketing': {
+                    'id_type': '<?php echo $this->get_dyn_r_id_type() ?>'
+                }
+            };
 
             window.uetq = window.uetq || [];
 
@@ -69,14 +83,14 @@ class Bing_Pixel extends Pixel
     }
 
 
-    public function inject_order_received_page($order, $order_total, $order_item_ids)
+    public function inject_order_received_page($order, $order_total)
     {
         ?>
 
             if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_id() ?>)) {
                 window.uetq.push('event', 'purchase', {
                     'ecomm_pagetype': 'purchase',
-                    'ecomm_prodid'  :<?php echo json_encode($order_item_ids) ?>,
+                    'ecomm_prodid'  :<?php echo json_encode($this->get_order_item_ids($order)) ?>,
                     'revenue_value' : <?php echo $order_total ?>,
                     'currency'      : '<?php echo $order->get_currency() ?>'
                 });

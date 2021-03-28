@@ -44,9 +44,9 @@ class Pinterest_Pixel_Manager extends Pixel_Manager_Base
         $this->pinterest_pixel->inject_cart($cart, $cart_total);
     }
 
-    public function inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer)
+    public function inject_order_received_page($order, $order_total, $is_new_customer)
     {
-        $this->pinterest_pixel->inject_order_received_page($order, $order_total, $order_item_ids, $is_new_customer);
+        $this->pinterest_pixel->inject_order_received_page($order, $order_total, $is_new_customer);
     }
 
     protected function inject_opening_script_tag()

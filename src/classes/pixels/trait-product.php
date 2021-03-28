@@ -71,4 +71,18 @@ trait Trait_Product
             }
         }
     }
+
+    protected function get_dyn_r_ids($product): array
+    {
+        $dyn_r_ids = [
+            'post_id' => (string)$product->get_id(),
+            'sku'     => (string) $product->get_sku() ? $product->get_sku() : $product->get_id(),
+            'gpf'     => 'woocommerce_gpf_' . (string)$product->get_id(),
+        ];
+
+        // if you want to add a custom dyn_r_id for each product
+        $dyn_r_ids = apply_filters('wooptpm_dyn_r_product_ids', $dyn_r_ids, $product);
+
+        return $dyn_r_ids;
+    }
 }
