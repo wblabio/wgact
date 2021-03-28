@@ -18,7 +18,7 @@ class Google_Ads_Pixel extends Google_Pixel
 
         add_action('wp_enqueue_scripts', [$this, 'wooptpm_google_ads_front_end_scripts']);
 
-        $this->pixel_name = 'google_ads';
+//        $this->pixel_name = 'google_ads';
     }
 
     public function wooptpm_google_ads_front_end_scripts()
