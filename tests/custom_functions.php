@@ -1,33 +1,36 @@
 <?php
 
-add_filter('wooptpm_dyn_r_product_ids', 'return_wooptpm_dyn_r_product_ids', 10, 2);
-function return_wooptpm_dyn_r_product_ids($dyn_r_ids, $product)
-{
-    $dyn_r_ids['custom1'] = 'custm_googXX_' . $product->get_id();
-    $dyn_r_ids['custom2'] = 'custm_fbXX_' . $product->get_id();
-    $dyn_r_ids['custom3'] = 'custm_pinterestXX_' . $product->get_id();
+if (isset($_GET["dynr"])) {
+    add_filter('wooptpm_dyn_r_product_ids', 'return_wooptpm_dyn_r_product_ids', 10, 2);
+    function return_wooptpm_dyn_r_product_ids($dyn_r_ids, $product)
+    {
+        $dyn_r_ids['custom1'] = 'custm_googXX_' . $product->get_id();
+        $dyn_r_ids['custom2'] = 'custm_fbXX_' . $product->get_id();
+        $dyn_r_ids['custom3'] = 'custm_pinterestXX_' . $product->get_id();
 
-    return $dyn_r_ids;
+        return $dyn_r_ids;
+    }
+
+
+    add_filter('wooptpm_dyn_r_google_id_type', 'return_wooptpm_dyn_r_google_id_type');
+    function return_wooptpm_dyn_r_google_id_type($id_type): string
+    {
+        return 'custom1';
+    }
+
+    add_filter('wooptpm_dyn_r_facebook_id_type', 'return_wooptpm_dyn_r_facebook_id_type');
+    function return_wooptpm_dyn_r_facebook_id_type($id_type): string
+    {
+        return 'custom2';
+    }
+
+    add_filter('wooptpm_dyn_r_pinterest_id_type', 'return_wooptpm_dyn_r_pinterest_id_type');
+    function return_wooptpm_dyn_r_pinterest_id_type($id_type): string
+    {
+        return 'custom3';
+    }
 }
 
-
-add_filter('wooptpm_dyn_r_google_id_type', 'return_wooptpm_dyn_r_google_id_type');
-function return_wooptpm_dyn_r_google_id_type($id_type): string
-{
-    return 'custom1';
-}
-
-add_filter('wooptpm_dyn_r_facebook_id_type', 'return_wooptpm_dyn_r_facebook_id_type');
-function return_wooptpm_dyn_r_facebook_id_type($id_type): string
-{
-    return 'custom2';
-}
-
-add_filter('wooptpm_dyn_r_pinterest_id_type', 'return_wooptpm_dyn_r_pinterest_id_type');
-function return_wooptpm_dyn_r_pinterest_id_type($id_type): string
-{
-    return 'custom3';
-}
 
 // add_filter('wgact_google_ads_conversion_identifiers', 'wgact_add_conversion_identifiers');
 function wgact_add_conversion_identifiers($conversion_identifiers)
