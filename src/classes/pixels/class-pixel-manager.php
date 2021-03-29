@@ -99,8 +99,8 @@ class Pixel_Manager extends Pixel_Manager_Base
          */
         add_action('wp_enqueue_scripts', [$this, 'wooptpm_front_end_scripts']);
 
-        add_action('wp_ajax_wooptpm_get_cart_items', [$this, 'ajax_wooptpm_get_cart_items__premium_only']);
-        add_action('wp_ajax_nopriv_wooptpm_get_cart_items', [$this, 'ajax_wooptpm_get_cart_items__premium_only']);
+        add_action('wp_ajax_wooptpm_get_cart_items', [$this, 'ajax_wooptpm_get_cart_items']);
+        add_action('wp_ajax_nopriv_wooptpm_get_cart_items', [$this, 'ajax_wooptpm_get_cart_items']);
 
         if (wga_fs()->is__premium_only()) {
             add_action('wp_ajax_wgact_purchase_pixels_fired', [$this, 'ajax_purchase_pixels_fired_handler__premium_only']);
@@ -186,7 +186,7 @@ class Pixel_Manager extends Pixel_Manager_Base
         }
     }
 
-    public function ajax_wooptpm_get_cart_items__premium_only()
+    public function ajax_wooptpm_get_cart_items()
     {
         global $woocommerce;
 
@@ -250,6 +250,8 @@ class Pixel_Manager extends Pixel_Manager_Base
     public function wooptpm_front_end_scripts()
     {
         wp_enqueue_script('front-end-scripts', plugin_dir_url(__DIR__) . '../js/public/wooptpm.js', [], WGACT_CURRENT_VERSION, false);
+        wp_localize_script('front-end-scripts', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
+
         if (wga_fs()->is__premium_only()) {
             wp_enqueue_script('front-end-scripts-premium-only', plugin_dir_url(__DIR__) . '../js/public/wooptpm__premium_only.js', [], WGACT_CURRENT_VERSION, false);
             wp_localize_script('front-end-scripts-premium-only', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);

@@ -6,6 +6,10 @@
     "admin_password": "root",
     "purchase_confirmation_url": "/checkout/order-received/61/?key=wc_order_nPUFu8qoiCSkv",
     "wgact_options_presets_folder": "~/dev/PhpstormProjects/WGACT/cypress/fixtures/wgact-options-presets/",
-    "wordpress_install_directory": "/Users/aleksandarvucenovic/dev/apps/wordpress-deployment"
+    "wgact_options_preset": "all-pixels-enabled.json",
+    "wgact_options_preset_conversion_cart_data_off": "all-pixels-enabled_conversion-cart-data-off.json",
+    "wgact_options_preset_cookie_consent_fully_enabled": "all-pixels-enabled_cookie-consent-fully-enabled.json",
+    "wordpress_install_directory": "/Users/aleksandarvucenovic/dev/apps/wordpress-deployment",
+    "plugin_version": "free"
   }
 }

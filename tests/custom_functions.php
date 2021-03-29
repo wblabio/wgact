@@ -1,7 +1,7 @@
 <?php
 
 if (isset($_GET["dynr"])) {
-    add_filter('wooptpm_dyn_r_product_ids', 'return_wooptpm_dyn_r_product_ids', 10, 2);
+    add_filter('wooptpm_product_ids', 'return_wooptpm_dyn_r_product_ids', 10, 2);
     function return_wooptpm_dyn_r_product_ids($dyn_r_ids, $product)
     {
         $dyn_r_ids['custom1'] = 'custm_googXX_' . $product->get_id();
@@ -11,24 +11,27 @@ if (isset($_GET["dynr"])) {
         return $dyn_r_ids;
     }
 
-
-    add_filter('wooptpm_dyn_r_google_id_type', 'return_wooptpm_dyn_r_google_id_type');
-    function return_wooptpm_dyn_r_google_id_type($id_type): string
+    add_filter('wooptpm_product_id_type_for_google', 'product_id_type_output_for_google');
+    function product_id_type_output_for_google(): string
     {
         return 'custom1';
     }
 
-    add_filter('wooptpm_dyn_r_facebook_id_type', 'return_wooptpm_dyn_r_facebook_id_type');
-    function return_wooptpm_dyn_r_facebook_id_type($id_type): string
+    add_filter('wooptpm_product_id_type_for_facebook', 'product_id_type_output_for_facebook');
+    function product_id_type_output_for_facebook(): string
     {
-        return 'custom2';
+        return 'sku';
     }
 
-    add_filter('wooptpm_dyn_r_pinterest_id_type', 'return_wooptpm_dyn_r_pinterest_id_type');
-    function return_wooptpm_dyn_r_pinterest_id_type($id_type): string
+    add_filter('wooptpm_product_id_type_for_pinterest', 'product_id_type_output_for_pinterest');
+    function product_id_type_output_for_pinterest(): string
     {
         return 'custom3';
     }
+}
+
+if (isset($_GET["conversion_prevention_filter"])) {
+    add_filter('wgact_conversion_prevention', '__return_true');
 }
 
 

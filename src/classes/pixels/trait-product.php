@@ -81,7 +81,7 @@ trait Trait_Product
         ];
 
         // if you want to add a custom dyn_r_id for each product
-        $dyn_r_ids = apply_filters('wooptpm_dyn_r_product_ids', $dyn_r_ids, $product);
+        $dyn_r_ids = apply_filters('wooptpm_product_ids', $dyn_r_ids, $product);
 
         return $dyn_r_ids;
     }

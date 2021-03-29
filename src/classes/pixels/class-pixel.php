@@ -104,7 +104,7 @@ class Pixel
         }
 
         // if you want to change the dyn_r_id type for Google programmatically
-        $this->dyn_r_id_type = apply_filters('wooptpm_dyn_r_' . $this->pixel_name . '_id_type', $this->dyn_r_id_type);
+        $this->dyn_r_id_type = apply_filters('wooptpm_product_id_type_for_' . $this->pixel_name, $this->dyn_r_id_type);
 
         return $this->dyn_r_id_type;
     }

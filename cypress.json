@@ -9,6 +9,7 @@
     "wgact_options_preset": "all-pixels-enabled.json",
     "wgact_options_preset_conversion_cart_data_off": "all-pixels-enabled_conversion-cart-data-off.json",
     "wgact_options_preset_cookie_consent_fully_enabled": "all-pixels-enabled_cookie-consent-fully-enabled.json",
-    "wordpress_install_directory": "/Users/aleksandarvucenovic/dev/apps/wordpress"
+    "wordpress_install_directory": "/Users/aleksandarvucenovic/dev/apps/wordpress",
+    "plugin_version": "premium"
   }
 }

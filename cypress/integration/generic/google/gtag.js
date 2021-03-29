@@ -81,10 +81,15 @@ describe('Google gtag events', () => {
                 .eq(0)
                 .click()
 
-            cy.get('@gtag').should('be.calledThrice')
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            if (Cypress.env('plugin_version') === 'premium') {
+                cy.get('@gtag').should('be.calledThrice')
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            } else {
+                cy.get('@gtag').should('be.calledOnce')
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            }
 
             // cy.get('@gtag').should('be.calledOnceWith', 'event', 'add_to_cart')
 
@@ -112,10 +117,17 @@ describe('Google gtag events', () => {
 
             // cy.get('@gtag').should('be.called')
             // cy.get('@gtag').should('be.calledOnceWith', 'event', 'add_to_cart')
-            cy.get('@gtag').should('be.calledThrice')
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+
+
+            if (Cypress.env('plugin_version') === 'premium') {
+                cy.get('@gtag').should('be.calledThrice')
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            } else {
+                cy.get('@gtag').should('be.calledOnce')
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            }
             // cy.get('@gtag').should('be.calledTwiceWith', 'event', 'add_to_cart')
             // cy.get('@gtag').should('be.calledWith', 'event', 'remove_from_cart')
         })
@@ -136,10 +148,16 @@ describe('Google gtag events', () => {
 
             // cy.get('@gtag').should('be.called')
             // cy.get('@gtag').should('be.calledOnceWith', 'event', 'add_to_cart')
-            cy.get('@gtag').should('be.calledThrice')
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+
+            if (Cypress.env('plugin_version') === 'premium') {
+                cy.get('@gtag').should('be.calledThrice')
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            } else {
+                cy.get('@gtag').should('be.calledOnce')
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            }
             // cy.get('@gtag').should('be.calledTwiceWith', 'event', 'add_to_cart')
             // cy.get('@gtag').should('be.calledWith', 'event', 'remove_from_cart')
         })
@@ -160,10 +178,15 @@ describe('Google gtag events', () => {
 
             // cy.get('@gtag').should('be.called')
             // cy.get('@gtag').should('be.calledOnceWith', 'event', 'add_to_cart')
-            cy.get('@gtag').should('be.calledThrice')
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            if (Cypress.env('plugin_version') === 'premium') {
+                cy.get('@gtag').should('be.calledThrice')
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            } else {
+                cy.get('@gtag').should('be.calledOnce')
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            }
             // cy.get('@gtag').should('be.calledTwiceWith', 'event', 'add_to_cart')
             // cy.get('@gtag').should('be.calledWith', 'event', 'remove_from_cart')
         })
@@ -185,9 +208,15 @@ describe('Google gtag events', () => {
             // cy.get('@gtag').should('be.called')
             // cy.get('@gtag').should('be.calledOnceWith', 'event', 'add_to_cart')
             // cy.get('@gtag').should('be.calledThrice')
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            if (Cypress.env('plugin_version') === 'premium') {
+                cy.get('@gtag').should('be.calledThrice')
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            } else {
+                cy.get('@gtag').should('be.calledOnce')
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            }
             // cy.get('@gtag').should('be.calledTwiceWith', 'event', 'add_to_cart')
             // cy.get('@gtag').should('be.calledWith', 'event', 'remove_from_cart')
         })
@@ -288,7 +317,12 @@ describe('Google gtag events', () => {
         //         multiple: true
         //     })
 
-        cy.get('@gtag').should('be.calledWith', 'event', 'remove_from_cart')
+        if (Cypress.env('plugin_version') === 'premium') {
+            cy.get('@gtag').should('be.calledWith', 'event', 'remove_from_cart')
+        } else {
+            // no event to be checked
+        }
+
     })
 
     it('fire gtag remove_from_cart on /cart/ page with remove button', () => {
@@ -328,7 +362,11 @@ describe('Google gtag events', () => {
                 .eq(0)
                 .click()
 
-            cy.get('@gtag').should('be.calledWith', 'event', 'remove_from_cart')
+            if (Cypress.env('plugin_version') === 'premium') {
+                cy.get('@gtag').should('be.calledWith', 'event', 'remove_from_cart')
+            } else {
+                // no event to be checked
+            }
         })
     })
 
@@ -377,8 +415,15 @@ describe('Google gtag events', () => {
                 .eq(0)
                 .click()
 
-            cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart')
-            cy.get('@gtag').should('be.calledWith', 'event', 'remove_from_cart')
+            // cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart')
+            // cy.get('@gtag').should('be.calledWith', 'event', 'remove_from_cart')
+
+            if (Cypress.env('plugin_version') === 'premium') {
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart')
+                cy.get('@gtag').should('be.calledWith', 'event', 'remove_from_cart')
+            } else {
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart')
+            }
         })
     })
 
@@ -403,10 +448,14 @@ describe('Google gtag events', () => {
                 .click()
 
             // cy.get('@gtag').should('be.calledOnceWith', 'event', 'select_content')
-            cy.get('@gtag').should('be.calledThrice')
-            cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            if (Cypress.env('plugin_version') === 'premium') {
+                cy.get('@gtag').should('be.calledThrice')
+                cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
+                cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+                cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            } else {
+                // no gtag event to be logged in the free version
+            }
         })
     })
 
@@ -424,10 +473,15 @@ describe('Google gtag events', () => {
                 .click()
 
             // cy.get('@gtag').should('be.calledOnceWith', 'event', 'select_content')
-            cy.get('@gtag').should('be.calledThrice')
-            cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            if (Cypress.env('plugin_version') === 'premium') {
+                cy.get('@gtag').should('be.calledThrice')
+                cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
+                cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+                cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            } else {
+                // no gtag event to be logged in the free version
+
+            }
         })
     })
 
@@ -445,10 +499,15 @@ describe('Google gtag events', () => {
                 .click()
 
             // cy.get('@gtag').should('be.calledOnceWith', 'event', 'select_content')
-            cy.get('@gtag').should('be.calledThrice')
-            cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            if (Cypress.env('plugin_version') === 'premium') {
+                cy.get('@gtag').should('be.calledThrice')
+                cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
+                cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+                cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            } else {
+                // no gtag event to be logged in the free version
+
+            }
         })
     })
 
@@ -468,10 +527,15 @@ describe('Google gtag events', () => {
             cy.window().its('wooptpmDataLayer').should('have.property', 'cart')
 
             // cy.get('@gtag').should('be.calledOnceWith', 'event', 'select_content')
-            cy.get('@gtag').should('be.calledThrice')
-            cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            if (Cypress.env('plugin_version') === 'premium') {
+                cy.get('@gtag').should('be.calledThrice')
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+                cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+            } else {
+                // no gtag event to be logged in the free version
+
+            }
         })
     })
 
@@ -503,8 +567,15 @@ describe('Google gtag events', () => {
 
         // cy.get('@gtag').should('be.calledWith', 'event', 'begin_checkout')
         // cy.get('@gtag').should('be.calledTwice')
-        cy.get('@gtag').should('be.calledWith', 'event', 'begin_checkout', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
-        cy.get('@gtag').should('be.calledWith', 'event', 'begin_checkout', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+        // cy.get('@gtag').should('be.calledWith', 'event', 'begin_checkout', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
+        // cy.get('@gtag').should('be.calledWith', 'event', 'begin_checkout', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+
+        if (Cypress.env('plugin_version') === 'premium') {
+            cy.get('@gtag').should('be.calledWith', 'event', 'begin_checkout', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
+            cy.get('@gtag').should('be.calledWith', 'event', 'begin_checkout', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+        } else {
+            // no gtag event to be logged in the free version
+        }
     })
 
     it('fire gtag add_to_cart and remove_from_cart on /cart/ page with update button', () => {
@@ -545,8 +616,14 @@ describe('Google gtag events', () => {
 
             // cy.get('@gtag').should('be.calledWith', 'event', 'set_checkout_option')
             // cy.get('@gtag').should('be.calledTwice')
-            cy.get('@gtag').should('be.calledWith', 'event', 'set_checkout_option', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
-            cy.get('@gtag').should('be.calledWith', 'event', 'set_checkout_option', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+
+
+            if (Cypress.env('plugin_version') === 'premium') {
+                cy.get('@gtag').should('be.calledWith', 'event', 'set_checkout_option', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
+                cy.get('@gtag').should('be.calledWith', 'event', 'set_checkout_option', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
+            } else {
+                // no gtag event to be logged in the free version
+            }
         })
     })
 })
