@@ -321,10 +321,10 @@ jQuery(function () {
     });
 
     // add_to_cart event
-    jQuery(document).on('click', '.ajax_add_to_cart, .single_add_to_cart_button', function (e) {
+    jQuery(document).on('click', '.add_to_cart_button, .ajax_add_to_cart, .single_add_to_cart_button', function (e) {
 
         // console.log('test x');
-        // alert('test');
+        alert('test');
         if (wooptpmDataLayer.shop.product_type !== 'grouped') {
 
             let productId = null;

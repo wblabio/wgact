@@ -313,8 +313,9 @@ class Pixel_Manager extends Pixel_Manager_Base
 
             $product_ids = [];
             $posts       = $wp_query->posts;
+
             foreach ($posts as $key => $post) {
-                if ($post->post_type == 'product') {
+                if ($post->post_type == 'product' || $post->post_type == 'product_variation') {
                     array_push($product_ids, $post->ID);
                 }
             }
@@ -393,6 +394,7 @@ class Pixel_Manager extends Pixel_Manager_Base
 
     private function eec_get_visible_products($product_ids): array
     {
+//        error_log(print_r($product_ids, true));
         $data = [];
 
         $position = 1;
@@ -424,7 +426,6 @@ class Pixel_Manager extends Pixel_Manager_Base
 
         return $data;
     }
-
 
 
     protected function inject_transaction_deduper_script($order_id)

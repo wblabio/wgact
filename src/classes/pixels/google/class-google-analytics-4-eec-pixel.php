@@ -29,7 +29,7 @@ class Google_Analytics_4_EEC_Pixel extends Google_Analytics
 
         foreach ($posts as $key => $post) {
 
-            if ($post->post_type == 'product') {
+            if ($post->post_type == 'product' || $post->post_type == 'product_variation') {
 
                 array_push($items, $this->eec_appweb_get_product_details_array($post->ID, $list_id, $position));
 

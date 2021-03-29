@@ -106,7 +106,7 @@ class Google_Ads_Pixel extends Google_Pixel
 
         foreach ($posts as $key => $post) {
 
-            if ($post->post_type == 'product') {
+            if ($post->post_type == 'product' || $post->post_type == 'product_variation') {
 
                 $item_details = [];
 
