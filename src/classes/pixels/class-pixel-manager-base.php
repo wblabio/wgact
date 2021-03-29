@@ -266,7 +266,7 @@ class Pixel_Manager_Base
         );
     }
 
-    protected function conversion_pixels_already_fired_html__premium_only()
+    protected function conversion_pixels_already_fired_html()
     {
         ?>
 

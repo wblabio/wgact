@@ -181,7 +181,7 @@ class Pixel_Manager extends Pixel_Manager_Base
 
 
             } else {
-                $this->conversion_pixels_already_fired_html__premium_only();
+                $this->conversion_pixels_already_fired_html();
             }
         }
     }
