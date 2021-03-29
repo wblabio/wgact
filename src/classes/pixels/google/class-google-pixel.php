@@ -48,7 +48,10 @@ class Google_Pixel extends Pixel
             <?php echo $this->get_modified_script_opening_tag() . PHP_EOL ?>
 
             <?php echo $this->get_google_init_js();
+        } else {
+            ?><script><?php
         }
+
         foreach ($this->google_ads_conversion_identifiers as $conversion_id => $conversion_label): ?>
             <?php echo $this->options_obj->google->ads->conversion_id ? $this->gtag_config($conversion_id, 'ads') : PHP_EOL; ?>
         <?php endforeach; ?>
