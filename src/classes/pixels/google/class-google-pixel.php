@@ -35,8 +35,7 @@ class Google_Pixel extends Pixel
         if ($this->options_obj->google->optimize->container_id) {
             ?>
 
-            <script async
-                    src="https://www.googleoptimize.com/optimize.js?id=<?php echo $this->options_obj->google->optimize->container_id ?>"></script>
+            <script async src="https://www.googleoptimize.com/optimize.js?id=<?php echo $this->options_obj->google->optimize->container_id ?>"></script>
             <?php
         }
 

@@ -5,7 +5,7 @@
  * Author:       Wolf+Bär Agency
  * Plugin URI:   https://wordpress.org/plugins/woocommerce-google-adwords-conversion-tracking-tag/
  * Author URI:   https://wolfundbaer.ch
- * Version:      1.8.24
+ * Version:      1.8.25
  * License:      GPLv2 or later
  * Text Domain:  woocommerce-google-adwords-conversion-tracking-tag
  * WC requires at least: 2.6
@@ -150,10 +150,16 @@ if (function_exists('wga_fs')) {
 
                 // load the options
                 $this->wgact_options_init();
+
                 if (isset($this->options['google']['gads']['dynamic_remarketing']) && $this->options['google']['gads']['dynamic_remarketing']) {
                     // make sure to disable the WGDR plugin in case we use dynamic remarketing in this plugin
                     add_filter('wgdr_third_party_cookie_prevention', '__return_true');
                 }
+
+                // run environment workflows
+                add_action('admin_notices', [$this, 'run_admin_compatibility_checks']);
+                $this->run_permanent_compatibility_mode();
+//                if ($this->options['general']['maximum_compatibility_mode']) (new Environment_Check())->enable_maximum_compatibility_mode();
 
                 $this->init();
             }
@@ -192,6 +198,18 @@ if (function_exists('wga_fs')) {
                 // inject pixels
                 new Pixel_Manager();
             }
+        }
+
+        public function run_admin_compatibility_checks()
+        {
+            if (is_admin()) {
+                (new Environment_Check())->run_checks();
+            }
+        }
+
+        public function run_permanent_compatibility_mode()
+        {
+            (new Environment_Check())->permanent_compatibility_mode();
         }
 
         // initialise the options

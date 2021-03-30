@@ -13,13 +13,12 @@ class Environment_Check
         if (is_admin()) {
             add_action('admin_enqueue_scripts', [$this, 'environment_check_script']);
             add_action('wp_ajax_environment_check_handler', [$this, 'ajax_environment_check_handler']);
-            add_action('admin_notices', [$this, 'run_checks']);
         }
     }
 
     public function run_checks()
     {
-        $this->check_wp_rocket_js_concatenation();
+//        $this->check_wp_rocket_js_concatenation();
         $this->check_litespeed_js_inline_after_dom();
     }
 
@@ -143,20 +142,104 @@ class Environment_Check
         return $option;
     }
 
-    public function disable_wp_rocket_js_concatenation($option)
+    public function disable_wp_rocket_js_optimizations($option)
     {
         $option['minify_concatenate_js'] = 0;
+        $option['defer_all_js']          = 0;
+        $option['delay_js']              = 0;
         return $option;
     }
 
+    public function permanent_compatibility_mode()
+    {
+        if ($this->is_wp_rocket_active()) $this->exclude_inline_scripts_from_wp_rocket();
+    }
+
+    public function exclude_inline_scripts_from_wp_rocket()
+    {
+        error_log('test');
+        $options        = get_option('wp_rocket_settings');
+        $update_options = false;
+
+        $js_to_exclude = [
+            'wooptpm',
+            'wooptpmDataLayer',
+            'window.wooptpmDataLayer',
+            'wooptpm__premiums_only.js',
+            'wooptpm.js',
+            'window.dataLayer',
+            'optimize.js',
+            'googleoptimize.com/optimize.js',
+            '/gtag/js',
+            'gtag',
+            '/gtag/js',
+            'gtag(',
+            '/gtm.js',
+            '/gtm-',
+            'GTM-',
+            'fbq(',
+            'fbevents.js',
+            'twq(',
+            'twq',
+            'e.twq',
+            'static.ads-twitter.com/uwt.js',
+            'platform.twitter.com/widgets.js',
+            'uetq',
+        ];
+
+        foreach ($js_to_exclude as $string) {
+
+            if (!in_array($string, $options['exclude_inline_js'])) {
+
+                array_push($options['exclude_inline_js'], $string);
+                $update_options = true;
+            }
+        }
+
+        foreach ($js_to_exclude as $string) {
+
+            if (!in_array($string, $options['exclude_js'])) {
+
+                array_push($options['exclude_js'], $string);
+                $update_options = true;
+            }
+        }
+
+        // remove scripts from delay_js_scripts
+        foreach ($js_to_exclude as $string) {
+
+            if (in_array($string, $options['delay_js_scripts'])) {
+                unset($options['delay_js_scripts'][array_search($string, $options['delay_js_scripts'])]);
+                $update_options = true;
+            }
+        }
+
+        // exclude_defer_js
+        foreach ($js_to_exclude as $string) {
+
+            if (!in_array($string, $options['exclude_defer_js'])) {
+
+                array_push($options['exclude_defer_js'], $string);
+                $update_options = true;
+            }
+        }
+
+        if ($update_options === true) {
+            update_option('wp_rocket_settings', $options);
+        }
+    }
+
+
     public function enable_maximum_compatibility_mode()
     {
-        if($this->is_litespeed_active()) add_filter('option_litespeed.conf.optm-js_inline_defer', [$this, 'disable_litespeed_js_inline_after_dom']);
-        if($this->is_wp_rocket_active()) add_filter('option_wp_rocket_settings', [$this, 'disable_wp_rocket_js_concatenation']);
+        if ($this->is_litespeed_active()) add_filter('option_litespeed.conf.optm-js_inline_defer', [$this, 'disable_litespeed_js_inline_after_dom']);
+
+        // disabling WP Rocket js optimizations not necessary here, since we add permanent script specific exclusions
+//        if ($this->is_wp_rocket_active()) add_filter('option_wp_rocket_settings', [$this, 'disable_wp_rocket_js_optimizations']);
     }
 
     public function enable_maximum_compatibility_mode_yoast_seo()
     {
-        if($this->is_yoast_seo_active()) add_filter('option_wpseo_social', [$this, 'disable_yoast_seo_facebook_social']);
+        if ($this->is_yoast_seo_active()) add_filter('option_wpseo_social', [$this, 'disable_yoast_seo_facebook_social']);
     }
 }

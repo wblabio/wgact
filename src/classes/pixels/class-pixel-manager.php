@@ -53,14 +53,16 @@ class Pixel_Manager extends Pixel_Manager_Base
         /*
          * Compatibility modes
          */
-        if ($this->options_obj->general->maximum_compatibility_mode) (new Environment_Check())->enable_maximum_compatibility_mode();
+//            if ($this->options_obj->general->maximum_compatibility_mode) (new Environment_Check())->enable_maximum_compatibility_mode();
+        if ($this->options['general']['maximum_compatibility_mode']) (new Environment_Check())->enable_maximum_compatibility_mode();
 
         if (
-            $this->options_obj->general->maximum_compatibility_mode &&
-            $this->options_obj->facebook->microdata
+            $this->options['general']['maximum_compatibility_mode'] &&
+            $this->options['facebook']['microdata']
         ) {
             (new Environment_Check())->enable_maximum_compatibility_mode_yoast_seo();
         }
+
         /*
          * Inject pixel snippets in head
          */

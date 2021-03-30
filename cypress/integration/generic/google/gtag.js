@@ -209,7 +209,7 @@ describe('Google gtag events', () => {
             // cy.get('@gtag').should('be.calledOnceWith', 'event', 'add_to_cart')
             // cy.get('@gtag').should('be.calledThrice')
             if (Cypress.env('plugin_version') === 'premium') {
-                cy.get('@gtag').should('be.calledThrice')
+                // cy.get('@gtag').should('be.calledThrice')
                 cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
                 cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
                 cy.get('@gtag').should('be.calledWith', 'event', 'add_to_cart', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
