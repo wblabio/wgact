@@ -31,12 +31,12 @@ class Facebook_Browser_Pixel extends Pixel
 
             !function(f,b,e,v,n,t,s)
             {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-                n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-                n.queue=[];t=b.createElement(e);t.async=!0;
-                t.src=v;s=b.getElementsByTagName(e)[0];
-                s.parentNode.insertBefore(t,s)}(window, document,'script',
-                'https://connect.facebook.net/en_US/fbevents.js');
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window, document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
 
             fbq('init', '<?php echo $this->options_obj->facebook->pixel_id ?>');
             fbq('track', 'PageView');
@@ -54,16 +54,18 @@ class Facebook_Browser_Pixel extends Pixel
 
     public function inject_product($product, $product_attributes)
     {
+        $data = [
+            'content_type'     => 'product',
+            'content_name'     => (string)$product->get_name(),
+            'content_category' => $this->get_product_category($product->get_id()),
+            'content_ids'      => $product_attributes['dyn_r_ids'][$this->get_dyn_r_id_type()],
+            'currency'         => (string)$this->options_obj->shop->currency,
+            'value'            => (float)$product->get_price(),
+        ];
+
         ?>
 
-            fbq('track', 'ViewContent', {
-                'content_type'    : 'product',
-                'content_name'    : '<?php echo $product->get_name() ?>',
-                'content_category': <?php echo json_encode($this->get_product_category($product->get_id())) ?>,
-                'content_ids'     : '<?php echo $product_attributes['dyn_r_ids'][$this->get_dyn_r_id_type()] ?>',
-                'currency'        : '<?php echo $this->options_obj->shop->currency ?>',
-                'value'           : <?php echo (float)$product->get_price() . PHP_EOL ?>
-            });
+            fbq('track', 'ViewContent', <?php echo json_encode($data) ?>);
         <?php
     }
 
@@ -74,16 +76,18 @@ class Facebook_Browser_Pixel extends Pixel
 
     public function inject_order_received_page($order, $order_total, $is_new_customer)
     {
+        $data = [
+            'value'        => $order_total,
+            'currency'     => $this->options_obj->shop->currency,
+            'content_ids'  => $this->get_order_item_ids($order),
+            'content_type' => 'product',
+        ];
+
         ?>
 
-            if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_id() ?>)) {
-                fbq('track', 'Purchase', {
-                    'content_type': 'product',
-                    'content_ids' : <?php echo json_encode($this->get_order_item_ids($order)) ?>,
-                    'currency'    : '<?php echo $this->options_obj->shop->currency ?>',
-                    'value'       : <?php echo $order_total . PHP_EOL ?>
-                });
-            }
+        if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_id() ?>)) {
+            fbq('track', 'Purchase', <?php echo json_encode($data) ?>);
+        }
 
         <?php
     }
