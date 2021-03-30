@@ -33,6 +33,10 @@ class Google_Pixel extends Pixel
         $this->inject_data_layer_pixels();
 
         if ($this->options_obj->google->optimize->container_id) {
+
+//            $opt = "<script async src='https://www.googleoptimize.com/optimize.js?id=" . $this->options_obj->google->optimize->container_id . "'></script>";
+//
+//            echo $opt;
             ?>
 
             <script async src="https://www.googleoptimize.com/optimize.js?id=<?php echo $this->options_obj->google->optimize->container_id ?>"></script>

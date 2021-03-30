@@ -145,8 +145,8 @@ class Environment_Check
     public function disable_wp_rocket_js_optimizations($option)
     {
         $option['minify_concatenate_js'] = 0;
-        $option['defer_all_js']          = 0;
-        $option['delay_js']              = 0;
+//        $option['defer_all_js']          = 0;
+//        $option['delay_js']              = 0;
         return $option;
     }
 
@@ -157,31 +157,33 @@ class Environment_Check
 
     public function exclude_inline_scripts_from_wp_rocket()
     {
-        error_log('test');
+//        error_log('test');
         $options        = get_option('wp_rocket_settings');
         $update_options = false;
 
         $js_to_exclude = [
+            'optimize.js',
+            'googleoptimize.com/optimize.js',
+            'jQuery',
             'wooptpm',
             'wooptpmDataLayer',
             'window.wooptpmDataLayer',
-            'wooptpm__premiums_only.js',
+//            'wooptpm__premiums_only.js',
             'wooptpm.js',
             'window.dataLayer',
-            'optimize.js',
-            'googleoptimize.com/optimize.js',
-            '/gtag/js',
+//            '/gtag/js',
             'gtag',
-            '/gtag/js',
-            'gtag(',
-            '/gtm.js',
-            '/gtm-',
-            'GTM-',
-            'fbq(',
+//            '/gtag/js',
+//            'gtag(',
+            'gtm.js',
+//            '/gtm-',
+//            'GTM-',
+//            'fbq(',
+            'fbq',
             'fbevents.js',
-            'twq(',
+//            'twq(',
             'twq',
-            'e.twq',
+//            'e.twq',
             'static.ads-twitter.com/uwt.js',
             'platform.twitter.com/widgets.js',
             'uetq',

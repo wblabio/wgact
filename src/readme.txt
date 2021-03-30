@@ -106,6 +106,7 @@ You can send the link to the front page of your shop too if you think it would b
 = 1.8.25 =
 
 * Tweak: Implemented permanent compatibility mode for WP Rocket
+* Fix: Refactored a JavaScript regex that was not working in Safari
 
 = 1.8.24 =
 

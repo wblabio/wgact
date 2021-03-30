@@ -284,6 +284,10 @@
         return data;
     }
 
+    wooptpm.getPostIdFromString = function (string) {
+        return string.match(/(post-)(\d+)/)[2];
+    }
+
     // return {
     // writeOrderIdToStorage  : writeOrderIdToStorage,
     // isOrderIdStored        : isOrderIdStored,
@@ -351,8 +355,7 @@ jQuery(function () {
             jQuery('.woocommerce-grouped-product-list-item').each(function () {
                 let quantity  = Number(jQuery(this).find('.input-text.qty').val());
                 let classes   = jQuery(this).attr('class');
-                let regex     = /(?<=post-)\d+/gm;
-                let productId = classes.match(regex)[0];
+                let productId = wooptpm.getPostIdFromString(classes);
                 wooptpm.addProductToCart(productId, quantity);
             });
         }
@@ -386,8 +389,7 @@ jQuery(function () {
 
             let name      = jQuery(this).closest('.product');
             let classes   = name.attr('class');
-            let regex     = /(?<=post-)\d+/gm;
-            let productId = classes.match(regex)[0];
+            let productId = wooptpm.getPostIdFromString(classes);
 
             let data = {
                 'id'       : productId.toString(),
@@ -465,14 +467,3 @@ jQuery(function () {
         });
     });
 });
-
-
-
-
-
-
-
-
-
-
-

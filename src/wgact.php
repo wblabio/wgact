@@ -159,9 +159,24 @@ if (function_exists('wga_fs')) {
                 // run environment workflows
                 add_action('admin_notices', [$this, 'run_admin_compatibility_checks']);
                 $this->run_permanent_compatibility_mode();
-//                if ($this->options['general']['maximum_compatibility_mode']) (new Environment_Check())->enable_maximum_compatibility_mode();
+                $this->run_compatibility_modes();
 
                 $this->init();
+            }
+        }
+
+        private function run_compatibility_modes()
+        {
+            /*
+            * Compatibility modes
+            */
+            if ($this->options['general']['maximum_compatibility_mode']) (new Environment_Check())->enable_maximum_compatibility_mode();
+
+            if (
+                $this->options['general']['maximum_compatibility_mode'] &&
+                $this->options['facebook']['microdata']
+            ) {
+                (new Environment_Check())->enable_maximum_compatibility_mode_yoast_seo();
             }
         }
 
