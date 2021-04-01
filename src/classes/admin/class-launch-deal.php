@@ -32,7 +32,7 @@ class Launch_Deal
     {
         $wooptpm_launch_deal = get_option('wooptpm_launch_deal');
 
-        if ($wooptpm_launch_deal['dismissed'] === false) {
+        if ($wooptpm_launch_deal['eligible'] === true && $wooptpm_launch_deal['dismissed'] === false) {
             if ($wooptpm_launch_deal['later'] === true) {
 
                 if (strtotime("now") >= $wooptpm_launch_deal['later_date']) {
