@@ -19,7 +19,7 @@ class Environment_Check
     public function run_checks()
     {
 //        $this->check_wp_rocket_js_concatenation();
-        $this->check_litespeed_js_inline_after_dom();
+//        $this->check_litespeed_js_inline_after_dom();
     }
 
     public function environment_check_script()
@@ -102,6 +102,11 @@ class Environment_Check
         return is_plugin_active('wp-rocket/wp-rocket.php');
     }
 
+    public function is_sg_optimizer_active(): bool
+    {
+        return is_plugin_active('sg-cachepress/sg-cachepress.php');
+    }
+
     public function is_litespeed_active(): bool
     {
         // TODO find out if there is a pro version with different folder and file name
@@ -153,6 +158,73 @@ class Environment_Check
     public function permanent_compatibility_mode()
     {
         if ($this->is_wp_rocket_active()) $this->exclude_inline_scripts_from_wp_rocket();
+        
+        if ($this->is_sg_optimizer_active())
+        {
+            add_filter('sgo_javascript_combine_excluded_inline_content', [$this, 'sg_optimizer_js_exclude_combine_inline_content']);
+            add_filter('sgo_js_minify_exclude', [$this, 'sg_optimizer_js_minify_exclude']);
+        }
+
+        if ($this->is_litespeed_active())
+        {
+            add_filter('litespeed_optm_js_defer_exc', [$this, 'litespeed_cache_js_defer_exc']);
+            add_filter('litespeed_optimize_js_excludes', [$this, 'litespeed_optimize_js_excludes']);
+            add_filter('litespeed_optm_cssjs', [$this, 'litespeed_optm_cssjs']);
+
+
+
+//             litespeed_optm_cssjs
+//             litespeed_optm_html_head
+        }
+    }
+
+    public function litespeed_optm_cssjs($excludes)
+    {
+        return $excludes;
+    }
+
+    public function litespeed_optimize_js_excludes($excludes)
+    {
+        if(is_array($excludes)){
+            $excludes = array_merge($excludes,$this->get_wooptpm_script_identifiers());
+        }
+
+        return $excludes;
+    }
+
+    public function litespeed_cache_js_defer_exc($excludes): array
+    {
+        if(is_array($excludes)){
+            $excludes = array_merge($excludes,$this->get_wooptpm_script_identifiers());
+        }
+        return $excludes;
+    }
+
+    public function sg_optimizer_js_exclude_combine_inline_content($exclude_list): array
+    {
+        if(is_array($exclude_list)) {
+            $exclude_list =  array_merge($exclude_list, $this->get_wooptpm_script_identifiers());
+        }
+
+        return $exclude_list;
+    }
+
+    public function sg_optimizer_js_minify_exclude($exclude_list)
+    {
+        $exclude_list[] = 'wooptpm-front-end-scripts';
+        $exclude_list[] = 'front-end-scripts';
+        $exclude_list[] = 'wooptpm-front-end-scripts-premium-only';
+        $exclude_list[] = 'front-end-scripts-premium-only';
+        $exclude_list[] = 'facebook';
+        $exclude_list[] = 'script-blocker-warning';
+        $exclude_list[] = 'admin-helpers';
+        $exclude_list[] = 'admin-tabs';
+        $exclude_list[] = 'selectWoo';
+        $exclude_list[] = 'google-ads';
+        $exclude_list[] = 'ga-ua-eec';
+        $exclude_list[] = 'ga4-eec';
+
+        return $exclude_list;
     }
 
     public function exclude_inline_scripts_from_wp_rocket()
@@ -161,65 +233,33 @@ class Environment_Check
         $options        = get_option('wp_rocket_settings');
         $update_options = false;
 
-        $js_to_exclude = [
-            'optimize.js',
-            'googleoptimize.com/optimize.js',
-            'jQuery',
-            'wooptpm',
-            'wooptpmDataLayer',
-            'window.wooptpmDataLayer',
-//            'wooptpm__premiums_only.js',
-            'wooptpm.js',
-            'window.dataLayer',
-//            '/gtag/js',
-            'gtag',
-//            '/gtag/js',
-//            'gtag(',
-            'gtm.js',
-//            '/gtm-',
-//            'GTM-',
-//            'fbq(',
-            'fbq',
-            'fbevents.js',
-//            'twq(',
-            'twq',
-//            'e.twq',
-            'static.ads-twitter.com/uwt.js',
-            'platform.twitter.com/widgets.js',
-            'uetq',
-        ];
+        $js_to_exclude = $this->get_wooptpm_script_identifiers();
 
         foreach ($js_to_exclude as $string) {
 
-            if (!in_array($string, $options['exclude_inline_js'])) {
+            // add exclusions for inline js
+            if (is_array($options['exclude_inline_js']) && !in_array($string, $options['exclude_inline_js'])) {
 
                 array_push($options['exclude_inline_js'], $string);
                 $update_options = true;
             }
-        }
 
-        foreach ($js_to_exclude as $string) {
-
-            if (!in_array($string, $options['exclude_js'])) {
+            // add exclusions for js
+            if (is_array($options['exclude_js']) && !in_array($string, $options['exclude_js'])) {
 
                 array_push($options['exclude_js'], $string);
                 $update_options = true;
             }
-        }
 
-        // remove scripts from delay_js_scripts
-        foreach ($js_to_exclude as $string) {
+            // remove scripts from delay_js_scripts
+            if (is_array($options['delay_js_scripts']) && in_array($string, $options['delay_js_scripts'])) {
 
-            if (in_array($string, $options['delay_js_scripts'])) {
                 unset($options['delay_js_scripts'][array_search($string, $options['delay_js_scripts'])]);
                 $update_options = true;
             }
-        }
 
-        // exclude_defer_js
-        foreach ($js_to_exclude as $string) {
-
-            if (!in_array($string, $options['exclude_defer_js'])) {
+            // exclude_defer_js
+            if (is_array($options['exclude_defer_js']) && !in_array($string, $options['exclude_defer_js'])) {
 
                 array_push($options['exclude_defer_js'], $string);
                 $update_options = true;
@@ -243,5 +283,36 @@ class Environment_Check
     public function enable_maximum_compatibility_mode_yoast_seo()
     {
         if ($this->is_yoast_seo_active()) add_filter('option_wpseo_social', [$this, 'disable_yoast_seo_facebook_social']);
+    }
+
+    private function get_wooptpm_script_identifiers(): array
+    {
+        return [
+            'optimize.js',
+            'googleoptimize.com/optimize.js',
+            'jQuery',
+            'wooptpm',
+            'wooptpmDataLayer',
+            'window.wooptpmDataLayer',
+            //            'wooptpm__premiums_only.js',
+            'wooptpm.js',
+            'window.dataLayer',
+            //            '/gtag/js',
+            'gtag',
+            //            '/gtag/js',
+            //            'gtag(',
+            'gtm.js',
+            //            '/gtm-',
+            //            'GTM-',
+            //            'fbq(',
+            'fbq',
+            'fbevents.js',
+            //            'twq(',
+            'twq',
+            //            'e.twq',
+            'static.ads-twitter.com/uwt.js',
+            'platform.twitter.com/widgets.js',
+            'uetq',
+        ];
     }
 }

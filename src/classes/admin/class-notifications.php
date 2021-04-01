@@ -19,7 +19,8 @@ class Notifications
                 </span><br>
             </p>
             <p>
-                <a href="https://docs.woopt.com/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=wp-rocket-javascript-concatenation-error#/troubleshooting?id=wp-rocket-javascript-concatenation" target="_blank"
+                <a href="https://docs.woopt.com/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=wp-rocket-javascript-concatenation-error#/troubleshooting?id=wp-rocket-javascript-concatenation"
+                   target="_blank"
                    style="font-weight: bold;color:blue">
                     <?php esc_html_e('Learn more', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
                 </a>
@@ -37,7 +38,8 @@ class Notifications
             </p>
             <p>
             <div id="wgact-dismiss-wp-rocket-js-concatenation-error" class="button" style="white-space:normal;">
-                <?php esc_html_e('Click here to dismiss this warning forever.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?><br>
+                <?php esc_html_e('Click here to dismiss this warning forever.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+                <br>
                 <?php esc_html_e('And I swear that I triple checked that the visitor and conversion tracking is working just fine and that I won\'t ask for support as long as the WP Rocket JavaScript concatenation is turned on!', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
 
             </div>
@@ -58,7 +60,8 @@ class Notifications
                 </span><br>
             </p>
             <p>
-                <a href="https://docs.woopt.com/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=litespeed-inline-js-dom-ready-error#/troubleshooting?id=litespeed-cache-inline-javascript-after-dom-ready" target="_blank"
+                <a href="https://docs.woopt.com/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=litespeed-inline-js-dom-ready-error#/troubleshooting?id=litespeed-cache-inline-javascript-after-dom-ready"
+                   target="_blank"
                    style="font-weight: bold;color:blue">
                     <?php esc_html_e('Learn more', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
                 </a>
@@ -76,7 +79,8 @@ class Notifications
             </p>
             <p>
             <div id="wgact-dismiss-litespeed-inline-js-dom-ready-error" class="button" style="white-space:normal;">
-                <?php esc_html_e('Click here to dismiss this warning forever.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?><br>
+                <?php esc_html_e('Click here to dismiss this warning forever.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+                <br>
                 <?php esc_html_e('And I swear that I triple checked that the visitor and conversion tracking is working just fine and that I won\'t ask for support as long as the LiteSpeed Inline JavaScript After DOM Ready is turned on!', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
 
             </div>

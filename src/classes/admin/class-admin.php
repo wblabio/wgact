@@ -802,16 +802,14 @@ class Admin
                     <div>
                         <span>
                             <?php
-                            /* translators: 'Wolf+Bär' needs to always stay the same*/
-                            esc_html_e('Profit Driven Marketing by Wolf+Bär', 'woocommerce-google-adwords-conversion-tracking-tag');
+                            esc_html_e('Profit Driven Marketing by woopt', 'woocommerce-google-adwords-conversion-tracking-tag');
                             ?>
                         </span>
 
                         <span style="float: right; padding-left: 20px">
                             <?php esc_html_e('Visit us here:', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
-                            <a href="https://wolfundbaer.ch/<?php
-                            echo $this->get_link_locale() ?>/?utm_source=plugin&utm_medium=banner&utm_campaign=wgact_plugin"
-                               target="_blank">https://wolfundbaer.ch
+                            <a href="https://woopt.com/?utm_source=plugin&utm_medium=banner&utm_campaign=wooptpm"
+                               target="_blank">https://woopt.com
                             </a>
 					    </span>
 
@@ -902,7 +900,7 @@ class Admin
                 <li>
                     <?php
                     esc_html_e('Or send us an email to the following address: ', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
-                    <a href="mailto:support@wolfundbaer.ch" target="_blank">support@wolfundbaer.ch</a>
+                    <a href="mailto:support@woopt.com" target="_blank">support@woopt.com</a>
                 </li>
             </ul>
         </div>
@@ -949,15 +947,13 @@ class Admin
         </div>
         <div style="margin-bottom: 30px;">
             <div><?php
-                /* translators: 'Wolf+Bär' needs to always stay the same, while 'Agency' can be translated */
-                esc_html_e('Developer: Wolf+Bär Agency', 'woocommerce-google-adwords-conversion-tracking-tag');
+                esc_html_e('Developer: woopt', 'woocommerce-google-adwords-conversion-tracking-tag');
                 ?></div>
             <div>
                 <?php
                 esc_html_e('Website: ', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
-                <a href="https://wolfundbaer.ch/<?php
-                echo $this->get_link_locale() ?>/?utm_source=plugin&utm_medium=banner&utm_campaign=wgact_plugin"
-                   target="_blank">https://wolfundbaer.ch</a>
+                <a href="https://woopt.com/?utm_source=plugin&utm_medium=banner&utm_campaign=woopt"
+                   target="_blank">https://woopt.com</a>
             </div>
         </div>
         <?php
@@ -1604,7 +1600,7 @@ class Admin
         <div style="margin-top:10px">
             <?php
             esc_html_e('Currently the plugin automatically detects the location of the visitor for this setting. In most, if not all, cases this will work fine. Please let us know if you have a use case where you need another output:', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
-            <a href="mailto:support@wolfundbaer.ch">support@wolfundbaer.ch</a>
+            <a href="mailto:support@woopt.com">support@woopt.com</a>
         </div>
         <?php
     }
@@ -1641,7 +1637,7 @@ class Admin
         <div style="margin-top:10px">
             <?php
             esc_html_e('The plugin will use the WordPress default language for this setting. If the shop uses translations, in theory we could also use the visitors locale. But, if that language is  not set up in the Google Merchant Center we might run into issues. If you need more options here let us know:', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
-            <a href=\"mailto:support@wolfundbaer.ch\">support@wolfundbaer.ch</a>
+            <a href=\"mailto:support@woopt.com\">support@woopt.com</a>
         </div>
         <?php
     }

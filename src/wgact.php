@@ -1,10 +1,10 @@
 <?php
 /**
- * Plugin Name:  WooCommerce Google Ads Conversion Tracking
- * Description:  Google Ads dynamic conversion value tracking for WooCommerce.
- * Author:       Wolf+Bär Agency
+ * Plugin Name:  WooCommerce Conversion Tracking
+ * Description:  Google Ads conversion value tracking for WooCommerce.
+ * Author:       woopt
  * Plugin URI:   https://wordpress.org/plugins/woocommerce-google-adwords-conversion-tracking-tag/
- * Author URI:   https://wolfundbaer.ch
+ * Author URI:   https://woopt.com
  * Version:      1.8.26
  * License:      GPLv2 or later
  * Text Domain:  woocommerce-google-adwords-conversion-tracking-tag
@@ -15,7 +15,6 @@
  *
  **/
 
-// TODO give users choice to use content or footer based code insertion
 // TODO export settings function
 // TODO add option checkbox on uninstall and ask if user wants to delete options from db
 // TODO ask inverse cookie approval. Only of cookies have been allowed, fire the pixels.
@@ -151,6 +150,8 @@ if (function_exists('wga_fs')) {
                 // load the options
                 $this->wgact_options_init();
 
+                new \WGACT\Classes\Admin\Launch_Deal();
+
                 if (isset($this->options['google']['gads']['dynamic_remarketing']) && $this->options['google']['gads']['dynamic_remarketing']) {
                     // make sure to disable the WGDR plugin in case we use dynamic remarketing in this plugin
                     add_filter('wgdr_third_party_cookie_prevention', '__return_true');
@@ -158,7 +159,7 @@ if (function_exists('wga_fs')) {
 
                 // run environment workflows
                 add_action('admin_notices', [$this, 'run_admin_compatibility_checks']);
-                $this->run_permanent_compatibility_mode();
+                (new Environment_Check())->permanent_compatibility_mode();
                 $this->run_compatibility_modes();
 
                 $this->init();
@@ -217,24 +218,28 @@ if (function_exists('wga_fs')) {
 
         public function run_admin_compatibility_checks()
         {
-            if (is_admin()) {
-                (new Environment_Check())->run_checks();
-            }
-        }
-
-        public function run_permanent_compatibility_mode()
-        {
-            (new Environment_Check())->permanent_compatibility_mode();
+            (new Environment_Check())->run_checks();
         }
 
         // initialise the options
         private function wgact_options_init()
         {
             // set options equal to defaults
-//		global $wgact_plugin_options;
+//            global $wgact_plugin_options;
             $this->options = get_option(WGACT_DB_OPTIONS_NAME);
 
-            if (false === $this->options) { // of no options have been set yet, initiate default options
+            if (false === $this->options) { // if no options have been set yet, initiate default options
+
+                // launch deal prep
+                $wooptpm_launch_deal = [
+                    'eligible'   => false,
+                    'dismissed'  => false,
+                    'later'      => false,
+                    'later_date' => ''
+                ];
+
+                update_option('wooptpm_launch_deal', $wooptpm_launch_deal);
+
 //            error_log('options empty, loading default');
                 $this->options = $this->wgact_get_default_options();
                 update_option(WGACT_DB_OPTIONS_NAME, $this->options);
@@ -243,6 +248,18 @@ if (function_exists('wga_fs')) {
 //		    error_log(print_r($options, true));
 
             } else {  // Check if each single option has been set. If not, set them. That is necessary when new options are introduced.
+
+                if (get_option('wooptpm_launch_deal') === false) {
+                    // launch deal prep
+                    $wooptpm_launch_deal = [
+                        'eligible'   => true,
+                        'dismissed'  => false,
+                        'later'      => false,
+                        'later_date' => ''
+                    ];
+
+                    update_option('wooptpm_launch_deal', $wooptpm_launch_deal);
+                }
 
                 // cleanup the db of this setting
                 // remove by end of 2021 latest

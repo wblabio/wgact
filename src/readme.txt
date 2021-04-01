@@ -1,5 +1,5 @@
 === Plugin Name ===
-Contributors: alekv, wolfbaer, woopt
+Contributors: alekv, woopt, wolfbaer
 Tags: woocommerce, google ads, conversion tracking, dynamic retargeting, remarketing , adwords
 Requires at least: 3.7
 Tested up to: 5.7
@@ -8,7 +8,7 @@ Stable tag: 1.8.26
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Track the order value and create dynamic remarketing lists in Google Ads from WooCommerce
+Track the order value and create dynamic remarketing lists in Google Ads from WooCommerce and much more !
 
 == Description ==
 
@@ -105,6 +105,8 @@ You can send the link to the front page of your shop too if you think it would b
 
 = 1.8.26 =
 
+* Tweak: Implemented permanent compatibility mode for SG Optimizer
+* Tweak: Implemented permanent compatibility mode for LiteSpeed Cache
 * Tweak: Refactored the Facebook pixel and events
 
 = 1.8.25 =

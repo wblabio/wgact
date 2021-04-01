@@ -85,10 +85,41 @@ class Facebook_Browser_Pixel extends Pixel
 
         ?>
 
-        if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_id() ?>)) {
-            fbq('track', 'Purchase', <?php echo json_encode($data) ?>);
-        }
+            if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_id() ?>)) {
+                fbq('track', 'Purchase', <?php echo json_encode($data) ?>);
+            }
 
         <?php
+
+//        $html = "
+//            if ((typeof wooptpm !== \"undefined\") && !wooptpm.isOrderIdStored(" . $order->get_id() . ")) {
+//                fbq('track', 'Purchase', " . json_encode($data) .  ");
+//            }";
+//
+//        echo $html;
     }
+
+//    protected function get_order_item_ids($order): array
+//    {
+//        $order_items       = $order->get_items();
+//        $order_items_array = [];
+//
+//        foreach ((array)$order_items as $order_item) {
+//
+//            $product_id = $this->get_variation_or_product_id($order_item->get_data(), $this->options_obj->general->variations_output);
+//
+//            $product = wc_get_product($product_id);
+//
+//            // only continue if WC retrieves a valid product
+//            if (!is_bool($product)) {
+//
+//                $dyn_r_ids           = $this->get_dyn_r_ids($product);
+//                $product_id_compiled = $dyn_r_ids[$this->get_dyn_r_id_type()];
+//
+//                array_push($order_items_array, $product_id_compiled);
+//            }
+//        }
+//
+//        return $order_items_array;
+//    }
 }
