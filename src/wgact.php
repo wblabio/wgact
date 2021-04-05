@@ -130,8 +130,6 @@ if (function_exists('wga_fs')) {
 //        error_log(print_r($options, true));
 
 
-
-
             // check if WooCommerce is running
             // currently this is the most reliable test for single and multisite setups
             include_once(ABSPATH . 'wp-admin/includes/plugin.php');
@@ -322,6 +320,7 @@ if (function_exists('wga_fs')) {
                         ],
                         'eec'              => 0,
                         'link_attribution' => 0,
+                        'user_id'          => 0,
                     ],
                     'optimize'     => [
                         'container_id' => '',
