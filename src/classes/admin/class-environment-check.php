@@ -135,6 +135,15 @@ class Environment_Check
         return is_plugin_active('borlabs-cookie/borlabs-cookie.php');
     }
 
+    public function is_woo_discount_rules_active(): bool
+    {
+        if(is_plugin_active('woo-discount-rules/woo-discount-rules.php') || is_plugin_active('woo-discount-rules-pro/woo-discount-rules-pro.php')){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function disable_yoast_seo_facebook_social($option)
     {
         $option['opengraph'] = false;

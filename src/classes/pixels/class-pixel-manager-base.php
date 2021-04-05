@@ -101,10 +101,9 @@ class Pixel_Manager_Base
 //            $this->is_nodedupe_parameter_set();
 
             // get order from URL and evaluate order total
-            if (isset($_GET['key'])) {
+            if ($this->get_order_from_order_received_page()) {
 
-                $order_key = $_GET['key'];
-                $order     = new WC_Order(wc_get_order_id_by_order_key($order_key));
+                $order = $this->get_order_from_order_received_page();
 
                 if ($this->can_order_confirmation_be_processed($order)) {
 
@@ -128,19 +127,48 @@ class Pixel_Manager_Base
         $this->inject_closing_script_tag();
     }
 
+    // https://stackoverflow.com/a/49616130/4688612
+    protected function get_order_from_order_received_page()
+    {
+        global $wp;
+
+        $order_id = absint($wp->query_vars['order-received']);
+
+        $order = new WC_Order($order_id);
+
+        if (empty($order_id) || $order_id == 0) {
+
+            return false;
+        } else {
+            return $order;
+        }
+    }
+
     protected function can_order_confirmation_be_processed($order): bool
     {
         $conversion_prevention = false;
         $conversion_prevention = apply_filters('wgact_conversion_prevention', $conversion_prevention, $order);
+
+//        error_log('conversion_prevention: ' . $conversion_prevention);
+//        error_log('$this->is_nodedupe_parameter_set(): ' . $this->is_nodedupe_parameter_set());
+//        error_log('$order->has_status(\'failed\'): ' . $order->has_status('failed'));
+//        error_log('current_user_can(\'edit_others_pages\'): ' . current_user_can('edit_others_pages'));
+//        error_log("this->options['shop']['order_deduplication']: " . $this->options['shop']['order_deduplication']);
+//        error_log('order id: ' . $order->get_id());
+//        error_log('order number: ' . $order->get_order_number());
+//        error_log('get_post_meta($order->get_order_number(), \'_WGACT_conversion_pixel_fired\', true): ' . get_post_meta($order->get_order_number(), '_WGACT_conversion_pixel_fired', true));
+
 
         if ($this->is_nodedupe_parameter_set() ||
             (!$order->has_status('failed') &&
                 !current_user_can('edit_others_pages') &&
                 $conversion_prevention == false &&
                 (!$this->options['shop']['order_deduplication'] ||
-                    get_post_meta($order->get_id(), '_WGACT_conversion_pixel_fired', true) != true))) {
+                    get_post_meta($order->get_order_number(), '_WGACT_conversion_pixel_fired', true) != true))) {
+//            error_log('fire pixels: true' . PHP_EOL);
             return true;
         } else {
+//            error_log('fire pixels: false' . PHP_EOL);
             return false;
         }
     }
@@ -225,7 +253,6 @@ class Pixel_Manager_Base
         // Return a boolean value based on orders count
         return $count > 0 ? true : false;
     }
-
 
 
     protected function query_string_contains_all_variation_attributes($product): bool

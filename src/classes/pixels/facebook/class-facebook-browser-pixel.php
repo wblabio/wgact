@@ -85,14 +85,14 @@ class Facebook_Browser_Pixel extends Pixel
 
         ?>
 
-            if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_id() ?>)) {
+            if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_order_number() ?>)) {
                 fbq('track', 'Purchase', <?php echo json_encode($data) ?>);
             }
 
         <?php
 
 //        $html = "
-//            if ((typeof wooptpm !== \"undefined\") && !wooptpm.isOrderIdStored(" . $order->get_id() . ")) {
+//            if ((typeof wooptpm !== \"undefined\") && !wooptpm.isOrderIdStored(" . $order->get_order_number() . ")) {
 //                fbq('track', 'Purchase', " . json_encode($data) .  ");
 //            }";
 //

@@ -34,6 +34,8 @@ describe('Google Analytics eec events', () => {
         // visit /shop/ page
         cy.visit('/shop/')
 
+        cy.wait(400)
+
         // add to an item to the cart
         cy.get('.add_to_cart_button')
             .eq(0)
@@ -45,6 +47,9 @@ describe('Google Analytics eec events', () => {
         //     .eq(1)
         //     .click()
 
+        // https://docs.cypress.io/api/commands/its#Nested-Properties
+        cy.window().its('wooptpmDataLayer.cart')
+
         //remove the product from the cart
         cy.get('[id="site-header-cart"]')
             .trigger('mouseover')
@@ -53,7 +58,7 @@ describe('Google Analytics eec events', () => {
         cy.get('.woocommerce-mini-cart-item')
             .get('.remove_from_cart_button')
             .click({force:true})
-            .wait(400)
+            // .wait(400)
     })
 
     it('ado to cart WC product page: simple product', () => {

@@ -5,13 +5,13 @@
  * Author:       woopt
  * Plugin URI:   https://wordpress.org/plugins/woocommerce-google-adwords-conversion-tracking-tag/
  * Author URI:   https://woopt.com
- * Version:      1.8.27
+ * Version:      1.8.28.1
  * License:      GPLv2 or later
  * Text Domain:  woocommerce-google-adwords-conversion-tracking-tag
  * WC requires at least: 2.6
  * WC tested up to: 5.1
  *
- * @fs_premium_only /classes/pixels/bing/, /classes/pixels/twitter/, /classes/pixels/pinterest/, /classes/pixels/facebook/class-facebook-microdata.php, /classes/pixels/google/class-google-analytics-4-eec-pixel.php, /classes/pixels/google/class-google-analytics-ua-eec-pixel.php
+ * @fs_premium_only /classes/pixels/bing/, /classes/pixels/twitter/, /classes/pixels/pinterest/, /classes/pixels/facebook/class-facebook-microdata.php, /classes/pixels/google/class-google-analytics-4-eec-pixel.php, /classes/pixels/google/class-google-analytics-ua-eec-pixel.php, /classes/pixels/google/class-google-analytics-ua-refund-pixel.php
  *
  **/
 
@@ -130,6 +130,8 @@ if (function_exists('wga_fs')) {
 //        error_log(print_r($options, true));
 
 
+
+
             // check if WooCommerce is running
             // currently this is the most reliable test for single and multisite setups
             include_once(ABSPATH . 'wp-admin/includes/plugin.php');
@@ -187,7 +189,7 @@ if (function_exists('wga_fs')) {
             // display admin views
             new Admin();
 
-            // ask visitor for ratingx
+            // ask visitor for rating
             new Ask_For_Rating();
 
             new Environment_Check();

@@ -11,8 +11,14 @@ if (isset($_GET["dynr"])) {
         return $dyn_r_ids;
     }
 
-    add_filter('wooptpm_product_id_type_for_google', 'product_id_type_output_for_google');
-    function product_id_type_output_for_google(): string
+//    add_filter('wooptpm_product_id_type_for_google', 'product_id_type_output_for_google');
+//    function product_id_type_output_for_google(): string
+//    {
+//        return 'custom1';
+//    }
+
+    add_filter('wooptpm_product_id_type_for_google_ads', 'product_id_type_output_for_google_ads');
+    function product_id_type_output_for_google_ads(): string
     {
         return 'custom1';
     }
@@ -34,6 +40,11 @@ if (isset($_GET["conversion_prevention_filter"])) {
     add_filter('wgact_conversion_prevention', '__return_true');
 }
 
+add_filter('wooptpm_product_id_type_for_google_analytics', 'wooptpm_product_id_type_for_google_analytics');
+function wooptpm_product_id_type_for_google_analytics()
+{
+    return 'sku';
+}
 
 // add_filter('wgact_google_ads_conversion_identifiers', 'wgact_add_conversion_identifiers');
 function wgact_add_conversion_identifiers($conversion_identifiers)

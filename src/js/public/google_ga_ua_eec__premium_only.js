@@ -1,3 +1,58 @@
+(function (wooptpm, $, undefined) {
+
+    wooptpm.getViewItemProductsGaUa = function (productList) {
+
+        let data = [];
+
+        for (const [key, value] of Object.entries(productList)) {
+
+            data.push({
+                'item_id'  : value.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
+                'item_name': value['name'],
+                'quantity' : 1,
+                // 'affiliation': '',
+                // 'coupon': '',
+                // 'discount': 0,
+                // 'index': 0, // probably doesn't make much sense on the product page
+                'item_brand'   : value['brand'],
+                'item_category': value['category'],
+                // 'item_list_name': '', // probably doesn't make much sense on the product page
+                // 'item_list_id': '', // probably doesn't make much sense on the product page
+                // 'item_variant': '',
+                'price': value['price'],
+                // 'currency': '',
+            });
+
+        }
+
+        return data;
+    }
+
+    wooptpm.getCartItemsGaUa = function () {
+        let data = [];
+
+        for (const [productId, product] of Object.entries(wooptpmDataLayer.cart)) {
+
+            data.push({
+                'id'      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
+                'name'    : product.name,
+                'brand'   : product.brand,
+                'category': product.category,
+                // 'coupon': '',
+                // 'list_name': '',
+                // 'list_position': 1,
+                'price'   : product.price,
+                'quantity': product.quantity,
+                // 'variant'      : product.variant,
+            });
+        }
+
+        return data;
+    }
+
+}(window.wooptpm = window.wooptpm || {}, jQuery));
+
+
 jQuery(function () {
 
     // fire view_item_list on product page to add related, upsell and cross-sell items to the remarketing list
@@ -16,7 +71,7 @@ jQuery(function () {
         // console.log(wooptpm.getViewItemProducts(wooptpmDataLayer.visible_products));
         gtag('event', 'view_item_list', {
             "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
-            "items": wooptpm.getViewItemProducts(wooptpmDataLayer.visible_products)
+            "items"  : wooptpm.getViewItemProductsGaUa(wooptpmDataLayer.visible_products)
         });
     }
 
@@ -26,7 +81,7 @@ jQuery(function () {
         // create gtag object with all wooptpmDataLayer.visible_products and fire
         gtag('event', 'view_item_list', {
             "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
-            "items": wooptpm.getViewItemProducts(wooptpmDataLayer.upsell_products)
+            "items"  : wooptpm.getViewItemProductsGaUa(wooptpmDataLayer.upsell_products)
         });
     }
 
@@ -38,11 +93,11 @@ jQuery(function () {
         // console.log(data);
 
         gtag('event', 'select_content', {
-            "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
+            "send_to"     : wooptpmDataLayer.pixels.google.analytics.universal.property_id,
             "content_type": "product",
             "items"       : [
                 {
-                    "id"       : data.id,
+                    "id"       : data.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
                     "name"     : data.name,
                     "list_name": data.list_name, // doesn't make sense on mini_cart
                     "brand"    : data.brand,
@@ -65,9 +120,9 @@ jQuery(function () {
 
         gtag('event', 'add_to_cart', {
             "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
-            "items": [
+            "items"  : [
                 {
-                    "id"       : data.id,
+                    "id"       : data.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
                     "name"     : data.name,
                     "list_name": data.list_name, // doesn't make sense on mini_cart
                     "brand"    : data.brand,
@@ -90,9 +145,9 @@ jQuery(function () {
 
         gtag('event', 'remove_from_cart', {
             "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
-            "items": [
+            "items"  : [
                 {
-                    "id"  : data.id,
+                    "id"  : data.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
                     "name": data.name,
                     // "list_name": data.list_name, // doesn't make sense on mini_cart
                     "brand"   : data.brand,
@@ -107,14 +162,14 @@ jQuery(function () {
     });
 
     // begin_checkout event
-    jQuery(document).on('wooptpmBeginCheckout', function (event, data) {
+    jQuery(document).on('wooptpmBeginCheckout', function (event) {
 
         // console.log('firing google begin_checkout event');
         // console.log(data);
 
         gtag('event', 'begin_checkout', {
             "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
-            "items": data
+            "items"  : wooptpm.getCartItemsGaUa()
         });
     });
 
@@ -125,7 +180,7 @@ jQuery(function () {
         // console.log(data);
 
         gtag('event', 'set_checkout_option', {
-            "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
+            "send_to"        : wooptpmDataLayer.pixels.google.analytics.universal.property_id,
             "checkout_step"  : data.step,
             "checkout_option": data.checkout_option,
             "value"          : data.value

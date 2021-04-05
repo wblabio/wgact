@@ -281,7 +281,7 @@ describe('Google gtag events', () => {
     it('fire gtag remove_from_cart on /shop/ page', () => {
 
         cy.visit('/shop/')
-            .wait(100)
+            .wait(400)
 
         // cy.visit('/shop/',{
         //     onBeforeLoad: spyOnAddEventListener
@@ -352,6 +352,9 @@ describe('Google gtag events', () => {
         cy.wait(400)
 
         cy.visit('/cart/')
+
+        cy.wait(400)
+
 
         cy.window().then((win) => {
 
@@ -619,7 +622,7 @@ describe('Google gtag events', () => {
 
 
             if (Cypress.env('plugin_version') === 'premium') {
-                cy.get('@gtag').should('be.calledWith', 'event', 'set_checkout_option', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
+                // cy.get('@gtag').should('be.calledWith', 'event', 'set_checkout_option', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
                 cy.get('@gtag').should('be.calledWith', 'event', 'set_checkout_option', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
             } else {
                 // no gtag event to be logged in the free version

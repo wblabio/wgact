@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-class Google_Ads_Pixel extends Google_Pixel
+class Google_Ads extends Google
 {
     use Trait_Google;
 
@@ -18,7 +18,7 @@ class Google_Ads_Pixel extends Google_Pixel
 
         add_action('wp_enqueue_scripts', [$this, 'wooptpm_google_ads_front_end_scripts']);
 
-//        $this->pixel_name = 'google_ads';
+        $this->pixel_name = 'google_ads';
     }
 
     public function wooptpm_google_ads_front_end_scripts()
@@ -179,7 +179,7 @@ class Google_Ads_Pixel extends Google_Pixel
     {
         ?>
 
-                if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_id() ?>)) {
+                if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_order_number() ?>)) {
                     gtag('event', 'purchase', {
                         'send_to': <?php echo json_encode($this->get_google_ads_conversion_ids()) ?>,
                         'value'  : <?php echo $order_total; ?>,

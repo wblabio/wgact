@@ -87,7 +87,7 @@ class Bing_Pixel extends Pixel
     {
         ?>
 
-            if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_id() ?>)) {
+            if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_order_number() ?>)) {
                 window.uetq.push('event', 'purchase', {
                     'ecomm_pagetype': 'purchase',
                     'ecomm_prodid'  :<?php echo json_encode($this->get_order_item_ids($order)) ?>,

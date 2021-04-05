@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-class Google_Optimize extends Google_Pixel
+class Google_Optimize extends Google
 {
     public function inject_google_optimize_anti_flicker_snippet()
     {

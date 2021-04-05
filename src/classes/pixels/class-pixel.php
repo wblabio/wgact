@@ -41,6 +41,11 @@ class Pixel
         $this->options_obj->shop->currency = new stdClass();
         $this->options_obj->shop->currency = get_woocommerce_currency();
 
+        // avoid number output with too many decimals
+        if (version_compare(phpversion(), '7.1', '>=')) {
+            ini_set( 'serialize_precision', -1 );
+        }
+
         $this->order_total_logic = $this->options['shop']['order_total_logic'];
 //        $this->add_cart_data       = $this->options['google']['ads']['add_cart_data'];
         $this->add_cart_data       = $this->options['google']['ads']['aw_merchant_id'] ? true : false;
@@ -91,23 +96,7 @@ class Pixel
         return in_array($_SERVER['REMOTE_ADDR'], ['127.0.0.1', '::1']);
     }
 
-    protected function get_dyn_r_id_type (): string
-    {
-//        $dyn_r_id_type = '';
 
-        if($this->options_obj->google->ads->product_identifier == 0) {
-            $this->dyn_r_id_type = 'post_id';
-        } elseif ($this->options_obj->google->ads->product_identifier == 1) {
-            $this->dyn_r_id_type =  'gpf';
-        } elseif ($this->options_obj->google->ads->product_identifier == 2) {
-            $this->dyn_r_id_type =  'sku';
-        }
-
-        // if you want to change the dyn_r_id type for Google programmatically
-        $this->dyn_r_id_type = apply_filters('wooptpm_product_id_type_for_' . $this->pixel_name, $this->dyn_r_id_type);
-
-        return $this->dyn_r_id_type;
-    }
 
     protected function get_order_item_ids($order): array
     {
@@ -132,4 +121,24 @@ class Pixel
 
         return $order_items_array;
     }
+
+    protected function get_dyn_r_id_type (): string
+    {
+//        $dyn_r_id_type = '';
+
+        if($this->options_obj->google->ads->product_identifier == 0) {
+            $this->dyn_r_id_type = 'post_id';
+        } elseif ($this->options_obj->google->ads->product_identifier == 1) {
+            $this->dyn_r_id_type =  'gpf';
+        } elseif ($this->options_obj->google->ads->product_identifier == 2) {
+            $this->dyn_r_id_type =  'sku';
+        }
+
+        // if you want to change the dyn_r_id type for Google programmatically
+        $this->dyn_r_id_type = apply_filters('wooptpm_product_id_type_for_' . $this->pixel_name, $this->dyn_r_id_type);
+
+        return $this->dyn_r_id_type;
+    }
+
+
 }

@@ -110,6 +110,7 @@
 
         let data = {
             "id"  : productId.toString(),
+            "dyn_r_ids": wooptpmDataLayer['cart'][productId]['dyn_r_ids'],
             "name": wooptpmDataLayer['cart'][productId]['name'],
             // "list_name": wooptpmDataLayer['shop']['list_name'], // doesn't make sense on mini_cart
             "brand"   : wooptpmDataLayer['cart'][productId]['brand'],
@@ -130,28 +131,6 @@
         } else {
             wooptpmDataLayer['cart'][productId]['quantity'] = wooptpmDataLayer['cart'][productId]['quantity'] - quantity;
         }
-    }
-
-    wooptpm.getViewItemProducts = function (productList) {
-
-        let data = [];
-
-        for (const [key, value] of Object.entries(productList)) {
-
-            data.push({
-                'id'      : value['id'],
-                'name'    : value['name'],
-                'brand'   : value['brand'],
-                'category': value['category'],
-                // 'list_position': '', // probably doesn't make much sense on the product page
-                'quantity': 1,
-                'price'   : value['price'],
-                // 'list_name'    : '' // probably doesn't make much sense on the product page
-            });
-
-        }
-        // console.log(data);
-        return data;
     }
 
     wooptpm.addProductToCart = function (productId, quantity, variationId = null) {
@@ -262,27 +241,7 @@
         jQuery(document).trigger('wooptpmFireCheckoutOption', data);
     }
 
-    wooptpm.getCartItems = function () {
-        let data = [];
 
-        for (const [productId, product] of Object.entries(wooptpmDataLayer.cart)) {
-
-            data.push({
-                'id'       : product.id,
-                'dyn_r_ids': product.dyn_r_ids,
-                'name'     : product.name,
-                // 'list_name': '',
-                'brand'   : product.brand,
-                'category': product.category,
-                // 'variant'      : product.variant,
-                // 'list_position': 1,
-                'quantity': product.quantity,
-                'price'   : product.price
-            });
-        }
-
-        return data;
-    }
 
     wooptpm.getPostIdFromString = function (string) {
         return string.match(/(post-)(\d+)/)[2];
@@ -302,10 +261,9 @@
 
 }(window.wooptpm = window.wooptpm || {}, jQuery));
 
-jQuery(function () {
 
-    // populate the wooptpmDataLayer with the cart items
-    wooptpm.getCartItemsFromBackEnd();
+jQuery(function () {
+// jQuery(window).on('load', function () {
 
     // remove_from_cart event
     jQuery(document).on('click', '.remove_from_cart_button, .remove', function (e) {
@@ -411,7 +369,7 @@ jQuery(function () {
     // begin_checkout event
     jQuery(document).one('click', '.checkout-button, .cart-checkout-button, .button.checkout', function (e) {
 
-        jQuery(document).trigger('wooptpmBeginCheckout', wooptpm.getCartItems());
+        jQuery(document).trigger('wooptpmBeginCheckout');
     });
 
     // set_checkout_option event
@@ -466,4 +424,10 @@ jQuery(function () {
             }
         });
     });
+});
+
+
+jQuery(window).on('load', function () {
+    // populate the wooptpmDataLayer with the cart items
+    wooptpm.getCartItemsFromBackEnd();
 });

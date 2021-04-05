@@ -74,4 +74,20 @@ trait Trait_Google
             return false;
         }
     }
+
+    protected function get_order_currency($order)
+    {
+        // use the right function to get the currency depending on the WooCommerce version
+        return $this->woocommerce_3_and_above() ? $order->get_currency() : $order->get_order_currency();
+    }
+
+    protected function woocommerce_3_and_above(): bool
+    {
+        global $woocommerce;
+        if (version_compare($woocommerce->version, 3.0, ">=")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

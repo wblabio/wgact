@@ -91,7 +91,7 @@ class Pinterest_Pixel extends Pixel
     {
         ?>
 
-            if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_id() ?>)) {
+            if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_order_number() ?>)) {
                 pintrk('track', 'checkout', {
                     value         : <?php echo $order_total ?>,
                     order_quantity: <?php echo count($order->get_items()) ?>,

@@ -2,15 +2,19 @@
 
 namespace WGACT\Classes\Pixels\Google;
 
+use WGACT\Classes\Admin\Environment_Check;
+
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-class Google_Analytics extends Google_Pixel
+class Google_Analytics extends Google
 {
     public function __construct()
     {
         parent::__construct();
+
+        $this->pixel_name = 'google_analytics';
     }
 
     protected function get_list_name_by_current_page_type($list_id): string
@@ -32,5 +36,127 @@ class Google_Analytics extends Google_Pixel
         ];
 
         return $list_names[$list_id];
+    }
+
+    protected function wooptpm_get_order_item_price($order_item, $product): float
+    {
+        if ((new Environment_Check())->is_woo_discount_rules_active()) {
+            $item_value = $order_item->get_meta('_advanced_woo_discount_item_total_discount');
+            if (is_array($item_value) && array_key_exists('discounted_price', $item_value) && $item_value['discounted_price'] != 0) {
+                return $item_value['discounted_price'];
+            } elseif (is_array($item_value) && array_key_exists('initial_price', $item_value) && $item_value['initial_price'] != 0) {
+                return $item_value['initial_price'];
+            } else {
+                return $product->get_price();
+            }
+        } else {
+            return $product->get_price();
+        }
+    }
+
+    protected function get_order_item_data($order_item): array
+    {
+        $product = $order_item->get_product();
+
+        $dyn_r_ids = $this->get_dyn_r_ids($product);
+
+        return [
+            'id'       => (string)$dyn_r_ids[$this->get_ga_id_type()],
+            'name'     => (string)$product->get_name(),
+            'quantity' => (int)$order_item['quantity'],
+//            'affiliation' => '',
+//            'coupon' => '',
+//            'discount' => 0,
+            'brand'    => (string)$this->get_brand_name($product->get_id()),
+            'category' => (array)$this->get_product_category($product->get_id()),
+            //                    'variant' => ,
+//            'tax'      => 0,
+            'price'    => (float)$this->wooptpm_get_order_item_price($order_item, $product),
+            //                    'list_name' => ,
+//            'currency' => '',
+
+        ];
+    }
+
+    protected function get_list_name_suffix(): string
+    {
+        $list_suffix = '';
+
+        if (is_product_category()) {
+
+            $category    = get_queried_object();
+            $list_suffix = ' | ' . $category->name;
+            $list_suffix = $this->add_parent_category_name($category, $list_suffix);
+        } else if (is_product_tag()) {
+            $tag         = get_queried_object();
+            $list_suffix = ' | ' . $tag->name;
+        }
+
+        return $list_suffix;
+    }
+
+    protected function add_parent_category_name($category, $list_suffix)
+    {
+        if ($category->parent > 0) {
+
+            $parent_category = get_term_by('id', $category->parent, 'product_cat');
+            $list_suffix     = ' | ' . $parent_category->name . $list_suffix;
+            $list_suffix     = $this->add_parent_category_name($parent_category, $list_suffix);
+        }
+
+        return $list_suffix;
+    }
+
+    protected function get_list_id_suffix(): string
+    {
+        $list_suffix = '';
+
+        if (is_product_category()) {
+
+            $category    = get_queried_object();
+            $list_suffix = '.' . $category->slug;
+            $list_suffix = $this->add_parent_category_id($category, $list_suffix);
+        } else if (is_product_tag()) {
+            $tag         = get_queried_object();
+            $list_suffix = '.' . $tag->slug;
+        }
+
+        return $list_suffix;
+    }
+
+    protected function add_parent_category_id($category, $list_suffix)
+    {
+        if ($category->parent > 0) {
+
+            $parent_category = get_term_by('id', $category->parent, 'product_cat');
+//            error_log(print_r($parent_category, true));
+            $list_suffix     = '.' . $parent_category->slug . $list_suffix;
+            $list_suffix     = $this->add_parent_category_id($parent_category, $list_suffix);
+        }
+
+        return $list_suffix;
+    }
+
+    public function inject_product_list_object($list_id)
+    {
+        global $wp_query;
+
+        $items = [];
+
+        $position = 1;
+
+        $posts = $wp_query->posts;
+
+        foreach ($posts as $key => $post) {
+
+            if ($post->post_type == 'product' || $post->post_type == 'product_variation') {
+
+                array_push($items, $this->eec_appweb_get_product_details_array($post->ID, $list_id, $position));
+
+                $position++;
+            }
+        }
+
+        $this->output_view_item_list_html($items, $list_id);
     }
 }

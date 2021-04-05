@@ -37,6 +37,55 @@ class Admin
 
         // Load textdomain
         add_action('init', [$this, 'load_plugin_textdomain']);
+
+        wga_fs()->add_filter('checkout/purchaseCompleted', [$this, 'my_after_purchase_js']);
+        wga_fs()->add_filter('templates/checkout.php', [$this, 'my_checkout_enrich']);
+    }
+
+    public function my_after_purchase_js($js_function): string
+    {
+        return "function ( response ) {
+
+            let
+                isTrial = (null != response.purchase.trial_ends),
+                isSubscription = (null != response.purchase.initial_amount),
+                total = isTrial ? 0 : (isSubscription ? response.purchase.initial_amount : response.purchase.gross).toString(),
+                productName = 'WooCommerce Pixel Manager',
+                // storeUrl = 'https://woopt.com',
+                storeName = 'woopt WooCommerce Pixel Manager';
+            
+            window.dataLayer = window.dataLayer || [];
+
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+    
+            gtag('js', new Date());            
+    
+            gtag('config', 'UA-39746956-10', {'anonymize_ip':'true'});
+            
+            gtag('event', 'purchase', {
+                'send_to':['UA-39746956-10'],
+                'transaction_id':response.purchase.id.toString(),
+                'currency':'USD',
+                'discount':0,
+                'items':[{
+                    'id':response.purchase.plan_id.toString(),
+                    'quantity':1,
+                    'price':response.purchase.initial_amount.toString(),
+                    'name':productName,
+                    'category': 'Plugin',
+                }],
+                'affiliation': storeName,
+                'value':response.purchase.initial_amount.toString()
+            });
+            
+        }";
+    }
+
+    public function my_checkout_enrich($html): string
+    {
+        return '<script async src="https://www.googletagmanager.com/gtag/js?id=UA-39746956-10"></script>' . $html;
     }
 
     public function wgact_admin_scripts($hook)
@@ -967,8 +1016,6 @@ class Admin
         echo '<br><br>';
         esc_html_e('The Google Analytics Universal property ID looks like this:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo '&nbsp;<i>UA-12345678-1</i>';
-        echo '<br>';
-        esc_html_e('At the moment only Google Analytics standard tracking is implemented. Enhanced ecommerce tracking is in development.', 'woocommerce-google-adwords-conversion-tracking-tag');
     }
 
     public function wgact_option_html_google_analytics_4_id()
@@ -1045,7 +1092,7 @@ class Admin
         echo $this->svg_pro_feature();
         echo '<br><br>';
         esc_html_e('The Twitter pixel ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
-        echo '&nbsp;<i>abcde</i>';
+        echo '&nbsp;<i>a1cde</i>';
     }
 
     public function wgact_option_html_pinterest_pixel_id()
@@ -1833,7 +1880,7 @@ class Admin
         if (isset($input['twitter']['pixel_id'])) {
             if (!$this->is_twitter_pixel_id($input['twitter']['pixel_id'])) {
                 $input['twitter']['pixel_id'] = isset($this->options['twitter']['pixel_id']) ? $this->options['twitter']['pixel_id'] : '';
-                add_settings_error('wgact_plugin_options', 'invalid-twitter-pixel-id', esc_html__('You have entered an invalid Twitter pixel ID. It only contains 5 to 7 lowercase letters.', 'woocommerce-google-adwords-conversion-tracking-tag'));
+                add_settings_error('wgact_plugin_options', 'invalid-twitter-pixel-id', esc_html__('You have entered an invalid Twitter pixel ID. It only contains 5 to 7 lowercase letters and numbers.', 'woocommerce-google-adwords-conversion-tracking-tag'));
             }
         }
 
@@ -2021,7 +2068,7 @@ class Admin
             return true;
         }
 
-        $re = '/^[a-z]{5,7}$/m';
+        $re = '/^[a-z0-9]{5,7}$/m';
 
         return $this->validate_with_regex($re, $string);
     }

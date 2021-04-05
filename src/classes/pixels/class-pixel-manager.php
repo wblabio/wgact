@@ -8,6 +8,9 @@ use WGACT\Classes\Admin\Environment_Check;
 use WGACT\Classes\Pixels\Bing\Bing_Pixel_Manager;
 use WGACT\Classes\Pixels\Facebook\Facebook_Pixel_Manager;
 use WGACT\Classes\Pixels\Facebook\Facebook_Pixel_Manager_Microdata;
+use WGACT\Classes\Pixels\Google\Google_Analytics_4_Refund;
+use WGACT\Classes\Pixels\Google\Google_Analytics_Refund;
+use WGACT\Classes\Pixels\Google\Google_Analytics_UA_Refund;
 use WGACT\Classes\Pixels\Google\Google_Pixel_Manager;
 use WGACT\Classes\Pixels\Google\Trait_Google;
 use WGACT\Classes\Pixels\Hotjar\Hotjar_Pixel;
@@ -49,7 +52,6 @@ class Pixel_Manager extends Pixel_Manager_Base
          */
         $this->facebook_active = !empty($this->options_obj->facebook->pixel_id);
         $this->google_active   = $this->google_active();
-
 
 
         /*
@@ -108,10 +110,37 @@ class Pixel_Manager extends Pixel_Manager_Base
         }
 
         /*
+         * Inject pixel snippets into wp_footer
+         */
+        add_action('wp_footer', [$this, 'woopt_wp_footer']);
+
+
+        /*
          * Process short codes
          */
         new Shortcodes($this->options, $this->options_obj);
     }
+
+
+
+    public function woopt_wp_footer()
+    {
+        if (wga_fs()->is__premium_only() && $this->options_obj->google->analytics->eec) {
+            (new Google_Analytics_Refund())->process_refund_to_frontend__premium_only();
+        }
+
+
+    }
+
+    public function output_gtag_login()
+    {
+        error_log('xxlog');
+        ?>
+            xxlog
+            <?php
+
+    }
+
 
     private function inject_data_layer_init()
     {
@@ -120,6 +149,7 @@ class Pixel_Manager extends Pixel_Manager_Base
         <script>
             window.wooptpmDataLayer                    = window.wooptpmDataLayer || [];
             window.wooptpmDataLayer.cart               = window.wooptpmDataLayer.cart || {};
+            window.wooptpmDataLayer.pixels             = window.wooptpmDataLayer.pixels || {};
             window.wooptpmDataLayer.orderDeduplication = <?php echo ($this->options['shop']['order_deduplication'] && !$this->is_nodedupe_parameter_set()) ? 'true' : 'false' ?>;
         </script>
 
@@ -141,15 +171,14 @@ class Pixel_Manager extends Pixel_Manager_Base
         if ($this->options_obj->hotjar->site_id) $this->hotjar_pixel->inject_everywhere();
 
         if (is_order_received_page()) {
-            if (isset($_GET['key'])) {
+            if ($this->get_order_from_order_received_page()) {
 
-                $order_key = $_GET['key'];
-                $order     = new WC_Order(wc_get_order_id_by_order_key($order_key));
-                $this->inject_transaction_deduper_script($order->get_id());
+                $order = new WC_Order($this->get_order_from_order_received_page());
+                $this->inject_transaction_deduper_script($order->get_order_number());
+
+                $this->increase_conversion_count_for_ratings($order);
             }
         }
-
-        $this->increase_conversion_count_for_ratings();
 
         echo PHP_EOL . '<!-- END woopt Pixel Manager -->' . PHP_EOL;
 
@@ -158,22 +187,15 @@ class Pixel_Manager extends Pixel_Manager_Base
         }
     }
 
-    private function increase_conversion_count_for_ratings()
+    private function increase_conversion_count_for_ratings($order)
     {
-        if (isset($_GET['key'])) {
+        if ($this->can_order_confirmation_be_processed($order)) {
 
-            $order_key = $_GET['key'];
-            $order     = new WC_Order(wc_get_order_id_by_order_key($order_key));
-
-            if ($this->can_order_confirmation_be_processed($order)) {
-                $ratings                      = get_option(WGACT_DB_RATINGS);
-                $ratings['conversions_count'] = $ratings['conversions_count'] + 1;
-                update_option(WGACT_DB_RATINGS, $ratings);
-
-
-            } else {
-                $this->conversion_pixels_already_fired_html();
-            }
+            $ratings                      = get_option(WGACT_DB_RATINGS);
+            $ratings['conversions_count'] = $ratings['conversions_count'] + 1;
+            update_option(WGACT_DB_RATINGS, $ratings);
+        } else {
+            $this->conversion_pixels_already_fired_html();
         }
     }
 
@@ -200,13 +222,14 @@ class Pixel_Manager extends Pixel_Manager_Base
 
             $data['cart'][$product->get_id()] = [
                 'id'           => (string)$product->get_id(),
+                'dyn_r_ids'    => (array)$this->get_dyn_r_ids($product),
                 'name'         => (string)$product->get_name(),
                 //                'list_name'     => '',
                 'brand'        => (string)$this->get_brand_name($product->get_id()),
                 //                'variant'       => '',
                 //                'list_position' => '',
                 'quantity'     => (int)$value['quantity'],
-                'price'        => (int)$product->get_price(),
+                'price'        => (float)$product->get_price(),
                 'is_variation' => false,
             ];
 //            error_log('id: ' . $product->get_id());
