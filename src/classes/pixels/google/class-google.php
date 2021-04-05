@@ -71,7 +71,7 @@ class Google extends Pixel
         //        $this->inject_closing_script_tag();
     }
 
-    private function get_modified_script_opening_tag()
+    private function get_modified_script_opening_tag(): string
     {
 
         $cookiebot_snippet = $this->options_obj->shop->cookie_consent_mgmt->cookiebot->active ? ' data-cookieconsent="ignore"' : '';
@@ -315,11 +315,26 @@ class Google extends Pixel
                 'link_attribution' => $this->options_obj->google->analytics->link_attribution ? 'true' : 'false', // must be a string for correct output
             ];
 
+            if ($this->options_obj->google->user_id &&  is_user_logged_in()) {
+                $ga_ua_parameters['user_id'] = get_current_user_id();
+            }
+
             $ga_ua_parameters = apply_filters('woopt_pm_analytics_parameters', $ga_ua_parameters, $id);
 
             return "\t\t" . "gtag('config', '" . $id . "', " . json_encode($ga_ua_parameters) . ");";
         } elseif ('ga_4' === $channel) {
-            return "\t\t" . "gtag('config', '" . $id . "');";
+
+            if ($this->options_obj->google->user_id &&  is_user_logged_in()) {
+                $ga_4_parameters = [
+                    'user_id' => get_current_user_id(),
+                    ];
+            }
+
+            if (empty($ga_4_parameters)) {
+                return "\t\t" . "gtag('config', '" . $id . "');";
+            } else {
+                return "\t\t" . "gtag('config', '" . $id . "', " . json_encode($ga_4_parameters) . ");";
+            }
         }
     }
 

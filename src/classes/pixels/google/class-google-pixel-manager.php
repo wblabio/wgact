@@ -66,10 +66,14 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
 
     public function output_gtag_login()
     {
+        $data = [
+            'user_id' => get_current_user_id(),
+        ];
+
         ?>
 
         <script>
-            gtag('event', 'login');
+            gtag('event', 'login', <?php echo json_encode($data) ?>);
         </script>
         <?php
     }

@@ -137,6 +137,8 @@ describe('Google gtag events', () => {
 
         cy.visit('/product-tag/funny/')
 
+        cy.wait(400)
+
         cy.window().then((win) => {
 
             cy.spy(win, 'gtag').as('gtag');

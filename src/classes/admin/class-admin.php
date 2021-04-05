@@ -7,6 +7,7 @@ namespace WGACT\Classes\Admin;
 
 use WC_Geolocation;
 use WC_Order;
+use WGACT\Classes\Pixels\Google\Trait_Google;
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
@@ -14,6 +15,8 @@ if (!defined('ABSPATH')) {
 
 class Admin
 {
+    use Trait_Google;
+
     public $ip;
     protected $text_domain;
     protected $options;
@@ -492,14 +495,14 @@ class Admin
         );
 
         if (wga_fs()->is__premium_only() || $this->pro_version_demo_active()) {
-            // add fields for the Google enhanced e-commerce
+            // add user_id for the Google
             add_settings_field(
-                'wgact_setting_google_analytics_user_id',
+                'wgact_setting_google_user_id',
                 esc_html__(
-                    'Google Analytics User ID',
+                    'Google User ID',
                     'woocommerce-google-adwords-conversion-tracking-tag'
                 ) . $this->svg_beta(),
-                [$this, 'wgact_setting_html_google_analytics_user_id'],
+                [$this, 'wgact_setting_html_google_user_id'],
                 'wgact_plugin_options_page',
                 $section_ids['settings_name']
             );
@@ -1312,25 +1315,25 @@ class Admin
         }
     }
 
-    public function wgact_setting_html_google_analytics_user_id()
+    public function wgact_setting_html_google_user_id()
     {
         // adding the hidden input is a hack to make WordPress save the option with the value zero,
         // instead of not saving it and remove that array key entirely
         // https://stackoverflow.com/a/1992745/4688612
         ?>
         <label>
-            <input type='hidden' value='0' name='wgact_plugin_options[google][analytics][user_id]'>
-            <input type='checkbox' id='wgact_setting_google_analytics_user_id'
-                   name='wgact_plugin_options[google][analytics][user_id]'
+            <input type='hidden' value='0' name='wgact_plugin_options[google][user_id]'>
+            <input type='checkbox' id='wgact_setting_google_user_id'
+                   name='wgact_plugin_options[google][user_id]'
                    value='1'
-                <?php checked($this->options['google']['analytics']['user_id']); ?>
+                <?php checked($this->options['google']['user_id']); ?>
                 <?php echo $this->disable_if_demo() ?>
             />
             <?php
-            esc_html_e('Enable Google Analytics user ID', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+            esc_html_e('Enable Google user ID', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
         </label>
         <?php
-        echo $this->get_status_icon($this->options['google']['analytics']['user_id'], $this->options['google']['analytics']['universal']['property_id'] || $this->options['google']['analytics']['ga4']['measurement_id'], true);
+        echo $this->get_status_icon($this->options['google']['user_id'], $this->options['google']['analytics']['universal']['property_id'] || $this->options['google']['analytics']['ga4']['measurement_id'] || $this->is_google_ads_active(), true);
         echo $this->svg_pro_feature();
 //        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-consent-mode#/consent-mgmt/google-consent-mode');
         ?>

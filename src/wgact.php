@@ -320,7 +320,6 @@ if (function_exists('wga_fs')) {
                         ],
                         'eec'              => 0,
                         'link_attribution' => 0,
-                        'user_id'          => 0,
                     ],
                     'optimize'     => [
                         'container_id' => '',
@@ -332,6 +331,7 @@ if (function_exists('wga_fs')) {
                         'active'  => 0,
                         'regions' => [],
                     ],
+                    'user_id'          => 0,
                 ],
                 'facebook'   => [
                     'pixel_id'  => '',

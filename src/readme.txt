@@ -110,6 +110,7 @@ You can send the link to the front page of your shop too if you think it would b
 [//]: # fs_premium_only_begin
 * New: Implemented all main GA4 events
 * New: Logged in event for GA
+* New: Google user ID tracking
 [//]: # fs_premium_only_end
 [//]: # fs_premium_only_begin
 * Tweak: Twitter ID check now allows numbers too

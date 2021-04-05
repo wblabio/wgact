@@ -23,7 +23,8 @@ trait Trait_Google
 
     protected function is_google_ads_active(): bool
     {
-        if($this->options_obj->google->ads->conversion_id){
+        if ($this->options['google']['ads']['conversion_id']) {
+
             return true;
         } else {
             return false;
