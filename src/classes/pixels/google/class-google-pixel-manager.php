@@ -53,9 +53,12 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
 
     public function run_on_init()
     {
+        // function to only fire gtag login once after login
+        // and then wait for the next session
         if (is_user_logged_in()) {
             if (!isset($_COOKIE['gtag_logged_in'])) {
                 add_action('wp_footer', [$this, 'output_gtag_login']);
+                // the cookie expires after the session
                 setcookie('gtag_logged_in', 'true');
             }
         }
