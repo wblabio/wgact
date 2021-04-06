@@ -232,6 +232,9 @@ class Environment_Check
         $exclude_list[] = 'google-ads';
         $exclude_list[] = 'ga-ua-eec';
         $exclude_list[] = 'ga4-eec';
+        $exclude_list[] = 'jquery';
+        $exclude_list[] = 'jquery-core';
+        $exclude_list[] = 'jquery-migrate';
 
         return $exclude_list;
     }
@@ -300,6 +303,7 @@ class Environment_Check
             'optimize.js',
             'googleoptimize.com/optimize.js',
             'jQuery',
+            'jQuery.min.js',
             'wooptpm',
             'wooptpmDataLayer',
             'window.wooptpmDataLayer',

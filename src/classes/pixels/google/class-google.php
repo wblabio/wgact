@@ -93,7 +93,7 @@ class Google extends Pixel
     {
         return "window.dataLayer = window.dataLayer || [];
 
-                function gtag() {
+                window.gtag = function gtag() {
                     dataLayer.push(arguments);
                 }
         " . $this->consent_mode_gtag_html() . "
