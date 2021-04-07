@@ -631,4 +631,14 @@ describe('Google gtag events', () => {
             }
         })
     })
+
+    // tests to write
+    // it('add_to_cart on related products on product page', () => {})
+    // it('no add_to_cart on clicks on select options button', () => {})
+    // it('', () => {})
+    // it('', () => {})
+    // it('', () => {})
+    // it('', () => {})
+    // it('', () => {})
+    // it('', () => {})
 })

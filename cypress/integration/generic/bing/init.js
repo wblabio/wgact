@@ -1,4 +1,4 @@
-describe('Google init gtag', () => {
+describe('Facebook init fbq', () => {
 
     const wgact_options_preset = Cypress.env('wgact_options_preset');
 
@@ -29,42 +29,40 @@ describe('Google init gtag', () => {
             .should('not.exist')
     })
 
-    // https://github.com/cypress-io/cypress/discussions/15694#discussioncomment-575530
-    it('check if gtag is being set up correctly', () => {
+    it('check if bing is being set up correctly', () => {
 
-        const gtag = cy.stub().as('gtag')
+        const uetq = cy.stub().as('uetq')
 
         cy.on('window:before:load', (win) => {
-            Object.defineProperty(win, 'gtag', {
+            Object.defineProperty(win, 'uetq', {
                 // configurable: false,
-                get: () => gtag,
+                get: () => uetq,
                 set: () => {},
             })
         })
 
-        cy.visit('/')
+        cy.visit('/product/album/')
 
-        cy.get('@gtag').should('be.called')
-        cy.get('@gtag').should('be.calledWith', 'config', 'AW-965183221')
-        cy.get('@gtag').should('be.calledWith', 'config', 'UA-39746956-9')
-        cy.get('@gtag').should('be.calledWith', 'config', 'G-YQBXCRGVLT')
+        cy.get('@uetq').should('be.called')
+        // cy.get('@uetq').should('be.calledWith', 'track', 'PageView')
+        // cy.get('@fbq').should('be.called', 'config', 'UA-39746956-9')
+        // cy.get('@fbq').should('be.called', 'config', 'G-YQBXCRGVLT')
     })
 
     // https://github.com/cypress-io/cypress/issues/897
-    it('check if GA UA and GA 4 have been loaded successfully', () => {
-
-        cy.visit('/')
-        cy.wait(100)
-        cy.window().then((win) => {
-            // cy.log(win.ga.getAll()[0].get('trackingId'))
-
-            expect(win.ga.getAll()[0].get('trackingId')).to.equal('UA-39746956-9')
-            expect(win.google_tag_manager['UA-39746956-9'].dataLayer.name).to.equal('dataLayer')
-            expect(win.google_tag_manager['G-YQBXCRGVLT'].dataLayer.name).to.equal('dataLayer')
-
-            // expect(win.google_tag_manager['UA-39746956-9']).should('exist')
-            // cy.window().should('have.property', 'google_tag_manager[\'UA-39746956-9\']')
-        })
-
-    })
+    // it('check if Facebook fbq have been loaded successfully', () => {
+    //     cy.visit('/shop/')
+    //     // cy.wait(100)
+    //     // cy.window().then((win) => {
+    //     //     // cy.log(win.ga.getAll()[0].get('trackingId'))
+    //     //     expect(win.ga.getAll()[0].get('trackingId')).to.equal('UA-39746956-9')
+    //     //     expect(win.google_tag_manager['UA-39746956-9'].dataLayer.name).to.equal('dataLayer')
+    //     //     expect(win.google_tag_manager['G-YQBXCRGVLT'].dataLayer.name).to.equal('dataLayer')
+    //     //
+    //     //     // expect(win.google_tag_manager['UA-39746956-9']).should('exist')
+    //     //     // cy.window().should('have.property', 'google_tag_manager[\'UA-39746956-9\']')
+    //     // })
+    //
+    //     cy.window().should('have.property', 'fbq')
+    // })
 })

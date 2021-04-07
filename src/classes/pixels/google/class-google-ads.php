@@ -23,7 +23,7 @@ class Google_Ads extends Google
 
     public function wooptpm_google_ads_front_end_scripts()
     {
-        wp_enqueue_script('google-ads', plugin_dir_url(__DIR__) . '../../js/public/google_ads.js', [], WGACT_CURRENT_VERSION, false);
+        wp_enqueue_script('google-ads', plugin_dir_url(__DIR__) . '../../js/public/google_ads.js', [], WGACT_CURRENT_VERSION, true);
     }
 
     public function inject_product_list($list_name)

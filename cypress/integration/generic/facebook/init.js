@@ -29,9 +29,29 @@ describe('Facebook init fbq', () => {
             .should('not.exist')
     })
 
+    it('check if fbq is being set up correctly', () => {
+
+        const fbq = cy.stub().as('fbq')
+
+        cy.on('window:before:load', (win) => {
+            Object.defineProperty(win, 'fbq', {
+                // configurable: false,
+                get: () => fbq,
+                set: () => {},
+            })
+        })
+
+        cy.visit('/')
+
+        cy.get('@fbq').should('be.called')
+        cy.get('@fbq').should('be.calledWith', 'track', 'PageView')
+        // cy.get('@fbq').should('be.called', 'config', 'UA-39746956-9')
+        // cy.get('@fbq').should('be.called', 'config', 'G-YQBXCRGVLT')
+    })
+
     // https://github.com/cypress-io/cypress/issues/897
     it('check if Facebook fbq have been loaded successfully', () => {
-        cy.visit('/')
+        cy.visit('/shop/')
         // cy.wait(100)
         // cy.window().then((win) => {
         //     // cy.log(win.ga.getAll()[0].get('trackingId'))

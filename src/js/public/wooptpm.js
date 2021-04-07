@@ -109,9 +109,9 @@
         // alert ('product_id: ' + productId + ' | qty: ' + quantity);
 
         let data = {
-            "id"  : productId.toString(),
+            "id"       : productId.toString(),
             "dyn_r_ids": wooptpmDataLayer['cart'][productId]['dyn_r_ids'],
-            "name": wooptpmDataLayer['cart'][productId]['name'],
+            "name"     : wooptpmDataLayer['cart'][productId]['name'],
             // "list_name": wooptpmDataLayer['shop']['list_name'], // doesn't make sense on mini_cart
             "brand"   : wooptpmDataLayer['cart'][productId]['brand'],
             "category": wooptpmDataLayer['cart'][productId]['category'],
@@ -242,7 +242,6 @@
     }
 
 
-
     wooptpm.getPostIdFromString = function (string) {
         return string.match(/(post-)(\d+)/)[2];
     }
@@ -282,40 +281,64 @@ jQuery(function () {
         }
     });
 
+
     // add_to_cart event
-    jQuery(document).on('click', '.add_to_cart_button, .ajax_add_to_cart, .single_add_to_cart_button', function (e) {
+    jQuery(document).on('click', '.add_to_cart_button:not(.product_type_variable), .ajax_add_to_cart, .single_add_to_cart_button', function (e) {
 
         // console.log('test x');
         // alert('test');
-        if (wooptpmDataLayer.shop.product_type !== 'grouped') {
 
-            let productId = null;
+        // alert(jQuery(this).attr('href'));
+        // alert(jQuery(this).attr('href'));
 
-            let quantity = 1;
 
-            if (wooptpmDataLayer['shop']['page_type'] === 'product') {
-                quantity = Number(jQuery('.input-text.qty').val());
-            }
+        if (wooptpmDataLayer['shop']['page_type'] === 'product') {
 
-            if (wooptpmDataLayer['shop']['page_type'] !== 'product') {
-                productId = jQuery(this).data('product_id');
+            // first process related and upsell products
+            if(typeof jQuery(this).attr('href') !== 'undefined' && jQuery(this).attr('href').includes('add-to-cart')){
+                // alert('add-to-cart on upsell and related products');
+                let quantity  = 1;
+                let productId = jQuery(this).data('product_id');
+                // alert('productId: ' + productId);
                 wooptpm.addProductToCart(productId, quantity);
-            } else if (wooptpmDataLayer['shop']['product_type'] === 'variable') {
-                productId       = jQuery("[name='product_id']").val();
-                let variationId = jQuery("[name='variation_id']").val();
-                wooptpm.addProductToCart(productId, quantity, variationId);
-
             } else {
-                productId = jQuery(this).val();
-                wooptpm.addProductToCart(productId, quantity);
+
+                if (wooptpmDataLayer.shop.product_type === 'simple') {
+
+                    // alert('test');
+                    let quantity  = Number(jQuery('.input-text.qty').val());
+                    let productId = jQuery(this).val();
+                    // alert('productId: ' + productId);
+                    wooptpm.addProductToCart(productId, quantity);
+
+                } else if (wooptpmDataLayer['shop']['product_type'] === 'variable') {
+
+                    // alert('variable');
+                    let quantity    = Number(jQuery('.input-text.qty').val());
+                    let productId   = jQuery("[name='product_id']").val();
+                    let variationId = jQuery("[name='variation_id']").val();
+                    wooptpm.addProductToCart(productId, quantity, variationId);
+
+                } else if (wooptpmDataLayer.shop.product_type === 'grouped') {
+
+                    // alert('grouped');
+
+                    jQuery('.woocommerce-grouped-product-list-item').each(function () {
+                        let quantity  = Number(jQuery(this).find('.input-text.qty').val());
+                        let classes   = jQuery(this).attr('class');
+                        let productId = wooptpm.getPostIdFromString(classes);
+                        wooptpm.addProductToCart(productId, quantity);
+                    });
+                }
             }
         } else {
-            jQuery('.woocommerce-grouped-product-list-item').each(function () {
-                let quantity  = Number(jQuery(this).find('.input-text.qty').val());
-                let classes   = jQuery(this).attr('class');
-                let productId = wooptpm.getPostIdFromString(classes);
-                wooptpm.addProductToCart(productId, quantity);
-            });
+
+            // alert('non product page');
+
+            let quantity  = 1;
+            let productId = jQuery(this).data('product_id');
+            // alert('productId: ' + productId);
+            wooptpm.addProductToCart(productId, quantity);
         }
     });
 
@@ -323,12 +346,14 @@ jQuery(function () {
     // trigger the add to cart event
     jQuery(document).one('click', function (e) {
 
+
         if (jQuery(this)[0].URL) {
 
             let href         = new URL(jQuery(this)[0].URL);
             let searchParams = new URLSearchParams(href.search);
 
             if (searchParams.has('add-to-cart')) {
+        // alert('non product page, /?add-to-cart=123 link');
 
                 let productId = searchParams.get('add-to-cart');
                 wooptpm.addProductToCart(productId, 1);
