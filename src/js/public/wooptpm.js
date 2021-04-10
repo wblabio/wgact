@@ -260,7 +260,6 @@
         return string.match(/(post-)(\d+)/)[2];
     }
 
-
     wooptpm.triggerViewItemList = function (productId) {
 
         let data = {
@@ -281,12 +280,8 @@
     }
 
     wooptpm.viewItemListTriggerTestMode = function (target) {
-        // console.log(jQuery(target).find('.add_to_cart_button, .product_type_grouped').data('product_id'));
 
-        jQuery(target).css({
-            "position": "relative",
-        });
-
+        jQuery(target).css({"position": "relative"});
         jQuery(target).append('<div id="viewItemListTriggerOverlay"></div>')
         jQuery(target).find('#viewItemListTriggerOverlay').css({
             "z-index"         : "10",
@@ -301,35 +296,25 @@
         })
     }
 
-    wooptpm.observerCallback = function (entries, observer) {
-        entries.forEach((entry) => {
+    let timeouts = {};
 
+    wooptpm.observerCallback = function (entries, observer) {
+
+        entries.forEach((entry) => {
+            let elementId = jQuery(entry.target).data('ioid');
             let productId = jQuery(entry.target).find('.add_to_cart_button, .product_type_grouped').data('product_id');
 
             if (entry.isIntersecting) {
 
-                // https://stackoverflow.com/a/65571786/4688612
-
-                // console.log('setting timeout for: ' + productId);
-
-                // timeouts[productId] = setTimeout(() => {
-                //     viewItemListTriggerTestMode(entry.target);
-                //     triggerViewItemList(productId);
-                //     if (wooptpmDataLayer.viewItemListTrigger.repeat === false) observer.unobserve(entry.target);
-                // }, wooptpmDataLayer.viewItemListTrigger.timeout)
-
-                wooptpm.triggerViewItemList(productId);
-                if (wooptpmDataLayer.viewItemListTrigger.testMode) wooptpm.viewItemListTriggerTestMode(entry.target);
-                if (wooptpmDataLayer.viewItemListTrigger.repeat === false) observer.unobserve(entry.target);
+                timeouts[elementId] = setTimeout(() => {
+                    wooptpm.triggerViewItemList(productId);
+                    if (wooptpmDataLayer.viewItemListTrigger.testMode) wooptpm.viewItemListTriggerTestMode(entry.target);
+                    if (wooptpmDataLayer.viewItemListTrigger.repeat === false) observer.unobserve(entry.target);
+                }, wooptpmDataLayer.viewItemListTrigger.timeout)
 
             } else {
-                // console.log('clearing timeout for: ');
 
-                // console.log('clearing timeout for: ' + productId);
-                // if (timeouts[productId] !== undefined) {
-                //
-                //     clearTimeout(timeouts[productId])
-                // }
+                clearTimeout(timeouts[elementId])
                 if (wooptpmDataLayer.viewItemListTrigger.testMode) jQuery(entry.target).find('#viewItemListTriggerOverlay').remove();
             }
         });
@@ -355,10 +340,20 @@ jQuery(function () {
 
     // fire view_item_list only on products that have become visible
     const io = new IntersectionObserver(wooptpm.observerCallback, {threshold: wooptpmDataLayer.viewItemListTrigger.threshold});
-    // let timeouts = {};
-    document.querySelectorAll('.wc-block-grid__product, .product:not(.product-category)')
-        .forEach(elem => io.observe(elem));
 
+    let ioid = 0;
+    document.querySelectorAll('.wc-block-grid__product, .product:not(.product-category)')
+        .forEach(elem => {
+
+            // Skip first element on a product page
+            // because we don't want to measure the main product
+            if(wooptpmDataLayer.shop.page_type === 'product' && ioid === 0) return ioid++;
+
+            // jQuery(elem).attr('data-ioid', ioid++);
+
+            jQuery(elem).data('ioid', ioid++);
+            io.observe(elem)
+        });
 
     // remove_from_cart event
     jQuery(document).on('click', '.remove_from_cart_button, .remove', function (e) {
@@ -380,13 +375,6 @@ jQuery(function () {
 
     // add_to_cart event
     jQuery(document).on('click', '.add_to_cart_button:not(.product_type_variable), .ajax_add_to_cart, .single_add_to_cart_button', function (e) {
-
-        // console.log('test x');
-        // alert('test');
-
-        // alert(jQuery(this).attr('href'));
-        // alert(jQuery(this).attr('href'));
-
 
         if (wooptpmDataLayer['shop']['page_type'] === 'product') {
 
@@ -553,6 +541,4 @@ jQuery(window).on('load', function () {
     wooptpm.getCartItemsFromBackEnd();
 
     // wooptpm.loadPageProductsFromBackend();
-
-
 });
