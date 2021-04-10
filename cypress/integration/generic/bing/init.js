@@ -29,25 +29,25 @@ describe('Facebook init fbq', () => {
             .should('not.exist')
     })
 
-    it('check if bing is being set up correctly', () => {
-
-        const uetq = cy.stub().as('uetq')
-
-        cy.on('window:before:load', (win) => {
-            Object.defineProperty(win, 'uetq', {
-                // configurable: false,
-                get: () => uetq,
-                set: () => {},
-            })
-        })
-
-        cy.visit('/product/album/')
-
-        cy.get('@uetq').should('be.called')
-        // cy.get('@uetq').should('be.calledWith', 'track', 'PageView')
-        // cy.get('@fbq').should('be.called', 'config', 'UA-39746956-9')
-        // cy.get('@fbq').should('be.called', 'config', 'G-YQBXCRGVLT')
-    })
+    // it('check if bing is being set up correctly', () => {
+    //
+    //     const uetq = cy.stub().as('uetq')
+    //
+    //     cy.on('window:before:load', (win) => {
+    //         Object.defineProperty(win, 'uetq', {
+    //             // configurable: false,
+    //             get: () => uetq,
+    //             set: () => {},
+    //         })
+    //     })
+    //
+    //     cy.visit('/product/album/')
+    //
+    //     cy.get('@uetq').should('be.called')
+    //     // cy.get('@uetq').should('be.calledWith', 'track', 'PageView')
+    //     // cy.get('@fbq').should('be.called', 'config', 'UA-39746956-9')
+    //     // cy.get('@fbq').should('be.called', 'config', 'G-YQBXCRGVLT')
+    // })
 
     // https://github.com/cypress-io/cypress/issues/897
     // it('check if Facebook fbq have been loaded successfully', () => {

@@ -4,6 +4,20 @@
         cookieExpiresDays: 365
     };
 
+    // wooptpm.loadPageProductsFromBackend = function () {
+    //
+    //     // collect all products on page
+    //     let productList = wooptpm.collectProductsFromPage();
+    //     // compare and remove the products which are already in the data layer
+    //     // get the product from the back-end
+    //     // save the products in the data layer
+    // }
+    //
+    // wooptpm.collectProductsFromPage = function () {
+    //
+    //     // get all add to cart buttons with /add-to-cart links
+    // }
+
     wooptpm.writeOrderIdToStorage = function (orderId, expireDays = 365) {
 
         // save the order ID in the browser storage
@@ -147,15 +161,15 @@
 
         let data = {
             "id"       : id.toString(),
-            "dyn_r_ids": wooptpmDataLayer['visible_products'][productId]['dyn_r_ids'],
-            "name"     : wooptpmDataLayer['visible_products'][productId]['name'],
+            "dyn_r_ids": wooptpmDataLayer['products'][productId]['dyn_r_ids'],
+            "name"     : wooptpmDataLayer['products'][productId]['name'],
             "list_name": wooptpmDataLayer['shop']['list_name'], // maybe remove if in cart
-            "brand"    : wooptpmDataLayer['visible_products'][productId]['brand'],
-            "category" : wooptpmDataLayer['visible_products'][productId]['category'],
+            "brand"    : wooptpmDataLayer['products'][productId]['brand'],
+            "category" : wooptpmDataLayer['products'][productId]['category'],
             // "variant": "Black",
-            "list_position": wooptpmDataLayer['visible_products'][productId]['position'],
+            "list_position": wooptpmDataLayer['products'][productId]['position'],
             "quantity"     : quantity,
-            "price"        : wooptpmDataLayer['visible_products'][productId]['price'],
+            "price"        : wooptpmDataLayer['products'][productId]['price'],
             "currency"     : wooptpmDataLayer.shop.currency
         };
 
@@ -172,11 +186,11 @@
             // Object.assign(wooptpmDataLayer['cart'], {
             //     id: {
             //         'id'      : id,
-            //         'name'    : wooptpmDataLayer['visible_products'][productId]['name'],
-            //         'brand'   : wooptpmDataLayer['visible_products'][productId]['brand'],
-            //         'category': wooptpmDataLayer['visible_products'][productId]['category'],
+            //         'name'    : wooptpmDataLayer['products'][productId]['name'],
+            //         'brand'   : wooptpmDataLayer['products'][productId]['brand'],
+            //         'category': wooptpmDataLayer['products'][productId]['category'],
             //         'quantity': quantity,
-            //         'price'   : wooptpmDataLayer['visible_products'][productId]['price']
+            //         'price'   : wooptpmDataLayer['products'][productId]['price']
             //     }
             // });
 
@@ -185,12 +199,12 @@
                 wooptpmDataLayer['cart'] = {
                     [id]: {
                         'id'       : id,
-                        'dyn_r_ids': wooptpmDataLayer['visible_products'][productId]['dyn_r_ids'],
-                        'name'     : wooptpmDataLayer['visible_products'][productId]['name'],
-                        'brand'    : wooptpmDataLayer['visible_products'][productId]['brand'],
-                        'category' : wooptpmDataLayer['visible_products'][productId]['category'],
+                        'dyn_r_ids': wooptpmDataLayer['products'][productId]['dyn_r_ids'],
+                        'name'     : wooptpmDataLayer['products'][productId]['name'],
+                        'brand'    : wooptpmDataLayer['products'][productId]['brand'],
+                        'category' : wooptpmDataLayer['products'][productId]['category'],
                         'quantity' : quantity,
-                        'price'    : wooptpmDataLayer['visible_products'][productId]['price']
+                        'price'    : wooptpmDataLayer['products'][productId]['price']
                     }
                 };
 
@@ -198,12 +212,12 @@
 
                 wooptpmDataLayer.cart[id] = {
                     'id'       : id,
-                    'dyn_r_ids': wooptpmDataLayer['visible_products'][productId]['dyn_r_ids'],
-                    'name'     : wooptpmDataLayer['visible_products'][productId]['name'],
-                    'brand'    : wooptpmDataLayer['visible_products'][productId]['brand'],
-                    'category' : wooptpmDataLayer['visible_products'][productId]['category'],
+                    'dyn_r_ids': wooptpmDataLayer['products'][productId]['dyn_r_ids'],
+                    'name'     : wooptpmDataLayer['products'][productId]['name'],
+                    'brand'    : wooptpmDataLayer['products'][productId]['brand'],
+                    'category' : wooptpmDataLayer['products'][productId]['category'],
                     'quantity' : quantity,
-                    'price'    : wooptpmDataLayer['visible_products'][productId]['price']
+                    'price'    : wooptpmDataLayer['products'][productId]['price']
                 };
             }
         }
@@ -246,6 +260,81 @@
         return string.match(/(post-)(\d+)/)[2];
     }
 
+
+    wooptpm.triggerViewItemList = function (productId) {
+
+        let data = {
+            "id"       : productId.toString(),
+            "dyn_r_ids": wooptpmDataLayer['products'][productId]['dyn_r_ids'],
+            "name"     : wooptpmDataLayer['products'][productId]['name'],
+            "list_name": wooptpmDataLayer['shop']['list_name'], // maybe remove if in cart
+            "brand"    : wooptpmDataLayer['products'][productId]['brand'],
+            "category" : wooptpmDataLayer['products'][productId]['category'],
+            // "variant": "Black",
+            "list_position": wooptpmDataLayer['products'][productId]['position'],
+            "quantity"     : 1,
+            "price"        : wooptpmDataLayer['products'][productId]['price'],
+            "currency"     : wooptpmDataLayer.shop.currency
+        };
+
+        jQuery(document).trigger('wooptpmViewItemList', data);
+    }
+
+    wooptpm.viewItemListTriggerTestMode = function (target) {
+        // console.log(jQuery(target).find('.add_to_cart_button, .product_type_grouped').data('product_id'));
+
+        jQuery(target).css({
+            "position": "relative",
+        });
+
+        jQuery(target).append('<div id="viewItemListTriggerOverlay"></div>')
+        jQuery(target).find('#viewItemListTriggerOverlay').css({
+            "z-index"         : "10",
+            "display"         : "block",
+            "position"        : "absolute",
+            "height"          : "100%",
+            "top"             : "0",
+            "left"            : "0",
+            "right"           : "0",
+            "opacity"         : wooptpmDataLayer.viewItemListTrigger.opacity,
+            "background-color": wooptpmDataLayer.viewItemListTrigger.backgroundColor,
+        })
+    }
+
+    wooptpm.observerCallback = function (entries, observer) {
+        entries.forEach((entry) => {
+
+            let productId = jQuery(entry.target).find('.add_to_cart_button, .product_type_grouped').data('product_id');
+
+            if (entry.isIntersecting) {
+
+                // https://stackoverflow.com/a/65571786/4688612
+
+                // console.log('setting timeout for: ' + productId);
+
+                // timeouts[productId] = setTimeout(() => {
+                //     viewItemListTriggerTestMode(entry.target);
+                //     triggerViewItemList(productId);
+                //     if (wooptpmDataLayer.viewItemListTrigger.repeat === false) observer.unobserve(entry.target);
+                // }, wooptpmDataLayer.viewItemListTrigger.timeout)
+
+                wooptpm.triggerViewItemList(productId);
+                if (wooptpmDataLayer.viewItemListTrigger.testMode) wooptpm.viewItemListTriggerTestMode(entry.target);
+                if (wooptpmDataLayer.viewItemListTrigger.repeat === false) observer.unobserve(entry.target);
+
+            } else {
+                // console.log('clearing timeout for: ');
+
+                // console.log('clearing timeout for: ' + productId);
+                // if (timeouts[productId] !== undefined) {
+                //
+                //     clearTimeout(timeouts[productId])
+                // }
+                if (wooptpmDataLayer.viewItemListTrigger.testMode) jQuery(entry.target).find('#viewItemListTriggerOverlay').remove();
+            }
+        });
+    }
+
     // return {
     // writeOrderIdToStorage  : writeOrderIdToStorage,
     // isOrderIdStored        : isOrderIdStored,
@@ -263,6 +352,13 @@
 
 jQuery(function () {
 // jQuery(window).on('load', function () {
+
+    // fire view_item_list only on products that have become visible
+    const io = new IntersectionObserver(wooptpm.observerCallback, {threshold: wooptpmDataLayer.viewItemListTrigger.threshold});
+    // let timeouts = {};
+    document.querySelectorAll('.wc-block-grid__product, .product:not(.product-category)')
+        .forEach(elem => io.observe(elem));
+
 
     // remove_from_cart event
     jQuery(document).on('click', '.remove_from_cart_button, .remove', function (e) {
@@ -295,7 +391,7 @@ jQuery(function () {
         if (wooptpmDataLayer['shop']['page_type'] === 'product') {
 
             // first process related and upsell products
-            if(typeof jQuery(this).attr('href') !== 'undefined' && jQuery(this).attr('href').includes('add-to-cart')){
+            if (typeof jQuery(this).attr('href') !== 'undefined' && jQuery(this).attr('href').includes('add-to-cart')) {
                 // alert('add-to-cart on upsell and related products');
                 let quantity  = 1;
                 let productId = jQuery(this).data('product_id');
@@ -353,7 +449,7 @@ jQuery(function () {
             let searchParams = new URLSearchParams(href.search);
 
             if (searchParams.has('add-to-cart')) {
-        // alert('non product page, /?add-to-cart=123 link');
+                // alert('non product page, /?add-to-cart=123 link');
 
                 let productId = searchParams.get('add-to-cart');
                 wooptpm.addProductToCart(productId, 1);
@@ -376,15 +472,15 @@ jQuery(function () {
 
             let data = {
                 'id'       : productId.toString(),
-                'dyn_r_ids': wooptpmDataLayer['visible_products'][productId]['dyn_r_ids'],
-                'name'     : wooptpmDataLayer['visible_products'][productId]['name'],
+                'dyn_r_ids': wooptpmDataLayer['products'][productId]['dyn_r_ids'],
+                'name'     : wooptpmDataLayer['products'][productId]['name'],
                 'list_name': wooptpmDataLayer['shop']['list_name'],
-                'brand'    : wooptpmDataLayer['visible_products'][productId]['brand'],
-                'category' : wooptpmDataLayer['visible_products'][productId]['category'],
+                'brand'    : wooptpmDataLayer['products'][productId]['brand'],
+                'category' : wooptpmDataLayer['products'][productId]['category'],
                 // "variant": "Black",
-                'list_position': wooptpmDataLayer['visible_products'][productId]['position'],
+                'list_position': wooptpmDataLayer['products'][productId]['position'],
                 'quantity'     : 1,
-                'price'        : wooptpmDataLayer['visible_products'][productId]['price']
+                'price'        : wooptpmDataLayer['products'][productId]['price']
             };
 
             jQuery(document).trigger('wooptpmSelectContent', data);
@@ -455,4 +551,8 @@ jQuery(function () {
 jQuery(window).on('load', function () {
     // populate the wooptpmDataLayer with the cart items
     wooptpm.getCartItemsFromBackEnd();
+
+    // wooptpm.loadPageProductsFromBackend();
+
+
 });

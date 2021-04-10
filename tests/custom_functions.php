@@ -1,5 +1,48 @@
 <?php
 
+add_filter('wooptpm_view_item_list_trigger_settings', 'wooptpm_view_item_list_trigger_settings');
+function wooptpm_view_item_list_trigger_settings($settings)
+{
+    $settings['testMode']        = true;
+//    $settings['backgroundColor'] = 'rgba(60,179,113)';
+//    $settings['opacity']         = 0.5;
+//    $settings['repeat']          = true;
+//    $settings['threshold']       = 1;
+
+    return $settings;
+}
+
+
+// http://hookr.io/filters/wc_get_template_part/
+// http://hookr.io/plugins/woocommerce/3.0.6/files/includes-class-wc-shortcodes/
+
+// define the woocommerce_after_shop_loop_item callback
+function action_woocommerce_after_shop_loop_item()
+{
+    global $product;
+    // make action magic happen here...
+//    error_log('new test: ' . $product->get_id());
+
+    echo "xfxf";
+}
+
+
+// add the action
+//add_action( 'woocommerce_after_shop_loop_item', 'action_woocommerce_after_shop_loop_item', 10, 1 );
+
+
+function wc_add_date_to_gutenberg_block($html, $data, $product)
+{
+
+
+    error_log('test');
+
+    return $html . "xfxf";
+}
+
+//add_filter("woocommerce_blocks_product_grid_item_html", "wc_add_date_to_gutenberg_block", 10, 3);
+
+
 if (isset($_GET["dynr"])) {
     add_filter('wooptpm_product_ids', 'return_wooptpm_dyn_r_product_ids', 10, 2);
     function return_wooptpm_dyn_r_product_ids($dyn_r_ids, $product)

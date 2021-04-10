@@ -28,15 +28,7 @@ class Google_Ads extends Google
 
     public function inject_product_list($list_name)
     {
-        global $wp_query;
-
-        ?>
-
-                gtag('event', '<?php echo $list_name ?>', {
-                    'send_to': <?php echo json_encode($this->get_google_ads_conversion_ids()) ?>,
-                    'items'  : <?php echo json_encode($this->get_products_from_wp_query($wp_query)) . PHP_EOL ?>
-                });
-        <?php
+        // handled on front-end
     }
 
     public function inject_product($product, $product_attributes)

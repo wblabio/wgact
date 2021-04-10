@@ -106,7 +106,12 @@ You can send the link to the front page of your shop too if you think it would b
 = 1.8.29 =
 
 * Tweak: Additional caching exclusions for SG Optimizer
-* Tweak: to the gtag code in order to make it better testable
+* Tweak: Changed the gtag code in order to make it better testable
+* Tweak: Moved some scripts to the footer
+* Tweak: Improved add_to_cart trigger
+* Tweak: Refactored view_item_list event entirely to be unaffected by caching mechanisms
+* Tweak: Added a new view_item_list trigger with some interesting options
+* Fix: Fixed front-end triggers for Google and Facebook to only fire if the pixels are enabled
 
 = 1.8.28 =
 
