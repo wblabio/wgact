@@ -276,7 +276,7 @@ class Google extends Pixel
             'google' => [
                 'ads'       => [
                     'dynamic_remarketing'      => [
-                        'status'  => $this->options_obj->google->ads->dynamic_remarketing,
+                        'status'  => $this->options_obj->google->ads->dynamic_remarketing ? true : false,
                         'id_type' => $this->get_dyn_r_id_type(),
                     ],
                     'conversionIds'            => $this->get_google_ads_conversion_ids(),
@@ -315,7 +315,7 @@ class Google extends Pixel
                 'link_attribution' => $this->options_obj->google->analytics->link_attribution ? 'true' : 'false', // must be a string for correct output
             ];
 
-            if ($this->options_obj->google->user_id &&  is_user_logged_in()) {
+            if ($this->options_obj->google->user_id && is_user_logged_in()) {
                 $ga_ua_parameters['user_id'] = get_current_user_id();
             }
 
@@ -324,10 +324,10 @@ class Google extends Pixel
             return "\t\t" . "gtag('config', '" . $id . "', " . json_encode($ga_ua_parameters) . ");";
         } elseif ('ga_4' === $channel) {
 
-            if ($this->options_obj->google->user_id &&  is_user_logged_in()) {
+            if ($this->options_obj->google->user_id && is_user_logged_in()) {
                 $ga_4_parameters = [
                     'user_id' => get_current_user_id(),
-                    ];
+                ];
             }
 
             if (empty($ga_4_parameters)) {

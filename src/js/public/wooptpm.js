@@ -154,7 +154,7 @@
 
         let id = '';
 
-        if (wooptpmDataLayer.general.variationsOutput  && variationId !== null) {
+        if (wooptpmDataLayer.general.variationsOutput && variationId !== null) {
             id = variationId;
         } else {
             id = productId;

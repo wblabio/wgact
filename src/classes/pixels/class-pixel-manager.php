@@ -178,6 +178,7 @@ class Pixel_Manager extends Pixel_Manager_Base
             'id'        => (string)$product->get_id(),
             'sku'       => (string)$product->get_sku(),
             'name'      => (string)$product->get_name(),
+            //            'name'      => (string)$product->get_formatted_name(),
             'price'     => (int)$product->get_price(),
             'brand'     => $this->get_brand_name($product->get_id()),
             'category'  => (array)$this->get_product_category($product->get_id()),
@@ -185,11 +186,23 @@ class Pixel_Manager extends Pixel_Manager_Base
             'quantity'  => (int)1,
             //            'position'  => (int)$this->position,
             'dyn_r_ids' => $this->dyn_r_ids,
+            //            'type'  => $product->get_type(),
         ];
 
-//        $this->position = $this->position++;
+        if ($product->get_type() == 'variation') {
+            $parent_product = wc_get_product($product->get_parent_id());
+            $data['name']   = $parent_product->get_name();
 
-        $html =
+            $attributes         = $product->get_attributes();
+            $variant_text_array = [];
+            foreach ($attributes as $key => $value) {
+
+                $key_name = str_replace('pa_', '', $key);
+                $variant_text_array[] = ucfirst($key_name) . ': ' . $value;
+            }
+
+            $data['variant'] = implode(' | ', $variant_text_array);
+        }
 
         $html = "
             <script>
@@ -246,7 +259,6 @@ class Pixel_Manager extends Pixel_Manager_Base
 
         return apply_filters('wooptpm_view_item_list_trigger_settings', $settings);
     }
-
 
     public function inject_woopt_opening()
     {
@@ -418,7 +430,7 @@ class Pixel_Manager extends Pixel_Manager_Base
     private function inject_data_layer_general()
     {
         $data = [
-                'variationsOutput' => $this->options_obj->general->variations_output,
+            'variationsOutput' => $this->options_obj->general->variations_output ? true : false,
         ];
 
         ?>

@@ -76,7 +76,7 @@ class Admin
                 'items':[{
                     'id':response.purchase.plan_id.toString(),
                     'quantity':1,
-                    'price':response.purchase.initial_amount.toString(),
+                    'price':total,
                     'name':productName,
                     'category': 'Plugin',
                 }],
