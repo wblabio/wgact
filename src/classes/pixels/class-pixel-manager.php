@@ -178,27 +178,27 @@ class Pixel_Manager extends Pixel_Manager_Base
             'id'        => (string)$product->get_id(),
             'sku'       => (string)$product->get_sku(),
             'name'      => (string)$product->get_name(),
-            //            'name'      => (string)$product->get_formatted_name(),
             'price'     => (int)$product->get_price(),
             'brand'     => $this->get_brand_name($product->get_id()),
             'category'  => (array)$this->get_product_category($product->get_id()),
-            // 'variant'  => '',
             'quantity'  => (int)1,
-            //            'position'  => (int)$this->position,
             'dyn_r_ids' => $this->dyn_r_ids,
-            //            'type'  => $product->get_type(),
         ];
 
         if ($product->get_type() == 'variation') {
+
             $parent_product = wc_get_product($product->get_parent_id());
             $data['name']   = $parent_product->get_name();
 
-            $attributes         = $product->get_attributes();
             $variant_text_array = [];
-            foreach ($attributes as $key => $value) {
 
-                $key_name = str_replace('pa_', '', $key);
-                $variant_text_array[] = ucfirst($key_name) . ': ' . $value;
+            $attributes         = $product->get_attributes();
+            if($attributes){
+                foreach ($attributes as $key => $value) {
+
+                    $key_name             = str_replace('pa_', '', $key);
+                    $variant_text_array[] = ucfirst($key_name) . ': ' . $value;
+                }
             }
 
             $data['variant'] = implode(' | ', $variant_text_array);
