@@ -68,6 +68,7 @@ class Pixel_Manager extends Pixel_Manager_Base
 
             $this->inject_data_layer_init();
             $this->inject_data_layer_shop();
+            $this->inject_data_layer_general();
 //            $this->inject_data_layer_product();
         });
 
@@ -410,6 +411,20 @@ class Pixel_Manager extends Pixel_Manager_Base
 
         <script>
             wooptpmDataLayer.shop = <?php echo json_encode($data) ?>;
+        </script>
+        <?php
+    }
+
+    private function inject_data_layer_general()
+    {
+        $data = [
+                'variationsOutput' => $this->options_obj->general->variations_output,
+        ];
+
+        ?>
+
+        <script>
+            wooptpmDataLayer.general = <?php echo json_encode($data) ?>;
         </script>
         <?php
     }

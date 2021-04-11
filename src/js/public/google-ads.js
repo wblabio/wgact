@@ -24,7 +24,7 @@ jQuery(function () {
 
             // console.log('firing google ads add_to_cart event');
             // alert('firing google ads add_to_cart event');
-            // console.log(data);
+            console.log(data);
             // console.log(wooptpmDataLayer.pixels.google.ads.conversionIds);
             // console.log('dyn_r_id: ' + data.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type]);
             // console.log('dyn_r_id: ' + data.dyn_r_ids['gpf']);

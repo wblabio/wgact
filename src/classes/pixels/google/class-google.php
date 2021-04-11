@@ -277,7 +277,7 @@ class Google extends Pixel
                 'ads'       => [
                     'dynamic_remarketing'      => [
                         'status'  => $this->options_obj->google->ads->dynamic_remarketing,
-                        'id_type' => $this->get_dyn_r_id_type()
+                        'id_type' => $this->get_dyn_r_id_type(),
                     ],
                     'conversionIds'            => $this->get_google_ads_conversion_ids(),
                     'google_business_vertical' => $this->google_business_vertical,

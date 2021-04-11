@@ -66,9 +66,10 @@ class Admin
             gtag('js', new Date());            
     
             gtag('config', 'UA-39746956-10', {'anonymize_ip':'true'});
+            gtag('config', 'G-LWRCPMQS9T');
             
             gtag('event', 'purchase', {
-                'send_to':['UA-39746956-10'],
+                'send_to':['UA-39746956-10', 'G-LWRCPMQS9T'],
                 'transaction_id':response.purchase.id.toString(),
                 'currency':'USD',
                 'discount':0,

@@ -147,13 +147,14 @@
         }
     }
 
+    // add_to_cart
     wooptpm.addProductToCart = function (productId, quantity, variationId = null) {
 
         // alert('productId: ' + productId + ' | qty: ' + quantity);
 
         let id = '';
 
-        if (variationId !== null) {
+        if (wooptpmDataLayer.general.variationsOutput  && variationId !== null) {
             id = variationId;
         } else {
             id = productId;
@@ -161,15 +162,15 @@
 
         let data = {
             "id"       : id.toString(),
-            "dyn_r_ids": wooptpmDataLayer['products'][productId]['dyn_r_ids'],
-            "name"     : wooptpmDataLayer['products'][productId]['name'],
+            "dyn_r_ids": wooptpmDataLayer['products'][id]['dyn_r_ids'],
+            "name"     : wooptpmDataLayer['products'][id]['name'],
             "list_name": wooptpmDataLayer['shop']['list_name'], // maybe remove if in cart
-            "brand"    : wooptpmDataLayer['products'][productId]['brand'],
-            "category" : wooptpmDataLayer['products'][productId]['category'],
+            "brand"    : wooptpmDataLayer['products'][id]['brand'],
+            "category" : wooptpmDataLayer['products'][id]['category'],
             // "variant": "Black",
-            "list_position": wooptpmDataLayer['products'][productId]['position'],
+            "list_position": wooptpmDataLayer['products'][id]['position'],
             "quantity"     : quantity,
-            "price"        : wooptpmDataLayer['products'][productId]['price'],
+            "price"        : wooptpmDataLayer['products'][id]['price'],
             "currency"     : wooptpmDataLayer.shop.currency
         };
 
@@ -183,28 +184,17 @@
             wooptpmDataLayer['cart'][id]['quantity'] = wooptpmDataLayer['cart'][id]['quantity'] + quantity;
         } else {
 
-            // Object.assign(wooptpmDataLayer['cart'], {
-            //     id: {
-            //         'id'      : id,
-            //         'name'    : wooptpmDataLayer['products'][productId]['name'],
-            //         'brand'   : wooptpmDataLayer['products'][productId]['brand'],
-            //         'category': wooptpmDataLayer['products'][productId]['category'],
-            //         'quantity': quantity,
-            //         'price'   : wooptpmDataLayer['products'][productId]['price']
-            //     }
-            // });
-
             if (!wooptpmDataLayer.cart) {
 
                 wooptpmDataLayer['cart'] = {
                     [id]: {
                         'id'       : id,
-                        'dyn_r_ids': wooptpmDataLayer['products'][productId]['dyn_r_ids'],
-                        'name'     : wooptpmDataLayer['products'][productId]['name'],
-                        'brand'    : wooptpmDataLayer['products'][productId]['brand'],
-                        'category' : wooptpmDataLayer['products'][productId]['category'],
+                        'dyn_r_ids': wooptpmDataLayer['products'][id]['dyn_r_ids'],
+                        'name'     : wooptpmDataLayer['products'][id]['name'],
+                        'brand'    : wooptpmDataLayer['products'][id]['brand'],
+                        'category' : wooptpmDataLayer['products'][id]['category'],
                         'quantity' : quantity,
-                        'price'    : wooptpmDataLayer['products'][productId]['price']
+                        'price'    : wooptpmDataLayer['products'][id]['price']
                     }
                 };
 
@@ -212,12 +202,12 @@
 
                 wooptpmDataLayer.cart[id] = {
                     'id'       : id,
-                    'dyn_r_ids': wooptpmDataLayer['products'][productId]['dyn_r_ids'],
-                    'name'     : wooptpmDataLayer['products'][productId]['name'],
-                    'brand'    : wooptpmDataLayer['products'][productId]['brand'],
-                    'category' : wooptpmDataLayer['products'][productId]['category'],
+                    'dyn_r_ids': wooptpmDataLayer['products'][id]['dyn_r_ids'],
+                    'name'     : wooptpmDataLayer['products'][id]['name'],
+                    'brand'    : wooptpmDataLayer['products'][id]['brand'],
+                    'category' : wooptpmDataLayer['products'][id]['category'],
                     'quantity' : quantity,
-                    'price'    : wooptpmDataLayer['products'][productId]['price']
+                    'price'    : wooptpmDataLayer['products'][id]['price']
                 };
             }
         }
@@ -350,8 +340,8 @@ jQuery(function () {
             if(wooptpmDataLayer.shop.page_type === 'product' && ioid === 0) return ioid++;
 
             // jQuery(elem).attr('data-ioid', ioid++);
-
             jQuery(elem).data('ioid', ioid++);
+
             io.observe(elem)
         });
 

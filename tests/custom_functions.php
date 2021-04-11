@@ -1,13 +1,13 @@
 <?php
 
-add_filter('wooptpm_view_item_list_trigger_settings', 'wooptpm_view_item_list_trigger_settings');
+//add_filter('wooptpm_view_item_list_trigger_settings', 'wooptpm_view_item_list_trigger_settings');
 function wooptpm_view_item_list_trigger_settings($settings)
 {
     $settings['testMode']        = true;
     $settings['backgroundColor'] = 'blue';
     $settings['opacity']         = 0.5;
     $settings['repeat']          = true;
-    $settings['threshold']       = 0.5;
+    $settings['threshold']       = 0.8;
     $settings['timeout']         = 1000;
 
     return $settings;

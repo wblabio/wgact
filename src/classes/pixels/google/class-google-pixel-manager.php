@@ -91,10 +91,10 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
     public function google_front_end_scripts()
     {
         if (wga_fs()->is__premium_only()) {
-            wp_enqueue_script('ga-ua-eec', plugin_dir_url(__DIR__) . '../../js/public/google_ga_ua_eec__premium_only.js', [], WGACT_CURRENT_VERSION, true);
+            wp_enqueue_script('ga-ua-eec', plugin_dir_url(__DIR__) . '../../js/public/google-ga-ua-eec__premium_only.js', [], WGACT_CURRENT_VERSION, true);
             wp_localize_script('ga-ua-eec', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
 
-            wp_enqueue_script('ga4-eec', plugin_dir_url(__DIR__) . '../../js/public/google_ga_4_eec__premium_only.js', [], WGACT_CURRENT_VERSION, true);
+            wp_enqueue_script('ga4-eec', plugin_dir_url(__DIR__) . '../../js/public/google-ga-4-eec__premium_only.js', [], WGACT_CURRENT_VERSION, true);
             wp_localize_script('ga4-eec', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
         }
     }
