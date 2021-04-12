@@ -70,7 +70,7 @@ class Pixel
             $product_id = $this->get_variation_or_product_id($cart_item, $this->options_obj->general->variations_output);
             $product    = wc_get_product($product_id);
 
-            $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku(),'', $this->options);
+            $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku(), $this->options,'');
 
             array_push($cart_items, $product_id_compiled);
         }
@@ -114,7 +114,7 @@ class Pixel
 
                 $dyn_r_ids = $this->get_dyn_r_ids($product);
                 $product_id_compiled = $dyn_r_ids[$this->get_dyn_r_id_type()];
-//                $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku(), '', $this->options);
+//                $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku(), $this->options, '');
                 array_push($order_items_array, $product_id_compiled);
             }
         }

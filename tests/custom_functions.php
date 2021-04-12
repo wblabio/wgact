@@ -84,7 +84,7 @@ if (isset($_GET["conversion_prevention_filter"])) {
     add_filter('wgact_conversion_prevention', '__return_true');
 }
 
-add_filter('wooptpm_product_id_type_for_google_analytics', 'wooptpm_product_id_type_for_google_analytics');
+//add_filter('wooptpm_product_id_type_for_google_analytics', 'wooptpm_product_id_type_for_google_analytics');
 function wooptpm_product_id_type_for_google_analytics()
 {
     return 'sku';

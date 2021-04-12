@@ -56,7 +56,7 @@ trait Trait_Product
         return $prod_cats_output;
     }
 
-    protected function get_compiled_product_id($product_id, $product_sku, $channel = '', $options): string
+    protected function get_compiled_product_id($product_id, $product_sku, $options, $channel = ''): string
     {
         // depending on setting use product IDs or SKUs
         if (0 == $this->options['google']['ads']['product_identifier'] || $channel === 'ga_ua' || $channel === 'ga_4') {
@@ -85,6 +85,4 @@ trait Trait_Product
 
         return $dyn_r_ids;
     }
-
-
 }

@@ -83,7 +83,7 @@ class Pixel_Manager_Base
 //                return;
 //            }
 
-            $product_attributes['product_id_compiled'] = $this->get_compiled_product_id($product_id, $product->get_sku(), '', $this->options);
+            $product_attributes['product_id_compiled'] = $this->get_compiled_product_id($product_id, $product->get_sku(), $this->options, '');
 
             $product_attributes['dyn_r_ids'] = $this->get_dyn_r_ids($product);
 
@@ -112,7 +112,7 @@ class Pixel_Manager_Base
                     } else {
                         $user = $order->get_billing_email();
                     }
-                    $is_new_customer = !$this->has_bought($user, $order);
+                    $is_new_customer = !$this->has_bought($order, $user);
 
                     $order_total = 0 == $this->options_obj->shop->order_total_logic ? $order->get_subtotal() - $order->get_total_discount() : $order->get_total();
 
@@ -223,7 +223,7 @@ class Pixel_Manager_Base
     }
 
     // https://stackoverflow.com/a/46216073/4688612
-    protected function has_bought($value = 0, $order): bool
+    protected function has_bought($order, $value = 0): bool
     {
         global $wpdb;
 

@@ -112,6 +112,8 @@
             productId = wooptpmDataLayer['cart_item_keys'][cartItemKey]['id'];
         }
 
+        productId = getIdBasedOndVariationsOutputSetting(productId);
+
         let quantity;
 
         if (quantityToRemove == null) {

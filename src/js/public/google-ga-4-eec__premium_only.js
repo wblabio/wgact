@@ -1,33 +1,5 @@
 (function (wooptpm, $, undefined) {
 
-    wooptpm.getViewItemProductsGa4 = function (productList) {
-
-        let data = [];
-
-        for (const [key, value] of Object.entries(productList)) {
-
-            data.push({
-                'item_id'  : value.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
-                'item_name': value['name'],
-                'quantity' : 1,
-                // 'affiliation': '',
-                // 'coupon': '',
-                // 'discount': 0,
-                // 'index': 0, // probably doesn't make much sense on the product page
-                'item_brand'   : value['brand'],
-                'item_category': value['category'],
-                // 'item_list_name': '', // probably doesn't make much sense on the product page
-                // 'item_list_id': '', // probably doesn't make much sense on the product page
-                // 'item_variant': '',
-                'price': value['price'],
-                // 'currency': '',
-            });
-
-        }
-
-        return data;
-    }
-
     wooptpm.getCartItemsGa4 = function () {
 
         let data = [];
@@ -43,9 +15,9 @@
                 // 'discount'     : 0,
                 'item_brand'   : product.brand,
                 'item_category': product.category,
-                // 'item_variant'      : product.variant,
-                'price'   : product.price,
-                'currency': '',
+                'item_variant' : product.variant,
+                'price'        : product.price,
+                'currency'     : '',
             });
         }
 
@@ -57,7 +29,7 @@
 
 jQuery(function () {
 
-    if(wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id) {
+    if (wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id) {
 
         // view_item_list event
         jQuery(document).on('wooptpmViewItemList', function (event, data) {
@@ -79,8 +51,8 @@ jQuery(function () {
                     // "affiliation": "",
                     "item_brand"   : data.brand,
                     "item_category": data.category,
-                    // "item_variant": data.variant,
-                    "price": data.price,
+                    "item_variant" : data.variant,
+                    "price"        : data.price,
                     // "currency": "",
                     "quantity": data.quantity,
                 }],
@@ -124,10 +96,10 @@ jQuery(function () {
                         // "affiliation": "",
                         "item_brand"   : data.brand,
                         "item_category": data.category,
-                        // "item_variant": data.variant,
-                        "price"   : data.price,
-                        "currency": "",
-                        "quantity": data.quantity,
+                        "item_variant" : data.variant,
+                        "price"        : data.price,
+                        "currency"     : "",
+                        "quantity"     : data.quantity,
                     }
                 ]
             });
@@ -153,8 +125,8 @@ jQuery(function () {
                         // "affiliation": "",
                         "item_brand"   : data.brand,
                         "item_category": data.category,
-                        // "item_variant": data.variant,
-                        "price": data.price,
+                        "item_variant" : data.variant,
+                        "price"        : data.price,
                         // "currency": "",
                         "quantity": data.quantity,
                     }
@@ -177,7 +149,4 @@ jQuery(function () {
             });
         });
     }
-
-
-
 });

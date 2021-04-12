@@ -1,34 +1,7 @@
 (function (wooptpm, $, undefined) {
 
-    wooptpm.getViewItemProductsGaUa = function (productList) {
-
-        let data = [];
-
-        for (const [key, value] of Object.entries(productList)) {
-
-            data.push({
-                'item_id'  : value.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
-                'item_name': value['name'],
-                'quantity' : 1,
-                // 'affiliation': '',
-                // 'coupon': '',
-                // 'discount': 0,
-                // 'index': 0, // probably doesn't make much sense on the product page
-                'item_brand'   : value['brand'],
-                'item_category': value['category'],
-                // 'item_list_name': '', // probably doesn't make much sense on the product page
-                // 'item_list_id': '', // probably doesn't make much sense on the product page
-                // 'item_variant': '',
-                'price': value['price'],
-                // 'currency': '',
-            });
-
-        }
-
-        return data;
-    }
-
     wooptpm.getCartItemsGaUa = function () {
+
         let data = [];
 
         for (const [productId, product] of Object.entries(wooptpmDataLayer.cart)) {
@@ -43,7 +16,7 @@
                 // 'list_position': 1,
                 'price'   : product.price,
                 'quantity': product.quantity,
-                // 'variant'      : product.variant,
+                'variant' : product.variant,
             });
         }
 
@@ -55,7 +28,7 @@
 
 jQuery(function () {
 
-    if(wooptpmDataLayer.pixels.google.analytics.universal.property_id) {
+    if (wooptpmDataLayer.pixels.google.analytics.universal.property_id) {
 
         // fire view_item_list on product page to add related, upsell and cross-sell items to the remarketing list
         // if (wooptpmDataLayer.pixels && wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.status && wooptpmDataLayer.shop.page_type === 'product') {
@@ -106,7 +79,7 @@ jQuery(function () {
                     "list_position": data.list_position, // doesn't make sense on mini_cart
                     "price"        : data.price,
                     "quantity"     : data.quantity,
-                    // "variant": data.variant,
+                    "variant"      : data.variant,
                 }]
             });
         });
@@ -123,12 +96,12 @@ jQuery(function () {
                 "content_type": "product",
                 "items"       : [
                     {
-                        "id"       : data.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
-                        "name"     : data.name,
-                        "list_name": data.list_name, // doesn't make sense on mini_cart
-                        "brand"    : data.brand,
-                        "category" : data.category,
-                        // "variant": data.variant,
+                        "id"           : data.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
+                        "name"         : data.name,
+                        "list_name"    : data.list_name, // doesn't make sense on mini_cart
+                        "brand"        : data.brand,
+                        "category"     : data.category,
+                        "variant"      : data.variant,
                         "list_position": data.list_position, // doesn't make sense on mini_cart
                         "quantity"     : data.quantity,
                         "price"        : data.price
@@ -148,12 +121,12 @@ jQuery(function () {
                 "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
                 "items"  : [
                     {
-                        "id"       : data.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
-                        "name"     : data.name,
-                        "list_name": data.list_name, // doesn't make sense on mini_cart
-                        "brand"    : data.brand,
-                        "category" : data.category,
-                        // "variant": data.variant,
+                        "id"           : data.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
+                        "name"         : data.name,
+                        "list_name"    : data.list_name, // doesn't make sense on mini_cart
+                        "brand"        : data.brand,
+                        "category"     : data.category,
+                        "variant"      : data.variant,
                         "list_position": data.list_position, // doesn't make sense on mini_cart
                         "quantity"     : data.quantity,
                         "price"        : data.price
@@ -178,7 +151,7 @@ jQuery(function () {
                         // "list_name": data.list_name, // doesn't make sense on mini_cart
                         "brand"   : data.brand,
                         "category": data.category,
-                        // "variant": data.variant,
+                        "variant" : data.variant,
                         // "list_position": data.list_position, // doesn't make sense on mini_cart
                         "quantity": data.quantity,
                         "price"   : data.price

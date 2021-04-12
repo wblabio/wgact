@@ -47,7 +47,7 @@ class Facebook_Microdata extends Pixel
                 [
                     '@type'      => 'PropertyValue',
                     'propertyID' => 'item_group_id',
-                    'value'      => $this->get_compiled_product_id($parent_product_id, $parent_product->get_sku(),'', $this->options),
+                    'value'      => $this->get_compiled_product_id($parent_product_id, $parent_product->get_sku(), $this->options,''),
                 ]
             ]
         ];

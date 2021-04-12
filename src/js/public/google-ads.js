@@ -46,7 +46,7 @@ jQuery(function () {
 
             // console.log('firing google ads select_content event');
             // alert('firing google ads select_content event');
-            console.log(data);
+            // console.log(data);
 
             gtag("event", "select_content", {
                 "send_to"     : wooptpmDataLayer.pixels.google.ads.conversionIds,
