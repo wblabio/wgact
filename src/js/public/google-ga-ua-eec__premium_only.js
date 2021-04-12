@@ -92,7 +92,7 @@ jQuery(function () {
 
             // console.log('firing google select_content event');
             // alert('firing google select_content event');
-            console.log(data);
+            // console.log(data);
 
             gtag('event', 'view_item_list', {
                 "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,

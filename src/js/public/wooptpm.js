@@ -129,7 +129,7 @@
             // "list_name": wooptpmDataLayer['shop']['list_name'], // doesn't make sense on mini_cart
             "brand"   : wooptpmDataLayer['cart'][productId]['brand'],
             "category": wooptpmDataLayer['cart'][productId]['category'],
-            // "variant": "Black",
+            "variant" : wooptpmDataLayer['cart'][productId]['variant'],
             // "list_position": wooptpmDataLayer['cart'][productId]['position'], // doesn't make sense on mini_cart
             "quantity": quantity,
             "price"   : wooptpmDataLayer['cart'][productId]['price']
@@ -147,27 +147,43 @@
         }
     }
 
-    // add_to_cart
-    wooptpm.addProductToCart = function (productId, quantity, variationId = null) {
-
-        // alert('productId: ' + productId + ' | qty: ' + quantity);
-
-        let id = '';
-
-        if (wooptpmDataLayer.general.variationsOutput && variationId !== null) {
-            id = variationId;
+    getIdBasedOndVariationsOutputSetting = function (productId) {
+        if (wooptpmDataLayer.general.variationsOutput) {
+            return productId;
         } else {
-            id = productId;
+            if (wooptpmDataLayer['products'][productId]['isVariation']) {
+                return wooptpmDataLayer['products'][productId]['parentId'];
+            } else {
+                return productId;
+            }
         }
+    }
+
+    // add_to_cart
+    wooptpm.addProductToCart = function (productId, quantity) {
+
+        // alert('productId: ' + productId + ' | variationId: ' + variationId + ' | qty: ' + quantity);
+
+        let id = getIdBasedOndVariationsOutputSetting(productId);
+
+        // if (wooptpmDataLayer.general.variationsOutput) {
+        //     id = productId;
+        // } else {
+        //     if (wooptpmDataLayer['products'][productId]['isVariation']) {
+        //         id = wooptpmDataLayer['products'][productId]['parentId'];
+        //     } else {
+        //         id = productId;
+        //     }
+        // }
 
         let data = {
-            "id"       : id.toString(),
-            "dyn_r_ids": wooptpmDataLayer['products'][id]['dyn_r_ids'],
-            "name"     : wooptpmDataLayer['products'][id]['name'],
-            "list_name": wooptpmDataLayer['shop']['list_name'], // maybe remove if in cart
-            "brand"    : wooptpmDataLayer['products'][id]['brand'],
-            "category" : wooptpmDataLayer['products'][id]['category'],
-            // "variant": "Black",
+            "id"           : id.toString(),
+            "dyn_r_ids"    : wooptpmDataLayer['products'][id]['dyn_r_ids'],
+            "name"         : wooptpmDataLayer['products'][id]['name'],
+            "list_name"    : wooptpmDataLayer['shop']['list_name'], // maybe remove if in cart
+            "brand"        : wooptpmDataLayer['products'][id]['brand'],
+            "category"     : wooptpmDataLayer['products'][id]['category'],
+            "variant"      : wooptpmDataLayer['products'][id]['variant'],
             "list_position": wooptpmDataLayer['products'][id]['position'],
             "quantity"     : quantity,
             "price"        : wooptpmDataLayer['products'][id]['price'],
@@ -193,6 +209,7 @@
                         'name'     : wooptpmDataLayer['products'][id]['name'],
                         'brand'    : wooptpmDataLayer['products'][id]['brand'],
                         'category' : wooptpmDataLayer['products'][id]['category'],
+                        "variant"  : wooptpmDataLayer['products'][id]['variant'],
                         'quantity' : quantity,
                         'price'    : wooptpmDataLayer['products'][id]['price']
                     }
@@ -206,6 +223,7 @@
                     'name'     : wooptpmDataLayer['products'][id]['name'],
                     'brand'    : wooptpmDataLayer['products'][id]['brand'],
                     'category' : wooptpmDataLayer['products'][id]['category'],
+                    "variant"  : wooptpmDataLayer['products'][id]['variant'],
                     'quantity' : quantity,
                     'price'    : wooptpmDataLayer['products'][id]['price']
                 };
@@ -252,14 +270,16 @@
 
     wooptpm.triggerViewItemList = function (productId) {
 
+        productId = getIdBasedOndVariationsOutputSetting(productId);
+
         let data = {
-            "id"       : productId.toString(),
-            "dyn_r_ids": wooptpmDataLayer['products'][productId]['dyn_r_ids'],
-            "name"     : wooptpmDataLayer['products'][productId]['name'],
-            "list_name": wooptpmDataLayer['shop']['list_name'], // maybe remove if in cart
-            "brand"    : wooptpmDataLayer['products'][productId]['brand'],
-            "category" : wooptpmDataLayer['products'][productId]['category'],
-            // "variant": "Black",
+            "id"           : productId.toString(),
+            "dyn_r_ids"    : wooptpmDataLayer['products'][productId]['dyn_r_ids'],
+            "name"         : wooptpmDataLayer['products'][productId]['name'],
+            "list_name"    : wooptpmDataLayer['shop']['list_name'], // maybe remove if in cart
+            "brand"        : wooptpmDataLayer['products'][productId]['brand'],
+            "category"     : wooptpmDataLayer['products'][productId]['category'],
+            "variant"      : wooptpmDataLayer['products'][productId]['variant'],
             "list_position": wooptpmDataLayer['products'][productId]['position'],
             "quantity"     : 1,
             "price"        : wooptpmDataLayer['products'][productId]['price'],
@@ -337,7 +357,7 @@ jQuery(function () {
 
             // Skip first element on a product page
             // because we don't want to measure the main product
-            if(wooptpmDataLayer.shop.page_type === 'product' && ioid === 0) return ioid++;
+            if (wooptpmDataLayer.shop.page_type === 'product' && ioid === 0) return ioid++;
 
             // jQuery(elem).attr('data-ioid', ioid++);
             jQuery(elem).data('ioid', ioid++);
@@ -388,10 +408,10 @@ jQuery(function () {
                 } else if (wooptpmDataLayer['shop']['product_type'] === 'variable') {
 
                     // alert('variable');
-                    let quantity    = Number(jQuery('.input-text.qty').val());
-                    let productId   = jQuery("[name='product_id']").val();
-                    let variationId = jQuery("[name='variation_id']").val();
-                    wooptpm.addProductToCart(productId, quantity, variationId);
+
+                    let quantity  = Number(jQuery('.input-text.qty').val());
+                    let productId = jQuery("[name='variation_id']").val();
+                    wooptpm.addProductToCart(productId, quantity);
 
                 } else if (wooptpmDataLayer.shop.product_type === 'grouped') {
 
@@ -437,33 +457,38 @@ jQuery(function () {
 
 
     // select_content event
-    // only allow the script to be fired on the following pages
-    let allowed_pages = ['shop', 'product_category', 'product_tag', 'search', 'product_shop', 'product'];
+    jQuery(document).on('click', '.woocommerce-LoopProduct-link, .wc-block-grid__product', function (e) {
 
-    if (allowed_pages.includes(wooptpmDataLayer['shop']['page_type'])) {
+        let productId;
 
-        jQuery(document).on('click', '.woocommerce-LoopProduct-link', function (e) {
-
+        // We need one selector for related products on product pages and another one on shop pages
+        // because using the .product selector fires twice on product page, and I don't know why.
+        // woocommerce-LoopProduct-link avoids this, but requires a different logic to get the product Id
+        if (['shop', 'product_category', 'product_tag', 'search', 'product_shop', 'product'].indexOf(wooptpmDataLayer['shop']['page_type']) > -1) {
             let name      = jQuery(this).closest('.product');
             let classes   = name.attr('class');
-            let productId = wooptpm.getPostIdFromString(classes);
+            productId = wooptpm.getPostIdFromString(classes);
+        } else {
+            productId = jQuery(this).find('.add_to_cart_button, .product_type_grouped').data('product_id');
+        }
 
-            let data = {
-                'id'       : productId.toString(),
-                'dyn_r_ids': wooptpmDataLayer['products'][productId]['dyn_r_ids'],
-                'name'     : wooptpmDataLayer['products'][productId]['name'],
-                'list_name': wooptpmDataLayer['shop']['list_name'],
-                'brand'    : wooptpmDataLayer['products'][productId]['brand'],
-                'category' : wooptpmDataLayer['products'][productId]['category'],
-                // "variant": "Black",
-                'list_position': wooptpmDataLayer['products'][productId]['position'],
-                'quantity'     : 1,
-                'price'        : wooptpmDataLayer['products'][productId]['price']
-            };
+        productId = getIdBasedOndVariationsOutputSetting(productId);
 
-            jQuery(document).trigger('wooptpmSelectContent', data);
-        });
-    }
+        let data = {
+            "id"           : productId.toString(),
+            "dyn_r_ids"    : wooptpmDataLayer['products'][productId]['dyn_r_ids'],
+            "name"         : wooptpmDataLayer['products'][productId]['name'],
+            "list_name"    : wooptpmDataLayer['shop']['list_name'],
+            "brand"        : wooptpmDataLayer['products'][productId]['brand'],
+            "category"     : wooptpmDataLayer['products'][productId]['category'],
+            "variant"      : wooptpmDataLayer['products'][productId]['variant'],
+            "list_position": wooptpmDataLayer['products'][productId]['position'],
+            "quantity"     : 1,
+            "price"        : wooptpmDataLayer['products'][productId]['price']
+        };
+
+        jQuery(document).trigger('wooptpmSelectContent', data);
+    });
 
     // begin_checkout event
     jQuery(document).one('click', '.checkout-button, .cart-checkout-button, .button.checkout', function (e) {
@@ -531,4 +556,6 @@ jQuery(window).on('load', function () {
     wooptpm.getCartItemsFromBackEnd();
 
     // wooptpm.loadPageProductsFromBackend();
+
+
 });

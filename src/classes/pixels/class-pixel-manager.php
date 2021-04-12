@@ -183,12 +183,15 @@ class Pixel_Manager extends Pixel_Manager_Base
             'category'  => (array)$this->get_product_category($product->get_id()),
             'quantity'  => (int)1,
             'dyn_r_ids' => $this->dyn_r_ids,
+            'isVariation' => false,
         ];
 
         if ($product->get_type() == 'variation') {
 
             $parent_product = wc_get_product($product->get_parent_id());
             $data['name']   = $parent_product->get_name();
+            $data['isVariation']   = true;
+            $data['parentId']   = $parent_product->get_id();
 
             $variant_text_array = [];
 
@@ -197,7 +200,7 @@ class Pixel_Manager extends Pixel_Manager_Base
                 foreach ($attributes as $key => $value) {
 
                     $key_name             = str_replace('pa_', '', $key);
-                    $variant_text_array[] = ucfirst($key_name) . ': ' . $value;
+                    $variant_text_array[] = ucfirst($key_name) . ': ' . strtolower($value);
                 }
             }
 
