@@ -60,5 +60,27 @@ jQuery(function () {
                     }]
             });
         });
+
+        // view_item event
+        jQuery(document).on('wooptpmViewItem', function (event, data) {
+
+            // console.log('firing google ads view_item event');
+            // alert('firing google ads view_item event');
+            // console.log(data);
+            // console.log(wooptpmDataLayer.pixels.google.ads.conversionIds);
+            // console.log('dyn_r_id: ' + data.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type]);
+            // console.log('dyn_r_id: ' + data.dyn_r_ids['gpf']);
+
+            gtag("event", "view_item", {
+                "send_to": wooptpmDataLayer.pixels.google.ads.conversionIds,
+                "value"  : data.quantity * data.price,
+                "items"  : [{
+                    "id"                      : data.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
+                    "quantity"                : 1,
+                    "price"                   : data.price,
+                    "google_business_vertical": wooptpmDataLayer.pixels.google.ads.google_business_vertical
+                }]
+            });
+        });
     }
 })

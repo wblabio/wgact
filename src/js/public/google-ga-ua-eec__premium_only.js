@@ -135,6 +135,31 @@ jQuery(function () {
             });
         });
 
+        // view_item event
+        jQuery(document).on('wooptpmViewItem', function (event, data) {
+
+            // console.log('firing google view_item event');
+            // alert('firing google view_item event');
+            // console.log(data);
+
+            gtag('event', 'view_item', {
+                "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
+                "items"  : [
+                    {
+                        "id"           : data.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
+                        "name"         : data.name,
+                        "list_name"    : data.list_name, // doesn't make sense on mini_cart
+                        "brand"        : data.brand,
+                        "category"     : data.category,
+                        "variant"      : data.variant,
+                        "list_position": 1,
+                        "quantity"     : 1,
+                        "price"        : data.price
+                    }
+                ]
+            });
+        });
+
         // remove_from_cart event
         jQuery(document).on('wooptpmRemoveFromCart', function (event, data) {
 

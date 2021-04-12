@@ -550,6 +550,34 @@ jQuery(function () {
             }
         });
     });
+
+    // Fired when the user selects all the required dropdowns / attributes
+    // https://stackoverflow.com/a/27849208/4688612
+    jQuery( ".single_variation_wrap" ).on( "show_variation", function ( event, variation ) {
+        // Fired when the user selects all the required dropdowns / attributes
+        // console.log('product selected');
+        // console.log(variation);
+
+        let productId = getIdBasedOndVariationsOutputSetting(variation.variation_id);
+
+        // console.log('productId: ' + productId);
+
+        let data = {
+            "id"           : productId.toString(),
+            "dyn_r_ids"    : wooptpmDataLayer['products'][productId]['dyn_r_ids'],
+            "name"         : wooptpmDataLayer['products'][productId]['name'],
+            "list_name"    : wooptpmDataLayer['shop']['list_name'],
+            "brand"        : wooptpmDataLayer['products'][productId]['brand'],
+            "category"     : wooptpmDataLayer['products'][productId]['category'],
+            "variant"      : wooptpmDataLayer['products'][productId]['variant'],
+            "list_position": wooptpmDataLayer['products'][productId]['position'],
+            "quantity"     : 1,
+            "price"        : wooptpmDataLayer['products'][productId]['price']
+        };
+
+        jQuery(document).trigger('wooptpmViewItem', data);
+
+    } );
 });
 
 
@@ -558,6 +586,7 @@ jQuery(window).on('load', function () {
     wooptpm.getCartItemsFromBackEnd();
 
     // wooptpm.loadPageProductsFromBackend();
+
 
 
 });

@@ -105,6 +105,35 @@ jQuery(function () {
             });
         });
 
+        // view_item event
+        jQuery(document).on('wooptpmViewItem', function (event, data) {
+
+            // console.log('firing google view_item event');
+            // alert('firing google view_item event for: ' + wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id);
+            // console.log(data);
+
+            gtag('event', 'view_item', {
+                "send_to": wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id,
+                // "currency": "",
+                // "value": 0,
+                "items": [
+                    {
+                        "item_id"  : data.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
+                        "item_name": data.name,
+                        // "coupon": "",
+                        // "discount": 0,
+                        // "affiliation": "",
+                        "item_brand"   : data.brand,
+                        "item_category": data.category,
+                        "item_variant" : data.variant,
+                        "price"        : data.price,
+                        // "currency"     : "",
+                        "quantity"     : 1,
+                    }
+                ]
+            });
+        });
+
         // remove_from_cart event
         jQuery(document).on('wooptpmRemoveFromCart', function (event, data) {
 
