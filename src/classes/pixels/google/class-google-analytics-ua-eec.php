@@ -34,15 +34,14 @@ class Google_Analytics_UA_EEC extends Google_Analytics_UA
             'price'         => (int)$product->get_price(),
         ];
 
-        //@formatter:off
-        ?>
-
-                gtag('event', 'view_item', {
-                    "send_to": '<?php echo $this->options_obj->google->analytics->universal->property_id ?>',
-                    "items": [<?php echo json_encode($data) ?>]
+        echo "
+                wooptpmExists().then(function(){
+                    gtag('event', 'view_item', {
+                        'send_to': '" . $this->options_obj->google->analytics->universal->property_id . "',
+                        'items': [" . json_encode($data) . "]
+                    });
                 });
-        <?php
-        //@formatter:on
+        ";
     }
 
     public function inject_cart($cart, $cart_total)

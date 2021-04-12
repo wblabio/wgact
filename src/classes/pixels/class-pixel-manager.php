@@ -175,28 +175,28 @@ class Pixel_Manager extends Pixel_Manager_Base
         $this->dyn_r_ids = $this->get_dyn_r_ids($product);
 
         $data = [
-            'id'        => (string)$product->get_id(),
-            'sku'       => (string)$product->get_sku(),
-            'name'      => (string)$product->get_name(),
-            'price'     => (int)$product->get_price(),
-            'brand'     => $this->get_brand_name($product->get_id()),
-            'category'  => (array)$this->get_product_category($product->get_id()),
-            'quantity'  => (int)1,
-            'dyn_r_ids' => $this->dyn_r_ids,
+            'id'          => (string)$product->get_id(),
+            'sku'         => (string)$product->get_sku(),
+            'name'        => (string)$product->get_name(),
+            'price'       => (int)$product->get_price(),
+            'brand'       => $this->get_brand_name($product->get_id()),
+            'category'    => (array)$this->get_product_category($product->get_id()),
+            'quantity'    => (int)1,
+            'dyn_r_ids'   => $this->dyn_r_ids,
             'isVariation' => false,
         ];
 
         if ($product->get_type() == 'variation') {
 
-            $parent_product = wc_get_product($product->get_parent_id());
-            $data['name']   = $parent_product->get_name();
-            $data['isVariation']   = true;
-            $data['parentId']   = $parent_product->get_id();
+            $parent_product      = wc_get_product($product->get_parent_id());
+            $data['name']        = $parent_product->get_name();
+            $data['isVariation'] = true;
+            $data['parentId']    = $parent_product->get_id();
 
             $variant_text_array = [];
 
-            $attributes         = $product->get_attributes();
-            if($attributes){
+            $attributes = $product->get_attributes();
+            if ($attributes) {
                 foreach ($attributes as $key => $value) {
 
                     $key_name             = str_replace('pa_', '', $key);
@@ -237,6 +237,19 @@ class Pixel_Manager extends Pixel_Manager_Base
         ?>
 
         <script>
+
+            // Some "JavaScript optimization" plugins try to be smart and reshuffle
+            // the execution order of the scripts for this plugin and break it
+            // along the way. This functions helps working around this.
+            function wooptpmExists() {
+                return new Promise(function (resolve, reject) {
+                    (function waitForWooptpm(){
+                        if (window.wooptpm) return resolve();
+                        setTimeout(waitForWooptpm, 30);
+                    })();
+                });
+            }
+
             window.wooptpmDataLayer                     = window.wooptpmDataLayer || [];
             window.wooptpmDataLayer.cart                = window.wooptpmDataLayer.cart || {};
             window.wooptpmDataLayer.pixels              = window.wooptpmDataLayer.pixels || {};
@@ -316,40 +329,52 @@ class Pixel_Manager extends Pixel_Manager_Base
         foreach ($cart_items as $cart_item => $value) {
 
 //            error_log('qty: ' . $value['quantity']);
-
 //            error_log(print_r($value['data'], true));
 
             $product = wc_get_product($value['data']->get_id());
 
             $data['cart_item_keys'][$cart_item] = [
-                'id'           => $product->get_id(),
-                'is_variation' => false,
+                'id'          => (string)$product->get_id(),
+                'isVariation' => false,
             ];
 
             $data['cart'][$product->get_id()] = [
-                'id'           => (string)$product->get_id(),
-                'dyn_r_ids'    => (array)$this->get_dyn_r_ids($product),
-                'name'         => (string)$product->get_name(),
+                'id'          => (string)$product->get_id(),
+                'dyn_r_ids'   => (array)$this->get_dyn_r_ids($product),
+                'name'        => (string)$product->get_name(),
                 //                'list_name'     => '',
-                'brand'        => (string)$this->get_brand_name($product->get_id()),
+                'brand'       => (string)$this->get_brand_name($product->get_id()),
                 //                'variant'       => '',
                 //                'list_position' => '',
-                'quantity'     => (int)$value['quantity'],
-                'price'        => (float)$product->get_price(),
-                'is_variation' => false,
+                'quantity'    => (int)$value['quantity'],
+                'price'       => (float)$product->get_price(),
+                'isVariation' => false,
             ];
-//            error_log('id: ' . $product->get_id());
-//            error_log('type: ' . $product->get_type());
 
-            if ($product->is_type('variation')) {
-//                error_log('is variation');
-                $data['cart'][$product->get_id()]['parent_id']    = (string)$product->get_parent_id();
-                $data['cart'][$product->get_id()]['is_variation'] = true;
-                $data['cart'][$product->get_id()]['category']     = $this->get_product_category($product->get_parent_id());
+            if ($product->get_type() == 'variation') {
 
+                $parent_product                                  = wc_get_product($product->get_parent_id());
+                $data['cart'][$product->get_id()]['name']        = (string)$parent_product->get_name();
+                $data['cart'][$product->get_id()]['isVariation'] = true;
+                $data['cart'][$product->get_id()]['parentId']    = (string)$parent_product->get_id();
+                $data['cart'][$product->get_id()]['category']    = (array)$this->get_product_category($product->get_parent_id());
 
-                $data['cart_item_keys'][$cart_item]['parent_id']    = (string)$product->get_parent_id();
-                $data['cart_item_keys'][$cart_item]['is_variation'] = true;
+                $variant_text_array = [];
+
+                $attributes = $product->get_attributes();
+                if ($attributes) {
+                    foreach ($attributes as $key => $value) {
+
+                        $key_name             = str_replace('pa_', '', $key);
+                        $variant_text_array[] = ucfirst($key_name) . ': ' . strtolower($value);
+                    }
+                }
+
+                $data['cart'][$product->get_id()]['variant'] = (string)implode(' | ', $variant_text_array);
+
+                $data['cart_item_keys'][$cart_item]['parentId']    = (string)$product->get_parent_id();
+                $data['cart_item_keys'][$cart_item]['isVariation'] = true;
+
             } else {
                 $data['cart'][$product->get_id()]['category'] = $this->get_product_category($product->get_id());
             }
@@ -576,9 +601,9 @@ class Pixel_Manager extends Pixel_Manager_Base
         <script>
             jQuery(function () {
                 setTimeout(function () {
-                    if (typeof wooptpm !== "undefined") {
+                    wooptpmExists().then(function(){
                         wooptpm.writeOrderIdToStorage(<?php echo $order_id ?>);
-                    }
+                    });
                 }, <?php echo $this->transaction_deduper_timeout ?>);
             });
         </script>

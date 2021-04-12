@@ -41,7 +41,6 @@ class Google extends Pixel
 
         if (!$this->options_obj->google->gtag->deactivation) {
             ?>
-
             <script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo $this->get_gtag_id() ?>"></script>
 
             <?php echo $this->get_modified_script_opening_tag() . PHP_EOL ?>
@@ -91,7 +90,8 @@ class Google extends Pixel
 
     protected function get_google_init_js(): string
     {
-        return "window.dataLayer = window.dataLayer || [];
+        return "
+                window.dataLayer = window.dataLayer || [];
 
                 window.gtag = function gtag() {
                     dataLayer.push(arguments);
@@ -290,7 +290,7 @@ class Google extends Pixel
                         'measurement_id' => $this->options_obj->google->analytics->ga4->measurement_id,
                     ],
                     'id_type'   => $this->get_ga_id_type(),
-                    'eec' => $this->options_obj->google->analytics->eec ? true : false,
+                    'eec'       => $this->options_obj->google->analytics->eec ? true : false,
                 ]
             ],
         ];

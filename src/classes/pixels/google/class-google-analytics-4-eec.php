@@ -44,12 +44,13 @@ class Google_Analytics_4_EEC extends Google_Analytics_4
             ],
         ];
 
-        //@formatter:off
-        ?>
 
-                gtag('event', 'view_item', <?php echo json_encode($data) ?>);
-        <?php
-        //@formatter:on
+        echo " 
+                wooptpmExists().then(function(){
+//                    console.log('running gtag view_item event');
+                    gtag('event', 'view_item', " . json_encode($data) . ");
+                });
+               ";
     }
 
     public function inject_cart($cart, $cart_total)

@@ -169,15 +169,16 @@ class Google_Ads extends Google
 
     protected function get_dyn_remarketing_purchase_script($order, $order_total)
     {
-        ?>
-
-                if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_order_number() ?>)) {
-                    gtag('event', 'purchase', {
-                        'send_to': <?php echo json_encode($this->get_google_ads_conversion_ids()) ?>,
-                        'value'  : <?php echo $order_total; ?>,
-                        'items'  : <?php echo (json_encode($this->get_formatted_order_items($order, 'ads'))) . PHP_EOL ?>
-                    });
-                }
-        <?php
+        echo "
+                wooptpmExists().then(function(){
+                    if (!wooptpm.isOrderIdStored(" . $order->get_order_number() . ")) {
+                        gtag('event', 'purchase', {
+                            'send_to': " . json_encode($this->get_google_ads_conversion_ids()) . ",
+                            'value'  : " . $order_total . ",
+                            'items'  : " . (json_encode($this->get_formatted_order_items($order, 'ads'))) . "
+                        });
+                    }
+                });
+        ";
     }
 }

@@ -73,19 +73,19 @@ class Twitter_Pixel extends Pixel
     {
         // TODO find out under which circumstances to use different values in content_type
 
-        ?>
-
-            if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_order_number() ?>)) {
-                twq('track', 'Purchase', {
-                    value       : '<?php echo $order_total ?>',
-                    currency    : '<?php echo $order->get_currency() ?>',
-                    num_items   : '<?php echo count($order->get_items()) ?>',
-                    content_ids : <?php echo json_encode($this->get_order_item_ids($order)) ?>,
-                    content_type: 'product',
-                    order_id    : '<?php echo $order->get_order_number(); ?>'
-                });
-            }
-
-        <?php
+        echo "
+            wooptpmExists().then(function(){
+                if (!wooptpm.isOrderIdStored( " . $order->get_order_number() . ")) {
+                    twq('track', 'Purchase', {
+                        value       : '" . $order_total . "',
+                        currency    : '" . $order->get_currency() . "',
+                        num_items   : '" . count($order->get_items()) . "',
+                        content_ids : " . json_encode($this->get_order_item_ids($order)) . ",
+                        content_type: 'product',
+                        order_id    : '" . $order->get_order_number() . "'
+                    });
+                }
+            });
+        ";
     }
 }

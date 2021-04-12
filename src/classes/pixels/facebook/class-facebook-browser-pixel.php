@@ -83,13 +83,14 @@ class Facebook_Browser_Pixel extends Pixel
             'content_type' => 'product',
         ];
 
-        ?>
+        echo "
+            wooptpmExists().then(function(){
+                if (!wooptpm.isOrderIdStored(". $order->get_order_number() . ")) {
+                    fbq('track', 'Purchase', " . json_encode($data) . ");
+                }
+            });
 
-            if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_order_number() ?>)) {
-                fbq('track', 'Purchase', <?php echo json_encode($data) ?>);
-            }
-
-        <?php
+        ";
 
 //        $html = "
 //            if ((typeof wooptpm !== \"undefined\") && !wooptpm.isOrderIdStored(" . $order->get_order_number() . ")) {

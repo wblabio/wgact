@@ -17,6 +17,6 @@
   "homepage": "https://github.com/wblabio/wgact#readme",
   "description": "",
   "devDependencies": {
-    "cypress": "^6.3.0"
+    "cypress": "^7.0.1"
   }
 }

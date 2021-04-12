@@ -89,17 +89,18 @@ class Pinterest_Pixel extends Pixel
 
     public function inject_order_received_page($order, $order_total)
     {
-        ?>
-
-            if ((typeof wooptpm !== "undefined") && !wooptpm.isOrderIdStored(<?php echo $order->get_order_number() ?>)) {
-                pintrk('track', 'checkout', {
-                    value         : <?php echo $order_total ?>,
-                    order_quantity: <?php echo count($order->get_items()) ?>,
-                    currency      : '<?php echo $order->get_currency() ?>',
-                    order_id      : '<?php echo $order->get_order_number(); ?>',
-                    product_ids   : <?php echo json_encode($this->get_order_item_ids($order)) ?>
-                });
-            }
-        <?php
+        echo "
+            wooptpmExists().then(function(){
+                if (!wooptpm.isOrderIdStored(" . $order->get_order_number() . ")) {
+                    pintrk('track', 'checkout', {
+                        'value'         : " . $order_total . ",
+                        'order_quantity': " . count($order->get_items()) . ",
+                        'currency'      : '" . $order->get_currency() . "',
+                        'order_id'      : '" . $order->get_order_number() . "',
+                        'product_ids'   : " . json_encode($this->get_order_item_ids($order)) . "
+                    });
+                }
+            });
+        ";
     }
 }

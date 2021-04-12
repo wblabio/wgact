@@ -8,7 +8,7 @@ function wooptpm_view_item_list_trigger_settings($settings)
     $settings['opacity']         = 0.5;
     $settings['repeat']          = true;
     $settings['threshold']       = 0.8;
-    $settings['timeout']         = 1000;
+    $settings['timeout']         = 200;
 
     return $settings;
 }

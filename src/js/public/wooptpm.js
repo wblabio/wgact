@@ -1,4 +1,5 @@
 (function (wooptpm, $, undefined) {
+
     const wgactDeduper = {
         keyName          : '_wgact_order_ids',
         cookieExpiresDays: 365
@@ -137,6 +138,9 @@
             "price"   : wooptpmDataLayer['cart'][productId]['price']
         };
 
+        // console.log('removing');
+        // console.log(data);
+
         jQuery(document).trigger('wooptpmRemoveFromCart', data);
 
         if (quantityToRemove == null) {
@@ -164,6 +168,8 @@
     // add_to_cart
     wooptpm.addProductToCart = function (productId, quantity) {
 
+        // console.log('productId: ' + productId + ' | qty: ' + quantity);
+
         // alert('productId: ' + productId + ' | variationId: ' + variationId + ' | qty: ' + quantity);
 
         let id = getIdBasedOndVariationsOutputSetting(productId);
@@ -182,7 +188,7 @@
             "id"           : id.toString(),
             "dyn_r_ids"    : wooptpmDataLayer['products'][id]['dyn_r_ids'],
             "name"         : wooptpmDataLayer['products'][id]['name'],
-            "list_name"    : wooptpmDataLayer['shop']['list_name'], // maybe remove if in cart
+            "list_name"    : wooptpmDataLayer['shop']['list_name'], // maybe remove if in products
             "brand"        : wooptpmDataLayer['products'][id]['brand'],
             "category"     : wooptpmDataLayer['products'][id]['category'],
             "variant"      : wooptpmDataLayer['products'][id]['variant'],
@@ -191,6 +197,8 @@
             "price"        : wooptpmDataLayer['products'][id]['price'],
             "currency"     : wooptpmDataLayer.shop.currency
         };
+
+        // console.log(data);
 
         jQuery(document).trigger('wooptpmAddToCart', data);
 
@@ -248,7 +256,11 @@
                 data    : data,
                 success : function (cart_items) {
                     // save all cart items into wooptpmDataLayer
-                    wooptpmDataLayer['cart']           = cart_items['cart'];
+                    // console.log(cart_items['cart']);
+                    wooptpmDataLayer['cart']          = cart_items['cart'];
+                    // wooptpmDataLayer.products = {... wooptpmDataLayer.products, ...cart_items['cart']};
+                    wooptpmDataLayer.products = Object.assign({}, wooptpmDataLayer.products, cart_items['cart']);
+
                     wooptpmDataLayer['cart_item_keys'] = cart_items['cart_item_keys'];
                 }
             });
@@ -264,7 +276,6 @@
 
         jQuery(document).trigger('wooptpmFireCheckoutOption', data);
     }
-
 
     wooptpm.getPostIdFromString = function (string) {
         return string.match(/(post-)(\d+)/)[2];
@@ -315,10 +326,15 @@
         entries.forEach((entry) => {
             let elementId = jQuery(entry.target).data('ioid');
             let productId = jQuery(entry.target).find('.add_to_cart_button, .product_type_grouped').data('product_id');
+                // console.log('prodid: ' + productId);
+            if(!productId){
+                productId = jQuery(entry.target).find("[name='add-to-cart']").val();
+            }
 
             if (entry.isIntersecting) {
-
+                // console.log('prodid: ' + productId);
                 timeouts[elementId] = setTimeout(() => {
+                    //                 console.log('prodid: ' + productId);
                     wooptpm.triggerViewItemList(productId);
                     if (wooptpmDataLayer.viewItemListTrigger.testMode) wooptpm.viewItemListTriggerTestMode(entry.target);
                     if (wooptpmDataLayer.viewItemListTrigger.repeat === false) observer.unobserve(entry.target);
@@ -331,6 +347,7 @@
             }
         });
     }
+
 
     // return {
     // writeOrderIdToStorage  : writeOrderIdToStorage,
@@ -354,7 +371,7 @@ jQuery(function () {
     const io = new IntersectionObserver(wooptpm.observerCallback, {threshold: wooptpmDataLayer.viewItemListTrigger.threshold});
 
     let ioid = 0;
-    document.querySelectorAll('.wc-block-grid__product, .product:not(.product-category)')
+    document.querySelectorAll('.wc-block-grid__product, .product:not(.product-category):not(.woocommerce-grouped-product-list-item)')
         .forEach(elem => {
 
             // Skip first element on a product page
@@ -376,8 +393,10 @@ jQuery(function () {
             let href         = new URL(jQuery(this).attr('href'));
             let searchParams = new URLSearchParams(href.search);
             cartItemKey      = searchParams.get('remove_item');
+            // console.log('remove from cart page');
             wooptpm.removeProductFromCart(cartItemKey);
         } else if (wooptpmDataLayer.cart_item_keys && wooptpmDataLayer.cart_item_keys[jQuery(this).data('cart_item_key')] !== undefined) {
+            // console.log('remove from mini cart');
             wooptpm.removeProductFromCart(jQuery(this).data('cart_item_key'));
         } else {
             wooptpm.removeProductFromCart(null, null, jQuery(this).data('product_id'));
@@ -535,6 +554,7 @@ jQuery(function () {
             let searchParams = new URLSearchParams(href.search);
             let cartItemKey  = searchParams.get('remove_item');
             // alert('cart_item_key: ' + cartItemKey);
+            // console.log('cart_item_key: ' + cartItemKey);
             let productId    = wooptpmDataLayer['cart_item_keys'][cartItemKey]['id'];
 
             let quantity = jQuery(this).find('.qty').val();
@@ -546,6 +566,7 @@ jQuery(function () {
             } else if (quantity < wooptpmDataLayer['cart'][productId]['quantity']) {
                 wooptpm.removeProductFromCart(cartItemKey, wooptpmDataLayer['cart'][productId]['quantity'] - quantity);
             } else if (quantity > wooptpmDataLayer['cart'][productId]['quantity']) {
+                // console.log('adding product: ' + productId);
                 wooptpm.addProductToCart(productId, quantity - wooptpmDataLayer['cart'][productId]['quantity']);
             }
         });
@@ -583,6 +604,7 @@ jQuery(function () {
 
 jQuery(window).on('load', function () {
     // populate the wooptpmDataLayer with the cart items
+    // console.log('getting cart');
     wooptpm.getCartItemsFromBackEnd();
 
     // wooptpm.loadPageProductsFromBackend();
