@@ -112,8 +112,8 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
 
         if (wga_fs()->is__premium_only() && $this->options_obj->google->analytics->eec) {
 
-            if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_eec_pixel->inject_product_list_object('product_category');
-            if ($this->is_google_analytics_4_active()) $this->google_analytics_4_eec_pixel->inject_product_list_object('product_category');
+//            if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_eec_pixel->inject_product_list_object('product_category');
+//            if ($this->is_google_analytics_4_active()) $this->google_analytics_4_eec_pixel->inject_product_list_object('product_category');
         }
     }
 
@@ -123,8 +123,8 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
 
         if (wga_fs()->is__premium_only() && $this->options_obj->google->analytics->eec) {
 
-            if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_eec_pixel->inject_product_list_object('product_tag');
-            if ($this->is_google_analytics_4_active()) $this->google_analytics_4_eec_pixel->inject_product_list_object('product_tag');
+//            if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_eec_pixel->inject_product_list_object('product_tag');
+//            if ($this->is_google_analytics_4_active()) $this->google_analytics_4_eec_pixel->inject_product_list_object('product_tag');
         }
     }
 
@@ -134,8 +134,8 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
 
         if (wga_fs()->is__premium_only() && $this->options_obj->google->analytics->eec) {
 
-            if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_eec_pixel->inject_product_list_object('shop');
-            if ($this->is_google_analytics_4_active()) $this->google_analytics_4_eec_pixel->inject_product_list_object('shop');
+//            if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_eec_pixel->inject_product_list_object('shop');
+//            if ($this->is_google_analytics_4_active()) $this->google_analytics_4_eec_pixel->inject_product_list_object('shop');
         }
     }
 
@@ -145,8 +145,8 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
 
         if (wga_fs()->is__premium_only() && $this->options_obj->google->analytics->eec) {
 
-            if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_eec_pixel->inject_product_list_object('search');
-            if ($this->is_google_analytics_4_active()) $this->google_analytics_4_eec_pixel->inject_product_list_object('search');
+//            if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_eec_pixel->inject_product_list_object('search');
+//            if ($this->is_google_analytics_4_active()) $this->google_analytics_4_eec_pixel->inject_product_list_object('search');
         }
     }
 

@@ -29,7 +29,7 @@
 
 jQuery(function () {
 
-    if (wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id) {
+    if (wooptpmDataLayer.pixels.google.analytics.eec &&  wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id) {
 
         // view_item_list event
         jQuery(document).on('wooptpmViewItemList', function (event, data) {

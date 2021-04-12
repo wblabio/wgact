@@ -18,19 +18,7 @@ class Google_Analytics_4_EEC extends Google_Analytics_4
 
     protected function output_view_item_list_html($items, $list_id)
     {
-        $data = [
-            'send_to'        => $this->options_obj->google->analytics->ga4->measurement_id,
-            'item_list_name' => $this->get_list_name_by_current_page_type($list_id),
-            'item_list_id'   => $list_id,
-            'items'          => $items
-        ];
-
-        //@formatter:off
-        ?>
-
-                gtag('event', 'view_item_list', <?php echo json_encode($data) ?>);
-        <?php
-        //@formatter:on
+        // handled on front-end
     }
 
     public function inject_product($product, $product_attributes)

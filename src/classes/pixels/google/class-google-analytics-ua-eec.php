@@ -17,15 +17,7 @@ class Google_Analytics_UA_EEC extends Google_Analytics_UA
     }
 
     protected function output_view_item_list_html($items, $list_id){
-        //@formatter:off
-        ?>
-
-                gtag('event', 'view_item_list', {
-                    "send_to": '<?php echo $this->options_obj->google->analytics->universal->property_id ?>',
-                    "items": <?php echo json_encode($items) . PHP_EOL ?>
-                });
-        <?php
-        //@formatter:on
+        // handled on front-end
     }
 
     public function inject_product($product, $product_attributes)

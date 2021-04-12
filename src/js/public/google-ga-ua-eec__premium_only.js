@@ -28,7 +28,7 @@
 
 jQuery(function () {
 
-    if (wooptpmDataLayer.pixels.google.analytics.universal.property_id) {
+    if (wooptpmDataLayer.pixels.google.analytics.eec && wooptpmDataLayer.pixels.google.analytics.universal.property_id) {
 
         // fire view_item_list on product page to add related, upsell and cross-sell items to the remarketing list
         // if (wooptpmDataLayer.pixels && wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.status && wooptpmDataLayer.shop.page_type === 'product') {

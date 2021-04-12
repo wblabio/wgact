@@ -290,6 +290,7 @@ class Google extends Pixel
                         'measurement_id' => $this->options_obj->google->analytics->ga4->measurement_id,
                     ],
                     'id_type'   => $this->get_ga_id_type(),
+                    'eec' => $this->options_obj->google->analytics->eec ? true : false,
                 ]
             ],
         ];

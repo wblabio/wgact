@@ -105,6 +105,9 @@ You can send the link to the front page of your shop too if you think it would b
 
 = 1.8.29 =
 
+[//]: # fs_premium_only_begin
+* New: Implemented view_item event for variations when selected on the product page
+[//]: # fs_premium_only_end
 * Tweak: Additional caching exclusions for SG Optimizer
 * Tweak: Changed the gtag code in order to make it better testable
 * Tweak: Moved some scripts to the footer
