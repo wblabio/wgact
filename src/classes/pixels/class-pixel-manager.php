@@ -235,6 +235,14 @@ class Pixel_Manager extends Pixel_Manager_Base
 
     private function inject_data_layer_init()
     {
+        $data = [
+            'cart'                => [],
+            'pixels'              => [],
+            'orderDeduplication'  => ($this->options['shop']['order_deduplication'] && !$this->is_nodedupe_parameter_set()) ? 'true' : 'false',
+            'position'            => (int)1,
+            'viewItemListTrigger' => (array)$this->view_item_list_trigger_settings(),
+            'version'             => (string)WGACT_CURRENT_VERSION,
+        ];
         ?>
 
         <script>
@@ -251,12 +259,15 @@ class Pixel_Manager extends Pixel_Manager_Base
                 });
             }
 
-            window.wooptpmDataLayer                     = window.wooptpmDataLayer || [];
-            window.wooptpmDataLayer.cart                = window.wooptpmDataLayer.cart || {};
-            window.wooptpmDataLayer.pixels              = window.wooptpmDataLayer.pixels || {};
-            window.wooptpmDataLayer.orderDeduplication  = <?php echo ($this->options['shop']['order_deduplication'] && !$this->is_nodedupe_parameter_set()) ? 'true' : 'false' ?>;
-            window.wooptpmDataLayer.position            = 1;
-            window.wooptpmDataLayer.viewItemListTrigger = <?php echo json_encode($this->view_item_list_trigger_settings()) ?>;
+            window.wooptpmDataLayer = window.wooptpmDataLayer || {};
+
+            //window.wooptpmDataLayer.cart                = window.wooptpmDataLayer.cart || {};
+            //window.wooptpmDataLayer.pixels              = window.wooptpmDataLayer.pixels || {};
+            //window.wooptpmDataLayer.orderDeduplication  = <?php //echo ($this->options['shop']['order_deduplication'] && !$this->is_nodedupe_parameter_set()) ? 'true' : 'false' ?>//;
+            //window.wooptpmDataLayer.position            = 1;
+            //window.wooptpmDataLayer.viewItemListTrigger = <?php //echo json_encode($this->view_item_list_trigger_settings()) ?>//;
+
+            window.wooptpmDataLayer = <?php echo json_encode($data, JSON_FORCE_OBJECT) ?>;
 
         </script>
 

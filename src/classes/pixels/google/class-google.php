@@ -210,7 +210,7 @@ class Google extends Pixel
         ];
 
         if ('ads' === $channel) {
-            array_push($gtag_data['send_to'], $this->get_google_ads_conversion_ids(true));
+            $gtag_data['send_to'] = $this->get_google_ads_conversion_ids(true);
             $gtag_data['value']            = (float)$order_total;
             $gtag_data['aw_merchant_id']   = (int)$this->aw_merchant_id;
             $gtag_data['aw_feed_country']  = (string)$this->get_visitor_country();

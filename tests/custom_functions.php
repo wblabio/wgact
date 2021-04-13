@@ -90,7 +90,7 @@ function wooptpm_product_id_type_for_google_analytics()
     return 'sku';
 }
 
-// add_filter('wgact_google_ads_conversion_identifiers', 'wgact_add_conversion_identifiers');
+ add_filter('wgact_google_ads_conversion_identifiers', 'wgact_add_conversion_identifiers');
 function wgact_add_conversion_identifiers($conversion_identifiers)
 {
     return array_replace($conversion_identifiers, [
