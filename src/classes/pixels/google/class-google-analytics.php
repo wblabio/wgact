@@ -77,7 +77,6 @@ class Google_Analytics extends Google
             'price'    => (float)$this->wooptpm_get_order_item_price($order_item, $product),
             //                    'list_name' => ,
 //            'currency' => '',
-
         ];
     }
 

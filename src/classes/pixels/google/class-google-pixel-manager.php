@@ -48,7 +48,6 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
         }
 
         add_action('init', [$this, 'run_on_init']);
-
     }
 
     public function run_on_init()
@@ -105,49 +104,24 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
         update_post_meta($refund_id, 'wooptpm_refund_processed', false);
     }
 
-
     public function inject_product_category()
     {
-        if ($this->is_dynamic_remarketing_active()) $this->google_ads_pixel->inject_product_list('view_item_list');
-
-        if (wga_fs()->is__premium_only() && $this->options_obj->google->analytics->eec) {
-
-//            if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_eec_pixel->inject_product_list_object('product_category');
-//            if ($this->is_google_analytics_4_active()) $this->google_analytics_4_eec_pixel->inject_product_list_object('product_category');
-        }
+        // all handled on front-end
     }
 
     public function inject_product_tag()
     {
-        if ($this->is_dynamic_remarketing_active()) $this->google_ads_pixel->inject_product_list('view_item_list');
-
-        if (wga_fs()->is__premium_only() && $this->options_obj->google->analytics->eec) {
-
-//            if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_eec_pixel->inject_product_list_object('product_tag');
-//            if ($this->is_google_analytics_4_active()) $this->google_analytics_4_eec_pixel->inject_product_list_object('product_tag');
-        }
+        // all handled on front-end
     }
 
     public function inject_shop_top_page()
     {
-        if ($this->is_dynamic_remarketing_active()) $this->google_ads_pixel->inject_product_list('view_item_list');
-
-        if (wga_fs()->is__premium_only() && $this->options_obj->google->analytics->eec) {
-
-//            if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_eec_pixel->inject_product_list_object('shop');
-//            if ($this->is_google_analytics_4_active()) $this->google_analytics_4_eec_pixel->inject_product_list_object('shop');
-        }
+        // all handled on front-end
     }
 
     public function inject_search()
     {
-        if ($this->is_dynamic_remarketing_active()) $this->google_ads_pixel->inject_product_list('view_search_results');
-
-        if (wga_fs()->is__premium_only() && $this->options_obj->google->analytics->eec) {
-
-//            if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_eec_pixel->inject_product_list_object('search');
-//            if ($this->is_google_analytics_4_active()) $this->google_analytics_4_eec_pixel->inject_product_list_object('search');
-        }
+        // all handled on front-end
     }
 
     public function inject_product($product, $product_attributes)
@@ -163,13 +137,7 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
 
     public function inject_cart($cart, $cart_total)
     {
-        //  Google Ads triggered by front-end scripts
-
-        if (wga_fs()->is__premium_only() && $this->options_obj->google->analytics->eec) {
-
-            if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_eec_pixel->inject_cart($cart, $cart_total);
-            if ($this->is_google_analytics_4_active()) $this->google_analytics_4_eec_pixel->inject_cart($cart, $cart_total);
-        }
+        // all handled on front-end
     }
 
     public function inject_order_received_page($order, $order_total, $is_new_customer)

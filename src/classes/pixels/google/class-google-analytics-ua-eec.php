@@ -20,6 +20,11 @@ class Google_Analytics_UA_EEC extends Google_Analytics_UA
         // handled on front-end
     }
 
+    public function inject_cart($cart, $cart_total)
+    {
+        // triggered by front-end script
+    }
+
     public function inject_product($product, $product_attributes)
     {
         $data = [
@@ -42,11 +47,6 @@ class Google_Analytics_UA_EEC extends Google_Analytics_UA
                     });
                 });
         ";
-    }
-
-    public function inject_cart($cart, $cart_total)
-    {
-        // triggered by front-end script
     }
 
     protected function eec_appweb_get_product_details_array($product_id, $list_id, $position = null): array

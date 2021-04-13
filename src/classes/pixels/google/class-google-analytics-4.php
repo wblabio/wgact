@@ -27,7 +27,6 @@ class Google_Analytics_4 extends Google_Analytics
                     }
                 });
         ";
-
     }
 
     protected function get_event_purchase_json($order, $order_total, $order_currency, $is_new_customer, $channel = null)
