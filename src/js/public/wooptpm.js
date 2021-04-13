@@ -477,7 +477,8 @@ jQuery(function () {
     });
 
 
-    // select_content event
+    // select_content GA UA event
+    // select_item GA 4 event
     jQuery(document).on('click', '.woocommerce-LoopProduct-link, .wc-block-grid__product', function (e) {
 
         let productId;
@@ -508,7 +509,8 @@ jQuery(function () {
             "price"        : wooptpmDataLayer['products'][productId]['price']
         };
 
-        jQuery(document).trigger('wooptpmSelectContent', data);
+        jQuery(document).trigger('wooptpmSelectContentGaUa', data);
+        jQuery(document).trigger('wooptpmSelectItem', data);
     });
 
     // begin_checkout event

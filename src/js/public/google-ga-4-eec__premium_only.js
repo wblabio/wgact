@@ -29,7 +29,7 @@
 
 jQuery(function () {
 
-    if (wooptpmDataLayer.pixels.google.analytics.eec &&  wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id) {
+    if (wooptpmDataLayer.pixels.google.analytics.eec && wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id) {
 
         // view_item_list event
         jQuery(document).on('wooptpmViewItemList', function (event, data) {
@@ -46,8 +46,8 @@ jQuery(function () {
                     // "coupon"   : "",
                     // "discount": 0,
                     "index"         : data.list_position, // doesn't make sense on mini_cart
-                    "item_list_name": data.list_name, // doesn't make sense on mini_cart
-                    // "item_list_id": data.list_id, // doesn't make sense on mini_cart
+                    "item_list_name": wooptpmDataLayer.shop.list_name,
+                    "item_list_id"  : wooptpmDataLayer.id,
                     // "affiliation": "",
                     "item_brand"   : data.brand,
                     "item_category": data.category,
@@ -62,16 +62,30 @@ jQuery(function () {
         });
 
         // select_content event
-        jQuery(document).on('wooptpmSelectContent', function (event, data) {
+        jQuery(document).on('wooptpmSelectItem', function (event, data) {
 
             // console.log('firing google select_content event');
             // alert('firing google select_content event');
             // console.log(data);
 
-            gtag('event', 'select_content', {
-                "send_to"     : wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id,
-                "content_type": "product",
-                "item_id"     : data.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type]
+            gtag('event', 'select_item', {
+                "send_to": wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id,
+                "items"  : [{
+                    "item_id"  : data.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
+                    "item_name": data.name,
+                    // "coupon"   : "",
+                    // "discount": 0,
+                    "index"         : data.list_position, // doesn't make sense on mini_cart
+                    "item_list_name": wooptpmDataLayer.shop.list_name,
+                    "item_list_id"  : wooptpmDataLayer.id,
+                    // "affiliation": "",
+                    "item_brand"   : data.brand,
+                    "item_category": data.category,
+                    "item_variant" : data.variant,
+                    "price"        : data.price,
+                    // "currency": "",
+                    "quantity": data.quantity,
+                }],
             });
         });
 
@@ -80,7 +94,6 @@ jQuery(function () {
 
             // console.log('firing google add_to_cart event');
             // alert('firing google add_to_cart event for: ' + wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id);
-            //
             // console.log(data);
 
             gtag('event', 'add_to_cart', {
@@ -90,7 +103,8 @@ jQuery(function () {
                 "items": [
                     {
                         "item_id"  : data.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
-                        "item_name": data.name,
+                        "item_list_name": wooptpmDataLayer.shop.list_name,
+                        "item_list_id"  : wooptpmDataLayer.id,
                         // "coupon": "",
                         // "discount": 0,
                         // "affiliation": "",
@@ -128,7 +142,7 @@ jQuery(function () {
                         "item_variant" : data.variant,
                         "price"        : data.price,
                         // "currency"     : "",
-                        "quantity"     : 1,
+                        "quantity": 1,
                     }
                 ]
             });

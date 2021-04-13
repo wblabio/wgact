@@ -75,7 +75,7 @@ jQuery(function () {
                     "brand"   : data.brand,
                     "category": data.category,
                     // "coupon"   : "",
-                    "list_name"    : data.list_name, // doesn't make sense on mini_cart
+                    "list_name"    : wooptpmDataLayer.shop.list_name,
                     "list_position": data.list_position, // doesn't make sense on mini_cart
                     "price"        : data.price,
                     "quantity"     : data.quantity,
@@ -85,7 +85,7 @@ jQuery(function () {
         });
 
         // select_content event
-        jQuery(document).on('wooptpmSelectContent', function (event, data) {
+        jQuery(document).on('wooptpmSelectContentGaUa', function (event, data) {
 
             // console.log('firing google select_content event');
             // alert('firing google select_content event');
@@ -98,7 +98,7 @@ jQuery(function () {
                     {
                         "id"           : data.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
                         "name"         : data.name,
-                        "list_name"    : data.list_name, // doesn't make sense on mini_cart
+                        "list_name"    : wooptpmDataLayer.shop.list_name,
                         "brand"        : data.brand,
                         "category"     : data.category,
                         "variant"      : data.variant,
@@ -123,7 +123,7 @@ jQuery(function () {
                     {
                         "id"           : data.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
                         "name"         : data.name,
-                        "list_name"    : data.list_name, // doesn't make sense on mini_cart
+                        "list_name"    : wooptpmDataLayer.shop.list_name,
                         "brand"        : data.brand,
                         "category"     : data.category,
                         "variant"      : data.variant,
@@ -148,7 +148,7 @@ jQuery(function () {
                     {
                         "id"           : data.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
                         "name"         : data.name,
-                        "list_name"    : data.list_name, // doesn't make sense on mini_cart
+                        "list_name"    : wooptpmDataLayer.shop.list_name, // doesn't make sense on mini_cart
                         "brand"        : data.brand,
                         "category"     : data.category,
                         "variant"      : data.variant,
@@ -173,7 +173,7 @@ jQuery(function () {
                     {
                         "id"  : data.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
                         "name": data.name,
-                        // "list_name": data.list_name, // doesn't make sense on mini_cart
+                        "list_name": wooptpmDataLayer.shop.list_name,
                         "brand"   : data.brand,
                         "category": data.category,
                         "variant" : data.variant,

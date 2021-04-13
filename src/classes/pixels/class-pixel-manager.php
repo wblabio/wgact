@@ -26,6 +26,7 @@ class Pixel_Manager extends Pixel_Manager_Base
 {
     use Trait_Product;
     use Trait_Google;
+    use Trait_Shop;
 
     protected $options;
     protected $options_obj;
@@ -243,7 +244,7 @@ class Pixel_Manager extends Pixel_Manager_Base
             // along the way. This functions helps working around this.
             function wooptpmExists() {
                 return new Promise(function (resolve, reject) {
-                    (function waitForWooptpm(){
+                    (function waitForWooptpm() {
                         if (window.wooptpm) return resolve();
                         setTimeout(waitForWooptpm, 30);
                     })();
@@ -418,32 +419,40 @@ class Pixel_Manager extends Pixel_Manager_Base
         $data = [];
 
         if (is_product_category()) {
-            $data['list_name'] = 'Product Category';
+            $data['list_name'] = 'Product Category' . $this->get_list_name_suffix();
+            $data['list_id']   = 'product_category' . $this->get_list_id_suffix();
             $data['page_type'] = 'product_category';
         } elseif (is_product_tag()) {
-            $data['list_name'] = 'Product Tag';
+            $data['list_name'] = 'Product Tag' . $this->get_list_name_suffix();
+            $data['list_id']   = 'product_tag' . $this->get_list_id_suffix();
             $data['page_type'] = 'product_tag';
         } elseif (is_search()) {
             $data['list_name'] = 'Product Search';
+            $data['list_id']   = 'search';
             $data['page_type'] = 'search';
         } elseif (is_shop()) {
             $data['list_name'] = 'Shop';
+            $data['list_id']   = 'product_shop';
             $data['page_type'] = 'product_shop';
         } elseif (is_product()) {
+            $data['list_name'] = 'Product';
+            $data['list_id']   = 'product';
             $data['page_type'] = 'product';
 
             $product              = wc_get_product();
             $data['product_type'] = $product->get_type();
         } elseif (is_cart()) {
-            $data['list_name'] = '';
+            $data['list_name'] = 'Cart';
+            $data['list_id']   = 'cart';
             $data['page_type'] = 'cart';
         } else if (is_front_page()) {
             $data['list_name'] = 'Front Page';
-            $data['page_type'] = '';
+            $data['list_id']   = 'front_page';
+            $data['page_type'] = 'front_page';
         } else {
             $data['list_name'] = '';
+            $data['list_id']   = '';
             $data['page_type'] = '';
-
         }
 
         $data['currency'] = get_woocommerce_currency();
@@ -601,7 +610,7 @@ class Pixel_Manager extends Pixel_Manager_Base
         <script>
             jQuery(function () {
                 setTimeout(function () {
-                    wooptpmExists().then(function(){
+                    wooptpmExists().then(function () {
                         wooptpm.writeOrderIdToStorage(<?php echo $order_id ?>);
                     });
                 }, <?php echo $this->transaction_deduper_timeout ?>);

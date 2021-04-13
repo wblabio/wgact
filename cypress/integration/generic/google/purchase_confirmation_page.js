@@ -33,13 +33,13 @@ describe('Google purchase confirmation page all gtag events', () => {
 
         const gtag = cy.stub().as('gtag')
 
-        // cy.on('window:before:load', (win) => {
-        //     Object.defineProperty(win, 'gtag', {
-        //         // configurable: false,
-        //         get: () => gtag,
-        //         set: () => {},
-        //     })
-        // })
+        cy.on('window:before:load', (win) => {
+            Object.defineProperty(win, 'gtag', {
+                // configurable: false,
+                get: () => gtag,
+                set: () => {},
+            })
+        })
 
         cy.visit(Cypress.env('purchase_confirmation_url') + '&nodedupe')
 
@@ -47,10 +47,17 @@ describe('Google purchase confirmation page all gtag events', () => {
 
         // cy.get('@gtag').should('be.called')
         // cy.get('@gtag').should('be.calledWith', 'config', 'AW-965183221')
+
+        // cy.get('@gtag').then((gtag) =>{
+        //     debugger
+        // })
+
+        // cy.get('@gtag').then(console.log)
+
         // cy.get('@gtag').should('be.calledWith', 'config', 'UA-39746956-9')
         // cy.get('@gtag').should('be.calledWith', 'config', 'G-YQBXCRGVLT')
 
-        // cy.get('@gtag').should('be.calledWith', 'event', 'purchase')
+        cy.get('@gtag').should('be.calledWith', 'event', 'purchase')
         // cy.get('@gtag').should('be.calledWith', 'event', 'purchase', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
     })
 })
