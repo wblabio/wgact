@@ -338,11 +338,17 @@
     wooptpm.observerCallback = function (entries, observer) {
 
         entries.forEach((entry) => {
+
             let elementId = jQuery(entry.target).data('ioid');
             let productId = jQuery(entry.target).find('.add_to_cart_button, .product_type_grouped').data('product_id');
-                // console.log('prodid: ' + productId);
+
+            // for instance if the add-to-cart buttons are turned off
             if(!productId){
-                productId = jQuery(entry.target).find("[name='add-to-cart']").val();
+                // productId = jQuery(entry.target).find("[name='add-to-cart']").val();
+
+                let classes   = jQuery(entry.target).attr('class');
+                productId = wooptpm.getPostIdFromString(classes);
+                // console.log('prodid: ' + productId);
             }
 
             if (entry.isIntersecting) {

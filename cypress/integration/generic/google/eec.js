@@ -34,6 +34,7 @@ describe('Google Analytics eec events', () => {
         // visit /shop/ page
         cy.visit('/shop/')
 
+        // wait in order for the add_to_cart events to register
         cy.wait(400)
 
         // add to an item to the cart
@@ -48,7 +49,10 @@ describe('Google Analytics eec events', () => {
         //     .click()
 
         // https://docs.cypress.io/api/commands/its#Nested-Properties
-        cy.window().its('wooptpmDataLayer.cart')
+        // https://glebbahmutov.com/cypress-examples/7.0.1/recipes/find-object.html
+        cy.window()
+            .its('wooptpmDataLayer.cart')
+            .should('not.be.empty')
 
         //remove the product from the cart
         cy.get('[id="site-header-cart"]')
@@ -57,8 +61,8 @@ describe('Google Analytics eec events', () => {
 
         cy.get('.woocommerce-mini-cart-item')
             .get('.remove_from_cart_button')
-            .click({force:true})
-            // .wait(400)
+            .click({force: true})
+        // .wait(400)
     })
 
     it('ado to cart WC product page: simple product', () => {
@@ -66,10 +70,17 @@ describe('Google Analytics eec events', () => {
         // visit /product/album/ page
         cy.visit('/product/album/')
 
+        // wait in order for the add_to_cart events to register
+        cy.wait(400)
+
         // add to an item to the cart
         cy.get('.single_add_to_cart_button')
             .eq(0)
             .click()
+
+        cy.window()
+            .its('wooptpmDataLayer.cart')
+            .should('not.be.empty')
 
         //remove the product from the cart
         cy.get('[id="site-header-cart"]')
@@ -78,7 +89,7 @@ describe('Google Analytics eec events', () => {
 
         cy.get('.woocommerce-mini-cart-item')
             .get('.remove_from_cart_button')
-            .click({force:true})
+            .click({force: true})
             .wait(400)
     })
 
@@ -86,12 +97,22 @@ describe('Google Analytics eec events', () => {
 
         // visit /product/hoodie/ page
         cy.visit('/product/hoodie/')
-            .get('#pa_color')
+
+        // wait in order for the add_to_cart events to register
+        cy.wait(400)
+
+        cy.get('#pa_color')
             .select('Blue')
             .get('#logo')
             .select('Yes')
+
+
         cy.contains('Add to cart')
             .click()
+
+        cy.window()
+            .its('wooptpmDataLayer.cart')
+            .should('not.be.empty')
 
         //remove the product from the cart
         cy.get('[id="site-header-cart"]')
@@ -100,7 +121,7 @@ describe('Google Analytics eec events', () => {
 
         cy.get('.woocommerce-mini-cart-item')
             .get('.remove_from_cart_button')
-            .click({force:true})
+            .click({force: true})
             .wait(400)
     })
 
@@ -108,18 +129,26 @@ describe('Google Analytics eec events', () => {
 
         // add grouped product
         cy.visit('/product/logo-collection/')
+
+        // wait in order for the add_to_cart events to register
+        cy.wait(400)
+
+        cy.get('.input-text.qty')
+            .eq(0)
+            .type('3')
             .get('.input-text.qty')
-                .eq(0)
-                .type('3')
+            .eq(1)
+            .type('4')
             .get('.input-text.qty')
-                .eq(1)
-                .type('4')
-            .get('.input-text.qty')
-                .eq(2)
-                .type('5')
+            .eq(2)
+            .type('5')
 
         cy.contains('Add to cart')
             .click()
+
+        cy.window()
+            .its('wooptpmDataLayer.cart')
+            .should('not.be.empty')
 
         //remove the product from the cart
         cy.get('[id="site-header-cart"]')
@@ -128,17 +157,17 @@ describe('Google Analytics eec events', () => {
 
         cy.get('.woocommerce-mini-cart-item')
             .get('.remove_from_cart_button')
-                .eq(0)
-                .click({force:true})
-                .wait(400)
+            .eq(0)
+            .click({force: true})
+            .wait(400)
             .get('.remove_from_cart_button')
-                .eq(0)
-                .click({force:true})
-                .wait(400)
+            .eq(0)
+            .click({force: true})
+            .wait(400)
             .get('.remove_from_cart_button')
-                .eq(0)
-                .click({force:true})
-                .wait(400)
+            .eq(0)
+            .click({force: true})
+            .wait(400)
     })
 
     // it('ado to cart WC product page: external product', () => {
