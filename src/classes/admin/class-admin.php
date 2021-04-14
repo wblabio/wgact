@@ -226,7 +226,7 @@ class Admin
             esc_html__(
                 'Google Analytics 4',
                 'woocommerce-google-adwords-conversion-tracking-tag'
-            ) . $this->svg_beta(),
+            ),
             [$this, 'wgact_option_html_google_analytics_4_id'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']

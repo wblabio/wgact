@@ -487,7 +487,6 @@ jQuery(function () {
     // trigger the add to cart event
     jQuery(document).one('click', function (e) {
 
-
         if (jQuery(this)[0].URL) {
 
             let href         = new URL(jQuery(this)[0].URL);
@@ -507,23 +506,33 @@ jQuery(function () {
     // select_item GA 4 event
     jQuery(document).on('click', '.woocommerce-LoopProduct-link, .wc-block-grid__product', function (e) {
 
-        let productId;
+        // let productId;
+
+        // console.log(this);
 
         // We need one selector for related products on product pages and another one on shop pages
         // because using the .product selector fires twice on product page, and I don't know why.
         // woocommerce-LoopProduct-link avoids this, but requires a different logic to get the product Id
-        if (['shop', 'product_category', 'product_tag', 'search', 'product_shop', 'product'].indexOf(wooptpmDataLayer['shop']['page_type']) > -1) {
-            let name      = jQuery(this).closest('.product');
-            let classes   = name.attr('class');
-            // console.log('testid: ');
+        // if (['shop', 'product_category', 'product_tag', 'search', 'product_shop', 'product'].indexOf(wooptpmDataLayer['shop']['page_type']) > -1) {
+        //     let name      = jQuery(this).closest('.product');
+        //     let classes   = name.attr('class');
+        //     // console.log('testid: ');
+        //
+        //     productId = wooptpm.getPostIdFromString(classes);
+        //     console.log('testid: ' + productId);
+        // } else {
+        //     productId = jQuery(this).find('.add_to_cart_button, .product_type_grouped').data('product_id');
+        // }
 
-            productId = wooptpm.getPostIdFromString(classes);
-            // console.log('testid: ' + productId);
-        } else {
-            productId = jQuery(this).find('.add_to_cart_button, .product_type_grouped').data('product_id');
-        }
+        // let productElement      = jQuery(this).closest('.product');
+        // let classes = productElement.attr('class');
+        // let productId = wooptpm.getPostIdFromString(classes);
+
+        let productId = jQuery(this).nextAll('#wooptpmProductId:first').data('id');
 
         productId = getIdBasedOndVariationsOutputSetting(productId);
+
+        // console.log('prodid: ' + productId);
 
         let data = {
             "id"           : productId.toString(),
