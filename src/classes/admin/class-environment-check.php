@@ -135,6 +135,13 @@ class Environment_Check
         return is_plugin_active('borlabs-cookie/borlabs-cookie.php');
     }
 
+    public function is_wpml_woocommerce_multilingual_active(): bool
+    {
+        // TODO find out if there is a pro version with different folder and file name
+
+        return is_plugin_active('woocommerce-multilingual/wpml-woocommerce.php');
+    }
+
     public function is_woo_discount_rules_active(): bool
     {
         if(is_plugin_active('woo-discount-rules/woo-discount-rules.php') || is_plugin_active('woo-discount-rules-pro/woo-discount-rules-pro.php')){
@@ -241,7 +248,6 @@ class Environment_Check
 
     public function exclude_inline_scripts_from_wp_rocket()
     {
-//        error_log('test');
         $options        = get_option('wp_rocket_settings');
         $update_options = false;
 
@@ -250,28 +256,28 @@ class Environment_Check
         foreach ($js_to_exclude as $string) {
 
             // add exclusions for inline js
-            if (is_array($options['exclude_inline_js']) && !in_array($string, $options['exclude_inline_js'])) {
+            if (array_key_exists('exclude_inline_js', $options) && is_array($options['exclude_inline_js']) && !in_array($string, $options['exclude_inline_js'])) {
 
                 array_push($options['exclude_inline_js'], $string);
                 $update_options = true;
             }
 
             // add exclusions for js
-            if (is_array($options['exclude_js']) && !in_array($string, $options['exclude_js'])) {
+            if (array_key_exists('exclude_js', $options) && is_array($options['exclude_js']) && !in_array($string, $options['exclude_js'])) {
 
                 array_push($options['exclude_js'], $string);
                 $update_options = true;
             }
 
             // remove scripts from delay_js_scripts
-            if (is_array($options['delay_js_scripts']) && in_array($string, $options['delay_js_scripts'])) {
+            if (array_key_exists('delay_js_scripts', $options) && is_array($options['delay_js_scripts']) && in_array($string, $options['delay_js_scripts'])) {
 
                 unset($options['delay_js_scripts'][array_search($string, $options['delay_js_scripts'])]);
                 $update_options = true;
             }
 
             // exclude_defer_js
-            if (is_array($options['exclude_defer_js']) && !in_array($string, $options['exclude_defer_js'])) {
+            if (array_key_exists('exclude_defer_js', $options) && is_array($options['exclude_defer_js']) && !in_array($string, $options['exclude_defer_js'])) {
 
                 array_push($options['exclude_defer_js'], $string);
                 $update_options = true;

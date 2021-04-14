@@ -33,21 +33,12 @@ class Google_Ads extends Google
 
     public function inject_product($product, $product_attributes)
     {
-        $product_details = $this->get_gads_formatted_product_details_from_product_id($product->get_id());
-
-        ?>
-
-                gtag('event', 'view_item', {
-                    'send_to': <?php echo json_encode($this->get_google_ads_conversion_ids()) ?>,
-                    'value'  : <?php echo $product_details['price'] ?>,
-                    'items'  : [<?php echo(json_encode($product_details)) ?>]
-                });
-        <?php
+        // handled on front-end
     }
 
     public function inject_cart($cart, $cart_total)
     {
-//       triggered by front-end scripts
+        // handled on front-end
     }
 
     public function inject_order_received_page($order, $order_total, $is_new_customer)

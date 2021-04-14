@@ -68,6 +68,7 @@ describe('Google gtag events', () => {
 
     // https://github.com/cypress-io/cypress-example-recipes/blob/master/examples/stubbing-spying__google-analytics/cypress/integration/ga-method-stubbing.js
     // https://github.com/cypress-io/cypress-example-recipes/blob/master/examples/stubbing-spying__window-fetch/cypress/integration/spy-on-fetch-spec.js
+
     it('fire gtag add_to_cart on /shop/ page', () => {
 
         cy.visit('/shop/')
@@ -454,10 +455,10 @@ describe('Google gtag events', () => {
 
             // cy.get('@gtag').should('be.calledOnceWith', 'event', 'select_content')
             if (Cypress.env('plugin_version') === 'premium') {
-                cy.get('@gtag').should('be.calledThrice')
-                cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
+                cy.get('@gtag').should('be.calledTwice')
+                cy.get('@gtag').should('be.calledWith', 'event', 'select_item', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
                 cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
-                cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+                // cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
             } else {
                 // no gtag event to be logged in the free version
             }
@@ -479,10 +480,10 @@ describe('Google gtag events', () => {
 
             // cy.get('@gtag').should('be.calledOnceWith', 'event', 'select_content')
             if (Cypress.env('plugin_version') === 'premium') {
-                cy.get('@gtag').should('be.calledThrice')
-                cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
+                cy.get('@gtag').should('be.calledTwice')
+                cy.get('@gtag').should('be.calledWith', 'event', 'select_item', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
                 cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
-                cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+                // cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
             } else {
                 // no gtag event to be logged in the free version
 
@@ -505,10 +506,10 @@ describe('Google gtag events', () => {
 
             // cy.get('@gtag').should('be.calledOnceWith', 'event', 'select_content')
             if (Cypress.env('plugin_version') === 'premium') {
-                cy.get('@gtag').should('be.calledThrice')
-                cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
+                cy.get('@gtag').should('be.calledTwice')
+                cy.get('@gtag').should('be.calledWith', 'event', 'select_item', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
                 cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
-                cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+                // cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
             } else {
                 // no gtag event to be logged in the free version
 
@@ -533,10 +534,10 @@ describe('Google gtag events', () => {
 
             // cy.get('@gtag').should('be.calledOnceWith', 'event', 'select_content')
             if (Cypress.env('plugin_version') === 'premium') {
-                cy.get('@gtag').should('be.calledThrice')
-                cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
+                cy.get('@gtag').should('be.calledTwice')
+                cy.get('@gtag').should('be.calledWith', 'event', 'select_item', Cypress.sinon.match.has("send_to", "G-YQBXCRGVLT"))
                 cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", "UA-39746956-9"))
-                cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
+                // cy.get('@gtag').should('be.calledWith', 'event', 'select_content', Cypress.sinon.match.has("send_to", ["AW-965183221"]))
             } else {
                 // no gtag event to be logged in the free version
 

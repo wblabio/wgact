@@ -173,13 +173,21 @@ class Pixel_Manager extends Pixel_Manager_Base
 
     private function get_product_data_layer_script($product, $set_position = true): string
     {
+        global $woocommerce_wpml;
+
         $this->dyn_r_ids = $this->get_dyn_r_ids($product);
 
+        if ((new Environment_Check())->is_wpml_woocommerce_multilingual_active()) {
+            $price = $woocommerce_wpml->multi_currency->prices->get_product_price_in_currency($product->get_id(), get_woocommerce_currency());
+        } else {
+            $price = $product->get_price();
+        }
+
         $data = [
-            'id'          => (string)$product->get_id(),
-            'sku'         => (string)$product->get_sku(),
-            'name'        => (string)$product->get_name(),
-            'price'       => (int)$product->get_price(),
+            'id'    => (string)$product->get_id(),
+            'sku'   => (string)$product->get_sku(),
+            'name'  => (string)$product->get_name(),
+            'price' => (int)$price,
             'brand'       => $this->get_brand_name($product->get_id()),
             'category'    => (array)$this->get_product_category($product->get_id()),
             'quantity'    => (int)1,

@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, conversion tracking, dynamic retargeting, remarke
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 7.2
-Stable tag: 1.9.0-beta.1
+Stable tag: 1.9.0-beta.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,10 +103,14 @@ You can send the link to the front page of your shop too if you think it would b
 
 == Changelog ==
 
-= 1.8.29 =
+= 1.9.0 =
 
 [//]: # fs_premium_only_begin
 * New: Implemented view_item event for variations when selected on the product page
+[//]: # fs_premium_only_end
+[//]: # fs_premium_only_begin
+* Tweak: Use proper select_item event in GA4 not the deprecated select_content event anymore
+* Tweak: Moved view_item event processing entirely to front-end
 [//]: # fs_premium_only_end
 * Tweak: Additional caching exclusions for SG Optimizer
 * Tweak: Changed the gtag code in order to make it better testable
@@ -115,6 +119,8 @@ You can send the link to the front page of your shop too if you think it would b
 * Tweak: Refactored view_item_list event entirely to be unaffected by caching mechanisms
 * Tweak: Added a new view_item_list trigger with some interesting options
 * Fix: Fixed front-end triggers for Google and Facebook to only fire if the pixels are enabled
+* Fix: Fixed an array check if an old WP Rocket version was installed and threw a notice about a missing array index
+* Fix: Output correct price if WPML Multilingual with Multi-currency is running
 
 = 1.8.28 =
 

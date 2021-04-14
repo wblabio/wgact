@@ -2,11 +2,11 @@
 
     wooptpm.getCartItemsGa4 = function () {
 
-        let product = [];
+        let data = [];
 
         for (const [productId, product] of Object.entries(wooptpmDataLayer.cart)) {
 
-            product.push({
+            data.push({
                 'item_id'  : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
                 'item_name': product.name,
                 'quantity' : product.quantity,
@@ -21,7 +21,7 @@
             });
         }
 
-        return product;
+        return data;
     }
 
 }(window.wooptpm = window.wooptpm || {}, jQuery));
@@ -61,7 +61,7 @@ jQuery(function () {
             });
         });
 
-        // select_content event
+        // select_item event
         jQuery(document).on('wooptpmSelectItem', function (event, product) {
 
             // console.log('firing google select_content event');
@@ -192,4 +192,34 @@ jQuery(function () {
             });
         });
     }
+});
+
+jQuery(window).on('load', function () {
+
+    wooptpmExists().then(function () {
+
+        if (wooptpmDataLayer.shop.page_type === 'product' && wooptpm.getMainProductIdFromProductPage()) {
+
+            let product = wooptpm.getProductDataForViewItemEvent(wooptpm.getMainProductIdFromProductPage());
+
+            gtag("event", "view_item", {
+                "send_to": wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id,
+                // "currency": "",
+                "value": 1 * product.price,
+                "items"  : [{
+                    "item_id"      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
+                    "item_name"    : product.name,
+                    // "coupon": "",
+                    // "discount": 0,
+                    // "affiliation": "",
+                    "item_brand"   : product.brand,
+                    "item_category": product.category,
+                    "item_variant" : product.variant,
+                    "price"   : product.price,
+                    // "currency": "",
+                    "quantity": 1,
+                }]
+            });
+        }
+    })
 });

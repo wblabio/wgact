@@ -2,11 +2,11 @@
 
     wooptpm.getCartItemsGaUa = function () {
 
-        let product = [];
+        let data = [];
 
         for (const [productId, product] of Object.entries(wooptpmDataLayer.cart)) {
 
-            product.push({
+            data.push({
                 'id'      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
                 'name'    : product.name,
                 'brand'   : product.brand,
@@ -20,7 +20,7 @@
             });
         }
 
-        return product;
+        return data;
     }
 
 }(window.wooptpm = window.wooptpm || {}, jQuery));
@@ -171,12 +171,12 @@ jQuery(function () {
                 "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
                 "items"  : [
                     {
-                        "id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
-                        "name": product.name,
+                        "id"       : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
+                        "name"     : product.name,
                         "list_name": wooptpmDataLayer.shop.list_name,
-                        "brand"   : product.brand,
-                        "category": product.category,
-                        "variant" : product.variant,
+                        "brand"    : product.brand,
+                        "category" : product.category,
+                        "variant"  : product.variant,
                         // "list_position": product.list_position, // doesn't make sense on mini_cart
                         "quantity": product.quantity,
                         "price"   : product.price
@@ -211,4 +211,31 @@ jQuery(function () {
             });
         });
     }
+});
+
+jQuery(window).on('load', function () {
+
+    wooptpmExists().then(function () {
+
+        if (wooptpmDataLayer.shop.page_type === 'product' && wooptpm.getMainProductIdFromProductPage()) {
+
+            let product = wooptpm.getProductDataForViewItemEvent(wooptpm.getMainProductIdFromProductPage());
+
+            gtag("event", "view_item", {
+                "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
+                "items"  : [{
+                    "id"      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
+                    "name"    : product.name,
+                    "brand"   : product.brand,
+                    "category": product.category,
+                    // "coupon": "",
+                    // "list_name": "",
+                    // "list_position": 1,
+                    "price"   : product.price,
+                    "quantity": 1,
+                    "variant" : product.variant,
+                }]
+            });
+        }
+    })
 });

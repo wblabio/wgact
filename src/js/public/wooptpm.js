@@ -285,7 +285,11 @@
 
         productId = getIdBasedOndVariationsOutputSetting(productId);
 
-        let data = {
+        jQuery(document).trigger('wooptpmViewItemList', wooptpm.getProductDataForViewItemEvent(productId));
+    }
+
+    wooptpm.getProductDataForViewItemEvent = function (productId) {
+        return {
             "id"           : productId.toString(),
             "dyn_r_ids"    : wooptpmDataLayer['products'][productId]['dyn_r_ids'],
             "name"         : wooptpmDataLayer['products'][productId]['name'],
@@ -298,8 +302,18 @@
             "price"        : wooptpmDataLayer['products'][productId]['price'],
             "currency"     : wooptpmDataLayer.shop.currency
         };
+    }
 
-        jQuery(document).trigger('wooptpmViewItemList', data);
+    wooptpm.getMainProductIdFromProductPage = function() {
+        if(wooptpmDataLayer.shop.product_type === 'simple'){
+            return jQuery('.single_add_to_cart_button').val();
+        } else if (wooptpmDataLayer.shop.product_type === 'variable'){
+            return jQuery('.woocommerce-variation-add-to-cart').find('[name="add-to-cart"]').val();
+        } else if (wooptpmDataLayer.shop.product_type === 'grouped'){
+            return jQuery('.grouped_form').find('[name="add-to-cart"]').val();
+        } else {
+            return false;
+        }
     }
 
     wooptpm.viewItemListTriggerTestMode = function (target) {

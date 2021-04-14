@@ -80,26 +80,26 @@ class Google_Analytics extends Google
         ];
     }
 
-    public function inject_product_list_object($list_id)
-    {
-        global $wp_query;
-
-        $items = [];
-
-        $position = 1;
-
-        $posts = $wp_query->posts;
-
-        foreach ($posts as $key => $post) {
-
-            if ($post->post_type == 'product' || $post->post_type == 'product_variation') {
-
-                array_push($items, $this->eec_appweb_get_product_details_array($post->ID, $list_id, $position));
-
-                $position++;
-            }
-        }
-
-        $this->output_view_item_list_html($items, $list_id);
-    }
+//    public function inject_product_list_object($list_id)
+//    {
+//        global $wp_query;
+//
+//        $items = [];
+//
+//        $position = 1;
+//
+//        $posts = $wp_query->posts;
+//
+//        foreach ($posts as $key => $post) {
+//
+//            if ($post->post_type == 'product' || $post->post_type == 'product_variation') {
+//
+//                array_push($items, $this->eec_appweb_get_product_details_array($post->ID, $list_id, $position));
+//
+//                $position++;
+//            }
+//        }
+//
+//        $this->output_view_item_list_html($items, $list_id);
+//    }
 }

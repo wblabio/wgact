@@ -90,13 +90,12 @@ function wooptpm_product_id_type_for_google_analytics()
     return 'sku';
 }
 
- add_filter('wgact_google_ads_conversion_identifiers', 'wgact_add_conversion_identifiers');
-function wgact_add_conversion_identifiers($conversion_identifiers)
+// add_filter('wgact_google_ads_conversion_identifiers', 'wgact_google_ads_conversion_identifiers');
+function wgact_google_ads_conversion_identifiers($conversion_identifiers)
 {
-    return array_replace($conversion_identifiers, [
-        'CONVERSION_ID_2' => 'CONVERSION_LABEL_2',
-        'CONVERSION_ID_3' => 'CONVERSION_LABEL_2'
-    ]);
+    $conversion_identifiers['CONVERSION_ID_2'] = 'CONVERSION_LABEL_2';
+    $conversion_identifiers['CONVERSION_ID_3'] = 'CONVERSION_LABEL_3';
+    return $conversion_identifiers;
 }
 
 // add_filter('wgdr_third_party_cookie_prevention', '__return_true');
