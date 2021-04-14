@@ -118,8 +118,9 @@ jQuery(function () {
             // console.log(product);
 
             gtag('event', 'add_to_cart', {
-                "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
-                "items"  : [
+                "send_to" : wooptpmDataLayer.pixels.google.analytics.universal.property_id,
+                "currency": wooptpmDataLayer.shop.currency,
+                "items"   : [
                     {
                         "id"           : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
                         "name"         : product.name,
@@ -169,6 +170,7 @@ jQuery(function () {
 
             gtag('event', 'remove_from_cart', {
                 "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
+                "currency": wooptpmDataLayer.shop.currency,
                 "items"  : [
                     {
                         "id"       : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
@@ -192,8 +194,9 @@ jQuery(function () {
             // console.log(product);
 
             gtag('event', 'begin_checkout', {
-                "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
-                "items"  : wooptpm.getCartItemsGaUa()
+                "send_to" : wooptpmDataLayer.pixels.google.analytics.universal.property_id,
+                "currency": wooptpmDataLayer.shop.currency,
+                "items"   : wooptpm.getCartItemsGaUa()
             });
         });
 

@@ -195,7 +195,7 @@
             "list_position": wooptpmDataLayer['products'][id]['position'],
             "quantity"     : quantity,
             "price"        : wooptpmDataLayer['products'][id]['price'],
-            "currency"     : wooptpmDataLayer.shop.currency
+            "currency"     : wooptpmDataLayer.shop.currency,
         };
 
         // console.log(data);
@@ -300,7 +300,7 @@
             "list_position": wooptpmDataLayer['products'][productId]['position'],
             "quantity"     : 1,
             "price"        : wooptpmDataLayer['products'][productId]['price'],
-            "currency"     : wooptpmDataLayer.shop.currency
+            "currency"     : wooptpmDataLayer.shop.currency,
         };
     }
 

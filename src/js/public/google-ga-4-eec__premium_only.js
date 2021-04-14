@@ -7,17 +7,17 @@
         for (const [productId, product] of Object.entries(wooptpmDataLayer.cart)) {
 
             data.push({
-                'item_id'  : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
-                'item_name': product.name,
-                'quantity' : product.quantity,
-                // 'affiliation'  : '',
-                // 'coupon'       : '',
-                // 'discount'     : 0,
-                'item_brand'   : product.brand,
-                'item_category': product.category,
-                'item_variant' : product.variant,
-                'price'        : product.price,
-                'currency'     : '',
+                "item_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
+                "item_name": product.name,
+                "quantity" : product.quantity,
+                // "affiliation'  : '',
+                // "coupon"       : '',
+                // "discount"     : 0,
+                "item_brand"   : product.brand,
+                "item_category": product.category,
+                "item_variant" : product.variant,
+                "price"        : product.price,
+                "currency"     : wooptpmDataLayer.shop.currency,
             });
         }
 
@@ -53,7 +53,7 @@ jQuery(function () {
                     "item_category": product.category,
                     "item_variant" : product.variant,
                     "price"        : product.price,
-                    // "currency": "",
+                    "currency"     : wooptpmDataLayer.shop.currency,
                     "quantity": product.quantity,
                 }],
                 "item_list_name": product.list_name, // doesn't make sense on mini_cart
@@ -83,7 +83,7 @@ jQuery(function () {
                     "item_category": product.category,
                     "item_variant" : product.variant,
                     "price"        : product.price,
-                    // "currency": "",
+                    "currency"     : wooptpmDataLayer.shop.currency,
                     "quantity": product.quantity,
                 }],
             });
@@ -98,7 +98,7 @@ jQuery(function () {
 
             gtag('event', 'add_to_cart', {
                 "send_to": wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id,
-                // "currency": "",
+                "currency"     : wooptpmDataLayer.shop.currency,
                 // "value": 0,
                 "items": [
                     {
@@ -112,7 +112,7 @@ jQuery(function () {
                         "item_category": product.category,
                         "item_variant" : product.variant,
                         "price"        : product.price,
-                        "currency"     : "",
+                        "currency"     : wooptpmDataLayer.shop.currency,
                         "quantity"     : product.quantity,
                     }
                 ]
@@ -128,7 +128,7 @@ jQuery(function () {
 
             gtag('event', 'view_item', {
                 "send_to": wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id,
-                // "currency": "",
+                "currency"     : wooptpmDataLayer.shop.currency,
                 // "value": 0,
                 "items": [
                     {
@@ -141,7 +141,7 @@ jQuery(function () {
                         "item_category": product.category,
                         "item_variant" : product.variant,
                         "price"        : product.price,
-                        // "currency"     : "",
+                        "currency"     : wooptpmDataLayer.shop.currency,
                         "quantity": 1,
                     }
                 ]
@@ -157,7 +157,7 @@ jQuery(function () {
 
             gtag('event', 'remove_from_cart', {
                 "send_to": wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id,
-                // "currency": "",
+                "currency"     : wooptpmDataLayer.shop.currency,
                 // "value": 0,
                 "items": [
                     {
@@ -170,7 +170,7 @@ jQuery(function () {
                         "item_category": product.category,
                         "item_variant" : product.variant,
                         "price"        : product.price,
-                        // "currency": "",
+                        "currency"     : wooptpmDataLayer.shop.currency,
                         "quantity": product.quantity,
                     }
                 ]
@@ -186,7 +186,7 @@ jQuery(function () {
             gtag('event', 'begin_checkout', {
                 "send_to": wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id,
                 // "coupon": "",
-                // "currency": "",
+                "currency"     : wooptpmDataLayer.shop.currency,
                 // "value": 0,
                 "items": wooptpm.getCartItemsGa4()
             });
@@ -204,7 +204,7 @@ jQuery(window).on('load', function () {
 
             gtag("event", "view_item", {
                 "send_to": wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id,
-                // "currency": "",
+                "currency"     : wooptpmDataLayer.shop.currency,
                 "value": 1 * product.price,
                 "items"  : [{
                     "item_id"      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
@@ -216,7 +216,7 @@ jQuery(window).on('load', function () {
                     "item_category": product.category,
                     "item_variant" : product.variant,
                     "price"   : product.price,
-                    // "currency": "",
+                    "currency"     : wooptpmDataLayer.shop.currency,
                     "quantity": 1,
                 }]
             });
