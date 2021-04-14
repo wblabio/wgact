@@ -135,11 +135,15 @@ class Environment_Check
         return is_plugin_active('borlabs-cookie/borlabs-cookie.php');
     }
 
-    public function is_wpml_woocommerce_multilingual_active(): bool
+    public function is_wpml_woocommerce_multi_currency_active(): bool
     {
-        // TODO find out if there is a pro version with different folder and file name
+        global $woocommerce_wpml;
 
-        return is_plugin_active('woocommerce-multilingual/wpml-woocommerce.php');
+        if(is_plugin_active('woocommerce-multilingual/wpml-woocommerce.php') && is_object($woocommerce_wpml->multi_currency)){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function is_woo_discount_rules_active(): bool

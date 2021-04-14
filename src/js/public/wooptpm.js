@@ -278,6 +278,7 @@
     }
 
     wooptpm.getPostIdFromString = function (string) {
+        // console.log(string);
         return string.match(/(post-)(\d+)/)[2];
     }
 
@@ -368,6 +369,11 @@
         });
     }
 
+    wooptpm.getSearchTermFromUrl = function (){
+        let urlParameters = new URLSearchParams(window.location.search)
+        return urlParameters.get('s');
+    }
+
 
     // return {
     // writeOrderIdToStorage  : writeOrderIdToStorage,
@@ -391,7 +397,7 @@ jQuery(function () {
     const io = new IntersectionObserver(wooptpm.observerCallback, {threshold: wooptpmDataLayer.viewItemListTrigger.threshold});
 
     let ioid = 0;
-    document.querySelectorAll('.wc-block-grid__product, .product:not(.product-category):not(.woocommerce-grouped-product-list-item)')
+    document.querySelectorAll('.wc-block-grid__product, .product:not(.product-category):not(.woocommerce-grouped-product-list-item):not(.wcml_currency_switcher)')
         .forEach(elem => {
 
             // Skip first element on a product page
@@ -509,7 +515,10 @@ jQuery(function () {
         if (['shop', 'product_category', 'product_tag', 'search', 'product_shop', 'product'].indexOf(wooptpmDataLayer['shop']['page_type']) > -1) {
             let name      = jQuery(this).closest('.product');
             let classes   = name.attr('class');
+            // console.log('testid: ');
+
             productId = wooptpm.getPostIdFromString(classes);
+            // console.log('testid: ' + productId);
         } else {
             productId = jQuery(this).find('.add_to_cart_button, .product_type_grouped').data('product_id');
         }

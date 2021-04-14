@@ -37,10 +37,17 @@ describe('Google Analytics eec events', () => {
         // wait in order for the add_to_cart events to register
         cy.wait(400)
 
+        // cy.intercept('POST', 'https://wordpress-deployment.test/?wc-ajax=add_to_cart').as('atc')
+
         // add to an item to the cart
         cy.get('.add_to_cart_button')
             .eq(0)
             .click()
+
+        // cy.wait('@atc')
+
+        // wait for WC Ajax event to update cart
+        cy.wait(400)
 
         // cy.contains('Add to cart')
         //     .click()
@@ -73,10 +80,17 @@ describe('Google Analytics eec events', () => {
         // wait in order for the add_to_cart events to register
         cy.wait(400)
 
+        // cy.intercept('POST', 'https://wordpress-deployment.test/?wc-ajax=get_refreshed_fragments').as('atc')
+
         // add to an item to the cart
         cy.get('.single_add_to_cart_button')
             .eq(0)
             .click()
+
+        // cy.wait('@atc')
+
+        // wait for WC Ajax event to update cart
+        cy.wait(400)
 
         cy.window()
             .its('wooptpmDataLayer.cart')
@@ -106,9 +120,15 @@ describe('Google Analytics eec events', () => {
             .get('#logo')
             .select('Yes')
 
+        // cy.intercept('POST', 'https://wordpress-deployment.test/?wc-ajax=get_refreshed_fragments').as('atc')
 
         cy.contains('Add to cart')
             .click()
+
+        // cy.wait('@atc')
+
+        // wait for WC Ajax event to update cart
+        cy.wait(400)
 
         cy.window()
             .its('wooptpmDataLayer.cart')
@@ -143,8 +163,15 @@ describe('Google Analytics eec events', () => {
             .eq(2)
             .type('5')
 
+        // cy.intercept('POST', 'https://wordpress-deployment.test/?wc-ajax=get_refreshed_fragments').as('atc')
+
         cy.contains('Add to cart')
             .click()
+
+        // cy.wait('@atc')
+
+        // wait for WC Ajax event to update cart
+        cy.wait(400)
 
         cy.window()
             .its('wooptpmDataLayer.cart')

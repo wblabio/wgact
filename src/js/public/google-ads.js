@@ -101,10 +101,26 @@ jQuery(window).on('load', function () {
                 "value"  : 1 * product.price,
                 "items"  : [{
                     "id"                      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
-                    "quantity"                : 1,
-                    "price"                   : product.price,
                     "google_business_vertical": wooptpmDataLayer.pixels.google.ads.google_business_vertical
                 }]
+            });
+        } else if (wooptpmDataLayer.shop.page_type === 'search'){
+
+            let products = [];
+
+            for (const [key, product] of Object.entries(wooptpmDataLayer.products)) {
+                products.push({
+                    "id": product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
+                    "google_business_vertical": wooptpmDataLayer.pixels.google.ads.google_business_vertical
+                });
+            }
+
+            // console.log(products);
+
+            gtag("event", "view_search_results", {
+                "send_to": wooptpmDataLayer.pixels.google.ads.conversionIds,
+                // "value"  : 1 * product.price,
+                "items"  : products
             });
         }
     })

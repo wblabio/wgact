@@ -177,9 +177,12 @@ class Pixel_Manager extends Pixel_Manager_Base
 
         $this->dyn_r_ids = $this->get_dyn_r_ids($product);
 
-        if ((new Environment_Check())->is_wpml_woocommerce_multilingual_active()) {
+        if ((new Environment_Check())->is_wpml_woocommerce_multi_currency_active()) {
+            error_log('wpml mc active');
             $price = $woocommerce_wpml->multi_currency->prices->get_product_price_in_currency($product->get_id(), get_woocommerce_currency());
         } else {
+            error_log('wpml mc inactive');
+
             $price = $product->get_price();
         }
 
