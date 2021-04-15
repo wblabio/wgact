@@ -285,10 +285,6 @@ class Pixel_Manager extends Pixel_Manager_Base
             'threshold'       => 0.8,
         ];
 
-        if (isset($_GET["vildemomode"])) {
-            $settings['testMode'] = true;
-        }
-
         return apply_filters('wooptpm_view_item_list_trigger_settings', $settings);
     }
 

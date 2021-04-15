@@ -398,36 +398,36 @@ jQuery(function () {
 
     // fire view_item_list only on products that have become visible
     const io = new IntersectionObserver(wooptpm.observerCallback, {threshold: wooptpmDataLayer.viewItemListTrigger.threshold});
-
     let ioid = 0;
 
-    let elementsWithParents = jQuery('.wooptpmProductId').parent()
-        .filter(function () {
-            if (jQuery(this).hasClass('type-product') || jQuery(this).hasClass('product')) {
-                return this;
-            }
-        });
+    // enable view_item_list test mode from browser
+    let urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('vildemomode')) wooptpmDataLayer.viewItemListTrigger.testMode = true;
 
-    let elementsWithSiblings = jQuery('.wooptpmProductId').prev()
-        .filter(function () {
-            if (
-                jQuery(this).hasClass('wc-block-grid__product') ||
-                jQuery(this).hasClass('product-small') ||
-                jQuery(this).hasClass('product') ||
-                jQuery(this).hasClass('woocommerce-LoopProduct-link')
+    let allElementsToWatch = jQuery('.wooptpmProductId')
+        .map(function (i, elem) {
+            // console.log(elem);
+            if (jQuery(elem).parent().hasClass('type-product') || jQuery(elem).parent().hasClass('product')) {
+                // console.log(elem);
+                return jQuery(elem).parent();
+            } else if (
+                jQuery(elem).prev().hasClass('wc-block-grid__product') ||
+                jQuery(elem).prev().hasClass('product') ||
+                jQuery(elem).prev().hasClass('product-small') ||
+                jQuery(elem).prev().hasClass('woocommerce-LoopProduct-link')
             ) {
-                return this;
+                return jQuery(this).prev();
             }
         });
 
-    let allElementsToWatch = jQuery.merge(elementsWithParents, elementsWithSiblings);
+    // console.log(allElementsToWatch);
 
     allElementsToWatch.each(function (i, elem) {
-        // console.log('test');
-        // jQuery(elem).attr('data-ioid', ioid++);
-        jQuery(elem).data('ioid', ioid++);
+        // console.log(elem[0]);
+        jQuery(elem[0]).attr('data-ioid', ioid++);
+        jQuery(elem[0]).data('ioid', ioid++);
 
-        io.observe(elem)
+        io.observe(elem[0])
     });
 
     // remove_from_cart event
