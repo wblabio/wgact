@@ -173,9 +173,9 @@ describe('Google Analytics eec events', () => {
         // wait for WC Ajax event to update cart
         cy.wait(400)
 
-        cy.window()
-            .its('wooptpmDataLayer.cart')
-            .should('not.be.empty')
+            cy.window()
+                .its('wooptpmDataLayer.cart')
+                .should('not.be.empty')
 
         //remove the product from the cart
         cy.get('[id="site-header-cart"]')
