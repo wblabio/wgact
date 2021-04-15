@@ -507,11 +507,12 @@ jQuery(function () {
 
     // select_content GA UA event
     // select_item GA 4 event
-    jQuery(document).on('click', '.woocommerce-LoopProduct-link, .wc-block-grid__product', function (e) {
+    // jQuery(document).on('click', '.woocommerce-LoopProduct-link, .wc-block-grid__product, .product-small.box', function (e) {
+        jQuery(document).on('click', '.woocommerce-LoopProduct-link, .wc-block-grid__product, .product, .product-small, .type-product', function (e) {
 
         // let productId;
 
-        // console.log(this);
+        // console.log(this.attr('class');
 
         // We need one selector for related products on product pages and another one on shop pages
         // because using the .product selector fires twice on product page, and I don't know why.
@@ -533,25 +534,28 @@ jQuery(function () {
 
         let productId = jQuery(this).nextAll('#wooptpmProductId:first').data('id');
 
-        productId = getIdBasedOndVariationsOutputSetting(productId);
+        if(productId){
 
-        // console.log('prodid: ' + productId);
+            productId = getIdBasedOndVariationsOutputSetting(productId);
 
-        let data = {
-            "id"           : productId.toString(),
-            "dyn_r_ids"    : wooptpmDataLayer['products'][productId]['dyn_r_ids'],
-            "name"         : wooptpmDataLayer['products'][productId]['name'],
-            "list_name"    : wooptpmDataLayer['shop']['list_name'],
-            "brand"        : wooptpmDataLayer['products'][productId]['brand'],
-            "category"     : wooptpmDataLayer['products'][productId]['category'],
-            "variant"      : wooptpmDataLayer['products'][productId]['variant'],
-            "list_position": wooptpmDataLayer['products'][productId]['position'],
-            "quantity"     : 1,
-            "price"        : wooptpmDataLayer['products'][productId]['price']
-        };
+            // console.log('prodid: ' + productId);
 
-        jQuery(document).trigger('wooptpmSelectContentGaUa', data);
-        jQuery(document).trigger('wooptpmSelectItem', data);
+            let data = {
+                "id"           : productId.toString(),
+                "dyn_r_ids"    : wooptpmDataLayer['products'][productId]['dyn_r_ids'],
+                "name"         : wooptpmDataLayer['products'][productId]['name'],
+                "list_name"    : wooptpmDataLayer['shop']['list_name'],
+                "brand"        : wooptpmDataLayer['products'][productId]['brand'],
+                "category"     : wooptpmDataLayer['products'][productId]['category'],
+                "variant"      : wooptpmDataLayer['products'][productId]['variant'],
+                "list_position": wooptpmDataLayer['products'][productId]['position'],
+                "quantity"     : 1,
+                "price"        : wooptpmDataLayer['products'][productId]['price']
+            };
+
+            jQuery(document).trigger('wooptpmSelectContentGaUa', data);
+            jQuery(document).trigger('wooptpmSelectItem', data);
+        }
     });
 
     // begin_checkout event
