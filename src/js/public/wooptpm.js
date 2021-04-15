@@ -260,7 +260,7 @@
                 success : function (cart_items) {
                     // save all cart items into wooptpmDataLayer
                     // console.log(cart_items['cart']);
-                    wooptpmDataLayer['cart']          = cart_items['cart'];
+                    wooptpmDataLayer['cart']  = cart_items['cart'];
                     // wooptpmDataLayer.products = {... wooptpmDataLayer.products, ...cart_items['cart']};
                     wooptpmDataLayer.products = Object.assign({}, wooptpmDataLayer.products, cart_items['cart']);
 
@@ -308,12 +308,12 @@
         };
     }
 
-    wooptpm.getMainProductIdFromProductPage = function() {
-        if(wooptpmDataLayer.shop.product_type === 'simple'){
+    wooptpm.getMainProductIdFromProductPage = function () {
+        if (wooptpmDataLayer.shop.product_type === 'simple') {
             return jQuery('.single_add_to_cart_button').val();
-        } else if (wooptpmDataLayer.shop.product_type === 'variable'){
+        } else if (wooptpmDataLayer.shop.product_type === 'variable') {
             return jQuery('.woocommerce-variation-add-to-cart').find('[name="add-to-cart"]').val();
-        } else if (wooptpmDataLayer.shop.product_type === 'grouped'){
+        } else if (wooptpmDataLayer.shop.product_type === 'grouped') {
             return jQuery('.grouped_form').find('[name="add-to-cart"]').val();
         } else {
             return false;
@@ -344,15 +344,15 @@
         entries.forEach((entry) => {
 
             let elementId = jQuery(entry.target).data('ioid');
-            let productId = jQuery(entry.target).find('.add_to_cart_button, .product_type_grouped').data('product_id');
+            let productId = jQuery(entry.target).next('.wooptpmProductId').data('id');
 
-            // for instance if the add-to-cart buttons are turned off
-            if(!productId){
-                // productId = jQuery(entry.target).find("[name='add-to-cart']").val();
+            if (!productId) {
+                productId = jQuery(entry.target).find('.wooptpmProductId').data('id');
+            }
 
-                let classes   = jQuery(entry.target).attr('class');
-                productId = wooptpm.getPostIdFromString(classes);
-                // console.log('prodid: ' + productId);
+            if (!productId) {
+                console.log('wooptpmProductId element not found');
+                return;
             }
 
             if (entry.isIntersecting) {
@@ -372,7 +372,7 @@
         });
     }
 
-    wooptpm.getSearchTermFromUrl = function (){
+    wooptpm.getSearchTermFromUrl = function () {
         let urlParameters = new URLSearchParams(window.location.search)
         return urlParameters.get('s');
     }
@@ -400,18 +400,35 @@ jQuery(function () {
     const io = new IntersectionObserver(wooptpm.observerCallback, {threshold: wooptpmDataLayer.viewItemListTrigger.threshold});
 
     let ioid = 0;
-    document.querySelectorAll('.wc-block-grid__product, .product:not(.product-category):not(.woocommerce-grouped-product-list-item):not(.wcml_currency_switcher)')
-        .forEach(elem => {
 
-            // Skip first element on a product page
-            // because we don't want to measure the main product
-            if (wooptpmDataLayer.shop.page_type === 'product' && ioid === 0) return ioid++;
-
-            // jQuery(elem).attr('data-ioid', ioid++);
-            jQuery(elem).data('ioid', ioid++);
-
-            io.observe(elem)
+    let elementsWithParents = jQuery('.wooptpmProductId').parent()
+        .filter(function () {
+            if (jQuery(this).hasClass('type-product') || jQuery(this).hasClass('product')) {
+                return this;
+            }
         });
+
+    let elementsWithSiblings = jQuery('.wooptpmProductId').prev()
+        .filter(function () {
+            if (
+                jQuery(this).hasClass('wc-block-grid__product') ||
+                jQuery(this).hasClass('product-small') ||
+                jQuery(this).hasClass('product') ||
+                jQuery(this).hasClass('woocommerce-LoopProduct-link')
+            ) {
+                return this;
+            }
+        });
+
+    let allElementsToWatch = jQuery.merge(elementsWithParents, elementsWithSiblings);
+
+    allElementsToWatch.each(function (i, elem) {
+        // console.log('test');
+        // jQuery(elem).attr('data-ioid', ioid++);
+        jQuery(elem).data('ioid', ioid++);
+
+        io.observe(elem)
+    });
 
     // remove_from_cart event
     jQuery(document).on('click', '.remove_from_cart_button, .remove', function (e) {
@@ -508,7 +525,7 @@ jQuery(function () {
     // select_content GA UA event
     // select_item GA 4 event
     // jQuery(document).on('click', '.woocommerce-LoopProduct-link, .wc-block-grid__product, .product-small.box', function (e) {
-        jQuery(document).on('click', '.woocommerce-LoopProduct-link, .wc-block-grid__product, .product, .product-small, .type-product', function (e) {
+    jQuery(document).on('click', '.woocommerce-LoopProduct-link, .wc-block-grid__product, .product, .product-small, .type-product', function (e) {
 
         // let productId;
 
@@ -532,12 +549,12 @@ jQuery(function () {
         // let classes = productElement.attr('class');
         // let productId = wooptpm.getPostIdFromString(classes);
 
-        let productId = jQuery(this).nextAll('#wooptpmProductId:first').data('id');
+        let productId = jQuery(this).nextAll('.wooptpmProductId:first').data('id');
 
         // On product pages, for some reason, the click event is triggered on the main product on page load.
         // In that case no ID is found. But we can discard it, since we only want to trigger the event on
         // related products, which are found below.
-        if(productId){
+        if (productId) {
 
             productId = getIdBasedOndVariationsOutputSetting(productId);
 
@@ -605,7 +622,7 @@ jQuery(function () {
             let cartItemKey  = searchParams.get('remove_item');
             // alert('cart_item_key: ' + cartItemKey);
             // console.log('cart_item_key: ' + cartItemKey);
-            let productId    = wooptpmDataLayer['cart_item_keys'][cartItemKey]['id'];
+            let productId = wooptpmDataLayer['cart_item_keys'][cartItemKey]['id'];
 
             let quantity = jQuery(this).find('.qty').val();
 
@@ -624,7 +641,7 @@ jQuery(function () {
 
     // Fired when the user selects all the required dropdowns / attributes
     // https://stackoverflow.com/a/27849208/4688612
-    jQuery( ".single_variation_wrap" ).on( "show_variation", function ( event, variation ) {
+    jQuery(".single_variation_wrap").on("show_variation", function (event, variation) {
 
         // Fired when the user selects all the required dropdowns / attributes
         // console.log('product selected');
@@ -648,7 +665,7 @@ jQuery(function () {
         };
 
         jQuery(document).trigger('wooptpmViewItem', data);
-    } );
+    });
 });
 
 

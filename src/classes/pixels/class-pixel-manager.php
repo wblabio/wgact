@@ -217,7 +217,7 @@ class Pixel_Manager extends Pixel_Manager_Base
         }
 
         $html = "
-            <input type='hidden' id='wooptpmProductId' data-id='" . $product->get_id() . "'>
+            <input type='hidden' class='wooptpmProductId' data-id='" . $product->get_id() . "'>
             <script>
                 window.wooptpmDataLayer.products = window.wooptpmDataLayer.products || {};
                 window.wooptpmDataLayer.products[" . $product->get_id() . "] = " . json_encode($data) . ";";
@@ -284,6 +284,10 @@ class Pixel_Manager extends Pixel_Manager_Base
             'timeout'         => 1000,
             'threshold'       => 0.8,
         ];
+
+        if (isset($_GET["vildemomode"])) {
+            $settings['testMode'] = true;
+        }
 
         return apply_filters('wooptpm_view_item_list_trigger_settings', $settings);
     }
