@@ -19,10 +19,12 @@ class Google_Analytics_UA extends Google_Analytics
         $order_currency = $this->get_order_currency($order);
 
         echo "
-                wooptpmExists().then(function(){
+                 wooptpmExists().then(function(){
                     if  (!wooptpm.isOrderIdStored(" . $order->get_order_number() . ")) {
                         gtag('event', 'purchase', " . $this->get_event_purchase_json($order, $order_total, $order_currency, $is_new_customer) . ")
                     }
+                }).catch(() => {
+                    console.log('couldn\'t run gtag for GA UA');
                 });
         ";
     }

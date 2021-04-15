@@ -79,7 +79,9 @@
 
     wooptpm.isOrderIdStored = function (orderId) {
 
+        // console.log('deduper: ' + wooptpmDataLayer.orderDeduplication);
         if (wooptpmDataLayer.orderDeduplication) {
+            // console.log('order deduplication: on');
             if (!window.Storage) {
 
                 if (checkCookie()) {
@@ -97,6 +99,7 @@
                 }
             }
         } else {
+            console.log('order deduplication: off');
             return false;
         }
     }

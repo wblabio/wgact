@@ -54,7 +54,10 @@ class Pixel
         $this->conversion_label    = $this->options['google']['ads']['conversion_label'];
         $this->dynamic_remarketing = $this->options['google']['ads']['dynamic_remarketing'];
         $this->product_identifier  = $this->options['google']['ads']['product_identifier'];
-        $this->gtag_deactivation   = $this->options['google']['gtag']['deactivation'];
+
+        if(array_key_exists('gtag', $this->options['google'])){
+            $this->gtag_deactivation   = $this->options['google']['gtag']['deactivation'];
+        }
     }
 
     // get an array with all cart product ids

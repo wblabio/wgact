@@ -247,7 +247,7 @@ class Pixel_Manager extends Pixel_Manager_Base
         $data = [
             'cart'                => [],
             'pixels'              => [],
-            'orderDeduplication'  => ($this->options['shop']['order_deduplication'] && !$this->is_nodedupe_parameter_set()) ? 'true' : 'false',
+            'orderDeduplication'  => ($this->options['shop']['order_deduplication'] && !$this->is_nodedupe_parameter_set()) ? true : false,
             'position'            => (int)1,
             'viewItemListTrigger' => (array)$this->view_item_list_trigger_settings(),
             'version'             => (string)WGACT_CURRENT_VERSION,
@@ -267,6 +267,15 @@ class Pixel_Manager extends Pixel_Manager_Base
                     })();
                 });
             }
+
+            // https://stackoverflow.com/a/17914854/4688612
+            // function defer(method) {
+            //     if (window.jQuery) {
+            //         method();
+            //     } else {
+            //         setTimeout(function() { defer(method) }, 50);
+            //     }
+            // }
 
             window.wooptpmDataLayer = window.wooptpmDataLayer || {};
 
