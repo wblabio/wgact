@@ -257,9 +257,6 @@ class Pixel_Manager extends Pixel_Manager_Base
 
         <script>
 
-            // Some "JavaScript optimization" plugins try to be smart and reshuffle
-            // the execution order of the scripts for this plugin and break it
-            // along the way. This functions helps working around this.
             function wooptpmExists() {
                 return new Promise(function (resolve, reject) {
                     (function waitForWooptpm() {
@@ -268,15 +265,6 @@ class Pixel_Manager extends Pixel_Manager_Base
                     })();
                 });
             }
-
-            // https://stackoverflow.com/a/17914854/4688612
-            // function defer(method) {
-            //     if (window.jQuery) {
-            //         method();
-            //     } else {
-            //         setTimeout(function() { defer(method) }, 50);
-            //     }
-            // }
 
             window.wooptpmDataLayer = window.wooptpmDataLayer || {};
             window.wooptpmDataLayer = <?php echo json_encode($data, JSON_FORCE_OBJECT) ?>;

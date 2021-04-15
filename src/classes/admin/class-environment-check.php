@@ -183,6 +183,7 @@ class Environment_Check
         {
             add_filter('sgo_javascript_combine_excluded_inline_content', [$this, 'sg_optimizer_js_exclude_combine_inline_content']);
             add_filter('sgo_js_minify_exclude', [$this, 'sg_optimizer_js_minify_exclude']);
+            add_filter('sgo_javascript_combine_exclude_move_after', [$this, 'sgo_javascript_combine_exclude_move_after']);
         }
 
         if ($this->is_litespeed_active())
@@ -190,8 +191,6 @@ class Environment_Check
             add_filter('litespeed_optm_js_defer_exc', [$this, 'litespeed_cache_js_defer_exc']);
             add_filter('litespeed_optimize_js_excludes', [$this, 'litespeed_optimize_js_excludes']);
             add_filter('litespeed_optm_cssjs', [$this, 'litespeed_optm_cssjs']);
-
-
 
 //             litespeed_optm_cssjs
 //             litespeed_optm_html_head
@@ -226,6 +225,10 @@ class Environment_Check
             $exclude_list =  array_merge($exclude_list, $this->get_wooptpm_script_identifiers());
         }
 
+//        foreach ($this->get_wooptpm_script_identifiers() as $exclusion) {
+//            $exclude_list[] = $exclusion;
+//        }
+
         return $exclude_list;
     }
 
@@ -246,6 +249,15 @@ class Environment_Check
         $exclude_list[] = 'jquery';
         $exclude_list[] = 'jquery-core';
         $exclude_list[] = 'jquery-migrate';
+
+        return $exclude_list;
+    }
+
+    public function sgo_javascript_combine_exclude_move_after($exclude_list): array
+    {
+        if(is_array($exclude_list)) {
+            $exclude_list =  array_merge($exclude_list, $this->get_wooptpm_script_identifiers());
+        }
 
         return $exclude_list;
     }

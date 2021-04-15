@@ -534,6 +534,9 @@ jQuery(function () {
 
         let productId = jQuery(this).nextAll('#wooptpmProductId:first').data('id');
 
+        // On product pages, for some reason, the click event is triggered on the main product on page load.
+        // In that case no ID is found. But we can discard it, since we only want to trigger the event on
+        // related products, which are found below.
         if(productId){
 
             productId = getIdBasedOndVariationsOutputSetting(productId);
