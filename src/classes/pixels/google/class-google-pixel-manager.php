@@ -163,10 +163,10 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
     protected function inject_closing_script_tag()
     {
         echo PHP_EOL;
-        echo '//# sourceURL=wooptpmGoogleInlineScripts.js' . PHP_EOL;
-        echo '            </script>';
+        echo "\t\t" . '//# sourceURL=wooptpmGoogleInlineScripts.js' . PHP_EOL;
+        echo "\t\t" . '</script>';
         echo PHP_EOL . PHP_EOL;
-        echo '      <!-- END Google scripts -->' . PHP_EOL;
+        echo "\t" . '<!-- END Google scripts -->' . PHP_EOL;
     }
 }
 

@@ -33,22 +33,15 @@ class Google extends Pixel
         $this->inject_data_layer_pixels();
 
         if ($this->options_obj->google->optimize->container_id) {
-
-            $opt = "<script async src='https://www.googleoptimize.com/optimize.js?id=" . $this->options_obj->google->optimize->container_id . "'></script>";
-
-            echo $opt;
+            echo "<script async src='https://www.googleoptimize.com/optimize.js?id=" . $this->options_obj->google->optimize->container_id . "'></script>" . PHP_EOL;
         }
 
-        if (!$this->options_obj->google->gtag->deactivation) {
-            ?>
-            <script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo $this->get_gtag_id() ?>"></script>
+        echo "
+        <script async src='https://www.googletagmanager.com/gtag/js?id=" . $this->get_gtag_id() . "'></script>";
 
-            <?php echo $this->get_modified_script_opening_tag() . PHP_EOL ?>
+        echo $this->get_modified_script_opening_tag() . PHP_EOL;
 
-            <?php echo $this->get_google_init_js();
-        } else {
-            echo '<script>';
-        }
+        echo $this->get_google_init_js();
 
         foreach ($this->google_ads_conversion_identifiers as $conversion_id => $conversion_label): ?>
             <?php echo $this->options_obj->google->ads->conversion_id ? $this->gtag_config($conversion_id, 'ads') : PHP_EOL; ?>
@@ -58,7 +51,6 @@ class Google extends Pixel
         <?php echo $this->options_obj->google->analytics->ga4->measurement_id ? $this->gtag_config($this->options_obj->google->analytics->ga4->measurement_id, 'ga_4') : PHP_EOL; ?>
 
         <?php
-
 
         if ($this->is_google_ads_active() && $this->options_obj->google->ads->phone_conversion_number && $this->options_obj->google->ads->phone_conversion_label) {
             $this->inject_phone_conversion_number_html__premium_only();
@@ -72,32 +64,31 @@ class Google extends Pixel
 
     private function get_modified_script_opening_tag(): string
     {
-
         $cookiebot_snippet = $this->options_obj->shop->cookie_consent_mgmt->cookiebot->active ? ' data-cookieconsent="ignore"' : '';
 
-        return "<script" . $cookiebot_snippet . ">";
-
+        return "
+        <script" . $cookiebot_snippet . ">";
     }
 
     private function inject_phone_conversion_number_html__premium_only()
     {
         echo "    
-                gtag('config', 'AW-" . $this->options_obj->google->ads->conversion_id . "/" . $this->options_obj->google->ads->phone_conversion_label . "', {
-                    'phone_conversion_number': '" . $this->options_obj->google->ads->phone_conversion_number . "'
-                });" . PHP_EOL;
+            gtag('config', 'AW-" . $this->options_obj->google->ads->conversion_id . "/" . $this->options_obj->google->ads->phone_conversion_label . "', {
+                'phone_conversion_number': '" . $this->options_obj->google->ads->phone_conversion_number . "'
+            });" . PHP_EOL;
     }
 
 
     protected function get_google_init_js(): string
     {
         return "
-                window.dataLayer = window.dataLayer || [];
+            window.dataLayer = window.dataLayer || [];
 
-                window.gtag = function gtag() {
-                    dataLayer.push(arguments);
-                }
-        " . $this->consent_mode_gtag_html() . "
-                gtag('js', new Date());";
+            window.gtag = function gtag() {
+                dataLayer.push(arguments);
+            }
+    " . $this->consent_mode_gtag_html() . "
+            gtag('js', new Date());";
     }
 
     private function consent_mode_gtag_html(): string
@@ -240,7 +231,6 @@ class Google extends Pixel
         return strtoupper(substr(get_locale(), 0, 2));
     }
 
-
     protected function get_google_ads_conversion_ids($purchase = false): array
     {
         $formatted_conversion_ids = [];
@@ -268,7 +258,6 @@ class Google extends Pixel
         }
     }
 
-
     private function inject_data_layer_pixels()
     {
 
@@ -295,7 +284,6 @@ class Google extends Pixel
             ],
         ];
 
-
         ?>
 
         <script>
@@ -308,7 +296,7 @@ class Google extends Pixel
     protected function gtag_config($id, $channel = ''): string
     {
         if ('ads' === $channel) {
-            return PHP_EOL . "\t\t\t\t" . "gtag('config', 'AW-" . $id . "');" . PHP_EOL;
+            return PHP_EOL . "\t\t\t" . "gtag('config', 'AW-" . $id . "');" . PHP_EOL;
         } elseif ('ga_ua' === $channel) {
 
             $ga_ua_parameters = [
@@ -322,7 +310,7 @@ class Google extends Pixel
 
             $ga_ua_parameters = apply_filters('woopt_pm_analytics_parameters', $ga_ua_parameters, $id);
 
-            return "\t\t" . "gtag('config', '" . $id . "', " . json_encode($ga_ua_parameters) . ");";
+            return "\t" . "gtag('config', '" . $id . "', " . json_encode($ga_ua_parameters) . ");";
         } elseif ('ga_4' === $channel) {
 
             if ($this->options_obj->google->user_id && is_user_logged_in()) {
@@ -332,9 +320,9 @@ class Google extends Pixel
             }
 
             if (empty($ga_4_parameters)) {
-                return "\t\t" . "gtag('config', '" . $id . "');";
+                return "\t" . "gtag('config', '" . $id . "');";
             } else {
-                return "\t\t" . "gtag('config', '" . $id . "', " . json_encode($ga_4_parameters) . ");";
+                return "\t" . "gtag('config', '" . $id . "', " . json_encode($ga_4_parameters) . ");";
             }
         }
     }

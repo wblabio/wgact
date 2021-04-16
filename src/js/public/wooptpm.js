@@ -116,6 +116,11 @@
             productId = wooptpmDataLayer['cart_item_keys'][cartItemKey]['id'];
         }
 
+        if (typeof productId === 'undefined') {
+            console.log('Wasn\'t able to retrieve a productId');
+            return;
+        }
+
         productId = getIdBasedOndVariationsOutputSetting(productId);
 
         let quantity;
@@ -125,6 +130,7 @@
         } else {
             quantity = quantityToRemove;
         }
+
 
         // alert ('product_id: ' + productId + ' | qty: ' + quantity);
 
@@ -175,6 +181,11 @@
 
         // alert('productId: ' + productId + ' | variationId: ' + variationId + ' | qty: ' + quantity);
 
+        if (typeof productId === 'undefined') {
+            console.log('Wasn\'t able to retrieve a productId');
+            return;
+        }
+
         let id = getIdBasedOndVariationsOutputSetting(productId);
 
         // if (wooptpmDataLayer.general.variationsOutput) {
@@ -186,6 +197,7 @@
         //         id = productId;
         //     }
         // }
+
 
         let data = {
             "id"           : id.toString(),
@@ -286,6 +298,11 @@
     }
 
     wooptpm.triggerViewItemList = function (productId) {
+
+        if (typeof productId === 'undefined') {
+            console.log('Wasn\'t able to retrieve a productId');
+            return;
+        }
 
         productId = getIdBasedOndVariationsOutputSetting(productId);
 

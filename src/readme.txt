@@ -103,6 +103,15 @@ You can send the link to the front page of your shop too if you think it would b
 
 == Changelog ==
 
+= 1.9.1 =
+
+[//]: # fs_premium_only_begin
+* Tweak: Much better selector for view_item_list trigger
+[//]: # fs_premium_only_end
+* Tweak: Added some some safeguards in order to stop processing in case no productId can be evaluated
+* Tweak: Removed deprecated "disable gtag insertion" feature entirely
+
+
 = 1.9.0 =
 
 [//]: # fs_premium_only_begin
