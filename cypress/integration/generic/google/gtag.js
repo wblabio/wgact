@@ -338,7 +338,7 @@ describe('Google gtag events', () => {
             .eq(0)
             .click()
 
-        cy.wait(100)
+        cy.wait(400)
 
         cy.get('[id="site-header-cart"]')
             .trigger('mouseover')

@@ -5,20 +5,6 @@
         cookieExpiresDays: 365
     };
 
-    // wooptpm.loadPageProductsFromBackend = function () {
-    //
-    //     // collect all products on page
-    //     let productList = wooptpm.collectProductsFromPage();
-    //     // compare and remove the products which are already in the data layer
-    //     // get the product from the back-end
-    //     // save the products in the data layer
-    // }
-    //
-    // wooptpm.collectProductsFromPage = function () {
-    //
-    //     // get all add to cart buttons with /add-to-cart links
-    // }
-
     wooptpm.writeOrderIdToStorage = function (orderId, expireDays = 365) {
 
         // save the order ID in the browser storage
@@ -112,173 +98,186 @@
 
     wooptpm.removeProductFromCart = function (cartItemKey, quantityToRemove = null, productId = null) {
 
-        if (productId == null) {
-            productId = wooptpmDataLayer['cart_item_keys'][cartItemKey]['id'];
-        }
+        try {
 
-        if (typeof productId === 'undefined') {
-            console.log('Wasn\'t able to retrieve a productId');
-            return;
-        }
-
-        productId = getIdBasedOndVariationsOutputSetting(productId);
-
-        let quantity;
-
-        if (quantityToRemove == null) {
-            quantity = wooptpmDataLayer['cart'][productId]['quantity'];
-        } else {
-            quantity = quantityToRemove;
-        }
-
-
-        // alert ('product_id: ' + productId + ' | qty: ' + quantity);
-
-        let data = {
-            "id"       : productId.toString(),
-            "dyn_r_ids": wooptpmDataLayer['cart'][productId]['dyn_r_ids'],
-            "name"     : wooptpmDataLayer['cart'][productId]['name'],
-            // "list_name": wooptpmDataLayer['shop']['list_name'], // doesn't make sense on mini_cart
-            "brand"   : wooptpmDataLayer['cart'][productId]['brand'],
-            "category": wooptpmDataLayer['cart'][productId]['category'],
-            "variant" : wooptpmDataLayer['cart'][productId]['variant'],
-            // "list_position": wooptpmDataLayer['cart'][productId]['position'], // doesn't make sense on mini_cart
-            "quantity": quantity,
-            "price"   : wooptpmDataLayer['cart'][productId]['price']
-        };
-
-        // console.log('removing');
-        // console.log(data);
-
-        jQuery(document).trigger('wooptpmRemoveFromCart', data);
-
-        if (quantityToRemove == null) {
-            delete wooptpmDataLayer['cart'][productId];
-            if (cartItemKey) {
-                delete wooptpmDataLayer['cart_item_keys'][cartItemKey];
+            if (productId == null) {
+                productId = wooptpmDataLayer.cart_item_keys[cartItemKey].id;
             }
-        } else {
-            wooptpmDataLayer['cart'][productId]['quantity'] = wooptpmDataLayer['cart'][productId]['quantity'] - quantity;
+
+            if (!productId) throw Error('Wasn\'t able to retrieve a productId');
+
+            productId = getIdBasedOndVariationsOutputSetting(productId);
+
+            if (!productId) throw Error('Wasn\'t able to retrieve a productId');
+
+            let quantity;
+
+            if (quantityToRemove == null) {
+                quantity = wooptpmDataLayer.cart[productId].quantity;
+            } else {
+                quantity = quantityToRemove;
+            }
+
+            // console.log('product_id: ' + productId + ' | qty: ' + quantity);
+            // console.log(productId);
+            // console.log(wooptpmDataLayer.cart);
+            // console.log(wooptpmDataLayer.cart[productId]);
+
+            if (wooptpmDataLayer.cart[productId]) {
+
+                let data = {
+                    "id"       : productId.toString(),
+                    "dyn_r_ids": wooptpmDataLayer.cart[productId].dyn_r_ids,
+                    "name"     : wooptpmDataLayer.cart[productId].name,
+                    // "list_name": wooptpmDataLayer.shop.list_name, // doesn't make sense on mini_cart
+                    "brand"   : wooptpmDataLayer.cart[productId].brand,
+                    "category": wooptpmDataLayer.cart[productId].category,
+                    "variant" : wooptpmDataLayer.cart[productId].variant,
+                    // "list_position": wooptpmDataLayer.cart[productId].position, // doesn't make sense on mini_cart
+                    "quantity": quantity,
+                    "price"   : wooptpmDataLayer.cart[productId].price
+                };
+
+                // console.log('removing');
+                // console.log(data);
+
+                jQuery(document).trigger('wooptpmRemoveFromCart', data);
+
+                if (quantityToRemove == null) {
+                    delete wooptpmDataLayer.cart[productId];
+                    if (cartItemKey) {
+                        delete wooptpmDataLayer.cart_item_keys[cartItemKey];
+                    }
+                } else {
+                    wooptpmDataLayer.cart[productId].quantity = wooptpmDataLayer.cart[productId].quantity - quantity;
+                }
+            }
+        } catch (e) {
+            console.log(e);
         }
     }
 
     getIdBasedOndVariationsOutputSetting = function (productId) {
-        if (wooptpmDataLayer.general.variationsOutput) {
-            return productId;
-        } else {
-            if (wooptpmDataLayer['products'][productId]['isVariation']) {
-                return wooptpmDataLayer['products'][productId]['parentId'];
-            } else {
+
+        try {
+            if (wooptpmDataLayer.general.variationsOutput) {
+                // console.log('test');
                 return productId;
+            } else {
+                if (wooptpmDataLayer.products[productId].isVariation) {
+                    return wooptpmDataLayer.products[productId].parentId;
+                } else {
+                    return productId;
+                }
             }
+        } catch (e) {
+            console.log(e);
         }
     }
 
     // add_to_cart
     wooptpm.addProductToCart = function (productId, quantity) {
 
-        // console.log('productId: ' + productId + ' | qty: ' + quantity);
+        try {
+            // console.log('productId: ' + productId + ' | qty: ' + quantity);
+            // console.log('productId: ' + productId + ' | variationId: ' + variationId + ' | qty: ' + quantity);
 
-        // alert('productId: ' + productId + ' | variationId: ' + variationId + ' | qty: ' + quantity);
+            if (!productId) throw Error('Wasn\'t able to retrieve a productId');
 
-        if (typeof productId === 'undefined') {
-            console.log('Wasn\'t able to retrieve a productId');
-            return;
-        }
+            productId = getIdBasedOndVariationsOutputSetting(productId);
 
-        let id = getIdBasedOndVariationsOutputSetting(productId);
+            if (!productId) throw Error('Wasn\'t able to retrieve a productId');
 
-        // if (wooptpmDataLayer.general.variationsOutput) {
-        //     id = productId;
-        // } else {
-        //     if (wooptpmDataLayer['products'][productId]['isVariation']) {
-        //         id = wooptpmDataLayer['products'][productId]['parentId'];
-        //     } else {
-        //         id = productId;
-        //     }
-        // }
+            if (wooptpmDataLayer.products[productId]) {
 
+                let data = {
+                    "id"           : productId.toString(),
+                    "dyn_r_ids"    : wooptpmDataLayer.products[productId].dyn_r_ids,
+                    "name"         : wooptpmDataLayer.products[productId].name,
+                    "list_name"    : wooptpmDataLayer.shop.list_name, // maybe remove if in products
+                    "brand"        : wooptpmDataLayer.products[productId].brand,
+                    "category"     : wooptpmDataLayer.products[productId].category,
+                    "variant"      : wooptpmDataLayer.products[productId].variant,
+                    "list_position": wooptpmDataLayer.products[productId].position,
+                    "quantity"     : quantity,
+                    "price"        : wooptpmDataLayer.products[productId].price,
+                    "currency"     : wooptpmDataLayer.shop.currency,
+                };
 
-        let data = {
-            "id"           : id.toString(),
-            "dyn_r_ids"    : wooptpmDataLayer['products'][id]['dyn_r_ids'],
-            "name"         : wooptpmDataLayer['products'][id]['name'],
-            "list_name"    : wooptpmDataLayer['shop']['list_name'], // maybe remove if in products
-            "brand"        : wooptpmDataLayer['products'][id]['brand'],
-            "category"     : wooptpmDataLayer['products'][id]['category'],
-            "variant"      : wooptpmDataLayer['products'][id]['variant'],
-            "list_position": wooptpmDataLayer['products'][id]['position'],
-            "quantity"     : quantity,
-            "price"        : wooptpmDataLayer['products'][id]['price'],
-            "currency"     : wooptpmDataLayer.shop.currency,
-        };
+                // console.log(data);
 
-        // console.log(data);
+                jQuery(document).trigger('wooptpmAddToCart', data);
 
-        jQuery(document).trigger('wooptpmAddToCart', data);
+                // add product to cart wooptpmDataLayer['cart']
 
-        // add product to cart wooptpmDataLayer['cart']
+                // if the product already exists in the object, only add the additional quantity
+                // otherwise create that product object in the wooptpmDataLayer['cart']
+                if (wooptpmDataLayer.cart !== undefined && wooptpmDataLayer.cart[productId] !== undefined) {
+                    wooptpmDataLayer.cart[productId].quantity = wooptpmDataLayer.cart[productId].quantity + quantity;
+                } else {
 
-        // if the product already exists in the object, only add the additional quantity
-        // otherwise create that product object in the wooptpmDataLayer['cart']
-        if (wooptpmDataLayer['cart'] !== undefined && wooptpmDataLayer['cart'][id] !== undefined) {
-            wooptpmDataLayer['cart'][id]['quantity'] = wooptpmDataLayer['cart'][id]['quantity'] + quantity;
-        } else {
+                    if (!wooptpmDataLayer.cart) {
 
-            if (!wooptpmDataLayer.cart) {
+                        wooptpmDataLayer['cart'] = {
+                            [productId]: {
+                                'id'       : productId,
+                                'dyn_r_ids': wooptpmDataLayer.products[productId].dyn_r_ids,
+                                'name'     : wooptpmDataLayer.products[productId].name,
+                                'brand'    : wooptpmDataLayer.products[productId].brand,
+                                'category' : wooptpmDataLayer.products[productId].category,
+                                "variant"  : wooptpmDataLayer.products[productId].variant,
+                                'quantity' : quantity,
+                                'price'    : wooptpmDataLayer.products[productId].price
+                            }
+                        };
 
-                wooptpmDataLayer['cart'] = {
-                    [id]: {
-                        'id'       : id,
-                        'dyn_r_ids': wooptpmDataLayer['products'][id]['dyn_r_ids'],
-                        'name'     : wooptpmDataLayer['products'][id]['name'],
-                        'brand'    : wooptpmDataLayer['products'][id]['brand'],
-                        'category' : wooptpmDataLayer['products'][id]['category'],
-                        "variant"  : wooptpmDataLayer['products'][id]['variant'],
-                        'quantity' : quantity,
-                        'price'    : wooptpmDataLayer['products'][id]['price']
+                    } else {
+
+                        wooptpmDataLayer.cart[productId] = {
+                            'id'       : productId,
+                            'dyn_r_ids': wooptpmDataLayer.products[productId].dyn_r_ids,
+                            'name'     : wooptpmDataLayer.products[productId].name,
+                            'brand'    : wooptpmDataLayer.products[productId].brand,
+                            'category' : wooptpmDataLayer.products[productId].category,
+                            "variant"  : wooptpmDataLayer.products[productId].variant,
+                            'quantity' : quantity,
+                            'price'    : wooptpmDataLayer.products[productId].price
+                        };
                     }
-                };
-
-            } else {
-
-                wooptpmDataLayer.cart[id] = {
-                    'id'       : id,
-                    'dyn_r_ids': wooptpmDataLayer['products'][id]['dyn_r_ids'],
-                    'name'     : wooptpmDataLayer['products'][id]['name'],
-                    'brand'    : wooptpmDataLayer['products'][id]['brand'],
-                    'category' : wooptpmDataLayer['products'][id]['category'],
-                    "variant"  : wooptpmDataLayer['products'][id]['variant'],
-                    'quantity' : quantity,
-                    'price'    : wooptpmDataLayer['products'][id]['price']
-                };
+                }
             }
+        } catch (e) {
+            console.log(e);
         }
     }
 
     wooptpm.getCartItemsFromBackEnd = function () {
         // get all cart items from the backend
 
-        let data = {
-            'action': 'wooptpm_get_cart_items',
-        };
+        try {
+            let data = {
+                'action': 'wooptpm_get_cart_items',
+            };
 
-        jQuery.ajax(
-            {
-                type    : "get",
-                dataType: "json",
-                url     : ajax_object.ajax_url,
-                data    : data,
-                success : function (cart_items) {
-                    // save all cart items into wooptpmDataLayer
-                    // console.log(cart_items['cart']);
-                    wooptpmDataLayer['cart']  = cart_items['cart'];
-                    // wooptpmDataLayer.products = {... wooptpmDataLayer.products, ...cart_items['cart']};
-                    wooptpmDataLayer.products = Object.assign({}, wooptpmDataLayer.products, cart_items['cart']);
+            jQuery.ajax(
+                {
+                    type    : "get",
+                    dataType: "json",
+                    url     : ajax_object.ajax_url,
+                    data    : data,
+                    success : function (cart_items) {
+                        // save all cart items into wooptpmDataLayer
+                        // console.log(cart_items['cart']);
+                        wooptpmDataLayer.cart     = cart_items['cart'];
+                        // wooptpmDataLayer.products = {... wooptpmDataLayer.products, ...cart_items['cart']};
+                        wooptpmDataLayer.products = Object.assign({}, wooptpmDataLayer.products, cart_items['cart']);
 
-                    wooptpmDataLayer['cart_item_keys'] = cart_items['cart_item_keys'];
-                }
-            });
+                        wooptpmDataLayer['cart_item_keys'] = cart_items['cart_item_keys'];
+                    }
+                });
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     wooptpm.fireCheckoutOption = function (step, checkout_option = null, value = null) {
@@ -294,46 +293,64 @@
 
     wooptpm.getPostIdFromString = function (string) {
         // console.log(string);
-        return string.match(/(post-)(\d+)/)[2];
+        try {
+            return string.match(/(post-)(\d+)/)[2];
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     wooptpm.triggerViewItemList = function (productId) {
 
-        if (typeof productId === 'undefined') {
-            console.log('Wasn\'t able to retrieve a productId');
-            return;
-        }
+        // productId = null;
+
+        if (!productId) throw Error('Wasn\'t able to retrieve a productId');
 
         productId = getIdBasedOndVariationsOutputSetting(productId);
+
+        if (!productId) throw Error('Wasn\'t able to retrieve a productId');
 
         jQuery(document).trigger('wooptpmViewItemList', wooptpm.getProductDataForViewItemEvent(productId));
     }
 
     wooptpm.getProductDataForViewItemEvent = function (productId) {
-        return {
-            "id"           : productId.toString(),
-            "dyn_r_ids"    : wooptpmDataLayer['products'][productId]['dyn_r_ids'],
-            "name"         : wooptpmDataLayer['products'][productId]['name'],
-            "list_name"    : wooptpmDataLayer['shop']['list_name'], // maybe remove if in cart
-            "brand"        : wooptpmDataLayer['products'][productId]['brand'],
-            "category"     : wooptpmDataLayer['products'][productId]['category'],
-            "variant"      : wooptpmDataLayer['products'][productId]['variant'],
-            "list_position": wooptpmDataLayer['products'][productId]['position'],
-            "quantity"     : 1,
-            "price"        : wooptpmDataLayer['products'][productId]['price'],
-            "currency"     : wooptpmDataLayer.shop.currency,
-        };
+
+        if (!productId) throw Error('Wasn\'t able to retrieve a productId');
+
+        try {
+            if (wooptpmDataLayer.products[productId]) {
+                return {
+                    "id"           : productId.toString(),
+                    "dyn_r_ids"    : wooptpmDataLayer.products[productId].dyn_r_ids,
+                    "name"         : wooptpmDataLayer.products[productId].name,
+                    "list_name"    : wooptpmDataLayer.shop.list_name, // maybe remove if in cart
+                    "brand"        : wooptpmDataLayer.products[productId].brand,
+                    "category"     : wooptpmDataLayer.products[productId].category,
+                    "variant"      : wooptpmDataLayer.products[productId].variant,
+                    "list_position": wooptpmDataLayer.products[productId].position,
+                    "quantity"     : 1,
+                    "price"        : wooptpmDataLayer.products[productId].price,
+                    "currency"     : wooptpmDataLayer.shop.currency,
+                };
+            }
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     wooptpm.getMainProductIdFromProductPage = function () {
-        if (wooptpmDataLayer.shop.product_type === 'simple') {
-            return jQuery('.single_add_to_cart_button').val();
-        } else if (wooptpmDataLayer.shop.product_type === 'variable') {
-            return jQuery('.woocommerce-variation-add-to-cart').find('[name="add-to-cart"]').val();
-        } else if (wooptpmDataLayer.shop.product_type === 'grouped') {
-            return jQuery('.grouped_form').find('[name="add-to-cart"]').val();
-        } else {
-            return false;
+        try {
+            if (wooptpmDataLayer.shop.product_type === 'simple') {
+                return jQuery('.single_add_to_cart_button').val();
+            } else if (wooptpmDataLayer.shop.product_type === 'variable') {
+                return jQuery('.woocommerce-variation-add-to-cart').find('[name="add-to-cart"]').val();
+            } else if (wooptpmDataLayer.shop.product_type === 'grouped') {
+                return jQuery('.grouped_form').find('[name="add-to-cart"]').val();
+            } else {
+                return false;
+            }
+        } catch (e) {
+            console.log(e);
         }
     }
 
@@ -354,46 +371,157 @@
         })
     }
 
-    let timeouts = {};
+    wooptpm.getSearchTermFromUrl = function () {
+        try {
+            let urlParameters = new URLSearchParams(window.location.search)
+            return urlParameters.get('s');
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    // we need this to track timeouts for intersection observers
+    let ioTimeouts = {};
 
     wooptpm.observerCallback = function (entries, observer) {
 
         entries.forEach((entry) => {
 
-            let elementId = jQuery(entry.target).data('ioid');
-            let productId = jQuery(entry.target).next('.wooptpmProductId').data('id');
+            try {
+                let productId;
 
-            if (!productId) {
-                productId = jQuery(entry.target).find('.wooptpmProductId').data('id');
-            }
+                let elementId = jQuery(entry.target).data('ioid');
 
-            if (!productId) {
-                console.log('wooptpmProductId element not found');
-                return;
-            }
+                // Get the productId from next element, if wooptpmProductId is a sibling, like in Gutenberg blocks
+                // otherwise go search in children, like in regular WC loop items
+                if (jQuery(entry.target).next('.wooptpmProductId').length) {
+                    // console.log('test 1');
+                    productId = jQuery(entry.target).next('.wooptpmProductId').data('id');
+                } else {
+                    productId = jQuery(entry.target).find('.wooptpmProductId').data('id');
+                }
 
-            if (entry.isIntersecting) {
-                // console.log('prodid: ' + productId);
-                timeouts[elementId] = setTimeout(() => {
-                    //                 console.log('prodid: ' + productId);
-                    wooptpm.triggerViewItemList(productId);
-                    if (wooptpmDataLayer.viewItemListTrigger.testMode) wooptpm.viewItemListTriggerTestMode(entry.target);
-                    if (wooptpmDataLayer.viewItemListTrigger.repeat === false) observer.unobserve(entry.target);
-                }, wooptpmDataLayer.viewItemListTrigger.timeout)
+                // productId = null;
 
-            } else {
+                if (!productId) throw Error('wooptpmProductId element not found');
 
-                clearTimeout(timeouts[elementId])
-                if (wooptpmDataLayer.viewItemListTrigger.testMode) jQuery(entry.target).find('#viewItemListTriggerOverlay').remove();
+                if (entry.isIntersecting) {
+
+                    // console.log('prodid: ' + productId);
+                    ioTimeouts[elementId] = setTimeout(() => {
+                        //                 console.log('prodid: ' + productId);
+                        wooptpm.triggerViewItemList(productId);
+                        if (wooptpmDataLayer.viewItemListTrigger.testMode) wooptpm.viewItemListTriggerTestMode(entry.target);
+                        if (wooptpmDataLayer.viewItemListTrigger.repeat === false) observer.unobserve(entry.target);
+                    }, wooptpmDataLayer.viewItemListTrigger.timeout)
+
+                } else {
+
+                    clearTimeout(ioTimeouts[elementId])
+                    if (wooptpmDataLayer.viewItemListTrigger.testMode) jQuery(entry.target).find('#viewItemListTriggerOverlay').remove();
+                }
+            } catch (e) {
+                console.log(e);
             }
         });
     }
 
-    wooptpm.getSearchTermFromUrl = function () {
-        let urlParameters = new URLSearchParams(window.location.search)
-        return urlParameters.get('s');
+    // fire view_item_list only on products that have become visible
+    let io;
+    let ioid = 0;
+    let allIoElementsToWatch;
+
+    let getAllElementsToWatch = function () {
+
+        allIoElementsToWatch = jQuery('.wooptpmProductId')
+            .map(function (i, elem) {
+                // console.log(elem);
+                if (jQuery(elem).parent().hasClass('type-product') || jQuery(elem).parent().hasClass('product')) {
+                    // console.log(elem);
+                    return jQuery(elem).parent();
+                } else if (
+                    jQuery(elem).prev().hasClass('wc-block-grid__product') ||
+                    jQuery(elem).prev().hasClass('product') ||
+                    jQuery(elem).prev().hasClass('product-small') ||
+                    jQuery(elem).prev().hasClass('woocommerce-LoopProduct-link')
+                ) {
+                    return jQuery(this).prev();
+                }
+            });
     }
 
+    wooptpm.startIntersectionObserverToWatch = function () {
+
+        try {
+            // enable view_item_list test mode from browser
+            let urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('vildemomode')) wooptpmDataLayer.viewItemListTrigger.testMode = true;
+
+            // set up intersection observer
+            io = new IntersectionObserver(wooptpm.observerCallback, {
+                threshold: wooptpmDataLayer.viewItemListTrigger.threshold,
+            });
+
+            getAllElementsToWatch();
+
+            // console.log(allElementsToWatch);
+
+            allIoElementsToWatch.each(function (i, elem) {
+                // console.log(elem[0]);
+                // jQuery(elem[0]).attr('data-ioid', ioid++);
+                jQuery(elem[0]).data('ioid', ioid++);
+
+                io.observe(elem[0])
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    // watch DOM for new lazy loaded products and add them to the intersection observer
+    wooptpm.startProductsMutationObserverToWatch = function () {
+
+        try {
+            // Pass in the target node, as well as the observer options
+            productsMutationObserver.observe(jQuery('.products')[0], {
+                attributes   : true,
+                childList    : true,
+                characterData: true
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    // Create an observer instance
+    let productsMutationObserver = new MutationObserver(function (mutations) {
+
+        mutations.forEach(function (mutation) {
+            let newNodes = mutation.addedNodes; // DOM NodeList
+            if (newNodes !== null) { // If there are new nodes added
+                let nodes = jQuery(newNodes); // jQuery set
+                nodes.each(function () {
+                    if (
+                        jQuery(this).hasClass("type-product") ||
+                        jQuery(this).hasClass("product-small") ||
+                        jQuery(this).hasClass('wc-block-grid__product')
+                    ) {
+                        // check if the node has a child or sibling wooptpmProductId
+                        // if yes add it to the intersectionObserver
+                        if (hasWooptpmProductIdElement(this)) {
+                            jQuery(this).data('ioid', ioid++);
+                            io.observe(this)
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+    let hasWooptpmProductIdElement = function (elem) {
+        return !!(jQuery(elem).find('.wooptpmProductId').length ||
+            jQuery(elem).siblings('.wooptpmProductId').length);
+    }
 
     // return {
     // writeOrderIdToStorage  : writeOrderIdToStorage,
@@ -409,60 +537,40 @@
 
 }(window.wooptpm = window.wooptpm || {}, jQuery));
 
-
+// run when window ready
 jQuery(function () {
-// jQuery(window).on('load', function () {
 
-    // fire view_item_list only on products that have become visible
-    const io = new IntersectionObserver(wooptpm.observerCallback, {threshold: wooptpmDataLayer.viewItemListTrigger.threshold});
-    let ioid = 0;
+    // watch for products visible in viewport
+    wooptpm.startIntersectionObserverToWatch();
 
-    // enable view_item_list test mode from browser
-    let urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('vildemomode')) wooptpmDataLayer.viewItemListTrigger.testMode = true;
-
-    let allElementsToWatch = jQuery('.wooptpmProductId')
-        .map(function (i, elem) {
-            // console.log(elem);
-            if (jQuery(elem).parent().hasClass('type-product') || jQuery(elem).parent().hasClass('product')) {
-                // console.log(elem);
-                return jQuery(elem).parent();
-            } else if (
-                jQuery(elem).prev().hasClass('wc-block-grid__product') ||
-                jQuery(elem).prev().hasClass('product') ||
-                jQuery(elem).prev().hasClass('product-small') ||
-                jQuery(elem).prev().hasClass('woocommerce-LoopProduct-link')
-            ) {
-                return jQuery(this).prev();
-            }
-        });
-
-    // console.log(allElementsToWatch);
-
-    allElementsToWatch.each(function (i, elem) {
-        // console.log(elem[0]);
-        jQuery(elem[0]).attr('data-ioid', ioid++);
-        jQuery(elem[0]).data('ioid', ioid++);
-
-        io.observe(elem[0])
-    });
+    // watch for lazy loaded products
+    wooptpm.startProductsMutationObserverToWatch();
 
     // remove_from_cart event
     jQuery(document).on('click', '.remove_from_cart_button, .remove', function (e) {
 
-        let cartItemKey;
+        try {
+            let cartItemKey;
 
-        if (wooptpmDataLayer['shop']['page_type'] === 'cart') {
-            let href         = new URL(jQuery(this).attr('href'));
-            let searchParams = new URLSearchParams(href.search);
-            cartItemKey      = searchParams.get('remove_item');
-            // console.log('remove from cart page');
-            wooptpm.removeProductFromCart(cartItemKey);
-        } else if (wooptpmDataLayer.cart_item_keys && wooptpmDataLayer.cart_item_keys[jQuery(this).data('cart_item_key')] !== undefined) {
-            // console.log('remove from mini cart');
-            wooptpm.removeProductFromCart(jQuery(this).data('cart_item_key'));
-        } else {
-            wooptpm.removeProductFromCart(null, null, jQuery(this).data('product_id'));
+            // if (wooptpmDataLayer['shop']['page_type'] === 'cart') {
+            if (wooptpmDataLayer.shop.page_type === 'cart') {
+                let href         = new URL(jQuery(this).attr('href'));
+                let searchParams = new URLSearchParams(href.search);
+                cartItemKey      = searchParams.get('remove_item');
+                // console.log('remove from cart page');
+                wooptpm.removeProductFromCart(cartItemKey);
+            } else if (wooptpmDataLayer.cart_item_keys && wooptpmDataLayer.cart_item_keys[jQuery(this).data('cart_item_key')] !== undefined) {
+                // console.log('remove from mini cart ' + jQuery(this).data('product_id'));
+                // console.log('cart item key ' + jQuery(this).data('cart_item_key'));
+                wooptpm.removeProductFromCart(jQuery(this).data('cart_item_key'));
+            } else {
+                // console.log('trying');
+                // console.log('remove from mini cart ' + jQuery(this).data('product_id'));
+
+                wooptpm.removeProductFromCart(null, null, jQuery(this).data('product_id'));
+            }
+        } catch (e) {
+            console.log(e);
         }
     });
 
@@ -470,53 +578,57 @@ jQuery(function () {
     // add_to_cart event
     jQuery(document).on('click', '.add_to_cart_button:not(.product_type_variable), .ajax_add_to_cart, .single_add_to_cart_button', function (e) {
 
-        if (wooptpmDataLayer['shop']['page_type'] === 'product') {
+        try {
+            if (wooptpmDataLayer.shop.page_type === 'product') {
 
-            // first process related and upsell products
-            if (typeof jQuery(this).attr('href') !== 'undefined' && jQuery(this).attr('href').includes('add-to-cart')) {
-                // alert('add-to-cart on upsell and related products');
-                let quantity  = 1;
-                let productId = jQuery(this).data('product_id');
-                // alert('productId: ' + productId);
-                wooptpm.addProductToCart(productId, quantity);
+                // first process related and upsell products
+                if (typeof jQuery(this).attr('href') !== 'undefined' && jQuery(this).attr('href').includes('add-to-cart')) {
+                    // console.log('add-to-cart on upsell and related products');
+                    let quantity  = 1;
+                    let productId = jQuery(this).data('product_id');
+                    // console.log('productId: ' + productId);
+                    wooptpm.addProductToCart(productId, quantity);
+                } else {
+
+                    if (wooptpmDataLayer.shop.product_type === 'simple') {
+
+                        // console.log('test');
+                        let quantity  = Number(jQuery('.input-text.qty').val());
+                        let productId = jQuery(this).val();
+                        // console.log('productId: ' + productId);
+                        wooptpm.addProductToCart(productId, quantity);
+
+                    } else if (wooptpmDataLayer.shop.product_type === 'variable') {
+
+                        // console.log('variable');
+
+                        let quantity  = Number(jQuery('.input-text.qty').val());
+                        let productId = jQuery("[name='variation_id']").val();
+                        wooptpm.addProductToCart(productId, quantity);
+
+                    } else if (wooptpmDataLayer.shop.product_type === 'grouped') {
+
+                        // console.log('grouped');
+
+                        jQuery('.woocommerce-grouped-product-list-item').each(function () {
+                            let quantity  = Number(jQuery(this).find('.input-text.qty').val());
+                            let classes   = jQuery(this).attr('class');
+                            let productId = wooptpm.getPostIdFromString(classes);
+                            wooptpm.addProductToCart(productId, quantity);
+                        });
+                    }
+                }
             } else {
 
-                if (wooptpmDataLayer.shop.product_type === 'simple') {
+                // console.log('non product page');
 
-                    // alert('test');
-                    let quantity  = Number(jQuery('.input-text.qty').val());
-                    let productId = jQuery(this).val();
-                    // alert('productId: ' + productId);
-                    wooptpm.addProductToCart(productId, quantity);
-
-                } else if (wooptpmDataLayer['shop']['product_type'] === 'variable') {
-
-                    // alert('variable');
-
-                    let quantity  = Number(jQuery('.input-text.qty').val());
-                    let productId = jQuery("[name='variation_id']").val();
-                    wooptpm.addProductToCart(productId, quantity);
-
-                } else if (wooptpmDataLayer.shop.product_type === 'grouped') {
-
-                    // alert('grouped');
-
-                    jQuery('.woocommerce-grouped-product-list-item').each(function () {
-                        let quantity  = Number(jQuery(this).find('.input-text.qty').val());
-                        let classes   = jQuery(this).attr('class');
-                        let productId = wooptpm.getPostIdFromString(classes);
-                        wooptpm.addProductToCart(productId, quantity);
-                    });
-                }
+                let quantity  = 1;
+                let productId = jQuery(this).data('product_id');
+                // console.log('productId: ' + productId);
+                wooptpm.addProductToCart(productId, quantity);
             }
-        } else {
-
-            // alert('non product page');
-
-            let quantity  = 1;
-            let productId = jQuery(this).data('product_id');
-            // alert('productId: ' + productId);
-            wooptpm.addProductToCart(productId, quantity);
+        } catch (e) {
+            console.log(e);
         }
     });
 
@@ -524,18 +636,23 @@ jQuery(function () {
     // trigger the add to cart event
     jQuery(document).one('click', function (e) {
 
-        if (jQuery(this)[0].URL) {
+        try {
+            if (jQuery(this)[0].URL) {
 
-            let href         = new URL(jQuery(this)[0].URL);
-            let searchParams = new URLSearchParams(href.search);
+                let href         = new URL(jQuery(this)[0].URL);
+                let searchParams = new URLSearchParams(href.search);
 
-            if (searchParams.has('add-to-cart')) {
-                // alert('non product page, /?add-to-cart=123 link');
+                if (searchParams.has('add-to-cart')) {
+                    // console.log('non product page, /?add-to-cart=123 link');
 
-                let productId = searchParams.get('add-to-cart');
-                wooptpm.addProductToCart(productId, 1);
+                    let productId = searchParams.get('add-to-cart');
+                    wooptpm.addProductToCart(productId, 1);
+                }
             }
+        } catch (e) {
+            console.log(e);
         }
+
     });
 
 
@@ -544,54 +661,64 @@ jQuery(function () {
     // jQuery(document).on('click', '.woocommerce-LoopProduct-link, .wc-block-grid__product, .product-small.box', function (e) {
     jQuery(document).on('click', '.woocommerce-LoopProduct-link, .wc-block-grid__product, .product, .product-small, .type-product', function (e) {
 
-        // let productId;
+        try {
 
-        // console.log(this.attr('class');
+            // let productId;
 
-        // We need one selector for related products on product pages and another one on shop pages
-        // because using the .product selector fires twice on product page, and I don't know why.
-        // woocommerce-LoopProduct-link avoids this, but requires a different logic to get the product Id
-        // if (['shop', 'product_category', 'product_tag', 'search', 'product_shop', 'product'].indexOf(wooptpmDataLayer['shop']['page_type']) > -1) {
-        //     let name      = jQuery(this).closest('.product');
-        //     let classes   = name.attr('class');
-        //     // console.log('testid: ');
-        //
-        //     productId = wooptpm.getPostIdFromString(classes);
-        //     console.log('testid: ' + productId);
-        // } else {
-        //     productId = jQuery(this).find('.add_to_cart_button, .product_type_grouped').data('product_id');
-        // }
+            // console.log(this.attr('class');
 
-        // let productElement      = jQuery(this).closest('.product');
-        // let classes = productElement.attr('class');
-        // let productId = wooptpm.getPostIdFromString(classes);
+            // We need one selector for related products on product pages and another one on shop pages
+            // because using the .product selector fires twice on product page, and I don't know why.
+            // woocommerce-LoopProduct-link avoids this, but requires a different logic to get the product Id
+            // if (['shop', 'product_category', 'product_tag', 'search', 'product_shop', 'product'].indexOf(wooptpmDataLayer['shop']['page_type']) > -1) {
+            //     let name      = jQuery(this).closest('.product');
+            //     let classes   = name.attr('class');
+            //     // console.log('testid: ');
+            //
+            //     productId = wooptpm.getPostIdFromString(classes);
+            //     console.log('testid: ' + productId);
+            // } else {
+            //     productId = jQuery(this).find('.add_to_cart_button, .product_type_grouped').data('product_id');
+            // }
 
-        let productId = jQuery(this).nextAll('.wooptpmProductId:first').data('id');
+            // let productElement      = jQuery(this).closest('.product');
+            // let classes = productElement.attr('class');
+            // let productId = wooptpm.getPostIdFromString(classes);
 
-        // On product pages, for some reason, the click event is triggered on the main product on page load.
-        // In that case no ID is found. But we can discard it, since we only want to trigger the event on
-        // related products, which are found below.
-        if (productId) {
+            let productId = jQuery(this).nextAll('.wooptpmProductId:first').data('id');
 
-            productId = getIdBasedOndVariationsOutputSetting(productId);
+            // On product pages, for some reason, the click event is triggered on the main product on page load.
+            // In that case no ID is found. But we can discard it, since we only want to trigger the event on
+            // related products, which are found below.
+            if (productId) {
 
-            // console.log('prodid: ' + productId);
+                productId = getIdBasedOndVariationsOutputSetting(productId);
 
-            let data = {
-                "id"           : productId.toString(),
-                "dyn_r_ids"    : wooptpmDataLayer['products'][productId]['dyn_r_ids'],
-                "name"         : wooptpmDataLayer['products'][productId]['name'],
-                "list_name"    : wooptpmDataLayer['shop']['list_name'],
-                "brand"        : wooptpmDataLayer['products'][productId]['brand'],
-                "category"     : wooptpmDataLayer['products'][productId]['category'],
-                "variant"      : wooptpmDataLayer['products'][productId]['variant'],
-                "list_position": wooptpmDataLayer['products'][productId]['position'],
-                "quantity"     : 1,
-                "price"        : wooptpmDataLayer['products'][productId]['price']
-            };
+                if (!productId) throw Error('Wasn\'t able to retrieve a productId');
 
-            jQuery(document).trigger('wooptpmSelectContentGaUa', data);
-            jQuery(document).trigger('wooptpmSelectItem', data);
+                // console.log('prodid: ' + productId);
+
+                if (wooptpmDataLayer.products && wooptpmDataLayer.products[productId]) {
+
+                    let data = {
+                        "id"           : productId.toString(),
+                        "dyn_r_ids"    : wooptpmDataLayer.products[productId].dyn_r_ids,
+                        "name"         : wooptpmDataLayer.products[productId].name,
+                        "list_name"    : wooptpmDataLayer.shop.list_name,
+                        "brand"        : wooptpmDataLayer.products[productId].brand,
+                        "category"     : wooptpmDataLayer.products[productId].category,
+                        "variant"      : wooptpmDataLayer.products[productId].variant,
+                        "list_position": wooptpmDataLayer.products[productId].position,
+                        "quantity"     : 1,
+                        "price"        : wooptpmDataLayer.products[productId].price
+                    };
+
+                    jQuery(document).trigger('wooptpmSelectContentGaUa', data);
+                    jQuery(document).trigger('wooptpmSelectItem', data);
+                }
+            }
+        } catch (e) {
+            console.log(e);
         }
     });
 
@@ -633,55 +760,68 @@ jQuery(function () {
     // update cart event
     jQuery(document).on('click', "[name='update_cart']", function (e) {
 
-        jQuery('.cart_item').each(function () {
-            let href         = new URL(jQuery(this).find('.remove').attr('href'));
-            let searchParams = new URLSearchParams(href.search);
-            let cartItemKey  = searchParams.get('remove_item');
-            // alert('cart_item_key: ' + cartItemKey);
-            // console.log('cart_item_key: ' + cartItemKey);
-            let productId = wooptpmDataLayer['cart_item_keys'][cartItemKey]['id'];
+        try {
+            jQuery('.cart_item').each(function () {
+                let href         = new URL(jQuery(this).find('.remove').attr('href'));
+                let searchParams = new URLSearchParams(href.search);
+                let cartItemKey  = searchParams.get('remove_item');
+                // console.log('cart_item_key: ' + cartItemKey);
+                // console.log('cart_item_key: ' + cartItemKey);
+                let productId = wooptpmDataLayer.cart_item_keys[cartItemKey].id;
 
-            let quantity = jQuery(this).find('.qty').val();
+                let quantity = jQuery(this).find('.qty').val();
 
-            // alert ('quantity: ' + quantity);
+                // console.log('quantity: ' + quantity);
 
-            if (quantity == 0) {
-                wooptpm.removeProductFromCart(cartItemKey);
-            } else if (quantity < wooptpmDataLayer['cart'][productId]['quantity']) {
-                wooptpm.removeProductFromCart(cartItemKey, wooptpmDataLayer['cart'][productId]['quantity'] - quantity);
-            } else if (quantity > wooptpmDataLayer['cart'][productId]['quantity']) {
-                // console.log('adding product: ' + productId);
-                wooptpm.addProductToCart(productId, quantity - wooptpmDataLayer['cart'][productId]['quantity']);
-            }
-        });
+                if (quantity === 0) {
+                    wooptpm.removeProductFromCart(cartItemKey);
+                } else if (quantity < wooptpmDataLayer.cart[productId].quantity) {
+                    wooptpm.removeProductFromCart(cartItemKey, wooptpmDataLayer.cart[productId].quantity - quantity);
+                } else if (quantity > wooptpmDataLayer.cart[productId].quantity) {
+                    // console.log('adding product: ' + productId);
+                    wooptpm.addProductToCart(productId, quantity - wooptpmDataLayer.cart[productId].quantity);
+                }
+            });
+        } catch (e) {
+            console.log(e);
+        }
     });
 
     // Fired when the user selects all the required dropdowns / attributes
     // https://stackoverflow.com/a/27849208/4688612
     jQuery(".single_variation_wrap").on("show_variation", function (event, variation) {
 
-        // Fired when the user selects all the required dropdowns / attributes
-        // console.log('product selected');
-        // console.log(variation);
+        try {
+            // Fired when the user selects all the required dropdowns / attributes
+            // console.log('product selected');
+            // console.log(variation);
 
-        let productId = getIdBasedOndVariationsOutputSetting(variation.variation_id);
+            let productId = getIdBasedOndVariationsOutputSetting(variation.variation_id);
 
-        // console.log('productId: ' + productId);
+            if (!productId) throw Error('Wasn\'t able to retrieve a productId');
 
-        let data = {
-            "id"           : productId.toString(),
-            "dyn_r_ids"    : wooptpmDataLayer['products'][productId]['dyn_r_ids'],
-            "name"         : wooptpmDataLayer['products'][productId]['name'],
-            "list_name"    : wooptpmDataLayer['shop']['list_name'],
-            "brand"        : wooptpmDataLayer['products'][productId]['brand'],
-            "category"     : wooptpmDataLayer['products'][productId]['category'],
-            "variant"      : wooptpmDataLayer['products'][productId]['variant'],
-            "list_position": wooptpmDataLayer['products'][productId]['position'],
-            "quantity"     : 1,
-            "price"        : wooptpmDataLayer['products'][productId]['price']
-        };
+            if (wooptpmDataLayer.products && wooptpmDataLayer.products[productId]) {
 
-        jQuery(document).trigger('wooptpmViewItem', data);
+                // console.log('productId: ' + productId);
+
+                let data = {
+                    "id"           : productId.toString(),
+                    "dyn_r_ids"    : wooptpmDataLayer.products[productId].dyn_r_ids,
+                    "name"         : wooptpmDataLayer.products[productId].name,
+                    "list_name"    : wooptpmDataLayer.shop.list_name,
+                    "brand"        : wooptpmDataLayer.products[productId].brand,
+                    "category"     : wooptpmDataLayer.products[productId].category,
+                    "variant"      : wooptpmDataLayer.products[productId].variant,
+                    "list_position": wooptpmDataLayer.products[productId].position,
+                    "quantity"     : 1,
+                    "price"        : wooptpmDataLayer.products[productId].price
+                };
+
+                jQuery(document).trigger('wooptpmViewItem', data);
+            }
+        } catch (e) {
+            console.log(e);
+        }
     });
 });
 
@@ -689,7 +829,11 @@ jQuery(function () {
 jQuery(window).on('load', function () {
     // populate the wooptpmDataLayer with the cart items
     // console.log('getting cart');
-    wooptpm.getCartItemsFromBackEnd();
+    try {
+        wooptpm.getCartItemsFromBackEnd();
+    } catch (e) {
+        console.log(e);
+    }
 
     // wooptpm.loadPageProductsFromBackend();
 });

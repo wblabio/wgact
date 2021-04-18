@@ -184,10 +184,10 @@ class Pixel_Manager extends Pixel_Manager_Base
         }
 
         $data = [
-            'id'    => (string)$product->get_id(),
-            'sku'   => (string)$product->get_sku(),
-            'name'  => (string)$product->get_name(),
-            'price' => (int)$price,
+            'id'          => (string)$product->get_id(),
+            'sku'         => (string)$product->get_sku(),
+            'name'        => (string)$product->get_name(),
+            'price'       => (int)$price,
             'brand'       => $this->get_brand_name($product->get_id()),
             'category'    => (array)$this->get_product_category($product->get_id()),
             'quantity'    => (int)1,
@@ -246,6 +246,7 @@ class Pixel_Manager extends Pixel_Manager_Base
     {
         $data = [
             'cart'                => [],
+            'cart_item_keys'      => [],
             'pixels'              => [],
             'orderDeduplication'  => ($this->options['shop']['order_deduplication'] && !$this->is_nodedupe_parameter_set()) ? true : false,
             'position'            => (int)1,
@@ -278,7 +279,7 @@ class Pixel_Manager extends Pixel_Manager_Base
     {
         $settings = [
             'testMode'        => false,
-            'backgroundColor' => 'blue',
+            'backgroundColor' => 'green',
             'opacity'         => 0.5,
             'repeat'          => true,
             'timeout'         => 1000,

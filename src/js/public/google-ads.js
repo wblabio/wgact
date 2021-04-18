@@ -5,8 +5,7 @@ jQuery(function () {
         // view_item_list event
         jQuery(document).on('wooptpmViewItemList', function (event, product) {
 
-            // console.log('firing google select_content event');
-            // alert('firing google select_content event');
+            // console.log('firing google view_item_list event');
             // console.log(product);
 
             gtag('event', 'view_item_list', {
@@ -23,7 +22,7 @@ jQuery(function () {
         jQuery(document).on('wooptpmAddToCart', function (event, product) {
 
             // console.log('firing google ads add_to_cart event');
-            // alert('firing google ads add_to_cart event');
+            // console.log('firing google ads add_to_cart event');
             // console.log(product);
             // console.log(wooptpmDataLayer.pixels.google.ads.conversionIds);
             // console.log('dyn_r_id: ' + product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type]);
@@ -46,7 +45,7 @@ jQuery(function () {
         // jQuery(document).on('wooptpmSelectContentGaUa', function (event, product) {
         //
         //     // console.log('firing google ads select_content event');
-        //     // alert('firing google ads select_content event');
+        //     // console.log('firing google ads select_content event');
         //     // console.log(product);
         //
         //     gtag("event", "select_content", {
@@ -66,7 +65,6 @@ jQuery(function () {
         jQuery(document).on('wooptpmViewItem', function (event, product) {
 
             // console.log('firing google ads view_item event');
-            // alert('firing google ads view_item event');
             // console.log(product);
             // console.log(wooptpmDataLayer.pixels.google.ads.conversionIds);
             // console.log('dyn_r_id: ' + product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type]);
@@ -90,38 +88,42 @@ jQuery(window).on('load', function () {
 
     wooptpmExists().then(function () {
 
-        if (wooptpmDataLayer.shop.page_type === 'product' && wooptpm.getMainProductIdFromProductPage()) {
+        try {
+            if (wooptpmDataLayer.shop.page_type === 'product' && wooptpm.getMainProductIdFromProductPage()) {
 
-            // console.log('productId: ' + wooptpm.getMainProductIdFromProductPage());
+                // console.log('productId: ' + wooptpm.getMainProductIdFromProductPage());
 
-            let product = wooptpm.getProductDataForViewItemEvent(wooptpm.getMainProductIdFromProductPage());
+                let product = wooptpm.getProductDataForViewItemEvent(wooptpm.getMainProductIdFromProductPage());
 
-            gtag("event", "view_item", {
-                "send_to": wooptpmDataLayer.pixels.google.ads.conversionIds,
-                "value"  : 1 * product.price,
-                "items"  : [{
-                    "id"                      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
-                    "google_business_vertical": wooptpmDataLayer.pixels.google.ads.google_business_vertical
-                }]
-            });
-        } else if (wooptpmDataLayer.shop.page_type === 'search'){
+                gtag("event", "view_item", {
+                    "send_to": wooptpmDataLayer.pixels.google.ads.conversionIds,
+                    "value"  : 1 * product.price,
+                    "items"  : [{
+                        "id"                      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
+                        "google_business_vertical": wooptpmDataLayer.pixels.google.ads.google_business_vertical
+                    }]
+                });
+            } else if (wooptpmDataLayer.shop.page_type === 'search') {
 
-            let products = [];
+                let products = [];
 
-            for (const [key, product] of Object.entries(wooptpmDataLayer.products)) {
-                products.push({
-                    "id": product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
-                    "google_business_vertical": wooptpmDataLayer.pixels.google.ads.google_business_vertical
+                for (const [key, product] of Object.entries(wooptpmDataLayer.products)) {
+                    products.push({
+                        "id"                      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
+                        "google_business_vertical": wooptpmDataLayer.pixels.google.ads.google_business_vertical
+                    });
+                }
+
+                // console.log(products);
+
+                gtag("event", "view_search_results", {
+                    "send_to": wooptpmDataLayer.pixels.google.ads.conversionIds,
+                    // "value"  : 1 * product.price,
+                    "items": products
                 });
             }
-
-            // console.log(products);
-
-            gtag("event", "view_search_results", {
-                "send_to": wooptpmDataLayer.pixels.google.ads.conversionIds,
-                // "value"  : 1 * product.price,
-                "items"  : products
-            });
+        } catch (e) {
+            console.log(e);
         }
     })
 });
