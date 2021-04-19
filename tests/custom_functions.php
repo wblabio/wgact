@@ -1,5 +1,7 @@
 <?php
 
+add_filter('wooptpm_full_tracking_enabled', '__return_true');
+
 //add_filter('wooptpm_view_item_list_trigger_settings', 'wooptpm_view_item_list_trigger_settings');
 function wooptpm_view_item_list_trigger_settings($settings)
 {
@@ -34,8 +36,6 @@ function action_woocommerce_after_shop_loop_item()
 
 function wc_add_date_to_gutenberg_block($html, $data, $product)
 {
-
-
     error_log('test');
 
     return $html . "xfxf";
@@ -84,7 +84,7 @@ if (isset($_GET["conversion_prevention_filter"])) {
     add_filter('wgact_conversion_prevention', '__return_true');
 }
 
-add_filter('wooptpm_product_id_type_for_google_analytics', 'wooptpm_product_id_type_for_google_analytics');
+//add_filter('wooptpm_product_id_type_for_google_analytics', 'wooptpm_product_id_type_for_google_analytics');
 function wooptpm_product_id_type_for_google_analytics()
 {
     return 'sku';

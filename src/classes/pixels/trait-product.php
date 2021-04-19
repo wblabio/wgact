@@ -8,6 +8,22 @@ if (!defined('ABSPATH')) {
 
 trait Trait_Product
 {
+    protected function get_formatted_variant_text($product): string
+    {
+        $variant_text_array = [];
+
+        $attributes = $product->get_attributes();
+        if ($attributes) {
+            foreach ($attributes as $key => $value) {
+
+                $key_name             = str_replace('pa_', '', $key);
+                $variant_text_array[] = ucfirst($key_name) . ': ' . strtolower($value);
+            }
+        }
+
+        return implode(' | ', $variant_text_array);
+    }
+
     protected function get_variation_or_product_id($item, $variations_output = true)
     {
         if ($item['variation_id'] <> 0 && $variations_output == true) {

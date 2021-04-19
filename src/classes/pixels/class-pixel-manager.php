@@ -201,19 +201,7 @@ class Pixel_Manager extends Pixel_Manager_Base
             $data['name']        = $parent_product->get_name();
             $data['isVariation'] = true;
             $data['parentId']    = $parent_product->get_id();
-
-            $variant_text_array = [];
-
-            $attributes = $product->get_attributes();
-            if ($attributes) {
-                foreach ($attributes as $key => $value) {
-
-                    $key_name             = str_replace('pa_', '', $key);
-                    $variant_text_array[] = ucfirst($key_name) . ': ' . strtolower($value);
-                }
-            }
-
-            $data['variant'] = implode(' | ', $variant_text_array);
+            $data['variant']     = $this->get_formatted_variant_text($product);
         }
 
         $html = "
@@ -238,8 +226,6 @@ class Pixel_Manager extends Pixel_Manager_Base
         if (wga_fs()->is__premium_only() && $this->options_obj->google->analytics->eec) {
             (new Google_Analytics_Refund())->process_refund_to_frontend__premium_only();
         }
-
-
     }
 
     private function inject_data_layer_init()

@@ -7,7 +7,6 @@ jQuery(function () {
             jQuery(document).on('wooptpmAddToCart', function (event, data) {
 
                 // console.log('firing facebook ads AddToCart event');
-                // console.log('firing facebook ads AddToCart event');
                 // console.log(data);
 
                 fbq('track', 'AddToCart', {

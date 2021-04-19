@@ -5,6 +5,7 @@ namespace WGACT\Classes\Pixels\Google;
 use WC_Order;
 use WC_Order_Refund;
 use WC_Product;
+use WGACT\Classes\Http\Google_UA_MP;
 use WGACT\Classes\Pixels\Pixel_Manager_Base;
 
 if (!defined('ABSPATH')) {
@@ -20,6 +21,7 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
     private $google_analytics_ua_standard_pixel;
     private $google_analytics_4_standard_pixel;
     private $google_analytics_ua_eec_pixel;
+    private $google_analytics_ua_http_mp;
 //    private $google_analytics_ua_refund_pixel;
     private $google_analytics_4_eec_pixel;
 
@@ -40,6 +42,7 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
 
             $this->google_analytics_ua_eec_pixel = new Google_Analytics_UA_EEC();
 //            $this->google_analytics_ua_refund_pixel = new Google_Analytics_UA_Refund_Pixel();
+            $this->google_analytics_ua_http_mp        = new Google_UA_MP();
 
             $this->google_analytics_4_eec_pixel = new Google_Analytics_4_EEC();
 
@@ -148,6 +151,7 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
             if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_standard_pixel->inject_order_received_page($order, $order_total, $is_new_customer);
             if ($this->is_google_analytics_4_active()) $this->google_analytics_4_standard_pixel->inject_order_received_page($order, $order_total, $is_new_customer);
         } else if (wga_fs()->is__premium_only()) {
+            if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_http_mp->send_purchase_hit($order);
             if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_eec_pixel->inject_order_received_page($order, $order_total, $is_new_customer);
             if ($this->is_google_analytics_4_active()) $this->google_analytics_4_eec_pixel->inject_order_received_page($order, $order_total, $is_new_customer);
         }

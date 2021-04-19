@@ -19,7 +19,7 @@ class Google_Analytics_UA extends Google_Analytics
         $order_currency = $this->get_order_currency($order);
 
         echo "
-                 wooptpmExists().then(function(){
+                wooptpmExists().then(function(){
                     if  (!wooptpm.isOrderIdStored(" . $order->get_order_number() . ")) {
                         gtag('event', 'purchase', " . $this->get_event_purchase_json($order, $order_total, $order_currency, $is_new_customer) . ")
                     }
@@ -35,7 +35,7 @@ class Google_Analytics_UA extends Google_Analytics
             'send_to'        => [],
             'transaction_id' => (string)$order->get_order_number(),
             'affiliation'    => (string)get_bloginfo('name'),
-            'currency'       => (string)$order_currency,
+            'currency'       => (string)$this->get_order_currency($order),
             'value'          => (float)$order->get_total(),
             'discount'       => (float)$order->get_total_discount(),
             'tax'            => (float)$order->get_total_tax(),

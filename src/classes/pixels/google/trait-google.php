@@ -8,6 +8,15 @@ if (!defined('ABSPATH')) {
 
 trait Trait_Google
 {
+    protected function get_ga_id_type(): string
+    {
+        $ga_id_type = 'post_id';
+
+        $ga_id_type = apply_filters('wooptpm_product_id_type_for_google_analytics', $ga_id_type);
+
+        return $ga_id_type;
+    }
+
     protected function google_active(): bool
     {
         if ($this->options_obj->google->analytics->universal->property_id) {

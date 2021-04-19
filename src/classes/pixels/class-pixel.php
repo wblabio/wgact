@@ -35,7 +35,6 @@ class Pixel
          * Initialize options
          */
         $this->options = get_option(WGACT_DB_OPTIONS_NAME);
-
         $this->options_obj = json_decode(json_encode($this->options));
 
         $this->options_obj->shop->currency = new stdClass();

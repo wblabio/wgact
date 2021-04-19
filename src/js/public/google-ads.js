@@ -22,7 +22,6 @@ jQuery(function () {
         jQuery(document).on('wooptpmAddToCart', function (event, product) {
 
             // console.log('firing google ads add_to_cart event');
-            // console.log('firing google ads add_to_cart event');
             // console.log(product);
             // console.log(wooptpmDataLayer.pixels.google.ads.conversionIds);
             // console.log('dyn_r_id: ' + product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type]);
@@ -127,5 +126,3 @@ jQuery(window).on('load', function () {
         }
     })
 });
-
-

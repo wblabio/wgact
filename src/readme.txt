@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== WooCommerce Conversion Tracking ===
 Contributors: alekv, woopt, wolfbaer
 Tags: woocommerce, google ads, conversion tracking, dynamic retargeting, remarketing , adwords
 Requires at least: 3.7

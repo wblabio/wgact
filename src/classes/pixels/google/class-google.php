@@ -181,15 +181,6 @@ class Google extends Pixel
         return $order_items_array;
     }
 
-    protected function get_ga_id_type(): string
-    {
-        $ga_id_type = 'post_id';
-
-        $ga_id_type = apply_filters('wooptpm_product_id_type_for_google_analytics', $ga_id_type);
-
-        return $ga_id_type;
-    }
-
     protected function get_event_purchase_json($order, $order_total, $order_currency, $is_new_customer, $channel)
     {
         $gtag_data = [
