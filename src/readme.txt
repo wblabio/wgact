@@ -105,7 +105,12 @@ You can send the link to the front page of your shop too if you think it would b
 
 = 1.9.4 =
 
+[//]: # fs_premium_only_begin
+* Tweak: Only activate eec scripts if GA UA or GA4 are enabled
+[//]: # fs_premium_only_end
 * Tweak: Finalized improvement for front-end error handling
+* Tweak: Added a JS modification exclusion for Autoptimize in order to prevent our script to get modified and broken
+* Fix: Fixed a selector for cart items on the cart page which caused on certain custom shop templates to trigger an error
 
 = 1.9.3 =
 

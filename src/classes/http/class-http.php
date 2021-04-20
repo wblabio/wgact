@@ -22,7 +22,7 @@ class Http
             'timeout'     => '5',
             'redirection' => '5',
             'httpversion' => '1.0',
-            'blocking'    => true,
+            'blocking'    => false,
             'headers'     => [],
             'cookies'     => [],
         ];

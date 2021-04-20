@@ -96,13 +96,9 @@
         return regex.test(email);
     }
 
-    wooptpm.removeProductFromCart = function (cartItemKey, quantityToRemove = null, productId = null) {
+        wooptpm.removeProductFromCart = function (productId, quantityToRemove = null) {
 
         try {
-
-            if (productId == null) {
-                productId = wooptpmDataLayer.cart_item_keys[cartItemKey].id;
-            }
 
             if (!productId) throw Error('Wasn\'t able to retrieve a productId');
 
@@ -145,9 +141,6 @@
 
                 if (quantityToRemove == null) {
                     delete wooptpmDataLayer.cart[productId];
-                    if (cartItemKey) {
-                        delete wooptpmDataLayer.cart_item_keys[cartItemKey];
-                    }
                 } else {
                     wooptpmDataLayer.cart[productId].quantity = wooptpmDataLayer.cart[productId].quantity - quantity;
                 }
@@ -271,8 +264,6 @@
                         wooptpmDataLayer.cart     = cart_items['cart'];
                         // wooptpmDataLayer.products = {... wooptpmDataLayer.products, ...cart_items['cart']};
                         wooptpmDataLayer.products = Object.assign({}, wooptpmDataLayer.products, cart_items['cart']);
-
-                        wooptpmDataLayer['cart_item_keys'] = cart_items['cart_item_keys'];
                     }
                 });
         } catch (e) {
@@ -550,25 +541,9 @@ jQuery(function () {
     jQuery(document).on('click', '.remove_from_cart_button, .remove', function (e) {
 
         try {
-            let cartItemKey;
 
-            // if (wooptpmDataLayer['shop']['page_type'] === 'cart') {
-            if (wooptpmDataLayer.shop.page_type === 'cart') {
-                let href         = new URL(jQuery(this).attr('href'));
-                let searchParams = new URLSearchParams(href.search);
-                cartItemKey      = searchParams.get('remove_item');
-                // console.log('remove from cart page');
-                wooptpm.removeProductFromCart(cartItemKey);
-            } else if (wooptpmDataLayer.cart_item_keys && wooptpmDataLayer.cart_item_keys[jQuery(this).data('cart_item_key')] !== undefined) {
-                // console.log('remove from mini cart ' + jQuery(this).data('product_id'));
-                // console.log('cart item key ' + jQuery(this).data('cart_item_key'));
-                wooptpm.removeProductFromCart(jQuery(this).data('cart_item_key'));
-            } else {
-                // console.log('trying');
-                // console.log('remove from mini cart ' + jQuery(this).data('product_id'));
+            wooptpm.removeProductFromCart(jQuery(this).data('product_id'));
 
-                wooptpm.removeProductFromCart(null, null, jQuery(this).data('product_id'));
-            }
         } catch (e) {
             console.log(e);
         }
@@ -762,23 +737,16 @@ jQuery(function () {
 
         try {
             jQuery('.cart_item').each(function () {
-                let href         = new URL(jQuery(this).find('.remove').attr('href'));
-                let searchParams = new URLSearchParams(href.search);
-                let cartItemKey  = searchParams.get('remove_item');
-                // console.log('cart_item_key: ' + cartItemKey);
-                // console.log('cart_item_key: ' + cartItemKey);
-                let productId = wooptpmDataLayer.cart_item_keys[cartItemKey].id;
+
+                let productId = jQuery(this).find('[data-product_id]').data('product_id');
 
                 let quantity = jQuery(this).find('.qty').val();
 
-                // console.log('quantity: ' + quantity);
-
                 if (quantity === 0) {
-                    wooptpm.removeProductFromCart(cartItemKey);
+                    wooptpm.removeProductFromCart(productId);
                 } else if (quantity < wooptpmDataLayer.cart[productId].quantity) {
-                    wooptpm.removeProductFromCart(cartItemKey, wooptpmDataLayer.cart[productId].quantity - quantity);
+                    wooptpm.removeProductFromCart(productId, wooptpmDataLayer.cart[productId].quantity - quantity);
                 } else if (quantity > wooptpmDataLayer.cart[productId].quantity) {
-                    // console.log('adding product: ' + productId);
                     wooptpm.addProductToCart(productId, quantity - wooptpmDataLayer.cart[productId].quantity);
                 }
             });
@@ -823,6 +791,14 @@ jQuery(function () {
             console.log(e);
         }
     });
+
+    // add_to_wishlist
+    // jQuery(document).on('click', '.add_to_wishlist', function(){
+    //     console.log('this:' + jQuery(this).data('product-id'));
+    //     let productId = jQuery(this).data('product-id');
+    //
+    //     jQuery(document).trigger('wooptpmAddToWishlist', data);
+    // })
 });
 
 

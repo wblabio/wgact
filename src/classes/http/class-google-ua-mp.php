@@ -28,6 +28,13 @@ class Google_UA_MP extends Http
         // woocommerce_order_status_completed
         // woocommerce_payment_complete
 
+        // https://developers.google.com/gtagjs/reference/api#get
+        //
+        //get the cid in the browser
+        // gtag('get', 'UA-XXXXXXXX-Y', 'client_id', (clientID) => {
+        //  sendOfflineEvent(clientID, "tutorial_begin")
+        // });
+
         error_log('test mp');
 
         // only run, if the hit has not been sent already (check in db)

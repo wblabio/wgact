@@ -139,7 +139,7 @@ class Environment_Check
     {
         global $woocommerce_wpml;
 
-        if(is_plugin_active('woocommerce-multilingual/wpml-woocommerce.php') && is_object($woocommerce_wpml->multi_currency)){
+        if (is_plugin_active('woocommerce-multilingual/wpml-woocommerce.php') && is_object($woocommerce_wpml->multi_currency)) {
             return true;
         } else {
             return false;
@@ -148,7 +148,7 @@ class Environment_Check
 
     public function is_woo_discount_rules_active(): bool
     {
-        if(is_plugin_active('woo-discount-rules/woo-discount-rules.php') || is_plugin_active('woo-discount-rules-pro/woo-discount-rules-pro.php')){
+        if (is_plugin_active('woo-discount-rules/woo-discount-rules.php') || is_plugin_active('woo-discount-rules-pro/woo-discount-rules-pro.php')) {
             return true;
         } else {
             return false;
@@ -178,16 +178,14 @@ class Environment_Check
     public function permanent_compatibility_mode()
     {
         if ($this->is_wp_rocket_active()) $this->exclude_inline_scripts_from_wp_rocket();
-        
-        if ($this->is_sg_optimizer_active())
-        {
+
+        if ($this->is_sg_optimizer_active()) {
             add_filter('sgo_javascript_combine_excluded_inline_content', [$this, 'sg_optimizer_js_exclude_combine_inline_content']);
             add_filter('sgo_js_minify_exclude', [$this, 'sg_optimizer_js_minify_exclude']);
             add_filter('sgo_javascript_combine_exclude_move_after', [$this, 'sgo_javascript_combine_exclude_move_after']);
         }
 
-        if ($this->is_litespeed_active())
-        {
+        if ($this->is_litespeed_active()) {
             add_filter('litespeed_optm_js_defer_exc', [$this, 'litespeed_cache_js_defer_exc']);
             add_filter('litespeed_optimize_js_excludes', [$this, 'litespeed_optimize_js_excludes']);
             add_filter('litespeed_optm_cssjs', [$this, 'litespeed_optm_cssjs']);
@@ -195,6 +193,25 @@ class Environment_Check
 //             litespeed_optm_cssjs
 //             litespeed_optm_html_head
         }
+
+        if ($this->is_autoptimize_active()) {
+            add_filter('autoptimize_filter_js_consider_minified', [$this, 'autoptimize_filter_js_consider_minified']);
+            add_filter('autoptimize_filter_js_dontmove', [$this, 'autoptimize_filter_js_dontmove']);
+        }
+    }
+
+    // https://github.com/futtta/autoptimize/blob/37b13d4e19269bb2f50df123257de51afa37244f/classes/autoptimizeScripts.php#L387
+    public function autoptimize_filter_js_consider_minified()
+    {
+        $exclude_js[] = 'wooptpm.js';
+        return $exclude_js;
+    }
+
+    // https://github.com/futtta/autoptimize/blob/37b13d4e19269bb2f50df123257de51afa37244f/classes/autoptimizeScripts.php#L285
+    public function autoptimize_filter_js_dontmove($dontmove)
+    {
+        $dontmove[] = 'wooptpm.js';
+        return $dontmove;
     }
 
     public function litespeed_optm_cssjs($excludes)
@@ -204,8 +221,8 @@ class Environment_Check
 
     public function litespeed_optimize_js_excludes($excludes)
     {
-        if(is_array($excludes)){
-            $excludes = array_merge($excludes,$this->get_wooptpm_script_identifiers());
+        if (is_array($excludes)) {
+            $excludes = array_merge($excludes, $this->get_wooptpm_script_identifiers());
         }
 
         return $excludes;
@@ -213,16 +230,16 @@ class Environment_Check
 
     public function litespeed_cache_js_defer_exc($excludes): array
     {
-        if(is_array($excludes)){
-            $excludes = array_merge($excludes,$this->get_wooptpm_script_identifiers());
+        if (is_array($excludes)) {
+            $excludes = array_merge($excludes, $this->get_wooptpm_script_identifiers());
         }
         return $excludes;
     }
 
     public function sg_optimizer_js_exclude_combine_inline_content($exclude_list): array
     {
-        if(is_array($exclude_list)) {
-            $exclude_list =  array_merge($exclude_list, $this->get_wooptpm_script_identifiers());
+        if (is_array($exclude_list)) {
+            $exclude_list = array_merge($exclude_list, $this->get_wooptpm_script_identifiers());
         }
 
 //        foreach ($this->get_wooptpm_script_identifiers() as $exclusion) {
@@ -255,8 +272,8 @@ class Environment_Check
 
     public function sgo_javascript_combine_exclude_move_after($exclude_list): array
     {
-        if(is_array($exclude_list)) {
-            $exclude_list =  array_merge($exclude_list, $this->get_wooptpm_script_identifiers());
+        if (is_array($exclude_list)) {
+            $exclude_list = array_merge($exclude_list, $this->get_wooptpm_script_identifiers());
         }
 
         return $exclude_list;
