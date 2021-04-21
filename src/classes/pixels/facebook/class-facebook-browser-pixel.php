@@ -46,27 +46,7 @@ class Facebook_Browser_Pixel extends Pixel
 
     public function inject_search()
     {
-        ?>
-
-            fbq('track', 'Search');
-        <?php
-    }
-
-    public function inject_product($product, $product_attributes)
-    {
-        $data = [
-            'content_type'     => 'product',
-            'content_name'     => (string)$product->get_name(),
-            'content_category' => $this->get_product_category($product->get_id()),
-            'content_ids'      => $product_attributes['dyn_r_ids'][$this->get_dyn_r_id_type()],
-            'currency'         => (string)$this->options_obj->shop->currency,
-            'value'            => (float)$product->get_price(),
-        ];
-
-        ?>
-
-            fbq('track', 'ViewContent', <?php echo json_encode($data) ?>);
-        <?php
+        // handled on front-end
     }
 
     public function inject_cart($cart, $cart_total)
@@ -74,11 +54,16 @@ class Facebook_Browser_Pixel extends Pixel
         // AddToCart event is triggered in front-end event layer
     }
 
+    public function inject_product($product, $product_attributes)
+    {
+        // handled on front-end
+    }
+
     public function inject_order_received_page($order, $order_total, $is_new_customer)
     {
         $data = [
             'value'        => $order_total,
-            'currency'     => $this->options_obj->shop->currency,
+            'currency'     => get_woocommerce_currency(),
             'content_ids'  => $this->get_order_item_ids($order),
             'content_type' => 'product',
         ];
@@ -91,36 +76,5 @@ class Facebook_Browser_Pixel extends Pixel
             });
 
         ";
-
-//        $html = "
-//            if ((typeof wooptpm !== \"undefined\") && !wooptpm.isOrderIdStored(" . $order->get_order_number() . ")) {
-//                fbq('track', 'Purchase', " . json_encode($data) .  ");
-//            }";
-//
-//        echo $html;
     }
-
-//    protected function get_order_item_ids($order): array
-//    {
-//        $order_items       = $order->get_items();
-//        $order_items_array = [];
-//
-//        foreach ((array)$order_items as $order_item) {
-//
-//            $product_id = $this->get_variation_or_product_id($order_item->get_data(), $this->options_obj->general->variations_output);
-//
-//            $product = wc_get_product($product_id);
-//
-//            // only continue if WC retrieves a valid product
-//            if (!is_bool($product)) {
-//
-//                $dyn_r_ids           = $this->get_dyn_r_ids($product);
-//                $product_id_compiled = $dyn_r_ids[$this->get_dyn_r_id_type()];
-//
-//                array_push($order_items_array, $product_id_compiled);
-//            }
-//        }
-//
-//        return $order_items_array;
-//    }
 }

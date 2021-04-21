@@ -22,7 +22,7 @@ class Google_Analytics_4 extends Google_Analytics
 
         echo "       
                 wooptpmExists().then(function(){
-                    if  (!wooptpm.isOrderIdStored(". $order->get_order_number() . ")) {
+                    if  (!wooptpm.isOrderIdStored(" . $order->get_order_number() . ")) {
                         gtag('event', 'purchase', " . $this->get_event_purchase_json($order, $order_total, $order_currency, $is_new_customer) . ");
                     }
                 });
@@ -71,11 +71,11 @@ class Google_Analytics_4 extends Google_Analytics
                 //                'discount' => 0,
                 'item_brand'    => $order_item_data['brand'],
                 'item_category' => $order_item_data['category'],
-//                'item_variant'       => '',
-//                'tax' => 0,
+                //                'item_variant'       => '',
+                //                'tax' => 0,
                 'price'         => $order_item_data['price'],
                 //                    'list_name' => ,
-//                'currency' => '',
+                'currency'      => get_woocommerce_currency(),
             ];
 
             array_push($order_items_array, $item_details_array);

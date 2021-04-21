@@ -5,6 +5,17 @@
         cookieExpiresDays: 365
     };
 
+    wooptpm.objectExists = function (obj) {
+
+        for (let i = 1; i < arguments.length; i++) {
+            if (!obj.hasOwnProperty(arguments[i])) {
+                return false;
+            }
+            obj = obj[arguments[i]];
+        }
+        return true;
+    }
+
     wooptpm.writeOrderIdToStorage = function (orderId, expireDays = 365) {
 
         // save the order ID in the browser storage
