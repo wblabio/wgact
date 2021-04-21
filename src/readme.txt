@@ -106,6 +106,9 @@ You can send the link to the front page of your shop too if you think it would b
 = 1.9.4 =
 
 [//]: # fs_premium_only_begin
+* New: add_to_wishlist event
+[//]: # fs_premium_only_end
+[//]: # fs_premium_only_begin
 * Tweak: Only activate eec scripts if GA UA or GA4 are enabled
 [//]: # fs_premium_only_end
 * Tweak: Finalized improvement for front-end error handling

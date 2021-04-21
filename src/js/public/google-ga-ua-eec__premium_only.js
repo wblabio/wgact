@@ -140,7 +140,6 @@ jQuery(function () {
         jQuery(document).on('wooptpmViewItem', function (event, product) {
 
             // console.log('firing google view_item event');
-            // console.log('firing google view_item event');
             // console.log(product);
 
             gtag('event', 'view_item', {
@@ -156,6 +155,31 @@ jQuery(function () {
                         "list_position": 1,
                         "quantity"     : 1,
                         "price"        : product.price
+                    }
+                ]
+            });
+        });
+
+        // add_to_wishlist event
+        jQuery(document).on('wooptpmAddToWishlist', function (event, product) {
+
+            // console.log('firing google add_to_wishlist event');
+            // console.log(product);
+
+            gtag('event', 'add_to_wishlist', {
+                "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
+                "items"  : [
+                    {
+                        "id"           : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
+                        "name"         : product.name,
+                        "brand"        : product.brand,
+                        "category"     : product.category,
+                        // "coupon"       : "",
+                        "list_name"    : wooptpmDataLayer.shop.list_name, // doesn't make sense on mini_cart
+                        "list_position": 1,
+                        "price"        : product.price,
+                        "quantity"     : 1,
+                        "variant"      : product.variant,
                     }
                 ]
             });

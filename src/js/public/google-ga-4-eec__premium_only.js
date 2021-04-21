@@ -148,6 +148,35 @@ jQuery(function () {
             });
         });
 
+        // add_to_wishlist event
+        jQuery(document).on('wooptpmAddToWishlist', function (event, product) {
+
+            // console.log('firing google add_to_wishlist event');
+            // console.log('firing google add_to_wishlist event for: ' + wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id);
+            // console.log(product);
+
+            gtag('event', 'add_to_wishlist', {
+                "send_to" : wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id,
+                "currency": wooptpmDataLayer.shop.currency,
+                // "value": 0,
+                "items": [
+                    {
+                        "item_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
+                        "item_name": product.name,
+                        "quantity"     : 1,
+                        // "affiliation": "",
+                        // "coupon": "",
+                        // "discount": 0,
+                        "item_brand"   : product.brand,
+                        "item_category": product.category,
+                        "item_variant" : product.variant,
+                        "price"        : product.price,
+                        "currency"     : wooptpmDataLayer.shop.currency,
+                    }
+                ]
+            });
+        });
+
         // remove_from_cart event
         jQuery(document).on('wooptpmRemoveFromCart', function (event, product) {
 

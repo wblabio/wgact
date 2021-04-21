@@ -96,7 +96,7 @@
         return regex.test(email);
     }
 
-        wooptpm.removeProductFromCart = function (productId, quantityToRemove = null) {
+    wooptpm.removeProductFromCart = function (productId, quantityToRemove = null) {
 
         try {
 
@@ -793,12 +793,38 @@ jQuery(function () {
     });
 
     // add_to_wishlist
-    // jQuery(document).on('click', '.add_to_wishlist', function(){
-    //     console.log('this:' + jQuery(this).data('product-id'));
-    //     let productId = jQuery(this).data('product-id');
-    //
-    //     jQuery(document).trigger('wooptpmAddToWishlist', data);
-    // })
+    jQuery(document).on('click', '.add_to_wishlist, .wl-add-to-single', function () {
+        try {
+            // console.log('this:' + jQuery(this).data('product-id'));
+
+            let productId;
+
+            if (jQuery(this).data('productid')) { // for the WooCommerce wishlist plugin
+                productId = jQuery(this).data('productid');
+            } else if (jQuery(this).data('product-id')) {  // for the YITH wishlist plugin
+                productId = jQuery(this).data('product-id');
+            }
+
+            if (!productId) throw Error('Wasn\'t able to retrieve a productId');
+
+            let product = {
+                "id"           : productId.toString(),
+                "dyn_r_ids"    : wooptpmDataLayer.products[productId].dyn_r_ids,
+                "name"         : wooptpmDataLayer.products[productId].name,
+                "list_name"    : wooptpmDataLayer.shop.list_name,
+                "brand"        : wooptpmDataLayer.products[productId].brand,
+                "category"     : wooptpmDataLayer.products[productId].category,
+                "variant"      : wooptpmDataLayer.products[productId].variant,
+                "list_position": wooptpmDataLayer.products[productId].position,
+                "quantity"     : 1,
+                "price"        : wooptpmDataLayer.products[productId].price
+            };
+
+            jQuery(document).trigger('wooptpmAddToWishlist', product);
+        } catch (e) {
+            console.log(e);
+        }
+    })
 });
 
 
