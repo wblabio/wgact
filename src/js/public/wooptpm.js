@@ -793,8 +793,9 @@ jQuery(function () {
     });
 
     // add_to_wishlist
-    jQuery(document).on('click', '.add_to_wishlist, .wl-add-to-single', function () {
+    jQuery('body').on('click', '.add_to_wishlist, .wl-add-to', function () {
         try {
+            // console.log('add_to_wishlist');
             // console.log('this:' + jQuery(this).data('product-id'));
 
             let productId;
@@ -819,6 +820,8 @@ jQuery(function () {
                 "quantity"     : 1,
                 "price"        : wooptpmDataLayer.products[productId].price
             };
+
+            // console.log(product);
 
             jQuery(document).trigger('wooptpmAddToWishlist', product);
         } catch (e) {
