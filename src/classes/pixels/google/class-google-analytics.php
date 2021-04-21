@@ -64,19 +64,19 @@ class Google_Analytics extends Google
         $dyn_r_ids = $this->get_dyn_r_ids($product);
 
         return [
-            'id'       => (string)$dyn_r_ids[$this->get_ga_id_type()],
-            'name'     => (string)$product->get_name(),
-            'quantity' => (int)$order_item['quantity'],
-//            'affiliation' => '',
-//            'coupon' => '',
-//            'discount' => 0,
-            'brand'    => (string)$this->get_brand_name($product->get_id()),
-            'category' => (array)$this->get_product_category($product->get_id()),
-            //                    'variant' => ,
-//            'tax'      => 0,
-            'price'    => (float)$this->wooptpm_get_order_item_price($order_item, $product),
+            'id'          => (string)$dyn_r_ids[$this->get_ga_id_type()],
+            'name'        => (string)$product->get_name(),
+            'quantity'    => (int)$order_item['quantity'],
+            'affiliation' => (string)get_bloginfo('name'),
+            //            'coupon' => '',
+            //            'discount' => 0,
+            'brand'       => (string)$this->get_brand_name($product->get_id()),
+            'category'    => (array)$this->get_product_category($product->get_id()),
+            'variant'     => $this->get_formatted_variant_text($product),
+            //            'tax'      => 0,
+            'price'       => (float)$this->wooptpm_get_order_item_price($order_item, $product),
             //                    'list_name' => ,
-//            'currency' => '',
+            //            'currency' => '',
         ];
     }
 

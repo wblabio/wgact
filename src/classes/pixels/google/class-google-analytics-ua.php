@@ -63,14 +63,15 @@ class Google_Analytics_UA extends Google_Analytics
 
             $item_details_array = [
                 'id'            => $order_item_data['id'],
-                'quantity'      => $order_item_data['quantity'],
-                'price'         => $order_item_data['price'],
                 'name'          => $order_item_data['name'],
-                //                    'list_name' => ,
                 'brand'         => $order_item_data['brand'],
                 'category'      => $order_item_data['category'],
-                //                    'variant' => ,
+                //                'coupon'        => '',
+                //                'list_name'     => '',
                 'list_position' => (int)$list_position++,
+                'price'         => $order_item_data['price'],
+                'quantity'      => $order_item_data['quantity'],
+                'variant'       => $order_item_data['variant'],
             ];
 
             array_push($order_items_array, $item_details_array);
