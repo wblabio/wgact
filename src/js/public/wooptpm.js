@@ -530,6 +530,7 @@
 
 // run when window ready
 jQuery(function () {
+// jQuery(window).on('load', function () {
 
     // watch for products visible in viewport
     wooptpm.startIntersectionObserverToWatch();
@@ -537,10 +538,13 @@ jQuery(function () {
     // watch for lazy loaded products
     wooptpm.startProductsMutationObserverToWatch();
 
+    let body     = jQuery('body');
+    let products = jQuery('.products, .product');
     // remove_from_cart event
-    jQuery(document).on('click', '.remove_from_cart_button, .remove', function (e) {
+    body.on('click', '.remove_from_cart_button, .remove', function (e) {
 
         try {
+            // console.log('remove_from_cart: ' + jQuery(this).data('product_id'));
 
             wooptpm.removeProductFromCart(jQuery(this).data('product_id'));
 
@@ -551,9 +555,11 @@ jQuery(function () {
 
 
     // add_to_cart event
-    jQuery(document).on('click', '.add_to_cart_button:not(.product_type_variable), .ajax_add_to_cart, .single_add_to_cart_button', function (e) {
+    body.on('click', '.add_to_cart_button:not(.product_type_variable), .ajax_add_to_cart, .single_add_to_cart_button', function (e) {
 
         try {
+            // console.log('add_to_cart');
+
             if (wooptpmDataLayer.shop.page_type === 'product') {
 
                 // first process related and upsell products
@@ -609,7 +615,7 @@ jQuery(function () {
 
     // if someone clicks anywhere on a custom /?add-to-cart=123 link
     // trigger the add to cart event
-    jQuery(document).one('click', function (e) {
+    body.one('click', function (e) {
 
         try {
             if (jQuery(this)[0].URL) {
@@ -634,38 +640,30 @@ jQuery(function () {
     // select_content GA UA event
     // select_item GA 4 event
     // jQuery(document).on('click', '.woocommerce-LoopProduct-link, .wc-block-grid__product, .product-small.box', function (e) {
-    jQuery(document).on('click', '.woocommerce-LoopProduct-link, .wc-block-grid__product, .product, .product-small, .type-product', function (e) {
+    body.on('click', '.woocommerce-LoopProduct-link, .wc-block-grid__product, .product, .product-small, .type-product', function (e) {
 
         try {
 
-            // let productId;
+            // On some pages the event fires multiple times, and on product pages
+            // even on page load. Using e.stopPropagation helps to prevent this,
+            // but I dont know why. We don't even have to use this, since only a real
+            // product click yields a valid productId. So we filter the invalid click
+            // events out later down the code. I'll keep it that way because this is
+            // the most compatible way across shops.
+            // e.stopPropagation();
 
-            // console.log(this.attr('class');
-
-            // We need one selector for related products on product pages and another one on shop pages
-            // because using the .product selector fires twice on product page, and I don't know why.
-            // woocommerce-LoopProduct-link avoids this, but requires a different logic to get the product Id
-            // if (['shop', 'product_category', 'product_tag', 'search', 'product_shop', 'product'].indexOf(wooptpmDataLayer['shop']['page_type']) > -1) {
-            //     let name      = jQuery(this).closest('.product');
-            //     let classes   = name.attr('class');
-            //     // console.log('testid: ');
-            //
-            //     productId = wooptpm.getPostIdFromString(classes);
-            //     console.log('testid: ' + productId);
-            // } else {
-            //     productId = jQuery(this).find('.add_to_cart_button, .product_type_grouped').data('product_id');
-            // }
-
-            // let productElement      = jQuery(this).closest('.product');
-            // let classes = productElement.attr('class');
-            // let productId = wooptpm.getPostIdFromString(classes);
+            // console.log('select_content and select_item');
 
             let productId = jQuery(this).nextAll('.wooptpmProductId:first').data('id');
+            // console.log('select_content and select_item: ' + productId);
+
 
             // On product pages, for some reason, the click event is triggered on the main product on page load.
             // In that case no ID is found. But we can discard it, since we only want to trigger the event on
             // related products, which are found below.
             if (productId) {
+
+                // console.log('select_content and select_item: ' + productId);
 
                 productId = getIdBasedOndVariationsOutputSetting(productId);
 
@@ -698,14 +696,16 @@ jQuery(function () {
     });
 
     // begin_checkout event
-    jQuery(document).one('click', '.checkout-button, .cart-checkout-button, .button.checkout', function (e) {
+    body.one('click', '.checkout-button, .cart-checkout-button, .button.checkout', function (e) {
+
+        // console.log('begin_checkout');
 
         jQuery(document).trigger('wooptpmBeginCheckout');
     });
 
     // set_checkout_option event
     // track checkout option event: entered valid billing email
-    jQuery(document).on('input', '#billing_email', function () {
+    body.on('input', '#billing_email', function () {
 
         if (wooptpm.isEmail(jQuery(this).val())) {
             wooptpm.fireCheckoutOption(2);
@@ -715,14 +715,14 @@ jQuery(function () {
     // track checkout option event: purchase click
     let payment_method_selected = false;
 
-    jQuery(document).on('click', '.wc_payment_methods', function () {
+    body.on('click', '.wc_payment_methods', function () {
 
         wooptpm.fireCheckoutOption(3, jQuery("input[name='payment_method']:checked").val());
         payment_method_selected = true;
     });
 
     // track checkout option event: purchase click
-    jQuery(document).one('click', '#place_order', function () {
+    body.one('click', '#place_order', function () {
 
         if (payment_method_selected === false) {
 
@@ -733,7 +733,7 @@ jQuery(function () {
     });
 
     // update cart event
-    jQuery(document).on('click', "[name='update_cart']", function (e) {
+    body.on('click', "[name='update_cart']", function (e) {
 
         try {
             jQuery('.cart_item').each(function () {
@@ -793,7 +793,7 @@ jQuery(function () {
     });
 
     // add_to_wishlist
-    jQuery('body').on('click', '.add_to_wishlist, .wl-add-to', function () {
+    body.on('click', '.add_to_wishlist, .wl-add-to', function () {
         try {
             // console.log('add_to_wishlist');
             // console.log('this:' + jQuery(this).data('product-id'));
@@ -821,6 +821,7 @@ jQuery(function () {
                 "price"        : wooptpmDataLayer.products[productId].price
             };
 
+            // console.log('add_to_wishlist');
             // console.log(product);
 
             jQuery(document).trigger('wooptpmAddToWishlist', product);
@@ -834,11 +835,11 @@ jQuery(function () {
 jQuery(window).on('load', function () {
     // populate the wooptpmDataLayer with the cart items
     // console.log('getting cart');
+
     try {
         wooptpm.getCartItemsFromBackEnd();
     } catch (e) {
         console.log(e);
     }
-
     // wooptpm.loadPageProductsFromBackend();
 });
