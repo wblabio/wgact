@@ -24,6 +24,10 @@ class Facebook_Pixel_Manager extends Pixel_Manager_Base
     public function wooptpm_facebook_front_end_scripts()
     {
         wp_enqueue_script('facebook', plugin_dir_url(__DIR__) . '../../js/public/facebook.js', [], WGACT_CURRENT_VERSION, true);
+
+        if (wga_fs()->is__premium_only()) {
+            wp_enqueue_script('facebook-premium', plugin_dir_url(__DIR__) . '../../js/public/facebook__premium_only.js', [], WGACT_CURRENT_VERSION, true);
+        }
     }
 
     public function inject_everywhere()

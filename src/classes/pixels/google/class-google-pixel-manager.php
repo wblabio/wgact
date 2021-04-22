@@ -42,7 +42,7 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
 
             $this->google_analytics_ua_eec_pixel = new Google_Analytics_UA_EEC();
 //            $this->google_analytics_ua_refund_pixel = new Google_Analytics_UA_Refund_Pixel();
-            $this->google_analytics_ua_http_mp        = new Google_UA_MP();
+            $this->google_analytics_ua_http_mp = new Google_UA_MP();
 
             $this->google_analytics_4_eec_pixel = new Google_Analytics_4_EEC();
 
@@ -94,12 +94,17 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
     {
         if (wga_fs()->is__premium_only()) {
 
-            if($this->options_obj->google->analytics->universal->property_id){
+            if ($this->options_obj->google->analytics->universal->property_id || $this->options_obj->google->analytics->ga4->measurement_id) {
+                wp_enqueue_script('google-premium', plugin_dir_url(__DIR__) . '../../js/public/google__premium_only.js', [], WGACT_CURRENT_VERSION, false);
+                wp_localize_script('google-premium', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
+            }
+
+            if ($this->options_obj->google->analytics->universal->property_id) {
                 wp_enqueue_script('ga-ua-eec', plugin_dir_url(__DIR__) . '../../js/public/google-ga-ua-eec__premium_only.js', [], WGACT_CURRENT_VERSION, true);
                 wp_localize_script('ga-ua-eec', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
             }
 
-            if($this->options_obj->google->analytics->ga4->measurement_id){
+            if ($this->options_obj->google->analytics->ga4->measurement_id) {
                 wp_enqueue_script('ga4-eec', plugin_dir_url(__DIR__) . '../../js/public/google-ga-4-eec__premium_only.js', [], WGACT_CURRENT_VERSION, true);
                 wp_localize_script('ga4-eec', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
             }

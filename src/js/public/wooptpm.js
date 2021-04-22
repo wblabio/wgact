@@ -485,11 +485,16 @@
 
         try {
             // Pass in the target node, as well as the observer options
-            productsMutationObserver.observe(jQuery('.products')[0], {
-                attributes   : true,
-                childList    : true,
-                characterData: true
-            });
+
+            let productsNode = jQuery('.products');
+
+            if(productsNode.length){
+                productsMutationObserver.observe(productsNode[0], {
+                    attributes   : true,
+                    childList    : true,
+                    characterData: true
+                });
+            }
         } catch (e) {
             console.log(e);
         }

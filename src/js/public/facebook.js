@@ -3,17 +3,17 @@ jQuery(function () {
         if (wooptpm.objectExists(wooptpmDataLayer.pixels.facebook)) {
 
             // add_to_cart event
-            jQuery(document).on('wooptpmAddToCart', function (event, data) {
+            jQuery(document).on('wooptpmAddToCart', function (event, product) {
 
                 // console.log('firing facebook ads AddToCart event');
                 // console.log(data);
 
                 fbq('track', 'AddToCart', {
                     'content_type': 'product',
-                    'content_name': data.name,
-                    'content_ids' : data.dyn_r_ids[wooptpmDataLayer.pixels.facebook.dynamic_remarketing.id_type],
-                    'value'       : data.quantity * data.price,
-                    'currency'    : data.currency,
+                    'content_name': product.name,
+                    'content_ids' : product.dyn_r_ids[wooptpmDataLayer.pixels.facebook.dynamic_remarketing.id_type],
+                    'value'       : product.quantity * product.price,
+                    'currency'    : product.currency,
                 });
             });
 
@@ -31,8 +31,8 @@ jQuery(window).on('load', function () {
 
                     let product = wooptpm.getProductDataForViewItemEvent(wooptpm.getMainProductIdFromProductPage());
 
-                    console.log('fbq ViewContent');
-                    console.log(product);
+                    // console.log('fbq ViewContent');
+                    // console.log(product);
 
                     fbq("track", "ViewContent", {
                         "content_type"    : "product",
@@ -42,7 +42,6 @@ jQuery(window).on('load', function () {
                         "currency"        : wooptpmDataLayer.shop.currency,
                         "value"           : product.price,
                     });
-
 
                 } else if (wooptpmDataLayer.shop.page_type === 'search') {
 

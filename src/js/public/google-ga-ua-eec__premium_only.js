@@ -170,10 +170,10 @@ jQuery(function () {
                 "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
                 "items"  : [
                     {
-                        "id"           : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
-                        "name"         : product.name,
-                        "brand"        : product.brand,
-                        "category"     : product.category,
+                        "id"      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
+                        "name"    : product.name,
+                        "brand"   : product.brand,
+                        "category": product.category,
                         // "coupon"       : "",
                         "list_name"    : wooptpmDataLayer.shop.list_name, // doesn't make sense on mini_cart
                         "list_position": 1,
@@ -298,4 +298,24 @@ jQuery(window).on('load', function () {
         }
     })
 });
+
+jQuery(window).on('load', function () {
+
+    wooptpmExists().then(function () {
+
+        try {
+            // We need to be sure that we capture the cid early enough, because the
+            // shop might be using a one click checkout button as early as on the product page.
+            if (['cart', 'checkout', 'product'].indexOf(wooptpmDataLayer.shop.page_type) >= 0) {
+
+                let targetID = wooptpmDataLayer.pixels.google.analytics.universal.property_id;
+
+                wooptpm.setGoogleCidOnServer(targetID);
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    })
+});
+
 

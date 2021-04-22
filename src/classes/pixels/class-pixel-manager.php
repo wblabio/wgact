@@ -447,6 +447,10 @@ class Pixel_Manager extends Pixel_Manager_Base
             $data['list_name'] = 'Front Page';
             $data['list_id']   = 'front_page';
             $data['page_type'] = 'front_page';
+        } else if (is_checkout()) {
+                $data['list_name'] = 'Checkout Page';
+                $data['list_id']   = 'checkout';
+                $data['page_type'] = 'checkout';
         } else {
             $data['list_name'] = '';
             $data['list_id']   = '';

@@ -17,6 +17,22 @@ class Google_UA_MP extends Http
     public function __construct()
     {
         parent::__construct();
+
+        add_action('wp_ajax_wooptpm_google_analytics_set_session_cid', [$this, 'wooptpm_google_analytics_set_session_cid']);
+        add_action('wp_ajax_nopriv_wooptpm_google_analytics_set_session_cid', [$this, 'wooptpm_google_analytics_set_session_cid']);
+    }
+
+    public function wooptpm_google_analytics_set_session_cid()
+    {
+        $target_id = $_POST['target_id'];
+        $client_id = $_POST['client_id'];
+
+//        error_log('target_id: ' . $target_id);
+//        error_log('client_id: ' . $client_id);
+
+        WC()->session->set('google_cid_' . $target_id, $client_id);
+
+        wp_die(); // this is required to terminate immediately and return a proper response
     }
 
     public function send_purchase_hit($order)
