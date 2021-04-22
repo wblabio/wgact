@@ -14,9 +14,24 @@ class Google_UA_MP extends Http
     use Trait_Product;
     use Trait_Google;
 
+    protected $cid_key;
+    protected $cid;
+    protected $url;
+
     public function __construct()
     {
         parent::__construct();
+
+        $this->mp_purchase_hit_key = 'wooptpm_google_analytics_ua_mp_purchase_hit';
+        $this->cid_key             = 'google_cid_' . $this->options_obj->google->analytics->universal->property_id;
+
+        $google_host     = 'www.google-analytics.com';
+        $google_endpoint = '/collect';
+        $hit_testing     = false;
+        $debug           = $hit_testing ? '/debug' : '';
+
+        $this->url = 'https://' . $google_host . $debug . $google_endpoint;
+
 
         add_action('wp_ajax_wooptpm_google_analytics_set_session_cid', [$this, 'wooptpm_google_analytics_set_session_cid']);
         add_action('wp_ajax_nopriv_wooptpm_google_analytics_set_session_cid', [$this, 'wooptpm_google_analytics_set_session_cid']);
@@ -35,62 +50,41 @@ class Google_UA_MP extends Http
         wp_die(); // this is required to terminate immediately and return a proper response
     }
 
-    public function send_purchase_hit($order)
+    public function send_purchase_hit($order, $cid = null)
     {
+        // https://developers.google.com/analytics/devguides/collection/protocol/v1
+        // https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
+
+        // Subscriptions
+        // send a non-interaction hit for subsequent purchase conversions
+        // https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ni
+        // woocommerce_order_status_completed
+        // woocommerce_payment_complete
+        // https://woocommerce.github.io/code-reference/files/woocommerce-includes-class-wc-order.html#source-view.121
+
+
         // https://developer.wordpress.org/plugins/http-api/
         // https://stackoverflow.com/a/42868240/4688612
         // https://stackoverflow.com/a/31861577/4688612
         // WC session storage: https://stackoverflow.com/a/52422613/4688612¿
-        // woocommerce_order_status_completed
-        // woocommerce_payment_complete
 
         // https://developers.google.com/gtagjs/reference/api#get
-        //
-        //get the cid in the browser
-        // gtag('get', 'UA-XXXXXXXX-Y', 'client_id', (clientID) => {
-        //  sendOfflineEvent(clientID, "tutorial_begin")
-        // });
-
-        error_log('test mp');
 
         // only run, if the hit has not been sent already (check in db)
-
-        // respect browser privacy settings
-        // basically, if a visitor is not logged in and has blocked GA then don't send the hit
-        // unless the shop owner overrides this for the shop
-        if ($this->visitor_does_not_want_to_track_google_analytics() && $this->full_tracking_enabled() === false) {
+        if (get_post_meta($order->get_id(), $this->mp_purchase_hit_key)) {
             return;
         }
 
-        // if available, save the cid in the order
-        $this->save_cid_in_order_if_available($order);
-
-
-        $google_host     = 'www.google-analytics.com';
-        $google_endpoint = '/collect';
-        $hit_testing     = true;
-        $debug           = $hit_testing ? '/debug' : '';
-
-        $url = 'https://' . $google_host . $debug . $google_endpoint;
-
-        error_log('url: ' . $url);
-
-        error_log('sending purchase hit');
-
-        error_log('random cid: ' . bin2hex(random_bytes(10)));
-//        $response = wp_remote_get( 'https://api.github.com/users/blobaugh' );
-//        $body     = wp_remote_retrieve_body( $response );
-//
-//        error_log($body);
+//        error_log('processing Measure Protocol hit');
 
         $data_hit_type = [
             'v'   => 1,
             't'   => 'pageview',
             'tid' => (string)$this->options_obj->google->analytics->universal->property_id,
+            'ni'  => true, // it's a non-interaction hit
         ];
 
-
-        $data_user_identifier = $this->get_user_identifier();
+        $data_user_identifier = $this->get_user_identifier($order, $cid);
 
         // save the user identifier on the order in order to use it for subsequent subscription purchases
 
@@ -103,14 +97,14 @@ class Google_UA_MP extends Http
         ];
 
         $data_transaction = [
-            'ti'  => (int)$order->get_order_number(),
-            'ta'  => (string)get_bloginfo('name'),
-            'tr'  => '37.39',   // transaction revenue
-            'tt'  => '2.85',    // transaction tax
-            'ts'  => '5.34',    // transaction shipping
-            'tcc' => '',        // coupon code
-            'cu'  => (string)$order->get_currency(),
-            'pa'  => 'purchase',
+            'ti' => (int)$order->get_order_number(),
+            'ta' => (string)get_bloginfo('name'),
+            'tr' => (float)$order->get_total(),   // transaction revenue
+            'tt' => (float)$order->get_total_tax(),    // transaction tax
+            'ts' => (float)$order->get_total_shipping(),    // transaction shipping
+            //            'tcc' => '',        // coupon code
+            'cu' => (string)$order->get_currency(),
+            'pa' => 'purchase',
         ];
 
         $data_products = $this->get_products($order);
@@ -125,21 +119,40 @@ class Google_UA_MP extends Http
 
         error_log(print_r($payload, true));
 
-        // maybe set the locale: https://www.php.net/manual/en/function.http-build-query.php#123906
+        // set the locale to avoid issues on a subset of shops
+        // https://www.php.net/manual/en/function.http-build-query.php#123906
         setlocale(LC_ALL, 'us_En');
-        $request_url = $url . '?' . http_build_query($payload);
+        $request_url = $this->url . '?' . http_build_query($payload);
 
-        error_log('request url: ' . $request_url);
-//        $response = wp_remote_post($request_url , $this->post_request_args);
+//        error_log('request url: ' . $request_url);
+//        error_log('sending purchase hit');
+
+        wp_safe_remote_post($request_url, $this->post_request_args);
+
+//        error_log('hit was sent');
+
+//        if we're sending the request non-blocking we won't receive a response back
 //        error_log(print_r($response, true));
+//        error_log('response code: ' . wp_remote_retrieve_response_code($response));
 
-        // if response is valid, save that the hit has been sent
-
-        // if the response is invalid, queue for later
-        // (retry 5 times. earliest in 5 minutes, then in an hour, then in 12 hours, then in a day, then in two days)
-
+        // Now we let the server know, that the hit has already been successfully sent.
+        update_post_meta($order->get_id(), $this->mp_purchase_hit_key, true);
     }
 
+    public function set_cid_on_order($order)
+    {
+        // Get the cid if the client provides one, if not generate an anonymous one
+        $this->cid = $this->get_cid_from_session();
+
+        update_post_meta($order->get_id(), $this->cid_key, $this->cid);
+    }
+
+    public function get_cid_from_order($order)
+    {
+        return get_post_meta($order->get_id(), $this->cid_key, true);
+    }
+
+    // https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#pr_id
     protected function get_products($order): array
     {
         $data       = [];
@@ -147,27 +160,15 @@ class Google_UA_MP extends Http
 
         foreach ($order->get_items() as $item_id => $item) {
 
-            $product   = $item->get_product();
-            $dyn_r_ids = $this->get_dyn_r_ids($product);
+            $order_item_data = $this->get_order_item_data($item);
 
-//            $name = '';
-
-//            error_log('type: ' . $product->get_type());
-            if ($product->get_type() === 'variation') {
-                $parent_product = wc_get_product($product->get_parent_id());
-                $name           = $parent_product->get_name();
-            } else {
-                $name = $product->get_name();
-            }
-
-            $data['pr' . $item_index . 'id'] = (string)$dyn_r_ids[$this->get_ga_id_type()];
-            $data['pr' . $item_index . 'nm'] = $name;
-
-            // https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#pr_ca
-            $data['pr' . $item_index . 'ca'] = implode(' | ', $this->get_product_category($product->get_id()));
-            $data['pr' . $item_index . 'br'] = (string)$this->get_brand_name($product->get_id());
-            $data['pr' . $item_index . 'va'] = $this->get_formatted_variant_text($product);
-            $data['pr' . $item_index . 'ps'] = $item->get_quantity();
+            $data['pr' . $item_index . 'id'] = $order_item_data['id'];
+            $data['pr' . $item_index . 'nm'] = $order_item_data['name'];
+            $data['pr' . $item_index . 'va'] = $order_item_data['variant'];
+            $data['pr' . $item_index . 'br'] = $order_item_data['brand'];
+            $data['pr' . $item_index . 'ca'] = $order_item_data['category'];
+            $data['pr' . $item_index . 'qt'] = $order_item_data['quantity'];
+            $data['pr' . $item_index . 'pr'] = $order_item_data['price'];
 
             $item_index++;
         }
@@ -175,31 +176,32 @@ class Google_UA_MP extends Http
         return $data;
     }
 
-    protected function save_cid_in_order_if_available($order)
-    {
-        if (WC()->session->get('google_analytics_cid')) {
-
-            update_post_meta($order->get_id(), 'google_analytics_cid', WC()->session->get('google_analytics_cid'));
-        }
-    }
-
-    protected function get_user_identifier(): array
+    protected function get_user_identifier($order, $cid): array
     {
         $data = [];
 
+        // We only add this if also user_id tracking has been enabled in the shop.
+        // Otherwise Google can't attribute the hit to the previous measurements.
         if ($this->options_obj->google->user_id && is_user_logged_in()) {
             $data['uid'] = get_current_user_id();
+        }
+
+        if ($cid) {
+            // If this is a subscription renewal we take the cid from the original order
+            $data['cid'] = $cid;
         } else {
-            $data['cid'] = $this->get_cid();
+            // We always send a cid. If we were able successfully capture one from the session,
+            // we use that one. Otherwise we send a random cid.
+            $data['cid'] = $this->get_cid_from_order($order);
         }
 
         return $data;
     }
 
-    protected function get_cid()
+    protected function get_cid_from_session()
     {
-        if (WC()->session->get('google_analytics_cid')) {
-            return WC()->session->get('google_analytics_cid');
+        if (WC()->session->get($this->cid_key)) {
+            return WC()->session->get($this->cid_key);
         } else {
             return bin2hex(random_bytes(10));
         }
@@ -207,7 +209,7 @@ class Google_UA_MP extends Http
 
     protected function visitor_does_not_want_to_track_google_analytics(): bool
     {
-        if (!WC()->session->get('google_analytics_cid')) {
+        if (!WC()->session->get($this->cid_key)) {
             return true;
         } else {
             return false;

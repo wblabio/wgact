@@ -41,44 +41,9 @@ class Google_Analytics extends Google
         return $list_names[$list_id];
     }
 
-    protected function wooptpm_get_order_item_price($order_item, $product): float
-    {
-        if ((new Environment_Check())->is_woo_discount_rules_active()) {
-            $item_value = $order_item->get_meta('_advanced_woo_discount_item_total_discount');
-            if (is_array($item_value) && array_key_exists('discounted_price', $item_value) && $item_value['discounted_price'] != 0) {
-                return $item_value['discounted_price'];
-            } elseif (is_array($item_value) && array_key_exists('initial_price', $item_value) && $item_value['initial_price'] != 0) {
-                return $item_value['initial_price'];
-            } else {
-                return $product->get_price();
-            }
-        } else {
-            return $product->get_price();
-        }
-    }
 
-    protected function get_order_item_data($order_item): array
-    {
-        $product = $order_item->get_product();
 
-        $dyn_r_ids = $this->get_dyn_r_ids($product);
 
-        return [
-            'id'          => (string)$dyn_r_ids[$this->get_ga_id_type()],
-            'name'        => (string)$product->get_name(),
-            'quantity'    => (int)$order_item['quantity'],
-            'affiliation' => (string)get_bloginfo('name'),
-            //            'coupon' => '',
-            //            'discount' => 0,
-            'brand'       => (string)$this->get_brand_name($product->get_id()),
-            'category'    => (array)$this->get_product_category($product->get_id()),
-            'variant'     => $this->get_formatted_variant_text($product),
-            //            'tax'      => 0,
-            'price'       => (float)$this->wooptpm_get_order_item_price($order_item, $product),
-            //                    'list_name' => ,
-            //            'currency' => '',
-        ];
-    }
 
 //    public function inject_product_list_object($list_id)
 //    {

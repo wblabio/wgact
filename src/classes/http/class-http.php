@@ -11,6 +11,8 @@ class Http
     protected $options;
     protected $options_obj;
     protected $post_request_args;
+    protected $mp_purchase_hit_key;
+
 
     public function __construct()
     {
@@ -19,13 +21,16 @@ class Http
 
         $this->post_request_args = [
             'body'        => '',
-            'timeout'     => '5',
-            'redirection' => '5',
+            'timeout'     => 5,
+            'redirection' => 5,
             'httpversion' => '1.0',
             'blocking'    => false,
             'headers'     => [],
             'cookies'     => [],
+            'sslverify' => false,
         ];
+
+        $this->post_request_args = apply_filters('wooptpm_http_post_request_args', $this->post_request_args);
     }
 
     protected function full_tracking_enabled(): bool

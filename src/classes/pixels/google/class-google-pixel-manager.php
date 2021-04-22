@@ -42,15 +42,58 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
 
             $this->google_analytics_ua_eec_pixel = new Google_Analytics_UA_EEC();
 //            $this->google_analytics_ua_refund_pixel = new Google_Analytics_UA_Refund_Pixel();
-            $this->google_analytics_ua_http_mp = new Google_UA_MP();
+
 
             $this->google_analytics_4_eec_pixel = new Google_Analytics_4_EEC();
 
             add_action('woocommerce_order_refunded', [$this, 'google_analytics_eec_action_woocommerce_order_refunded__premium_only'], 10, 2);
 //            add_action('wp_login', [$this,'output_gtag_login']);
+
+
+            if ($this->is_google_analytics_ua_active()) {
+
+                $this->google_analytics_ua_http_mp = new Google_UA_MP();
+
+                // Save the Google cid on the order so that we can use it later when the order gets paid or completed
+                // https://woocommerce.github.io/code-reference/files/woocommerce-includes-class-wc-checkout.html#source-view.403
+                add_action('woocommerce_checkout_order_created', [$this, 'google_analytics_ua_save_cid_on_order__premium_only']);
+
+                // Process the purchase through the GA Measurement Protocol when they are paid,
+                // or when they are manually completed.
+                add_action('woocommerce_payment_complete', [$this, 'google_analytics_ua_report_purchase_through_mp__premium_only']);
+                add_action('woocommerce_order_status_completed', [$this, 'google_analytics_ua_report_purchase_through_mp__premium_only']);
+
+                add_action('woocommerce_subscription_renewal_payment_complete', [$this, 'google_analytics_ua_report_subscription_renewal_purchase_through_mp__premium_only']);
+            }
         }
 
         add_action('init', [$this, 'run_on_init']);
+    }
+
+    public function google_analytics_ua_report_subscription_renewal_purchase_through_mp__premium_only($subscription, $renewal_order)
+    {
+        $renewal_order = $subscription->get_last_order( 'all', 'any' );
+
+        $original_order = $subscription->get_parent_id();
+
+        // Get cid from original order
+
+        $cid = $this->google_analytics_ua_http_mp->get_cid_from_order($original_order);
+
+        $this->google_analytics_ua_http_mp->send_purchase_hit($renewal_order, $cid);
+    }
+
+    public function google_analytics_ua_save_cid_on_order__premium_only($order)
+    {
+        $this->google_analytics_ua_http_mp->set_cid_on_order($order);
+    }
+
+    public function google_analytics_ua_report_purchase_through_mp__premium_only($order_id)
+    {
+        $order = wc_get_order($order_id);
+
+        // The Measurement Protocol has only been enabled for EEC
+        $this->google_analytics_ua_http_mp->send_purchase_hit($order);
     }
 
     public function run_on_init()
@@ -157,12 +200,12 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
     {
         if ($this->is_google_ads_active()) $this->google_ads_pixel->inject_order_received_page($order, $order_total, $is_new_customer);
 
-        if (!$this->options_obj->google->analytics->eec) {
+        if (!wga_fs()->is__premium_only() || !$this->options_obj->google->analytics->eec) {
             if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_standard_pixel->inject_order_received_page($order, $order_total, $is_new_customer);
             if ($this->is_google_analytics_4_active()) $this->google_analytics_4_standard_pixel->inject_order_received_page($order, $order_total, $is_new_customer);
-        } else if (wga_fs()->is__premium_only()) {
-            if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_http_mp->send_purchase_hit($order);
-            if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_eec_pixel->inject_order_received_page($order, $order_total, $is_new_customer);
+        } else {
+
+//            if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_eec_pixel->inject_order_received_page($order, $order_total, $is_new_customer);
             if ($this->is_google_analytics_4_active()) $this->google_analytics_4_eec_pixel->inject_order_received_page($order, $order_total, $is_new_customer);
         }
     }
