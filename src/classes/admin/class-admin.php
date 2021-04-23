@@ -67,6 +67,7 @@ class Admin
     
             gtag('config', 'UA-39746956-10', {'anonymize_ip':'true'});
             gtag('config', 'G-LWRCPMQS9T');
+            gtag('config', 'AW-406204436');
             
             gtag('event', 'purchase', {
                 'send_to':['UA-39746956-10', 'G-LWRCPMQS9T'],
@@ -84,6 +85,13 @@ class Admin
                 'value':response.purchase.initial_amount.toString()
             });
             
+            gtag('event', 'conversion', {
+              'send_to': 'AW-406204436/XrUYCK3J8YoCEJTg2MEB',
+              'value': response.purchase.initial_amount.toString(),
+              'currency': 'USD',
+              'transaction_id': response.purchase.id.toString()
+            });
+
         }";
     }
 
@@ -476,8 +484,20 @@ class Admin
                 esc_html__(
                     'Enhanced E-Commerce',
                     'woocommerce-google-adwords-conversion-tracking-tag'
-                ) . $this->svg_beta(),
+                ),
                 [$this, 'wgact_setting_html_google_analytics_eec'],
+                'wgact_plugin_options_page',
+                $section_ids['settings_name']
+            );
+
+            // add fields for the Google GA 4 API secret
+            add_settings_field(
+                'wgact_setting_google_analytics_4_api_secret',
+                esc_html__(
+                    'GA 4 API secret',
+                    'woocommerce-google-adwords-conversion-tracking-tag'
+                ) . $this->svg_beta(),
+                [$this, 'wgact_setting_html_google_analytics_4_api_secret'],
                 'wgact_plugin_options_page',
                 $section_ids['settings_name']
             );
@@ -562,7 +582,7 @@ class Admin
             esc_html__(
                 'Google Consent Mode',
                 'woocommerce-google-adwords-conversion-tracking-tag'
-            ) . $this->svg_beta(),
+            ),
             [$this, 'wgact_setting_html_google_consent_mode_active'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
@@ -574,7 +594,7 @@ class Admin
             esc_html__(
                 'Google Consent Regions',
                 'woocommerce-google-adwords-conversion-tracking-tag'
-            ) . $this->svg_beta(),
+            ),
             [$this, 'wgact_setting_html_google_consent_regions'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
@@ -600,7 +620,7 @@ class Admin
             esc_html__(
                 'Cookiebot support',
                 'woocommerce-google-adwords-conversion-tracking-tag'
-            ) . $this->svg_beta(),
+            ),
             [$this, 'wgact_setting_html_cookiebot_support'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
@@ -1288,6 +1308,33 @@ class Admin
         }
     }
 
+    public function wgact_setting_html_google_analytics_4_api_secret()
+    {
+        echo "<input 
+                id='wgact_setting_google_analytics_4_api_secret' 
+                name='wgact_plugin_options[google][analytics][ga4][api_secret]' 
+                size='40' 
+                type='text' 
+                value='{$this->options['google']['analytics']['ga4']['api_secret']}' 
+                {$this->disable_if_demo()}
+                />";
+        echo $this->get_status_icon($this->options['google']['analytics']['ga4']['api_secret'], $this->options['google']['analytics']['eec']);
+//        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-ads-phone-conversion-number#/pixels/google-ads?id=phone-conversion-number');
+        echo $this->svg_pro_feature();
+        echo '<br><br>';
+        if (!$this->options['google']['analytics']['ga4']['measurement_id']) {
+            echo '<p></p><span class="dashicons dashicons-info" style="margin-right: 10px"></span>';
+            esc_html_e('Google Analytics 4 activation required', 'woocommerce-google-adwords-conversion-tracking-tag');
+            echo '</p>';
+        }
+        if (!$this->options['google']['analytics']['eec'] ) {
+            echo '<p></p><span class="dashicons dashicons-info" style="margin-right: 10px"></span>';
+            esc_html_e('Enhanced E-Commerce activation required', 'woocommerce-google-adwords-conversion-tracking-tag');
+            echo '</p><br>';
+        }
+        esc_html_e('If enabled, purchase and refund events will be sent to Google through the measurement protocol for increased accuracy.', 'woocommerce-google-adwords-conversion-tracking-tag');
+    }
+
     public function wgact_setting_html_google_analytics_link_attribution()
     {
         // adding the hidden input is a hack to make WordPress save the option with the value zero,
@@ -1868,6 +1915,14 @@ class Admin
             }
         }
 
+        // validate Google Analytics 4 API key
+        if (isset($input['google']['analytics']['ga4']['api_secret'])) {
+            if (!$this->is_google_analytics_4_api_secret($input['google']['analytics']['ga4']['api_secret'])) {
+                $input['google']['analytics']['ga4']['api_secret'] = isset($this->options['google']['analytics']['ga4']['api_secret']) ? $this->options['google']['analytics']['ga4']['api_secret'] : '';
+                add_settings_error('wgact_plugin_options', 'invalid-google-analytics-4-measurement-id', esc_html__('You have entered an invalid Google Analytics 4 API key.', 'woocommerce-google-adwords-conversion-tracking-tag'));
+            }
+        }
+
         // validate ['google]['ads']['conversion_id']
         if (isset($input['google']['ads']['conversion_id'])) {
             if (!$this->is_gads_conversion_id($input['google']['ads']['conversion_id'])) {
@@ -2084,6 +2139,19 @@ class Admin
         }
 
         $re = '/^G-[A-Z0-9]{10,12}$/m';
+
+        return $this->validate_with_regex($re, $string);
+    }
+
+
+
+    public function is_google_analytics_4_api_secret($string): bool
+    {
+        if (empty($string)) {
+            return true;
+        }
+
+        $re = '/^[a-zA-Z\d]{18,26}$/m';
 
         return $this->validate_with_regex($re, $string);
     }

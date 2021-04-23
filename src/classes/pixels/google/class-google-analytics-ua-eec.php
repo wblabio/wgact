@@ -29,35 +29,4 @@ class Google_Analytics_UA_EEC extends Google_Analytics_UA
     {
         // handled on front-end
     }
-
-//    protected function eec_appweb_get_product_details_array($product_id, $list_id, $position = null): array
-//    {
-//        $list = $this->get_list_name_by_current_page_type($list_id);
-//
-//        $product = wc_get_product($product_id);
-//
-//        $data = [
-//            'id'            => (string)$product_id,
-//            'name'          => (string)$product->get_name(),
-//            //            'list_name'     => (string)$list,
-//            'brand'         => (string)$this->get_brand_name($product_id),
-//            'category'      => $this->get_product_category($product_id),
-//            // 'variant' => (string) $item['variant'],
-//            'list_position' => (int)$position,
-//            'quantity'      => 1,
-//            'price'         => (float)$product->get_price(),
-//        ];
-//
-////        $data = $this->eec_add_product_categories_to_product_item($data, $product_id);
-//
-//        if ($list) {
-//            $data['list_name'] = $list . $this->get_list_name_suffix();
-//        }
-////		if ($list) $data['item_list_id']   = '';
-////        if ($position) {
-////            $data['index'] = $position;
-////        }
-//
-//        return $data;
-//    }
 }

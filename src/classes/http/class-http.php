@@ -11,8 +11,11 @@ class Http
     protected $options;
     protected $options_obj;
     protected $post_request_args;
+    protected $server_base_path;
     protected $mp_purchase_hit_key;
-
+    protected $mp_full_refund_hit_key;
+    protected $mp_partial_refund_hit_key;
+    protected $hit_testing;
 
     public function __construct()
     {
@@ -27,7 +30,7 @@ class Http
             'blocking'    => false,
             'headers'     => [],
             'cookies'     => [],
-            'sslverify' => false,
+            'sslverify'   => false,
         ];
 
         $this->post_request_args = apply_filters('wooptpm_http_post_request_args', $this->post_request_args);

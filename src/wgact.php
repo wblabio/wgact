@@ -317,6 +317,7 @@ if (function_exists('wga_fs')) {
                         ],
                         'ga4'              => [
                             'measurement_id' => '',
+                            'api_secret'     => '',
                         ],
                         'eec'              => 0,
                         'link_attribution' => 0,
@@ -331,7 +332,7 @@ if (function_exists('wga_fs')) {
                         'active'  => 0,
                         'regions' => [],
                     ],
-                    'user_id'          => 0,
+                    'user_id'      => 0,
                 ],
                 'facebook'   => [
                     'pixel_id'  => '',

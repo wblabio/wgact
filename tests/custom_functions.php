@@ -1,5 +1,8 @@
 <?php
 
+//add_filter('wooptpm_enable_ga_4_mp_hit_testing', '__return_true');
+add_filter('wooptpm_enable_ga_4_mp_event_debug_mode', '__return_true');
+
 //add_filter('wooptpm_full_tracking_enabled', '__return_true');
 
 //add_filter('wooptpm_view_item_list_trigger_settings', 'wooptpm_view_item_list_trigger_settings');

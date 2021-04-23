@@ -87,6 +87,15 @@ trait Trait_Google
         }
     }
 
+    protected function is_google_analytics_4_mp_active(): bool
+    {
+        if ($this->options_obj->google->analytics->ga4->measurement_id && $this->options_obj->google->analytics->ga4->api_secret) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     protected function get_order_currency($order)
     {
         // use the right function to get the currency depending on the WooCommerce version
@@ -126,7 +135,7 @@ trait Trait_Google
             'brand'       => (string)$this->get_brand_name($product->get_id()),
             // https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#pr_ca
             'category'    => (string)implode(' | ', $this->get_product_category($product->get_id())),
-            'variant'     => ($product->get_type() === 'variation') ? $this->get_formatted_variant_text($product) : '',
+            'variant'     => (string)($product->get_type() === 'variation') ? $this->get_formatted_variant_text($product) : '',
             //            'tax'      => 0,
             'price'       => (float)$this->wooptpm_get_order_item_price($order_item, $product),
             //                    'list_name' => ,

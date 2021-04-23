@@ -108,6 +108,9 @@ You can send the link to the front page of your shop too if you think it would b
 [//]: # fs_premium_only_begin
 * New: add_to_wishlist event for GA and Facebook
 * New: InitiateCheckout event for FB
+* New: Send purchase events using the GA UA Measurement Protocol
+* New: Send subscription renewal purchase events using the GA UA Measurement Protocol
+* New: Send full refund events using the GA UA Measurement Protocol
 [//]: # fs_premium_only_end
 [//]: # fs_premium_only_begin
 * Tweak: Only activate eec scripts if GA UA or GA4 are enabled
