@@ -11,6 +11,7 @@
                 // save the state in the database
                 let data = {
                     'action'   : 'wooptpm_google_analytics_set_session_cid',
+                    'nonce': wooptpm_google_premium_ajax_object.nonce,
                     'target_id': targetID,
                     'client_id': clientID,
                 };
@@ -19,11 +20,14 @@
                     {
                         type    : "post",
                         dataType: "json",
-                        url     : ajax_object.ajax_url,
+                        url     : wooptpm_google_premium_ajax_object.ajax_url,
                         data    : data,
                         success : function (msg) {
                             console.log(msg);
-                        }
+                        },
+                        error : function (msg) {
+                            console.log(msg);
+                        },
                     });
             });
 

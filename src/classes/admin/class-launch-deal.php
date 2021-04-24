@@ -48,13 +48,7 @@ class Launch_Deal
 
     public function wooptpm_launch_deal_front_end_script()
     {
-        wp_enqueue_script(
-            'wooptpm-launch-deal', // Handle
-            plugin_dir_url(__DIR__) . '../js/admin/launch-deal.js',
-            ['jquery'],
-            WGACT_CURRENT_VERSION,
-            true
-        );
+        wp_enqueue_script('wooptpm-launch-deal', plugin_dir_url(__DIR__) . '../js/admin/launch-deal.js', ['jquery'], WGACT_CURRENT_VERSION, true);
     }
 
     // server side php ajax handler for the admin rating notice

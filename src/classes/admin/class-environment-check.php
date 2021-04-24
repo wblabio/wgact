@@ -24,13 +24,7 @@ class Environment_Check
 
     public function environment_check_script()
     {
-        wp_enqueue_script(
-            'environment-check', // Handle
-            plugin_dir_url(__DIR__) . '../js/admin/environment-check.js',
-            ['jquery'],
-            WGACT_CURRENT_VERSION,
-            true
-        );
+        wp_enqueue_script('wooptpm-environment-check', plugin_dir_url(__DIR__) . '../js/admin/environment-check.js', ['jquery'], WGACT_CURRENT_VERSION, true);
     }
 
     public function ajax_environment_check_handler()
@@ -252,17 +246,17 @@ class Environment_Check
     public function sg_optimizer_js_minify_exclude($exclude_list)
     {
         $exclude_list[] = 'wooptpm-front-end-scripts';
-        $exclude_list[] = 'front-end-scripts';
         $exclude_list[] = 'wooptpm-front-end-scripts-premium-only';
-        $exclude_list[] = 'front-end-scripts-premium-only';
-        $exclude_list[] = 'facebook';
-        $exclude_list[] = 'script-blocker-warning';
-        $exclude_list[] = 'admin-helpers';
-        $exclude_list[] = 'admin-tabs';
-        $exclude_list[] = 'selectWoo';
-        $exclude_list[] = 'google-ads';
-        $exclude_list[] = 'ga-ua-eec';
-        $exclude_list[] = 'ga4-eec';
+        $exclude_list[] = 'wooptpm';
+        $exclude_list[] = 'wooptpm-premium-only';
+        $exclude_list[] = 'wooptpm-facebook';
+        $exclude_list[] = 'wooptpm-script-blocker-warning';
+        $exclude_list[] = 'wooptpm-admin-helpers';
+        $exclude_list[] = 'wooptpm-admin-tabs';
+        $exclude_list[] = 'wooptpm-selectWoo';
+        $exclude_list[] = 'wooptpm-google-ads';
+        $exclude_list[] = 'wooptpm-ga-ua-eec';
+        $exclude_list[] = 'wooptpm-ga4-eec';
         $exclude_list[] = 'jquery';
         $exclude_list[] = 'jquery-core';
         $exclude_list[] = 'jquery-migrate';

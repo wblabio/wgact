@@ -106,9 +106,14 @@ You can send the link to the front page of your shop too if you think it would b
 = 1.9.5 =
 
 [//]: # fs_premium_only_begin
+* Tweak: Added nonces to some ajax calls
+[//]: # fs_premium_only_end
+* Tweak: Added dependencies to enqueued scripts
+[//]: # fs_premium_only_begin
 * Fix: Improved the verification for the Google Analytics 4 API secret. It was too restrictive.
 * Fix: Fixed the cid for subscription renewal purchases with missing cid on the parent order
 [//]: # fs_premium_only_end
+
 
 = 1.9.4 =
 

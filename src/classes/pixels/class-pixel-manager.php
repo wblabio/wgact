@@ -386,19 +386,32 @@ class Pixel_Manager extends Pixel_Manager_Base
 
     public function ajax_purchase_pixels_fired_handler__premium_only()
     {
-        $order_id = $_POST['order_id'];
+        if (!check_ajax_referer('wooptpm-premium-only-nonce', 'nonce', false)) {
+            wp_send_json_error('Invalid security token sent.');
+            error_log('Invalid security token sent.');
+            wp_die();
+        }
+
+        $order_id = filter_var($_POST['order_id'], FILTER_SANITIZE_STRING);
         update_post_meta($order_id, '_WGACT_conversion_pixel_fired', true);
         wp_die(); // this is required to terminate immediately and return a proper response
     }
 
     public function wooptpm_front_end_scripts()
     {
-        wp_enqueue_script('wooptpm-front-end-scripts', plugin_dir_url(__DIR__) . '../js/public/wooptpm.js', [], WGACT_CURRENT_VERSION, false);
-        wp_localize_script('wooptpm-front-end-scripts', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
+        wp_enqueue_script('wooptpm', plugin_dir_url(__DIR__) . '../js/public/wooptpm.js', ['jquery'], WGACT_CURRENT_VERSION, false);
+        wp_localize_script('wooptpm', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
 
         if (wga_fs()->is__premium_only()) {
-            wp_enqueue_script('wooptpm-front-end-scripts-premium-only', plugin_dir_url(__DIR__) . '../js/public/wooptpm__premium_only.js', [], WGACT_CURRENT_VERSION, false);
-            wp_localize_script('wooptpm-front-end-scripts-premium-only', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
+            wp_enqueue_script('wooptpm-premium-only', plugin_dir_url(__DIR__) . '../js/public/wooptpm__premium_only.js', ['jquery', 'wooptpm'], WGACT_CURRENT_VERSION, false);
+            wp_localize_script(
+                'wooptpm-premium-only',
+                'wooptpm_premium_only_ajax_object',
+                [
+                    'ajax_url' => admin_url('admin-ajax.php'),
+                    'nonce'    => wp_create_nonce('wooptpm-premium-only-nonce'),
+                ]
+            );
         }
     }
 
@@ -448,9 +461,9 @@ class Pixel_Manager extends Pixel_Manager_Base
             $data['list_id']   = 'front_page';
             $data['page_type'] = 'front_page';
         } else if (is_checkout()) {
-                $data['list_name'] = 'Checkout Page';
-                $data['list_id']   = 'checkout';
-                $data['page_type'] = 'checkout';
+            $data['list_name'] = 'Checkout Page';
+            $data['list_id']   = 'checkout';
+            $data['page_type'] = 'checkout';
         } else {
             $data['list_name'] = '';
             $data['list_id']   = '';

@@ -167,18 +167,25 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
         if (wga_fs()->is__premium_only()) {
 
             if ($this->options_obj->google->analytics->universal->property_id || $this->options_obj->google->analytics->ga4->measurement_id) {
-                wp_enqueue_script('google-premium', plugin_dir_url(__DIR__) . '../../js/public/google__premium_only.js', [], WGACT_CURRENT_VERSION, false);
-                wp_localize_script('google-premium', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
+                wp_enqueue_script('wooptpm-google-premium', plugin_dir_url(__DIR__) . '../../js/public/google__premium_only.js', ['jquery', 'wooptpm', 'wooptpm-premium-only'], WGACT_CURRENT_VERSION, false);
+                wp_localize_script(
+                    'wooptpm-google-premium',
+                    'wooptpm_google_premium_ajax_object',
+                    [
+                        'ajax_url' => admin_url('admin-ajax.php'),
+                        'nonce' => wp_create_nonce( 'wooptpm-google-premium-nonce' ),
+                    ]
+                );
             }
 
             if ($this->options_obj->google->analytics->universal->property_id) {
-                wp_enqueue_script('ga-ua-eec', plugin_dir_url(__DIR__) . '../../js/public/google-ga-ua-eec__premium_only.js', [], WGACT_CURRENT_VERSION, true);
-                wp_localize_script('ga-ua-eec', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
+                wp_enqueue_script('wooptpm-ga-ua-eec', plugin_dir_url(__DIR__) . '../../js/public/google-ga-ua-eec__premium_only.js', ['jquery', 'wooptpm', 'wooptpm-premium-only'], WGACT_CURRENT_VERSION, true);
+                wp_localize_script('wooptpm-ga-ua-eec', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
             }
 
             if ($this->options_obj->google->analytics->ga4->measurement_id) {
-                wp_enqueue_script('ga4-eec', plugin_dir_url(__DIR__) . '../../js/public/google-ga-4-eec__premium_only.js', [], WGACT_CURRENT_VERSION, true);
-                wp_localize_script('ga4-eec', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
+                wp_enqueue_script('wooptpm-ga4-eec', plugin_dir_url(__DIR__) . '../../js/public/google-ga-4-eec__premium_only.js', ['jquery', 'wooptpm', 'wooptpm-premium-only'], WGACT_CURRENT_VERSION, true);
+                wp_localize_script('wooptpm-ga4-eec', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
             }
         }
     }
