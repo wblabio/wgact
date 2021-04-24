@@ -335,8 +335,9 @@ if (function_exists('wga_fs')) {
                     'user_id'      => 0,
                 ],
                 'facebook'   => [
-                    'pixel_id'  => '',
-                    'microdata' => 0,
+                    'pixel_id'   => '',
+                    'capi_token' => '',
+                    'microdata'  => 0,
                 ],
                 'bing'       => [
                     'uet_tag_id' => ''

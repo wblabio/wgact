@@ -17,10 +17,10 @@
                     url     : wooptpm_premium_only_ajax_object.ajax_url,
                     data    : data,
                     success : function (msg) {
-                        console.log(msg);
+                        // console.log(msg);
                     },
                     error : function (msg) {
-                        console.log(msg);
+                        // console.log(msg);
                     }
 
                 });

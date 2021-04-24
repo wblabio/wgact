@@ -647,8 +647,19 @@ class Admin
             $section_ids['settings_name']
         );
 
+        // add field for the Facebook CAPI token
+        add_settings_field(
+            'wgact_setting_facebook_capi_token',
+            esc_html__(
+                'Facebook CAPI token',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ) . $this->svg_beta(),
+            [$this, 'wgact_setting_html_facebook_capi_token'],
+            'wgact_plugin_options_page',
+            $section_ids['settings_name']
+        );
 
-        // add fields for the gtag insertion
+        // add fields for Facebook microdata
         add_settings_field(
             'wgact_setting_facebook_microdata_active',
             esc_html__(
@@ -1460,6 +1471,30 @@ class Admin
         }
     }
 
+    public function wgact_setting_html_facebook_capi_token()
+    {
+        ?><textarea id='wgact_setting_facebook_capi_token'
+                        name='wgact_plugin_options[facebook][capi_token]'
+                        cols='60'
+                        rows='5'
+                        type='text'
+                        value='<?php echo $this->options['facebook']['capi_token'] ?>'
+                        <?php echo $this->disable_if_demo() ?>
+                        ><?php echo $this->options['facebook']['capi_token'] ?></textarea>
+        <?php
+        echo $this->get_status_icon($this->options['facebook']['capi_token'], $this->options['facebook']['pixel_id']);
+        echo $this->svg_pro_feature();
+        if (!$this->options['facebook']['pixel_id']) {
+            echo '<p></p><span class="dashicons dashicons-info"></span>';
+            esc_html_e('You need to activate the Facebook pixel', 'woocommerce-google-adwords-conversion-tracking-tag');
+            echo '</p><br>';
+        }
+//        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-ads-conversion-id#/pixels/google-ads?id=configure-the-plugin');
+        echo '<br><br>';
+//        esc_html_e('The conversion ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
+//        echo '&nbsp;<i>123456789</i>';
+    }
+
     public function wgact_setting_html_facebook_microdata()
     {
         // adding the hidden input is a hack to make WordPress save the option with the value zero,
@@ -1971,6 +2006,14 @@ class Admin
             }
         }
 
+        // validate ['facebook']['capi_token']
+        if (isset($input['facebook']['capi_token'])) {
+            if (!$this->is_facebook_capi_token($input['facebook']['capi_token'])) {
+                $input['facebook']['capi_token'] = isset($this->options['facebook']['capi_token']) ? $this->options['facebook']['capi_token'] : '';
+                add_settings_error('wgact_plugin_options', 'invalid-facebook-pixel-id', esc_html__('You have entered an invalid Facebook CAPI token.', 'woocommerce-google-adwords-conversion-tracking-tag'));
+            }
+        }
+
         // validate Bing Ads UET tag ID
         if (isset($input['bing']['uet_tag_id'])) {
             if (!$this->is_bing_uet_tag_id($input['bing']['uet_tag_id'])) {
@@ -2163,6 +2206,17 @@ class Admin
         }
 
         $re = '/^\d{14,16}$/m';
+
+        return $this->validate_with_regex($re, $string);
+    }
+
+    protected function is_facebook_capi_token($string): bool
+    {
+        if (empty($string)) {
+            return true;
+        }
+
+        $re = '/^[a-zA-Z\d_-]{150,250}$/m';
 
         return $this->validate_with_regex($re, $string);
     }

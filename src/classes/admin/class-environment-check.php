@@ -258,6 +258,7 @@ class Environment_Check
         $exclude_list[] = 'wooptpm-ga-ua-eec';
         $exclude_list[] = 'wooptpm-ga4-eec';
         $exclude_list[] = 'jquery';
+        $exclude_list[] = 'jquery-cookie';
         $exclude_list[] = 'jquery-core';
         $exclude_list[] = 'jquery-migrate';
 

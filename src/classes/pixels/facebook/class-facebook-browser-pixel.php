@@ -21,13 +21,17 @@ class Facebook_Browser_Pixel extends Pixel
 
     public function inject_everywhere()
     {
+        $facebook_data_layer = [
+                'dynamic_remarketing' => [
+                        'id_type' => $this->get_dyn_r_id_type(),
+                ],
+                'pixel_id' => $this->options_obj->facebook->pixel_id,
+        ];
+
+
         // @formatter:off
         ?>
-            wooptpmDataLayer.pixels.<?php echo $this->pixel_name ?> = {
-                'dynamic_remarketing': {
-                    'id_type': '<?php echo $this->get_dyn_r_id_type() ?>'
-                }
-            };
+            wooptpmDataLayer.pixels.<?php echo $this->pixel_name ?> = <?php echo json_encode($facebook_data_layer) ?>;
 
             !function(f,b,e,v,n,t,s)
             {if(f.fbq)return;n=f.fbq=function(){n.callMethod?

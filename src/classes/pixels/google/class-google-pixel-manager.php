@@ -167,13 +167,14 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
         if (wga_fs()->is__premium_only()) {
 
             if ($this->options_obj->google->analytics->universal->property_id || $this->options_obj->google->analytics->ga4->measurement_id) {
-                wp_enqueue_script('wooptpm-google-premium', plugin_dir_url(__DIR__) . '../../js/public/google__premium_only.js', ['jquery', 'wooptpm', 'wooptpm-premium-only'], WGACT_CURRENT_VERSION, false);
+                wp_enqueue_script('wooptpm-google-premium-only', plugin_dir_url(__DIR__) . '../../js/public/google__premium_only.js', ['jquery', 'wooptpm', 'wooptpm-premium-only'], WGACT_CURRENT_VERSION, false);
+
                 wp_localize_script(
-                    'wooptpm-google-premium',
-                    'wooptpm_google_premium_ajax_object',
+                    'wooptpm-google-premium-only',
+                    'wooptpm_google_premium_only_ajax_object',
                     [
                         'ajax_url' => admin_url('admin-ajax.php'),
-                        'nonce' => wp_create_nonce( 'wooptpm-google-premium-nonce' ),
+                        'nonce' => wp_create_nonce( 'wooptpm-google-premium-only-nonce' ),
                     ]
                 );
             }

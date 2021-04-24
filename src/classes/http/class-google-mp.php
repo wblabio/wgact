@@ -31,7 +31,7 @@ class Google_MP extends Http
 
     public function wooptpm_google_analytics_set_session_cid()
     {
-        if ( ! check_ajax_referer( 'wooptpm-google-premium-nonce', 'nonce', false ) ) {
+        if ( ! check_ajax_referer( 'wooptpm-google-premium-only-nonce', 'nonce', false ) ) {
             wp_send_json_error( 'Invalid security token sent.' );
             error_log('Invalid security token sent.');
             wp_die();
