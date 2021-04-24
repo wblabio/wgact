@@ -95,6 +95,7 @@ class Google_MP_GA4 extends Google_MP
 
         if ($this->event_debug_mode) {
             error_log('GA 4 event debug mode enabled');
+
             $payload['events']['params']['debug_mode'] = true;
         }
 
