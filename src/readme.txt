@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, conversion tracking, dynamic retargeting, remarke
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 7.2
-Stable tag: 1.9.4
+Stable tag: 1.9.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,6 +103,13 @@ You can send the link to the front page of your shop too if you think it would b
 
 == Changelog ==
 
+= 1.9.5 =
+
+[//]: # fs_premium_only_begin
+* Fix: Improved the verification for the Google Analytics 4 API secret. It was too restrictive.
+* Fix: Fixed the cid for subscription renewal purchases with missing cid on the parent order
+[//]: # fs_premium_only_end
+
 = 1.9.4 =
 
 [//]: # fs_premium_only_begin
@@ -111,6 +118,11 @@ You can send the link to the front page of your shop too if you think it would b
 * New: Send purchase events using the GA UA Measurement Protocol
 * New: Send subscription renewal purchase events using the GA UA Measurement Protocol
 * New: Send full refund events using the GA UA Measurement Protocol
+* New: Send partial refund events using the GA UA Measurement Protocol
+* New: Send purchase events using the GA 4 Measurement Protocol
+* New: Send subscription renewal purchase events using the GA 4 Measurement Protocol
+* New: Send full refund events using the GA 4 Measurement Protocol
+* New: Send partial refund events using the GA 4 Measurement Protocol
 [//]: # fs_premium_only_end
 [//]: # fs_premium_only_begin
 * Tweak: Only activate eec scripts if GA UA or GA4 are enabled

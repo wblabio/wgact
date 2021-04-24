@@ -2151,7 +2151,7 @@ class Admin
             return true;
         }
 
-        $re = '/^[a-zA-Z\d]{18,26}$/m';
+        $re = '/^[a-zA-Z\d_-]{18,26}$/m';
 
         return $this->validate_with_regex($re, $string);
     }

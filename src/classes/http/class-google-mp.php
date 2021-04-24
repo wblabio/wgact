@@ -17,6 +17,7 @@ class Google_MP extends Http
 
     protected $cid_key;
     protected $cid;
+    protected $use_debug_endpoint;
 
     public function __construct()
     {
@@ -24,6 +25,8 @@ class Google_MP extends Http
 
         add_action('wp_ajax_wooptpm_google_analytics_set_session_cid', [$this, 'wooptpm_google_analytics_set_session_cid']);
         add_action('wp_ajax_nopriv_wooptpm_google_analytics_set_session_cid', [$this, 'wooptpm_google_analytics_set_session_cid']);
+
+        $this->use_debug_endpoint = apply_filters('wooptpm_google_mp_use_debug_endpoint', false);
     }
 
     public function wooptpm_google_analytics_set_session_cid()
@@ -47,9 +50,17 @@ class Google_MP extends Http
         update_post_meta($order->get_id(), $this->cid_key, $this->cid);
     }
 
-    public function get_cid_from_order($order)
+    public function get_cid_from_order($order): string
     {
-        return get_post_meta($order->get_id(), $this->cid_key, true);
+        $cid = get_post_meta($order->get_id(), $this->cid_key, true);
+
+        if ($cid) {
+//            error_log('cid found: ' . $cid);
+            return $cid;
+        } else {
+//            error_log('cid not found. Returning random');
+            return $this->get_random_cid();
+        }
     }
 
     protected function get_cid_from_session()
@@ -57,7 +68,13 @@ class Google_MP extends Http
         if (WC()->session->get($this->cid_key)) {
             return WC()->session->get($this->cid_key);
         } else {
-            return bin2hex(random_bytes(10));
+//            return bin2hex(random_bytes(10));
+            return $this->get_random_cid();
         }
+    }
+
+    protected function get_random_cid(): string
+    {
+        return random_int(1000000000, 9999999999) . '.' . time();
     }
 }

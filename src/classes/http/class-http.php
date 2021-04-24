@@ -27,7 +27,7 @@ class Http
             'timeout'     => 5,
             'redirection' => 5,
             'httpversion' => '1.0',
-            'blocking'    => false,
+            'blocking'    => apply_filters('wooptpm_send_http_api_requests_blocking', false),
             'headers'     => [],
             'cookies'     => [],
             'sslverify'   => false,

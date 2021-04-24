@@ -52,10 +52,11 @@ class Google_MP_GA4 extends Google_MP
         $server_url             = 'www.google-analytics.com';
         $endpoint               = '/mp/collect';
         $api_secret             = $this->options_obj->google->analytics->ga4->api_secret;
-        $this->hit_testing      = apply_filters('wooptpm_enable_ga_4_mp_hit_testing', false);
         $this->event_debug_mode = apply_filters('wooptpm_enable_ga_4_mp_event_debug_mode', false);
-        $debug                  = $this->hit_testing ? '/debug' : '';
+        $debug                  = $this->use_debug_endpoint ? '/debug' : '';
         $this->server_base_path = 'https://' . $server_url . $debug . $endpoint . '?measurement_id=' . $measurement_id . '&api_secret=' . $api_secret;
+
+        $this->post_request_args['blocking'] = apply_filters('wooptpm_send_http_api_ga_4_requests_blocking', $this->post_request_args['blocking'] );
     }
 
     // We pass the $order and the $cid
@@ -93,7 +94,7 @@ class Google_MP_GA4 extends Google_MP
         }
 
         if ($this->event_debug_mode) {
-            error_log('event debug mode enabled');
+            error_log('GA 4 event debug mode enabled');
             $payload['events']['params']['debug_mode'] = true;
         }
 
@@ -183,16 +184,13 @@ class Google_MP_GA4 extends Google_MP
 
         $this->post_request_args['body'] = json_encode($payload);
 
-        if ($this->hit_testing === true) {
-            $this->post_request_args['blocking'] = true;
-        }
 
 //        error_log(print_r($this->post_request_args['body'], true));
 
 //        error_log('request url: ' . $request_url);
 
         // if we're sending the request non-blocking we won't receive a response back
-        if ($this->hit_testing) {
+        if ($this->post_request_args['blocking'] === true) {
             $response = wp_safe_remote_post($request_url, $this->post_request_args);
             error_log('response code: ' . wp_remote_retrieve_response_code($response));
             error_log(print_r($response, true));

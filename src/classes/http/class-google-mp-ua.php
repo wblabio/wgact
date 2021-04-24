@@ -47,9 +47,10 @@ class Google_MP_UA extends Google_MP
 
         $server_url             = 'www.google-analytics.com';
         $endpoint               = '/collect';
-        $this->hit_testing      = false;
-        $debug                  = $this->hit_testing ? '/debug' : '';
+        $debug                  = $this->use_debug_endpoint ? '/debug' : '';
         $this->server_base_path = 'https://' . $server_url . $debug . $endpoint;
+
+        $this->post_request_args['blocking'] = apply_filters('wooptpm_send_http_api_ga_ua_requests_blocking', $this->post_request_args['blocking'] );
     }
 
     public function send_purchase_hit($order, $cid = null)
@@ -138,7 +139,7 @@ class Google_MP_UA extends Google_MP
             $data_transaction
         );
 
-        error_log(print_r($payload, true));
+//        error_log(print_r($payload, true));
 
         $this->send_mp_hit($payload);
 
@@ -198,17 +199,17 @@ class Google_MP_UA extends Google_MP
 //        error_log('request url: ' . $request_url);
 //        error_log('sending full refund hit');
 
-        if ($this->hit_testing === true) {
-            $this->post_request_args['blocking'] = true;
+        // if we're sending the request non-blocking we won't receive a response back
+        if ($this->post_request_args['blocking'] === true) {
+
+            $response = wp_safe_remote_post($request_url, $this->post_request_args);
+
+            error_log('hit was sent');
+            error_log('response code: ' . wp_remote_retrieve_response_code($response));
+            error_log(print_r($response, true));
+        } else {
+            wp_safe_remote_post($request_url, $this->post_request_args);
         }
-
-        wp_safe_remote_post($request_url, $this->post_request_args);
-
-//        error_log('hit was sent');
-
-//        if we're sending the request non-blocking we won't receive a response back
-//        error_log(print_r($response, true));
-//        error_log('response code: ' . wp_remote_retrieve_response_code($response));
     }
 
     // https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#pr_id
