@@ -101,4 +101,46 @@ trait Trait_Product
 
         return $dyn_r_ids;
     }
+
+    protected function get_order_item_ids($order): array
+    {
+        $order_items       = $order->get_items();
+        $order_items_array = [];
+
+        foreach ((array)$order_items as $order_item) {
+
+            $product_id = $this->get_variation_or_product_id($order_item->get_data(), $this->options_obj->general->variations_output);
+
+            $product = wc_get_product($product_id);
+
+            // only continue if WC retrieves a valid product
+            if (!is_bool($product)) {
+
+                $dyn_r_ids = $this->get_dyn_r_ids($product);
+                $product_id_compiled = $dyn_r_ids[$this->get_dyn_r_id_type()];
+//                $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku(), $this->options, '');
+                array_push($order_items_array, $product_id_compiled);
+            }
+        }
+
+        return $order_items_array;
+    }
+
+    protected function get_dyn_r_id_type (): string
+    {
+//        $dyn_r_id_type = '';
+
+        if($this->options_obj->google->ads->product_identifier == 0) {
+            $this->dyn_r_id_type = 'post_id';
+        } elseif ($this->options_obj->google->ads->product_identifier == 1) {
+            $this->dyn_r_id_type =  'gpf';
+        } elseif ($this->options_obj->google->ads->product_identifier == 2) {
+            $this->dyn_r_id_type =  'sku';
+        }
+
+        // if you want to change the dyn_r_id type for Google programmatically
+        $this->dyn_r_id_type = apply_filters('wooptpm_product_id_type_for_' . $this->pixel_name, $this->dyn_r_id_type);
+
+        return $this->dyn_r_id_type;
+    }
 }

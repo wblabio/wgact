@@ -32,8 +32,8 @@ class Facebook_Pixel_Manager extends Pixel_Manager_Base
 
             // Process the purchase through Facebook CAPI when they are paid,
             // or when they are manually completed.
-//        add_action('woocommerce_payment_complete', [$this, 'facebook_capi_report_purchase__premium_only']);
-//        add_action('woocommerce_order_status_completed', [$this, 'facebook_capi_report_purchase__premium_only']);
+        add_action('woocommerce_payment_complete', [$this, 'facebook_capi_report_purchase__premium_only']);
+        add_action('woocommerce_order_status_completed', [$this, 'facebook_capi_report_purchase__premium_only']);
 
             // Process subscription renewals
             // https://docs.woocommerce.com/document/subscriptions/develop/action-reference/
@@ -45,6 +45,13 @@ class Facebook_Pixel_Manager extends Pixel_Manager_Base
     public function facebook_save_session_identifiers_on_order__premium_only($order)
     {
         $this->facebook_capi->set_identifiers_on_order($order);
+    }
+
+    public function facebook_capi_report_purchase__premium_only($order_id)
+    {
+        $order = wc_get_order($order_id);
+
+        $this->facebook_capi->send_purchase_hit($order);
     }
 
     public function wooptpm_facebook_front_end_scripts()

@@ -44,4 +44,53 @@ class Http
 
         return $full_tracking_enabled;
     }
+
+//    protected function send_hit($payload)
+//    {
+//        $request_url = $this->server_base_path;
+//
+////        error_log(print_r($payload, true));
+//
+//        $this->post_request_args['body'] = json_encode($payload);
+//
+//
+////        error_log(print_r($this->post_request_args['body'], true));
+//
+////        error_log('request url: ' . $request_url);
+//
+//        // if we're sending the request non-blocking we won't receive a response back
+//        if ($this->post_request_args['blocking'] === true) {
+//            $response = wp_safe_remote_post($request_url, $this->post_request_args);
+//            error_log('response code: ' . wp_remote_retrieve_response_code($response));
+//            error_log(print_r($response, true));
+//        } else {
+//            wp_safe_remote_post($request_url, $this->post_request_args);
+//        }
+//    }
+
+    protected function send_hit($request_url, $payload = null)
+    {
+        error_log('request url: ' . $request_url);
+
+        error_log(print_r($payload, true));
+
+
+        if ($payload) {
+            $this->post_request_args['body'] = json_encode($payload);
+        }
+
+        error_log(print_r($this->post_request_args, true));
+
+        // if we're sending the request non-blocking we won't receive a response back
+        if ($this->post_request_args['blocking'] === true) {
+
+            $response = wp_safe_remote_post($request_url, $this->post_request_args);
+
+            error_log('hit was sent');
+            error_log('response code: ' . wp_remote_retrieve_response_code($response));
+            error_log(print_r($response, true));
+        } else {
+            wp_safe_remote_post($request_url, $this->post_request_args);
+        }
+    }
 }

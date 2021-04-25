@@ -56,7 +56,7 @@ class Google_MP_GA4 extends Google_MP
         $debug                  = $this->use_debug_endpoint ? '/debug' : '';
         $this->server_base_path = 'https://' . $server_url . $debug . $endpoint . '?measurement_id=' . $measurement_id . '&api_secret=' . $api_secret;
 
-        $this->post_request_args['blocking'] = apply_filters('wooptpm_send_http_api_ga_4_requests_blocking', $this->post_request_args['blocking'] );
+        $this->post_request_args['blocking'] = apply_filters('wooptpm_send_http_api_ga_4_requests_blocking', $this->post_request_args['blocking']);
     }
 
     // We pass the $order and the $cid
@@ -65,11 +65,11 @@ class Google_MP_GA4 extends Google_MP
     public function send_purchase_hit($order, $cid = null)
     {
         // only run, if the hit has not been sent already (check in db)
-        if (get_post_meta($order->get_id(), $this->mp_purchase_hit_key) === true) {
+        if (get_post_meta($order->get_id(), $this->mp_purchase_hit_key)) {
             return;
         }
 
-//        error_log('processing GA 4 Measurement Protocol purchase hit');
+        error_log('processing GA 4 Measurement Protocol purchase hit');
 
         $payload = [
             'client_id'            => $this->get_cid_from_order($order),
@@ -101,7 +101,7 @@ class Google_MP_GA4 extends Google_MP
 
 //        error_log(print_r($payload, true));
 
-        $this->send_mp_hit($payload);
+        $this->send_hit($this->server_base_path, $payload);
 
         // Now we let the server know, that the hit has already been successfully sent.
         update_post_meta($order->get_id(), $this->mp_purchase_hit_key, true);
@@ -135,7 +135,8 @@ class Google_MP_GA4 extends Google_MP
 
 //        error_log(print_r($payload, true));
 
-        $this->send_mp_hit($payload);
+        $this->send_hit($this->server_base_path, $payload);
+
 
         // Now we let the server know, that the hit has already been successfully sent.
         update_post_meta($order->get_id(), $this->mp_full_refund_hit_key, true);
@@ -171,34 +172,12 @@ class Google_MP_GA4 extends Google_MP
 
 //        error_log(print_r($payload, true));
 
-        $this->send_mp_hit($payload);
+        $this->send_hit($this->server_base_path, $payload);
 
         // Now we let the server know, that the hit has already been successfully sent.
         update_post_meta($order->get_id(), $this->mp_partial_refund_hit_key . '_' . $refund_id, true);
     }
 
-    private function send_mp_hit($payload)
-    {
-        $request_url = $this->server_base_path;
-
-//        error_log(print_r($payload, true));
-
-        $this->post_request_args['body'] = json_encode($payload);
-
-
-//        error_log(print_r($this->post_request_args['body'], true));
-
-//        error_log('request url: ' . $request_url);
-
-        // if we're sending the request non-blocking we won't receive a response back
-        if ($this->post_request_args['blocking'] === true) {
-            $response = wp_safe_remote_post($request_url, $this->post_request_args);
-            error_log('response code: ' . wp_remote_retrieve_response_code($response));
-            error_log(print_r($response, true));
-        } else {
-            wp_safe_remote_post($request_url, $this->post_request_args);
-        }
-    }
 
     protected function get_all_order_products($order): array
     {
