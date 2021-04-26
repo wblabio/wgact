@@ -225,16 +225,16 @@ jQuery(function () {
         });
 
         // set_checkout_option event
-        jQuery(document).on('wooptpmFireCheckoutOption', function (event, product) {
+        jQuery(document).on('wooptpmFireCheckoutOption', function (event, data) {
 
             // console.log('firing google set_checkout_option event');
-            // console.log(product);
+            // console.log(data);
 
             gtag('event', 'set_checkout_option', {
                 "send_to"        : wooptpmDataLayer.pixels.google.analytics.universal.property_id,
-                "checkout_step"  : product.step,
-                "checkout_option": product.checkout_option,
-                "value"          : product.value
+                "checkout_step"  : data.step,
+                "checkout_option": data.checkout_option,
+                "value"          : data.value
             });
         });
     }

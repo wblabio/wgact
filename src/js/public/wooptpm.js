@@ -438,7 +438,11 @@
         allIoElementsToWatch = jQuery('.wooptpmProductId')
             .map(function (i, elem) {
                 // console.log(elem);
-                if (jQuery(elem).parent().hasClass('type-product') || jQuery(elem).parent().hasClass('product')) {
+                if (
+                    jQuery(elem).parent().hasClass('type-product') ||
+                    jQuery(elem).parent().hasClass('product') ||
+                    jQuery(elem).parent().hasClass('product-item-inner')
+                ) {
                     // console.log(elem);
                     return jQuery(elem).parent();
                 } else if (
@@ -486,7 +490,9 @@
         try {
             // Pass in the target node, as well as the observer options
 
-            let productsNode = jQuery('.products');
+            // selects the most common parent node
+            // https://stackoverflow.com/a/7648323/4688612
+            let productsNode = jQuery('.wooptpmProductId:eq(0)').parents().has(jQuery('.wooptpmProductId:eq(1)').parents()).first()
 
             if(productsNode.length){
                 productsMutationObserver.observe(productsNode[0], {
