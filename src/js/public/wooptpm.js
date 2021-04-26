@@ -293,6 +293,15 @@
         jQuery(document).trigger('wooptpmFireCheckoutOption', data);
     }
 
+    wooptpm.fireCheckoutProgress = function (step) {
+
+        let data = {
+            'step': step,
+        };
+
+        jQuery(document).trigger('wooptpmFireCheckoutProgress', data);
+    }
+
     wooptpm.getPostIdFromString = function (string) {
         // console.log(string);
         try {
@@ -494,7 +503,7 @@
             // https://stackoverflow.com/a/7648323/4688612
             let productsNode = jQuery('.wooptpmProductId:eq(0)').parents().has(jQuery('.wooptpmProductId:eq(1)').parents()).first()
 
-            if(productsNode.length){
+            if (productsNode.length) {
                 productsMutationObserver.observe(productsNode[0], {
                     attributes   : true,
                     childList    : true,
@@ -725,33 +734,45 @@ jQuery(function () {
         jQuery(document).trigger('wooptpmBeginCheckout');
     });
 
-    // set_checkout_option event
+    let emailSelected = false;
+
+    // checkout_progress event
     // track checkout option event: entered valid billing email
     body.on('input', '#billing_email', function () {
 
         if (wooptpm.isEmail(jQuery(this).val())) {
-            wooptpm.fireCheckoutOption(2);
+            // wooptpm.fireCheckoutOption(2);
+            wooptpm.fireCheckoutProgress(2);
+            emailSelected = true;
         }
     });
 
     // track checkout option event: purchase click
-    let payment_method_selected = false;
+    let paymentMethodSelected = false;
 
     body.on('click', '.wc_payment_methods', function () {
 
+        if (paymentMethodSelected === false) {
+            wooptpm.fireCheckoutProgress(3);
+        }
+
         wooptpm.fireCheckoutOption(3, jQuery("input[name='payment_method']:checked").val());
-        payment_method_selected = true;
+        paymentMethodSelected = true;
     });
 
     // track checkout option event: purchase click
     body.one('click', '#place_order', function () {
 
-        if (payment_method_selected === false) {
+        if (emailSelected === false) {
+            wooptpm.fireCheckoutProgress(2);
+        }
 
+        if (paymentMethodSelected === false) {
+            wooptpm.fireCheckoutProgress(3);
             wooptpm.fireCheckoutOption(3, jQuery("input[name='payment_method']:checked").val());
         }
 
-        wooptpm.fireCheckoutOption(4);
+        wooptpm.fireCheckoutProgress(4);
     });
 
     // update cart event

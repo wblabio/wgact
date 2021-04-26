@@ -237,6 +237,18 @@ jQuery(function () {
                 "value"          : data.value
             });
         });
+
+        // checkout_progress event
+        jQuery(document).on('wooptpmFireCheckoutProgress', function (event, data) {
+
+            // console.log('firing google checkout_progress event');
+            // console.log(data);
+
+            gtag('event', 'checkout_progress', {
+                "send_to"        : wooptpmDataLayer.pixels.google.analytics.universal.property_id,
+                "checkout_step"  : data.step,
+            });
+        });
     }
 });
 

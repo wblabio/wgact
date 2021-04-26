@@ -64,12 +64,15 @@ class Google_MP_GA4 extends Google_MP
     // https://developers.google.com/analytics/devguides/collection/protocol/ga4/reference/events#purchase
     public function send_purchase_hit($order, $cid = null)
     {
+
+//        error_log('processing GA 4 Measurement Protocol purchase hit');
+
         // only run, if the hit has not been sent already (check in db)
         if (get_post_meta($order->get_id(), $this->mp_purchase_hit_key)) {
             return;
         }
 
-        error_log('processing GA 4 Measurement Protocol purchase hit');
+//        error_log('GA 4, no previous order hit registered, continue...');
 
         $payload = [
             'client_id'            => $this->get_cid_from_order($order),

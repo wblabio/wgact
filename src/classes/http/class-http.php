@@ -70,16 +70,16 @@ class Http
 
     protected function send_hit($request_url, $payload = null)
     {
-        error_log('request url: ' . $request_url);
+//        error_log('request url: ' . $request_url);
 
-        error_log(print_r($payload, true));
+//        error_log(print_r($payload, true));
 
 
         if ($payload) {
             $this->post_request_args['body'] = json_encode($payload);
         }
 
-        error_log(print_r($this->post_request_args, true));
+//        error_log(print_r($this->post_request_args, true));
 
         // if we're sending the request non-blocking we won't receive a response back
         if ($this->post_request_args['blocking'] === true) {

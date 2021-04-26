@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, conversion tracking, dynamic retargeting, remarke
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 7.2
-Stable tag: 1.9.5
+Stable tag: 1.9.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -106,13 +106,20 @@ You can send the link to the front page of your shop too if you think it would b
 = 1.9.5 =
 
 [//]: # fs_premium_only_begin
+* Fix: Fix GA UA eec checkout progress steps
+[//]: # fs_premium_only_end
+
+[//]: # fs_premium_only_begin
 * Tweak: Added nonces to some ajax calls
 [//]: # fs_premium_only_end
 * Tweak: Added dependencies to enqueued scripts
 * Tweak: Improved the parent selector for the mutation observer for lazy loaded products
+* Tweak: Implemented better product selector for modification observer
+* Tweak: Added new selector for related products
 [//]: # fs_premium_only_begin
 * Fix: Improved the verification for the Google Analytics 4 API secret. It was too restrictive.
 * Fix: Fixed the cid for subscription renewal purchases with missing cid on the parent order
+* Fix: Fixed the deduplication check for GA UA MP hits
 [//]: # fs_premium_only_end
 
 

@@ -60,7 +60,7 @@ class Google_MP_UA extends Google_MP
             return;
         }
 
-        error_log('processing GA UA Measurement Protocol purchase hit');
+//        error_log('processing GA UA Measurement Protocol purchase hit');
 
         $data_hit_type = [
             'v'   => 1,
@@ -118,7 +118,7 @@ class Google_MP_UA extends Google_MP
             return;
         }
 
-        error_log('processing Measure Protocol full refund hit');
+//        error_log('processing Measure Protocol full refund hit');
 
         $data_hit_type = [
             'v'   => 1,
