@@ -12,9 +12,9 @@ class Google_Ads extends Google
 
     protected $google_business_vertical;
 
-    public function __construct()
+    public function __construct($options)
     {
-        parent::__construct();
+        parent::__construct($options);
 
         add_action('wp_enqueue_scripts', [$this, 'wooptpm_google_ads_front_end_scripts']);
 

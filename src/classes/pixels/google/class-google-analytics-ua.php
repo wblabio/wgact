@@ -9,9 +9,9 @@ if (!defined('ABSPATH')) {
 
 class Google_Analytics_UA extends Google_Analytics
 {
-    public function __construct()
+    public function __construct($options)
     {
-        parent::__construct();
+        parent::__construct($options);
     }
 
     public function inject_order_received_page($order, $order_total, $is_new_customer)

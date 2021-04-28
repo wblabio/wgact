@@ -11,9 +11,9 @@ class Google_Analytics_UA_EEC extends Google_Analytics_UA
 {
     use Trait_Google;
 
-    public function __construct()
+    public function __construct($options)
     {
-        parent::__construct();
+        parent::__construct($options);
     }
 
     protected function output_view_item_list_html($items, $list_id){

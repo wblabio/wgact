@@ -37,9 +37,9 @@ class Google_MP_GA4 extends Google_MP
 
     protected $event_debug_mode;
 
-    public function __construct()
+    public function __construct($options)
     {
-        parent::__construct();
+        parent::__construct($options);
 
         $this->mp_purchase_hit_key       = 'wooptpm_google_analytics_4_mp_purchase_hit';
         $this->mp_full_refund_hit_key    = 'wooptpm_google_analytics_4_mp_full_refund_hit';

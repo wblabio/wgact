@@ -12,11 +12,11 @@ class Bing_Pixel_Manager extends Pixel_Manager_Base
 {
     protected $bing_pixel;
 
-    public function __construct()
+    public function __construct($options)
     {
-        parent::__construct();
+        parent::__construct($options);
 
-        $this->bing_pixel = new Bing_Pixel();
+        $this->bing_pixel = new Bing_Pixel($options);
     }
 
     public function inject_everywhere()

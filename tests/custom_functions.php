@@ -8,8 +8,8 @@ function get_test_event_code(): string
 {
     return 'TEST26481';
 }
-//add_filter('wooptpm_send_http_api_facebook_capi_requests_blocking', '__return_true');
 
+//add_filter('wooptpm_send_http_api_facebook_capi_requests_blocking', '__return_true');
 
 
 //add_filter('wooptpm_full_tracking_enabled', '__return_true');

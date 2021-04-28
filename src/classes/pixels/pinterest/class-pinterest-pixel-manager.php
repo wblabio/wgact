@@ -12,11 +12,11 @@ class Pinterest_Pixel_Manager extends Pixel_Manager_Base
 {
     protected $pinterest_pixel;
 
-    public function __construct()
+    public function __construct($options)
     {
-        parent::__construct();
+        parent::__construct($options);
 
-        $this->pinterest_pixel = new Pinterest_Pixel();
+        $this->pinterest_pixel = new Pinterest_Pixel($options);
     }
 
     public function inject_everywhere()

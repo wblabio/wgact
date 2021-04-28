@@ -103,11 +103,17 @@ You can send the link to the front page of your shop too if you think it would b
 
 == Changelog ==
 
-= 1.9.5 =
+= 1.9.6 =
 
+[//]: # fs_premium_only_begin
+* Tweak: Orders now get reported as soon as the order goes into status 'processing'
+[//]: # fs_premium_only_end
 [//]: # fs_premium_only_begin
 * Fix: Fix GA UA eec checkout progress steps
 [//]: # fs_premium_only_end
+* Fix: Changed reading options from database to passing options from primary instance in order to avoid options caching issues on saving.
+
+= 1.9.5 =
 
 [//]: # fs_premium_only_begin
 * Tweak: Added nonces to some ajax calls

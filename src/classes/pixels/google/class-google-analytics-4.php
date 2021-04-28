@@ -11,9 +11,9 @@ class Google_Analytics_4 extends Google_Analytics
 {
     use Trait_Google;
 
-    public function __construct()
+    public function __construct($options)
     {
-        parent::__construct();
+        parent::__construct($options);
     }
 
     public function inject_order_received_page($order, $order_total, $is_new_customer)

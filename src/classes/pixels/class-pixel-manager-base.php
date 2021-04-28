@@ -18,12 +18,13 @@ class Pixel_Manager_Base
     protected $options;
     protected $options_obj;
 
-    public function __construct()
+    public function __construct($options)
     {
         /*
          * Initialize options
          */
-        $this->options = get_option(WGACT_DB_OPTIONS_NAME);
+//        $this->options = get_option(WGACT_DB_OPTIONS_NAME);
+        $this->options = $options;
 
         $this->options_obj = json_decode(json_encode($this->options));
 

@@ -9,8 +9,8 @@ if (!defined('ABSPATH')) {
 
 class Google_Analytics_4_Standard extends Google_Analytics_4
 {
-    public function __construct()
+    public function __construct($options)
     {
-        parent::__construct();
+        parent::__construct($options);
     }
 }

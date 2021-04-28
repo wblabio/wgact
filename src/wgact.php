@@ -25,6 +25,7 @@ use WGACT\Classes\Admin\Admin;
 use WGACT\Classes\Admin\Ask_For_Rating;
 use WGACT\Classes\Admin\Environment_Check;
 use WGACT\Classes\Db_Upgrade;
+use WGACT\Classes\Default_Options;
 use WGACT\Classes\Pixels\Cookie_Consent_Management;
 use WGACT\Classes\Pixels\Pixel_Manager;
 
@@ -212,7 +213,7 @@ if (function_exists('wga_fs')) {
             if ($cookie_consent->is_cookie_prevention_active() == false) {
 
                 // inject pixels
-                new Pixel_Manager();
+                new Pixel_Manager($this->options);
             }
         }
 
@@ -241,7 +242,9 @@ if (function_exists('wga_fs')) {
                 update_option('wooptpm_launch_deal', $wooptpm_launch_deal);
 
 //            error_log('options empty, loading default');
-                $this->options = $this->wgact_get_default_options();
+//                $this->options = $this->wgact_get_default_options();
+                $this->options = (new Default_Options())->get_default_options();
+
                 update_option(WGACT_DB_OPTIONS_NAME, $this->options);
 
 //            $options = get_option(WGACT_DB_OPTIONS_NAME);
@@ -275,98 +278,9 @@ if (function_exists('wga_fs')) {
                 }
 
                 // add new default options to the options db array
-                $this->options = $this->update_with_defaults($this->options, $this->wgact_get_default_options());
+                $this->options = (new Default_Options())->update_with_defaults($this->options, (new Default_Options())->get_default_options());
                 update_option(WGACT_DB_OPTIONS_NAME, $this->options);
             }
-        }
-
-        protected function update_with_defaults($array_input, $array_default)
-        {
-            foreach ($array_default as $key => $value) {
-                if (array_key_exists($key, $array_input)) {
-                    if (is_array($value)) {
-                        $array_input[$key] = $this->update_with_defaults($array_input[$key], $value);
-                    }
-                } else {
-                    $array_input[$key] = $value;
-                }
-            }
-
-            return $array_input;
-        }
-
-        // get the default options
-        private function wgact_get_default_options(): array
-        {
-            // default options settings
-            return [
-                'google'     => [
-                    'ads'          => [
-                        'conversion_id'            => '',
-                        'conversion_label'         => '',
-                        'aw_merchant_id'           => '',
-                        'product_identifier'       => 0,
-                        'google_business_vertical' => 0,
-                        'dynamic_remarketing'      => 0,
-                        'phone_conversion_number'  => '',
-                        'phone_conversion_label'   => '',
-                    ],
-                    'analytics'    => [
-                        'universal'        => [
-                            'property_id' => '',
-                        ],
-                        'ga4'              => [
-                            'measurement_id' => '',
-                            'api_secret'     => '',
-                        ],
-                        'eec'              => 0,
-                        'link_attribution' => 0,
-                    ],
-                    'optimize'     => [
-                        'container_id' => '',
-                    ],
-                    'gtag'         => [
-                        'deactivation' => 0,
-                    ],
-                    'consent_mode' => [
-                        'active'  => 0,
-                        'regions' => [],
-                    ],
-                    'user_id'      => 0,
-                ],
-                'facebook'   => [
-                    'pixel_id'   => '',
-                    'capi_token' => '',
-                    'microdata'  => 0,
-                ],
-                'bing'       => [
-                    'uet_tag_id' => ''
-                ],
-                'twitter'    => [
-                    'pixel_id' => ''
-                ],
-                'pinterest'  => [
-                    'pixel_id' => ''
-                ],
-                'hotjar'     => [
-                    'site_id' => ''
-                ],
-                'shop'       => [
-                    'order_total_logic'   => 0,
-                    'cookie_consent_mgmt' => [
-                        'cookiebot' => [
-                            'active' => 0
-                        ],
-                    ],
-                    'order_deduplication' => 1
-                ],
-                'general'    => [
-                    'variations_output'          => 1,
-                    'maximum_compatibility_mode' => 0,
-                    'pro_version_demo'           => 0,
-                ],
-                'db_version' => WGACT_DB_VERSION,
-            ];
         }
 
         // adds a link on the plugins page for the wgdr settings

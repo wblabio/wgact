@@ -14,17 +14,17 @@ class Facebook_Pixel_Manager extends Pixel_Manager_Base
     protected $facebook_browser_pixel;
     protected $facebook_capi;
 
-    public function __construct()
+    public function __construct($options)
     {
-        parent::__construct();
+        parent::__construct($options);
 
         add_action('wp_enqueue_scripts', [$this, 'wooptpm_facebook_front_end_scripts']);
 
-        $this->facebook_browser_pixel = new Facebook_Browser_Pixel();
+        $this->facebook_browser_pixel = new Facebook_Browser_Pixel($options);
 
         if (wga_fs()->is__premium_only() && $this->options_obj->facebook->capi_token) {
 
-            $this->facebook_capi = new Facebook_CAPI();
+            $this->facebook_capi = new Facebook_CAPI($options);
 
             // Save the Facebook session identifiers on the order so that we can use them later when the order gets paid or completed
             // https://woocommerce.github.io/code-reference/files/woocommerce-includes-class-wc-checkout.html#source-view.403

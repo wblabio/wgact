@@ -12,9 +12,9 @@ if (!defined('ABSPATH')) {
 
 class Google_Analytics_Refund_UA extends Google_Analytics
 {
-    public function __construct()
+    public function __construct($options)
     {
-        parent::__construct();
+        parent::__construct($options);
     }
 
     public function output_refund_to_frontend($order, $refund, $dataLayer_refund_items = null)

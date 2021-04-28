@@ -17,9 +17,10 @@ class Http
     protected $mp_partial_refund_hit_key;
     protected $hit_testing;
 
-    public function __construct()
+    public function __construct($options)
     {
-        $this->options     = get_option(WGACT_DB_OPTIONS_NAME);
+//        $this->options     = get_option(WGACT_DB_OPTIONS_NAME);
+        $this->options = $options;
         $this->options_obj = json_decode(json_encode($this->options));
 
         $this->post_request_args = [

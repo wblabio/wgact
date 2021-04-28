@@ -15,6 +15,11 @@ class Facebook_Microdata extends Pixel
 {
     use Trait_Product;
 
+    public function __construct($options)
+    {
+        parent::__construct($options);
+    }
+
     public function inject_product($product, $product_attributes)
     {
         if (wp_get_post_parent_id($product->get_id()) <> 0) {

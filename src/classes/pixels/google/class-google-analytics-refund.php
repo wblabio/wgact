@@ -14,9 +14,9 @@ class Google_Analytics_Refund extends Google_Analytics
 {
     use Trait_Google;
 
-    public function __construct()
+    public function __construct($options)
     {
-        parent::__construct();
+        parent::__construct($options);
     }
 
     /**

@@ -35,9 +35,9 @@ class Google_MP_UA extends Google_MP
     use Trait_Product;
     use Trait_Google;
 
-    public function __construct()
+    public function __construct($options)
     {
-        parent::__construct();
+        parent::__construct($options);
 
         $this->mp_purchase_hit_key       = 'wooptpm_google_analytics_ua_mp_purchase_hit';
         $this->mp_full_refund_hit_key    = 'wooptpm_google_analytics_ua_mp_full_refund_hit';

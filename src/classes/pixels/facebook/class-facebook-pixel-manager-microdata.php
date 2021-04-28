@@ -12,10 +12,10 @@ class Facebook_Pixel_Manager_Microdata extends Pixel_Manager_Base
 {
     protected $facebook_microdata_pixel;
 
-    public function __construct()
+    public function __construct($options)
     {
-        parent::__construct();
-        $this->facebook_microdata_pixel = new Facebook_Microdata();
+        parent::__construct($options);
+        $this->facebook_microdata_pixel = new Facebook_Microdata($options);
     }
 
     public function inject_product($product, $product_attributes)

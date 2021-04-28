@@ -18,22 +18,33 @@ class Facebook_CAPI extends Http
 
     protected $fbp_key;
     protected $fbc_key;
+    protected $facebook_key;
     protected $capi_purchase_hit_key;
     protected $test_event_code;
+    protected $user_transparency_settings;
     protected $pixel_name;
     protected $request_url;
 
-    public function __construct()
+    public function __construct($options)
     {
-        parent::__construct();
+        parent::__construct($options);
 
         $pixel_id     = $this->options_obj->facebook->pixel_id;
         $access_token = $this->options_obj->facebook->capi_token;
 
-        $this->fbp_key               = 'facebook_fbp_' . $pixel_id;
-        $this->fbc_key               = 'facebook_fbc_' . $pixel_id;
+        $this->fbp_key      = 'facebook_fbp_' . $pixel_id;
+        $this->fbc_key      = 'facebook_fbc_' . $pixel_id;
+        $this->facebook_key = 'facebook_user_identifiers_' . $pixel_id;
+
+        $this->test_event_code            = apply_filters('wooptpm_facebook_capi_test_event_code', false);
+        $this->user_transparency_settings = [
+            'process_anonymous_hits' => false,
+
+
+        ];
+        $this->user_transparency_settings = apply_filters('wooptpm_facebook_process_anonymous_hits', $this->user_transparency_settings);
+
         $this->capi_purchase_hit_key = 'wooptpm_facebook_capi_purchase_hit';
-        $this->test_event_code       = apply_filters('wooptpm_facebook_capi_test_event_code', false);
         $this->pixel_name            = 'facebook';
 
         $server_url        = 'graph.facebook.com';
@@ -70,28 +81,38 @@ class Facebook_CAPI extends Http
 //            error_log('Facebook CAPI purchase hit not yet processed. Continue...');
         }
 
+        // privacy filter
+        // if user didn't provide fbp he probably doesn't want to be tracked -> stop processing
+        // if fbp is available, continue with minimally required identifiers
+        // the shop owner can choose to add all available identifiers
+        // give the shop owner the choice to filter the user_data, based on IP
+
+        $user_data = $this->get_user_data();
+
+        if (!$user_data['fbp'] && !$this->user_transparency_settings['process_anonymous_hits']) {
+            error_log('fbp missing. purchase hit prevented');
+            return;
+        }
+
+        if (!$user_data['fbp']) {
+            $user_data['fbp'] = $this->get_random_fbp();
+        }
 
         $event_data = [
             'event_name'       => 'Purchase',
             'event_time'       => (int)time(),
             'event_id'         => (string)$order->get_order_number(),
-            'event_source_url' => '',
             'opt_out'          => false,
             'action_source'    => 'website',
             'event_source_url' => get_site_url(),
         ];
 
         // add user data
-        $event_data['user_data'] = [
-            //                'client_ip_address' => '',
-                            'client_user_agent' => $_SERVER['HTTP_USER_AGENT'],
-            //                'em'                => '', // email hashed
-            'fbp' => $fbp ? $fbp : $this->get_fbp_from_order($order),
-        ];
+        $event_data['user_data'] = $this->get_user_data();
 
-        if ($this->get_fbc_from_order($order)) {
-            $event_data['user_data']['fbc'] = $this->get_fbc_from_order($order);
-        }
+//        if ($this->get_fbc_from_order($order)) {
+//            $event_data['user_data']['fbc'] = $this->get_fbc_from_order($order);
+//        }
 
         // add order data
         $event_data['custom_data'] = [
@@ -121,33 +142,43 @@ class Facebook_CAPI extends Http
         update_post_meta($order->get_id(), $this->capi_purchase_hit_key, true);
     }
 
-    protected function get_all_order_products($order): array
+    protected function get_user_data(): array
     {
-        $items = [];
-
-        foreach ($order->get_items() as $item_id => $item) {
-
-            $order_item_data = $this->get_order_item_data($item);
-
-            $item_details = [
-                'id'         => $order_item_data['id'],
-                //                'item_name'     => $order_item_data['name'],
-                //                'coupon'        => '',
-                //                'discount'      => '',
-                //                'affiliation'   => '',
-                //                'item_brand'    => $order_item_data['brand'],
-                //                'item_category' => $order_item_data['category'],
-                //                'item_variant'  => $order_item_data['variant'],
-                'item_price' => $order_item_data['price'],
-                //                'currency'      => '',
-                'quantity'   => $order_item_data['quantity'],
-            ];
-
-            array_push($items, $item_details);
-        }
-
-        return $items;
+        return [
+            //                'client_ip_address' => '',
+            'client_user_agent' => $_SERVER['HTTP_USER_AGENT'],
+            //                'em'                => '', // email hashed
+            'fbp'               => $fbp ? $fbp : $this->get_fbp_from_order($order),
+        ];
     }
+
+//    protected function get_all_order_products($order): array
+//    {
+//        $items = [];
+//
+//        foreach ($order->get_items() as $item_id => $item) {
+//
+//            $order_item_data = $this->get_order_item_data($item);
+//
+//            $item_details = [
+//                'id'         => $order_item_data['id'],
+//                //                'item_name'     => $order_item_data['name'],
+//                //                'coupon'        => '',
+//                //                'discount'      => '',
+//                //                'affiliation'   => '',
+//                //                'item_brand'    => $order_item_data['brand'],
+//                //                'item_category' => $order_item_data['category'],
+//                //                'item_variant'  => $order_item_data['variant'],
+//                'item_price' => $order_item_data['price'],
+//                //                'currency'      => '',
+//                'quantity'   => $order_item_data['quantity'],
+//            ];
+//
+//            array_push($items, $item_details);
+//        }
+//
+//        return $items;
+//    }
 
 
     public function wooptpm_facebook_set_session_identifiers()
@@ -158,30 +189,89 @@ class Facebook_CAPI extends Http
             wp_die();
         }
 
+        $facebook_identifiers = [];
+
         if (isset($_POST['fbp'])) {
-            $fbp = filter_var($_POST['fbp'], FILTER_SANITIZE_STRING);
-            WC()->session->set($this->fbp_key, $fbp);
+            $facebook_identifiers['fbp'] = filter_var($_POST['fbp'], FILTER_SANITIZE_STRING);
         }
 
         if (isset($_POST['fbc'])) {
-            $fbc = filter_var($_POST['fbc'], FILTER_SANITIZE_STRING);
-            WC()->session->set($this->fbc_key, $fbc);
+            $facebook_identifiers['fbp'] = filter_var($_POST['fbc'], FILTER_SANITIZE_STRING);
         }
 
+        $facebook_identifiers['ip'] = $this->get_user_ip();
+
+        // If the user doesn't provide a fbp we can safely assume he doesn't want to be tracked.
+        // But the user agent is a required field in order to send a valid hit to FB.
+        // User agents are not exactly unique per user, but unique enough to be able to narrow
+        // down the identity of a user well enough. Only few additional fingerprints (like IP) are needed to
+        // enable FB to match a user.
+        // Since our user, who is not providing fbp, wants to stay anonymous, we don't sent the real
+        // user agent to FB, but a random one.
+        if (isset($_POST['fbp'])) {
+            $facebook_identifiers['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
+        } else {
+            $facebook_identifiers['user_agent'] = (new User_Agent())->get_random_user_agent();
+        }
+
+        WC()->session->set($this->facebook_key, $facebook_identifiers);
+
         wp_die(); // this is required to terminate immediately and return a proper response
+    }
+
+    // https://developers.whatismybrowser.com/api/
+    // https://github.com/tarampampam/random-user-agent/blob/master/extension/js/UAGenerator.js
+    protected function get_fake_user_agent()
+    {
+
+    }
+
+    // https://stackoverflow.com/a/2031935/4688612
+    // https://stackoverflow.com/q/67277544/4688612
+    protected function get_user_ip(): string
+    {
+        $proxy_headers = [
+            'HTTP_CF_CONNECTING_IP', // Cloudflare
+            'HTTP_TRUE_CLIENT_IP', // Cloudflare Enterprise
+            'HTTP_INCAP_CLIENT_IP', // Incapsula
+            'HTTP_X_SUCURI_CLIENTIP', // Sucuri
+            'HTTP_FASTLY_CLIENT_IP', // Fastly
+            'HTTP_X_FORWARDED_FOR', // any proxy
+            'HTTP_X_FORWARDED',
+            'HTTP_X_CLUSTER_CLIENT_IP',
+            'HTTP_FORWARDED_FOR',
+            'HTTP_FORWARDED',
+            'HTTP_CLIENT_IP',
+            'REMOTE_ADDR'
+        ];
+
+        foreach ($proxy_headers as $key) {
+            if (array_key_exists($key, $_SERVER) === true) {
+                foreach (explode(',', $_SERVER[$key]) as $ip) {
+                    $ip = trim($ip); // just to be safe
+
+                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false){
+                        return $ip;
+                    }
+                }
+            }
+        }
     }
 
     public function set_identifiers_on_order($order)
     {
         // Get the fbp cookie if the client provides one, if not generate an anonymous one
-        $fbp = $this->get_fbp_from_session();
-        update_post_meta($order->get_id(), $this->fbp_key, $fbp);
+//        $fbp = $this->get_fbp_from_session();
+//        update_post_meta($order->get_id(), $this->fbp_key, $fbp);
 
         // Only save the fbc cookie if one is available
-        if ($this->get_fbc_from_session()) {
-            $fbc = $this->get_fbc_from_session();
-            update_post_meta($order->get_id(), $this->fbc_key, $fbc);
-        }
+//        if ($this->get_fbc_from_session()) {
+//            $fbc = $this->get_fbc_from_session();
+//            update_post_meta($order->get_id(), $this->fbc_key, $fbc);
+//        }
+
+        $facebook_identifiers = WC()->session->get($this->facebook_key);
+        update_post_meta($order->get_id(), $this->facebook_key, $facebook_identifiers);
     }
 
     protected function get_fbp_from_session()

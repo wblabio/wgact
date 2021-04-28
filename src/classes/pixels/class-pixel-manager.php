@@ -38,12 +38,13 @@ class Pixel_Manager extends Pixel_Manager_Base
     protected $dyn_r_ids;
     protected $position = 1;
 
-    public function __construct()
+    public function __construct($options)
     {
         /*
          * Initialize options
          */
-        $this->options = get_option(WGACT_DB_OPTIONS_NAME);
+//        $this->options = get_option(WGACT_DB_OPTIONS_NAME);
+        $this->options = $options;
 
         $this->options_obj = json_decode(json_encode($this->options));
 
@@ -76,15 +77,15 @@ class Pixel_Manager extends Pixel_Manager_Base
         /*
          * Initialize all pixels
          */
-        if ($this->google_active) new Google_Pixel_Manager();
-        if ($this->facebook_active) new Facebook_Pixel_Manager();
-        if ($this->options_obj->hotjar->site_id) $this->hotjar_pixel = new Hotjar_Pixel();
+        if ($this->google_active) new Google_Pixel_Manager($this->options);
+        if ($this->facebook_active) new Facebook_Pixel_Manager($this->options);
+        if ($this->options_obj->hotjar->site_id) $this->hotjar_pixel = new Hotjar_Pixel($this->options);
 
         if (wga_fs()->is__premium_only()) {
-            if ($this->options_obj->facebook->microdata) new Facebook_Pixel_Manager_Microdata();
-            if ($this->options_obj->bing->uet_tag_id) new Bing_Pixel_Manager();
-            if ($this->options_obj->twitter->pixel_id) new Twitter_Pixel_Manager();
-            if ($this->options_obj->pinterest->pixel_id) new Pinterest_Pixel_Manager();
+            if ($this->options_obj->facebook->microdata) new Facebook_Pixel_Manager_Microdata($this->options);
+            if ($this->options_obj->bing->uet_tag_id) new Bing_Pixel_Manager($this->options);
+            if ($this->options_obj->twitter->pixel_id) new Twitter_Pixel_Manager($this->options);
+            if ($this->options_obj->pinterest->pixel_id) new Pinterest_Pixel_Manager($this->options);
         }
 
         add_action('wp_head', function () {

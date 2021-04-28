@@ -27,25 +27,25 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
 //    private $google_analytics_ua_refund_pixel;
     private $google_analytics_4_eec_pixel;
 
-    public function __construct()
+    public function __construct($options)
     {
-        parent::__construct();
+        parent::__construct($options);
 
-        $this->google_pixel = new Google();
-        if ($this->is_google_ads_active()) if ($this->is_google_ads_active()) $this->google_ads_pixel = new Google_Ads();
+        $this->google_pixel = new Google($options);
+        if ($this->is_google_ads_active()) if ($this->is_google_ads_active()) $this->google_ads_pixel = new Google_Ads($options);
 
         add_action('wp_enqueue_scripts', [$this, 'google_front_end_scripts']);
 
 
         if (!wga_fs()->is__premium_only() || !$this->options_obj->google->analytics->eec) {
-            if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_standard_pixel = new Google_Analytics_UA_Standard();
-            if ($this->is_google_analytics_4_active()) $this->google_analytics_4_standard_pixel = new Google_Analytics_4_Standard();
+            if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_standard_pixel = new Google_Analytics_UA_Standard($options);
+            if ($this->is_google_analytics_4_active()) $this->google_analytics_4_standard_pixel = new Google_Analytics_4_Standard($options);
         } else {
 
-            $this->google_analytics_ua_eec_pixel = new Google_Analytics_UA_EEC();
+            $this->google_analytics_ua_eec_pixel = new Google_Analytics_UA_EEC($options);
 //            $this->google_analytics_ua_refund_pixel = new Google_Analytics_UA_Refund_Pixel();
 
-            $this->google_analytics_4_eec_pixel = new Google_Analytics_4_EEC();
+            $this->google_analytics_4_eec_pixel = new Google_Analytics_4_EEC($options);
 
             if ($this->is_google_analytics_active()) {
 
@@ -58,8 +58,8 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
                 // how to tell if order is fully refunded
                 // https://github.com/woocommerce/woocommerce/blob/b19500728b4b292562afb65eb3a0c0f50d5859de/includes/wc-order-functions.php#L774
 
-                $this->google_analytics_ua_http_mp = new Google_MP_UA();
-                $this->google_analytics_4_http_mp  = new Google_MP_GA4();
+                $this->google_analytics_ua_http_mp = new Google_MP_UA($options);
+                $this->google_analytics_4_http_mp  = new Google_MP_GA4($options);
 
 //                error_log('running mp scripts');
 
@@ -69,8 +69,12 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
                 // https://woocommerce.github.io/code-reference/files/woocommerce-includes-class-wc-checkout.html#source-view.403
                 add_action('woocommerce_checkout_order_created', [$this, 'google_analytics_save_cid_on_order__premium_only']);
 
-                // Process the purchase through the GA Measurement Protocol when they are paid,
-                // or when they are manually completed.
+                // Process the purchase through the GA Measurement Protocol when they are paid, when they change to processing, or
+                // when they are manually set to completed.
+                // https://docs.woocommerce.com/document/managing-orders/
+                // Maybe also use woocommerce_pre_payment_complete
+                // https://woocommerce.github.io/code-reference/files/woocommerce-includes-class-wc-order.html#source-view.105
+                add_action('woocommerce_order_status_processing', [$this, 'google_analytics_mp_report_purchase__premium_only']);
                 add_action('woocommerce_payment_complete', [$this, 'google_analytics_mp_report_purchase__premium_only']);
                 add_action('woocommerce_order_status_completed', [$this, 'google_analytics_mp_report_purchase__premium_only']);
 
@@ -174,7 +178,7 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
                     'wooptpm_google_premium_only_ajax_object',
                     [
                         'ajax_url' => admin_url('admin-ajax.php'),
-                        'nonce' => wp_create_nonce( 'wooptpm-google-premium-only-nonce' ),
+                        'nonce'    => wp_create_nonce('wooptpm-google-premium-only-nonce'),
                     ]
                 );
             }

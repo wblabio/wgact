@@ -12,11 +12,11 @@ class Twitter_Pixel_Manager extends Pixel_Manager_Base
 {
     protected $twitter_pixel;
 
-    public function __construct()
+    public function __construct($options)
     {
-        parent::__construct();
+        parent::__construct($options);
 
-        $this->twitter_pixel = new Twitter_Pixel();
+        $this->twitter_pixel = new Twitter_Pixel($options);
     }
 
     public function inject_everywhere()

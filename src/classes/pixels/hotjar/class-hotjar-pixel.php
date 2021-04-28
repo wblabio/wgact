@@ -10,9 +10,9 @@ if (!defined('ABSPATH')) {
 
 class Hotjar_Pixel extends Pixel
 {
-    public function __construct()
+    public function __construct($options)
     {
-        parent::__construct();
+        parent::__construct($options);
     }
 
     public function inject_everywhere()

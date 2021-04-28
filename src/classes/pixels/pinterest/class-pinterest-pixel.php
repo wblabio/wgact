@@ -15,9 +15,9 @@ class Pinterest_Pixel extends Pixel
 {
     protected $pixel_name;
 
-    public function __construct()
+    public function __construct($options)
     {
-        parent::__construct();
+        parent::__construct($options);
 
         $this->pixel_name = 'pinterest';
     }

@@ -13,9 +13,9 @@ class Google_Analytics extends Google
 {
     use Trait_Shop;
 
-    public function __construct()
+    public function __construct($options)
     {
-        parent::__construct();
+        parent::__construct($options);
 
         $this->pixel_name = 'google_analytics';
     }
