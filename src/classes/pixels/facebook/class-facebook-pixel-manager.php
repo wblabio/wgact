@@ -21,7 +21,6 @@ class Facebook_Pixel_Manager extends Pixel_Manager_Base
         add_action('wp_enqueue_scripts', [$this, 'wooptpm_facebook_front_end_scripts']);
 
         $this->facebook_browser_pixel = new Facebook_Browser_Pixel($options);
-
         if (wga_fs()->is__premium_only() && $this->options_obj->facebook->capi_token) {
 
             $this->facebook_capi = new Facebook_CAPI($options);
@@ -32,8 +31,10 @@ class Facebook_Pixel_Manager extends Pixel_Manager_Base
 
             // Process the purchase through Facebook CAPI when they are paid,
             // or when they are manually completed.
-        add_action('woocommerce_payment_complete', [$this, 'facebook_capi_report_purchase__premium_only']);
-        add_action('woocommerce_order_status_completed', [$this, 'facebook_capi_report_purchase__premium_only']);
+
+            add_action('woocommerce_order_status_processing', [$this, 'facebook_capi_report_purchase__premium_only']);
+            add_action('woocommerce_payment_complete', [$this, 'facebook_capi_report_purchase__premium_only']);
+            add_action('woocommerce_order_status_completed', [$this, 'facebook_capi_report_purchase__premium_only']);
 
             // Process subscription renewals
             // https://docs.woocommerce.com/document/subscriptions/develop/action-reference/

@@ -28,8 +28,8 @@ class Cookie_Consent_Management {
 	public $pluginPrefix;
 
 	// check if third party cookie prevention is active
-	public function is_cookie_prevention_active() {
-
+	public function is_cookie_prevention_active(): bool
+    {
 		$cookie_prevention = false;
 
 		// use filter to set default to activate prevention

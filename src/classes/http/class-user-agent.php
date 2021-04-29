@@ -11,6 +11,8 @@ class User_Agent
 {
     // This is not fully random yet, but good enough for its purpose.
     // Maybe a better random user agent generator will be implemented in the future.
+    // https://developers.whatismybrowser.com/api/
+    // https://github.com/tarampampam/random-user-agent/blob/master/extension/js/UAGenerator.js
     public function get_random_user_agent(): string
     {
         $user_agents = [

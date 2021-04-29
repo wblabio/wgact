@@ -123,7 +123,7 @@ class Pixel_Manager extends Pixel_Manager_Base
         /*
          * Process short codes
          */
-        new Shortcodes($this->options, $this->options_obj);
+        new Shortcodes($this->options);
 
         add_action('woocommerce_after_shop_loop_item', [$this, 'action_woocommerce_after_shop_loop_item'], 10, 1);
         add_filter('woocommerce_blocks_product_grid_item_html', [$this, 'wc_add_date_to_gutenberg_block'], 10, 3);
@@ -225,7 +225,7 @@ class Pixel_Manager extends Pixel_Manager_Base
     public function woopt_wp_footer()
     {
         if (wga_fs()->is__premium_only() && $this->options_obj->google->analytics->eec) {
-            (new Google_Analytics_Refund())->process_refund_to_frontend__premium_only();
+            (new Google_Analytics_Refund($this->options))->process_refund_to_frontend__premium_only();
         }
     }
 

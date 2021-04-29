@@ -12,9 +12,9 @@ class Shortcodes extends Pixel
 {
     use Trait_Google;
 
-    public function __construct($options, $options_obj)
+    public function __construct($options)
     {
-        parent::__construct($options, $options_obj);
+        parent::__construct($options);
 
         add_shortcode('conversion-pixel', [$this, 'woopt_conversion_pixel']);
     }

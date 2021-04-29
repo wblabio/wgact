@@ -2,10 +2,6 @@
 
 namespace WGACT\Classes\Pixels\Google;
 
-use WC_Order;
-use WC_Order_Refund;
-use WC_Product;
-
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }

@@ -84,7 +84,7 @@ class Google_Analytics_Refund extends Google_Analytics
                 }
 
 //                (new Google_Analytics_Refund_UA())->output_refund_to_frontend($order, $refund, $dataLayer_refund_items_ga_ua);
-                (new Google_Analytics_Refund_4())->output_refund_to_frontend($order, $refund, $dataLayer_refund_items_ga_4);
+                (new Google_Analytics_Refund_4($this->options))->output_refund_to_frontend($order, $refund, $dataLayer_refund_items_ga_4);
 
                 update_post_meta($result->post_id, 'wooptpm_refund_processed', true);
             }

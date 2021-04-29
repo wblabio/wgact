@@ -75,7 +75,7 @@ jQuery(function () {
 
         jQuery("a[data-section-slug=" + sectionParams['section'] + "]").trigger('click');
 
-        if(sectionParams['subsection'] != false){
+        if(sectionParams['subsection'] !== false){
             jQuery("ul[data-section-slug=" + sectionParams['section'] + "]").children("[data-subsection-slug=" + sectionParams['subsection'] + "]").trigger('click')
         }
     } else {
@@ -128,7 +128,7 @@ function toggleSections(sectionSlug, sections) {
     jQuery(".subnav-tabs").hide();
     jQuery(".subnav-tabs[data-section-slug=" + sectionSlug + "]").show();
 
-    let sectionPos = sections.findIndex((arrayElement) => arrayElement['slug'] == sectionSlug);
+    let sectionPos = sections.findIndex((arrayElement) => arrayElement['slug'] === sectionSlug);
 
     jQuery("div[data-section-slug=" + sectionSlug + "]").closest("table").prevAll("h2:first").next().nextUntil("h2, .submit").andSelf().show();
 

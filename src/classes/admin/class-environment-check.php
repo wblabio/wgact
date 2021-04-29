@@ -338,6 +338,8 @@ class Environment_Check
             'googleoptimize.com/optimize.js',
             'jQuery',
             'jQuery.min.js',
+            'jquery.js',
+            'jquery.min.js',
             'wooptpm',
             'wooptpmDataLayer',
             'window.wooptpmDataLayer',

@@ -113,7 +113,7 @@ class Debug_info {
         return $html;
     }
 
-    private function is_wp_rocket_js_concatenation()
+    private function is_wp_rocket_js_concatenation(): string
     {
         if (is_plugin_active('wp-rocket/wp-rocket.php')) {
 

@@ -108,6 +108,7 @@ You can send the link to the front page of your shop too if you think it would b
 [//]: # fs_premium_only_begin
 * Tweak: Orders now get reported as soon as the order goes into status 'processing'
 [//]: # fs_premium_only_end
+* Tweak: Added one more tweak for LiteSpeed Cache users
 [//]: # fs_premium_only_begin
 * Fix: Fix GA UA eec checkout progress steps
 [//]: # fs_premium_only_end

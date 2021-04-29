@@ -4,7 +4,6 @@ namespace WGACT\Classes\Pixels;
 
 use stdClass;
 use WC_Geolocation;
-use WGACT\Classes\Admin\Environment_Check;
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly

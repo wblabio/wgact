@@ -70,7 +70,7 @@ class Facebook_CAPI extends Http
     // https://developers.facebook.com/docs/marketing-api/conversions-api/parameters/server-event#event-name
     public function send_purchase_hit($order, $fbp = null, $fbc = null)
     {
-//        error_log('processing Facebook CAPI purchase hit');
+        error_log('processing Facebook CAPI purchase hit');
         // only run, if the hit has not been sent already (check in db)
 //        error_log('key exists: ' . get_post_meta($order->get_id(), $this->capi_purchase_hit_key, true));
 
@@ -87,17 +87,16 @@ class Facebook_CAPI extends Http
         // the shop owner can choose to add all available identifiers
         // give the shop owner the choice to filter the user_data, based on IP
 
-        $user_data = $this->get_user_data();
 
-        if (!$user_data['fbp'] && !$this->user_transparency_settings['process_anonymous_hits']) {
-            error_log('fbp missing. purchase hit prevented');
+        // If fbp is missing and the store owner didn't instruct to process anonymous sessions, we stop.
+        $facebook_identifiers = $this->get_identifiers_from_order($order);
+        if (!array_key_exists('fbp', $facebook_identifiers) && !$this->user_transparency_settings['process_anonymous_hits']) {
+            error_log('fbp missing. Store owner doesn\'t want anonymous hits to be processed. Purchase hit prevented.');
             return;
         }
 
-        if (!$user_data['fbp']) {
-            $user_data['fbp'] = $this->get_random_fbp();
-        }
 
+        // Add event data
         $event_data = [
             'event_name'       => 'Purchase',
             'event_time'       => (int)time(),
@@ -107,8 +106,8 @@ class Facebook_CAPI extends Http
             'event_source_url' => get_site_url(),
         ];
 
-        // add user data
-        $event_data['user_data'] = $this->get_user_data();
+        // Add user data
+        $event_data['user_data'] = $this->get_user_data($facebook_identifiers);
 
 //        if ($this->get_fbc_from_order($order)) {
 //            $event_data['user_data']['fbc'] = $this->get_fbc_from_order($order);
@@ -134,7 +133,8 @@ class Facebook_CAPI extends Http
             $payload['test_event_code'] = $this->test_event_code;
         }
 
-//        error_log(print_r($payload, true));
+        error_log('payload');
+        error_log(print_r($payload, true));
 
         $this->send_hit($this->request_url, $payload);
 
@@ -142,14 +142,30 @@ class Facebook_CAPI extends Http
         update_post_meta($order->get_id(), $this->capi_purchase_hit_key, true);
     }
 
-    protected function get_user_data(): array
+    protected function get_user_data($facebook_identifiers): array
     {
-        return [
-            //                'client_ip_address' => '',
-            'client_user_agent' => $_SERVER['HTTP_USER_AGENT'],
-            //                'em'                => '', // email hashed
-            'fbp'               => $fbp ? $fbp : $this->get_fbp_from_order($order),
-        ];
+        $user_data = [];
+
+//        error_log(print_r($facebook_identifiers, true));
+
+        // If fbp doesn't exists, we only continue if the shop owner has instructed
+        // to send anonymous hits.
+
+
+        // If fbp exists we set all real data
+        // If fbp doesn't exist, we only set required fields with random data
+        if (array_key_exists('fbp', $facebook_identifiers)) {
+            $user_data['client_user_agent'] = $facebook_identifiers['client_user_agent'];
+            if (array_key_exists('client_ip_address', $facebook_identifiers)) $user_data['client_ip_address'] = $facebook_identifiers['client_ip_address'];
+            $user_data['fbp'] = $facebook_identifiers['fbp'];
+        } else {
+            $user_data['fbp']               = $this->get_random_fbp();
+            $user_data['client_user_agent'] = (new User_Agent())->get_random_user_agent();
+        }
+
+        if (array_key_exists('fbc', $facebook_identifiers)) $user_data['fbc'] = $facebook_identifiers['fbc'];
+
+        return $user_data;
     }
 
 //    protected function get_all_order_products($order): array
@@ -189,6 +205,8 @@ class Facebook_CAPI extends Http
             wp_die();
         }
 
+//        error_log('fbp from browser: ' . $_POST['fbp']);
+
         $facebook_identifiers = [];
 
         if (isset($_POST['fbp'])) {
@@ -199,7 +217,9 @@ class Facebook_CAPI extends Http
             $facebook_identifiers['fbp'] = filter_var($_POST['fbc'], FILTER_SANITIZE_STRING);
         }
 
-        $facebook_identifiers['ip'] = $this->get_user_ip();
+        if ($this->get_user_ip()) {
+            $facebook_identifiers['client_ip_address'] = $this->get_user_ip();
+        }
 
         // If the user doesn't provide a fbp we can safely assume he doesn't want to be tracked.
         // But the user agent is a required field in order to send a valid hit to FB.
@@ -209,21 +229,17 @@ class Facebook_CAPI extends Http
         // Since our user, who is not providing fbp, wants to stay anonymous, we don't sent the real
         // user agent to FB, but a random one.
         if (isset($_POST['fbp'])) {
-            $facebook_identifiers['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
+            $facebook_identifiers['client_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
         } else {
-            $facebook_identifiers['user_agent'] = (new User_Agent())->get_random_user_agent();
+            $facebook_identifiers['client_user_agent'] = (new User_Agent())->get_random_user_agent();
         }
+
+//        error_log('echo facebook identifiers');
+//        error_log(print_r($facebook_identifiers, true));
 
         WC()->session->set($this->facebook_key, $facebook_identifiers);
 
         wp_die(); // this is required to terminate immediately and return a proper response
-    }
-
-    // https://developers.whatismybrowser.com/api/
-    // https://github.com/tarampampam/random-user-agent/blob/master/extension/js/UAGenerator.js
-    protected function get_fake_user_agent()
-    {
-
     }
 
     // https://stackoverflow.com/a/2031935/4688612
@@ -250,12 +266,14 @@ class Facebook_CAPI extends Http
                 foreach (explode(',', $_SERVER[$key]) as $ip) {
                     $ip = trim($ip); // just to be safe
 
-                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false){
+                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false) {
                         return $ip;
                     }
                 }
             }
         }
+
+        return '';
     }
 
     public function set_identifiers_on_order($order)
@@ -271,55 +289,32 @@ class Facebook_CAPI extends Http
 //        }
 
         $facebook_identifiers = WC()->session->get($this->facebook_key);
+
+//        error_log('setting facebook identifiers on order');
+//        error_log(print_r($facebook_identifiers, true));
+
         update_post_meta($order->get_id(), $this->facebook_key, $facebook_identifiers);
     }
 
-    protected function get_fbp_from_session()
+    protected function get_identifiers_from_order($order): array
     {
-        if (WC()->session->get($this->fbp_key)) {
-            return WC()->session->get($this->fbp_key);
-        } else {
-            return $this->get_random_fbp();
-        }
+        $facebook_identifiers = get_post_meta($order->get_id(), $this->facebook_key, true);
+
+//        error_log('echo facebook identifiers');
+//        error_log(print_r($facebook_identifiers, true));
+//        error_log('fbp from server: ' . $facebook_identifiers['fbp']);
+
+        return $facebook_identifiers;
+
+//        return get_post_meta($order->get_id(), $this->facebook_key);
     }
 
-    public function get_fbp_from_order($order): string
-    {
-        $fbp = get_post_meta($order->get_id(), $this->fbp_key, true);
-
-        if ($fbp) {
-            return $fbp;
-        } else {
-            return $this->get_random_fbp();
-        }
-    }
-
-    public function get_fbc_from_order($order): string
-    {
-        $fbc = get_post_meta($order->get_id(), $this->fbc_key, true);
-
-        if ($fbc) {
-            return $fbc;
-        } else {
-            return false;
-        }
-    }
-
-    protected function get_fbc_from_session()
-    {
-        if (WC()->session->get($this->fbc_key)) {
-            return WC()->session->get($this->fbc_key);
-        } else {
-            return false;
-        }
-    }
-
+    // Facebook suggests to user their SDK to generate the random fbp
+    // but we won't do that. If we want true anonymity we need to generate the random
+    // number on our own terms.
+    // https://developers.facebook.com/docs/marketing-api/conversions-api/parameters/fbp-and-fbc/
     protected function get_random_fbp(): string
     {
-        // Facebook suggests to user their SDK to generate the random number
-        // but we won't do that. If we want anonymity we need to generate the random
-        // number on our own terms.
-        // https://developers.facebook.com/docs/marketing-api/conversions-api/parameters/fbp-and-fbc/
         $random_fbp = [
             'version'         => 'fb',
             'subdomain_index' => 1,

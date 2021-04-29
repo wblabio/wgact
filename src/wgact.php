@@ -24,6 +24,7 @@
 use WGACT\Classes\Admin\Admin;
 use WGACT\Classes\Admin\Ask_For_Rating;
 use WGACT\Classes\Admin\Environment_Check;
+use WGACT\Classes\Admin\Launch_Deal;
 use WGACT\Classes\Db_Upgrade;
 use WGACT\Classes\Default_Options;
 use WGACT\Classes\Pixels\Cookie_Consent_Management;
@@ -145,13 +146,13 @@ if (function_exists('wga_fs')) {
 
                 // running the DB updater
                 if (get_option(WGACT_DB_OPTIONS_NAME)) {
-                    (new Db_Upgrade)->run_options_db_upgrade();
+                    (new Db_Upgrade())->run_options_db_upgrade();
                 }
 
                 // load the options
                 $this->wgact_options_init();
 
-                new \WGACT\Classes\Admin\Launch_Deal();
+                new Launch_Deal();
 
                 if (isset($this->options['google']['gads']['dynamic_remarketing']) && $this->options['google']['gads']['dynamic_remarketing']) {
                     // make sure to disable the WGDR plugin in case we use dynamic remarketing in this plugin
@@ -186,7 +187,7 @@ if (function_exists('wga_fs')) {
         public function init()
         {
             // display admin views
-            new Admin();
+            new Admin($this->options);
 
             // ask visitor for rating
             new Ask_For_Rating();

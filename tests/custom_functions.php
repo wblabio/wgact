@@ -3,13 +3,13 @@
 add_filter('wooptpm_enable_ga_4_mp_event_debug_mode', '__return_true');
 //add_filter('wooptpm_send_http_api_ga_4_requests_blocking', '__return_true');
 
-//add_filter('wooptpm_facebook_capi_test_event_code', 'get_test_event_code');
-function get_test_event_code(): string
+add_filter('wooptpm_facebook_capi_test_event_code', 'set_test_event_code');
+function set_test_event_code(): string
 {
-    return 'TEST26481';
+    return 'TEST30840';
 }
 
-//add_filter('wooptpm_send_http_api_facebook_capi_requests_blocking', '__return_true');
+add_filter('wooptpm_send_http_api_facebook_capi_requests_blocking', '__return_true');
 
 
 //add_filter('wooptpm_full_tracking_enabled', '__return_true');

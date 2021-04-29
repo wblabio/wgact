@@ -2,9 +2,6 @@
 
 namespace WGACT\Classes\Pixels\Google;
 
-use WC_Order;
-use WC_Order_Refund;
-use WC_Product;
 use WGACT\Classes\Http\Google_MP_GA4;
 use WGACT\Classes\Http\Google_MP_UA;
 use WGACT\Classes\Pixels\Pixel_Manager_Base;

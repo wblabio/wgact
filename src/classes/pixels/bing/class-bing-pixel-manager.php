@@ -46,7 +46,7 @@ class Bing_Pixel_Manager extends Pixel_Manager_Base
 
     public function inject_order_received_page($order, $order_total, $is_new_customer)
     {
-        $this->bing_pixel->inject_order_received_page($order, $order_total, $is_new_customer);
+        $this->bing_pixel->inject_order_received_page($order, $order_total);
     }
 
     protected function inject_opening_script_tag()

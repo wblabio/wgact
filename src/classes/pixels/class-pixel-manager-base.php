@@ -5,6 +5,8 @@ namespace WGACT\Classes\Pixels;
 
 use stdClass;
 use WC_Order;
+use WC_Product;
+use WC_Product_Data_Store_CPT;
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
@@ -287,8 +289,8 @@ class Pixel_Manager_Base
 
     protected function find_matching_product_variation_id($product_id, $attributes): int
     {
-        return (new \WC_Product_Data_Store_CPT())->find_matching_product_variation(
-            new \WC_Product($product_id),
+        return (new WC_Product_Data_Store_CPT())->find_matching_product_variation(
+            new WC_Product($product_id),
             $attributes
         );
     }

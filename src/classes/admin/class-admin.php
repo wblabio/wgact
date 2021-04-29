@@ -23,12 +23,12 @@ class Admin
     protected $plugin_hook;
     protected $documentation_host;
 
-    public function __construct()
+    public function __construct($options)
     {
+        $this->options = $options;
+
         $this->plugin_hook        = 'woocommerce_page_wgact';
         $this->documentation_host = 'docs.woopt.com';
-
-        $this->options = get_option('wgact_plugin_options');
 
         add_action('admin_enqueue_scripts', [$this, 'wgact_admin_scripts']);
 
@@ -648,16 +648,16 @@ class Admin
         );
 
         // add field for the Facebook CAPI token
-        add_settings_field(
-            'wgact_setting_facebook_capi_token',
-            esc_html__(
-                'Facebook CAPI token',
-                'woocommerce-google-adwords-conversion-tracking-tag'
-            ) . $this->svg_beta(),
-            [$this, 'wgact_setting_html_facebook_capi_token'],
-            'wgact_plugin_options_page',
-            $section_ids['settings_name']
-        );
+//        add_settings_field(
+//            'wgact_setting_facebook_capi_token',
+//            esc_html__(
+//                'Facebook CAPI token',
+//                'woocommerce-google-adwords-conversion-tracking-tag'
+//            ) . $this->svg_beta(),
+//            [$this, 'wgact_setting_html_facebook_capi_token'],
+//            'wgact_plugin_options_page',
+//            $section_ids['settings_name']
+//        );
 
         // add fields for Facebook microdata
         add_settings_field(
@@ -1477,7 +1477,6 @@ class Admin
                         name='wgact_plugin_options[facebook][capi_token]'
                         cols='60'
                         rows='5'
-                        type='text'
                         value='<?php echo $this->options['facebook']['capi_token'] ?>'
                         <?php echo $this->disable_if_demo() ?>
                         ><?php echo $this->options['facebook']['capi_token'] ?></textarea>
