@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the WooCommerce Conversion Tracking plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Conversion Tracking 1.9.4\n"
+"Project-Id-Version: WooCommerce Conversion Tracking 1.9.6\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/src\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-04-23T12:14:03+00:00\n"
+"POT-Creation-Date: 2021-04-29T09:20:47+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: woocommerce-google-adwords-conversion-tracking-tag\n"
@@ -135,432 +135,437 @@ msgstr ""
 msgid "Cookiebot support"
 msgstr ""
 
-#: classes/admin/class-admin.php:654
+#: classes/admin/class-admin.php:665
 msgid "Facebook microdata"
 msgstr ""
 
-#: classes/admin/class-admin.php:677
+#: classes/admin/class-admin.php:688
 msgid "Beta"
 msgstr ""
 
-#: classes/admin/class-admin.php:700
+#: classes/admin/class-admin.php:711
 msgid "Conversion Cart Data"
 msgstr ""
 
-#: classes/admin/class-admin.php:736
+#: classes/admin/class-admin.php:747
 msgid "Product Identifier"
 msgstr ""
 
-#: classes/admin/class-admin.php:748
+#: classes/admin/class-admin.php:759
 msgid "Dynamic Remarketing"
 msgstr ""
 
-#: classes/admin/class-admin.php:760
+#: classes/admin/class-admin.php:771
 msgid "Variations output"
 msgstr ""
 
-#: classes/admin/class-admin.php:773
+#: classes/admin/class-admin.php:784
 msgid "Google Business Vertical"
 msgstr ""
 
-#: classes/admin/class-admin.php:796
+#: classes/admin/class-admin.php:807
 msgid "Support"
 msgstr ""
 
-#: classes/admin/class-admin.php:814
+#: classes/admin/class-admin.php:825
 msgid "Author"
 msgstr ""
 
-#: classes/admin/class-admin.php:851
+#: classes/admin/class-admin.php:862
 msgid ""
 "It looks like you are using some sort of ad or script blocker which is blocking the script and CSS files of this plugin.\n"
 "                    In order for the plugin to work properly you need to disable the script blocker."
 msgstr ""
 
-#: classes/admin/class-admin.php:858
+#: classes/admin/class-admin.php:869
 #: classes/admin/class-notifications.php:25
 #: classes/admin/class-notifications.php:66
 msgid "Learn more"
 msgstr ""
 
-#: classes/admin/class-admin.php:892
+#: classes/admin/class-admin.php:903
 msgid "Profit Driven Marketing by woopt"
 msgstr ""
 
-#: classes/admin/class-admin.php:897
+#: classes/admin/class-admin.php:908
 msgid "Visit us here:"
 msgstr ""
 
-#: classes/admin/class-admin.php:967
+#: classes/admin/class-admin.php:978
 msgid "Support contacts"
 msgstr ""
 
-#: classes/admin/class-admin.php:969
+#: classes/admin/class-admin.php:980
 msgid "Use the following two resources for support: "
 msgstr ""
 
-#: classes/admin/class-admin.php:976
+#: classes/admin/class-admin.php:987
 msgid "Post a support request in the WordPress support forum here: "
 msgstr ""
 
-#: classes/admin/class-admin.php:980
+#: classes/admin/class-admin.php:991
 msgid "Support forum"
 msgstr ""
 
-#: classes/admin/class-admin.php:985
+#: classes/admin/class-admin.php:996
 msgid "(Never post the debug or other sensitive information to the support forum. Instead send us the information by email.)"
 msgstr ""
 
-#: classes/admin/class-admin.php:989
+#: classes/admin/class-admin.php:1000
 msgid "Or send us an email to the following address: "
 msgstr ""
 
-#: classes/admin/class-admin.php:997
+#: classes/admin/class-admin.php:1008
 msgid "Translations"
 msgstr ""
 
-#: classes/admin/class-admin.php:999
+#: classes/admin/class-admin.php:1010
 msgid "If you want to participate improving the translations of this plugin into your language, please follow this link:"
 msgstr ""
 
-#: classes/admin/class-admin.php:1007
+#: classes/admin/class-admin.php:1018
 msgid "Debugging information"
 msgstr ""
 
-#: classes/admin/class-admin.php:1018
+#: classes/admin/class-admin.php:1029
 msgid "copy to clipboard"
 msgstr ""
 
-#: classes/admin/class-admin.php:1033
+#: classes/admin/class-admin.php:1044
 msgid "More details about the developer of this plugin: "
 msgstr ""
 
-#: classes/admin/class-admin.php:1037
+#: classes/admin/class-admin.php:1048
 msgid "Developer: woopt"
 msgstr ""
 
-#: classes/admin/class-admin.php:1041
+#: classes/admin/class-admin.php:1052
 msgid "Website: "
 msgstr ""
 
-#: classes/admin/class-admin.php:1055
+#: classes/admin/class-admin.php:1066
 msgid "The Google Analytics Universal property ID looks like this:"
 msgstr ""
 
-#: classes/admin/class-admin.php:1065
+#: classes/admin/class-admin.php:1076
 msgid "The Google Analytics 4 measurement ID looks like this:"
 msgstr ""
 
-#: classes/admin/class-admin.php:1075
+#: classes/admin/class-admin.php:1086
 msgid "The conversion ID looks similar to this:"
 msgstr ""
 
-#: classes/admin/class-admin.php:1085
+#: classes/admin/class-admin.php:1096
 msgid "The conversion Label looks similar to this:"
 msgstr ""
 
-#: classes/admin/class-admin.php:1089
-#: classes/admin/class-admin.php:1607
+#: classes/admin/class-admin.php:1100
+#: classes/admin/class-admin.php:1641
 msgid "Requires an active Google Ads Conversion ID"
 msgstr ""
 
-#: classes/admin/class-admin.php:1100
+#: classes/admin/class-admin.php:1111
 msgid "The Google Optimize container ID looks like this:"
 msgstr ""
 
-#: classes/admin/class-admin.php:1110
+#: classes/admin/class-admin.php:1121
 msgid "The Facebook pixel ID looks similar to this:"
 msgstr ""
 
-#: classes/admin/class-admin.php:1121
+#: classes/admin/class-admin.php:1132
 msgid "The Microsoft Advertising UET tag ID looks similar to this:"
 msgstr ""
 
-#: classes/admin/class-admin.php:1132
+#: classes/admin/class-admin.php:1143
 msgid "The Twitter pixel ID looks similar to this:"
 msgstr ""
 
-#: classes/admin/class-admin.php:1143
+#: classes/admin/class-admin.php:1154
 msgid "The Pinterest pixel ID looks similar to this:"
 msgstr ""
 
-#: classes/admin/class-admin.php:1153
+#: classes/admin/class-admin.php:1164
 msgid "The Hotjar site ID looks similar to this:"
 msgstr ""
 
-#: classes/admin/class-admin.php:1165
+#: classes/admin/class-admin.php:1176
 msgid "Use order_subtotal: Doesn't include tax and shipping (default)"
 msgstr ""
 
-#: classes/admin/class-admin.php:1173
+#: classes/admin/class-admin.php:1184
 msgid "Use order_total: Includes tax and shipping"
 msgstr ""
 
-#: classes/admin/class-admin.php:1177
+#: classes/admin/class-admin.php:1188
 msgid "This is the order total amount reported back to Google Ads"
 msgstr ""
 
-#: classes/admin/class-admin.php:1185
+#: classes/admin/class-admin.php:1196
 msgid "open the documentation"
 msgstr ""
 
-#: classes/admin/class-admin.php:1204
+#: classes/admin/class-admin.php:1215
 msgid "Disable gtag.js insertion, if another plugin is inserting it already"
 msgstr ""
 
-#: classes/admin/class-admin.php:1213
+#: classes/admin/class-admin.php:1224
 msgid "Only do this, if the other plugin does insert the gtag above this pixel. If not, keep the gtag active."
 msgstr ""
 
-#: classes/admin/class-admin.php:1218
+#: classes/admin/class-admin.php:1229
 msgid "This setting is deprecated. It will be removed in future versions of the plugin. Read more about it in the documentation."
 msgstr ""
 
-#: classes/admin/class-admin.php:1237
+#: classes/admin/class-admin.php:1248
 msgid "Enable Google consent mode with standard settings"
 msgstr ""
 
-#: classes/admin/class-admin.php:1275
+#: classes/admin/class-admin.php:1286
 msgid "If no region is set, then the restrictions are enabled for all regions. If you specify one or more regions, then the restrictions only apply for the specified regions."
 msgstr ""
 
-#: classes/admin/class-admin.php:1296
+#: classes/admin/class-admin.php:1307
 msgid "Enable Google Analytics enhanced e-commerce"
 msgstr ""
 
-#: classes/admin/class-admin.php:1306
-#: classes/admin/class-admin.php:1361
-#: classes/admin/class-admin.php:1391
+#: classes/admin/class-admin.php:1317
+#: classes/admin/class-admin.php:1372
+#: classes/admin/class-admin.php:1402
 msgid "You need to activate at least Google Analytics UA or Google Analytics 4"
 msgstr ""
 
-#: classes/admin/class-admin.php:1327
+#: classes/admin/class-admin.php:1338
 msgid "Google Analytics 4 activation required"
 msgstr ""
 
-#: classes/admin/class-admin.php:1332
+#: classes/admin/class-admin.php:1343
 msgid "Enhanced E-Commerce activation required"
 msgstr ""
 
-#: classes/admin/class-admin.php:1335
+#: classes/admin/class-admin.php:1346
 msgid "If enabled, purchase and refund events will be sent to Google through the measurement protocol for increased accuracy."
 msgstr ""
 
-#: classes/admin/class-admin.php:1351
+#: classes/admin/class-admin.php:1362
 msgid "Enable Google Analytics enhanced link attribution"
 msgstr ""
 
-#: classes/admin/class-admin.php:1381
+#: classes/admin/class-admin.php:1392
 msgid "Enable Google user ID"
 msgstr ""
 
-#: classes/admin/class-admin.php:1410
+#: classes/admin/class-admin.php:1421
 msgid "The Google Ads phone conversion number must be in the same format as on the website."
 msgstr ""
 
-#: classes/admin/class-admin.php:1432
+#: classes/admin/class-admin.php:1443
 msgid "Borlabs detected. Automatic support is:"
 msgstr ""
 
-#: classes/admin/class-admin.php:1452
+#: classes/admin/class-admin.php:1463
 msgid "Enable Cookiebot settings"
 msgstr ""
 
-#: classes/admin/class-admin.php:1458
+#: classes/admin/class-admin.php:1469
 msgid "You need to activate the Google consent mode"
 msgstr ""
 
-#: classes/admin/class-admin.php:1478
-msgid "Enable Facebook product microdata output"
-msgstr ""
-
-#: classes/admin/class-admin.php:1485
+#: classes/admin/class-admin.php:1488
+#: classes/admin/class-admin.php:1519
 msgid "You need to activate the Facebook pixel"
 msgstr ""
 
-#: classes/admin/class-admin.php:1503
-msgid "Add the cart data to the conversion event"
-msgstr ""
-
-#: classes/admin/class-admin.php:1511
-msgid "Requires an active Google Ads Conversion ID, an active Conversion Label and an active Google Merchant Center ID (aw_merchant_id)"
+#: classes/admin/class-admin.php:1512
+msgid "Enable Facebook product microdata output"
 msgstr ""
 
 #: classes/admin/class-admin.php:1537
+msgid "Add the cart data to the conversion event"
+msgstr ""
+
+#: classes/admin/class-admin.php:1545
+msgid "Requires an active Google Ads Conversion ID, an active Conversion Label and an active Google Merchant Center ID (aw_merchant_id)"
+msgstr ""
+
+#: classes/admin/class-admin.php:1571
 msgid "Only disable order deduplication for testing. Remember to re-enable the setting once done."
 msgstr ""
 
-#: classes/admin/class-admin.php:1555
+#: classes/admin/class-admin.php:1589
 msgid "Enable the maximum compatibility mode"
 msgstr ""
 
-#: classes/admin/class-admin.php:1567
+#: classes/admin/class-admin.php:1601
 msgid "Advanced order deduplication is "
 msgstr ""
 
-#: classes/admin/class-admin.php:1569
+#: classes/admin/class-admin.php:1603
 msgid "Basic order deduplication is "
 msgstr ""
 
-#: classes/admin/class-admin.php:1596
+#: classes/admin/class-admin.php:1630
 msgid "Enable dynamic remarketing audience collection"
 msgstr ""
 
-#: classes/admin/class-admin.php:1612
+#: classes/admin/class-admin.php:1646
 msgid "You need to choose the correct product identifier setting in order to match the product identifiers in the Google Merchant Center or your Google Ads business feed"
 msgstr ""
 
-#: classes/admin/class-admin.php:1631
+#: classes/admin/class-admin.php:1665
 msgid "Enable variations output"
 msgstr ""
 
-#: classes/admin/class-admin.php:1639
+#: classes/admin/class-admin.php:1673
 msgid "In order for this to work you need to upload your Google Merchant Center feed including product variations and the item_group_id. Disable it, if you choose only to upload the parent product for variable products."
 msgstr ""
 
-#: classes/admin/class-admin.php:1654
+#: classes/admin/class-admin.php:1688
 msgid "Retail"
 msgstr ""
 
-#: classes/admin/class-admin.php:1664
+#: classes/admin/class-admin.php:1698
 msgid "Education"
 msgstr ""
 
-#: classes/admin/class-admin.php:1674
+#: classes/admin/class-admin.php:1708
 msgid "Hotels and rentals"
 msgstr ""
 
-#: classes/admin/class-admin.php:1684
+#: classes/admin/class-admin.php:1718
 msgid "Jobs"
 msgstr ""
 
-#: classes/admin/class-admin.php:1694
+#: classes/admin/class-admin.php:1728
 msgid "Local deals"
 msgstr ""
 
-#: classes/admin/class-admin.php:1704
+#: classes/admin/class-admin.php:1738
 msgid "Real estate"
 msgstr ""
 
-#: classes/admin/class-admin.php:1714
+#: classes/admin/class-admin.php:1748
 msgid "Custom"
 msgstr ""
 
-#: classes/admin/class-admin.php:1727
+#: classes/admin/class-admin.php:1761
 msgid "ID of your Google Merchant Center account. It looks like this: 12345678"
 msgstr ""
 
-#: classes/admin/class-admin.php:1744
+#: classes/admin/class-admin.php:1778
 msgid "Currently the plugin automatically detects the location of the visitor for this setting. In most, if not all, cases this will work fine. Please let us know if you have a use case where you need another output:"
 msgstr ""
 
-#: classes/admin/class-admin.php:1781
+#: classes/admin/class-admin.php:1815
 msgid "The plugin will use the WordPress default language for this setting. If the shop uses translations, in theory we could also use the visitors locale. But, if that language is  not set up in the Google Merchant Center we might run into issues. If you need more options here let us know:"
 msgstr ""
 
-#: classes/admin/class-admin.php:1801
+#: classes/admin/class-admin.php:1835
 msgid "post id (default)"
 msgstr ""
 
-#: classes/admin/class-admin.php:1808
+#: classes/admin/class-admin.php:1842
 msgid "post id with woocommerce_gpf_ prefix *"
 msgstr ""
 
-#: classes/admin/class-admin.php:1816
+#: classes/admin/class-admin.php:1850
 msgid "SKU"
 msgstr ""
 
-#: classes/admin/class-admin.php:1821
+#: classes/admin/class-admin.php:1855
 msgid "Choose a product identifier."
 msgstr ""
 
-#: classes/admin/class-admin.php:1824
+#: classes/admin/class-admin.php:1858
 msgid "* This is for users of the WooCommerce Google Product Feed Plugin"
 msgstr ""
 
-#: classes/admin/class-admin.php:1906
+#: classes/admin/class-admin.php:1940
 msgid "You have entered an invalid Google Analytics Universal property ID."
 msgstr ""
 
-#: classes/admin/class-admin.php:1914
+#: classes/admin/class-admin.php:1948
 msgid "You have entered an invalid Google Analytics 4 measurement ID."
 msgstr ""
 
-#: classes/admin/class-admin.php:1922
+#: classes/admin/class-admin.php:1956
 msgid "You have entered an invalid Google Analytics 4 API key."
 msgstr ""
 
-#: classes/admin/class-admin.php:1930
+#: classes/admin/class-admin.php:1964
 msgid "You have entered an invalid conversion ID. It only contains 8 to 10 digits."
 msgstr ""
 
-#: classes/admin/class-admin.php:1938
-#: classes/admin/class-admin.php:1946
+#: classes/admin/class-admin.php:1972
+#: classes/admin/class-admin.php:1980
 msgid "You have entered an invalid conversion label."
 msgstr ""
 
-#: classes/admin/class-admin.php:1954
+#: classes/admin/class-admin.php:1988
 msgid "You have entered an invalid merchant ID. It only contains 7 to 10 digits."
 msgstr ""
 
-#: classes/admin/class-admin.php:1962
+#: classes/admin/class-admin.php:1996
 msgid "You have entered an invalid Google Optimize container ID."
 msgstr ""
 
-#: classes/admin/class-admin.php:1970
+#: classes/admin/class-admin.php:2004
 msgid "You have entered an invalid Facebook pixel ID. It only contains 14 to 16 digits."
 msgstr ""
 
-#: classes/admin/class-admin.php:1978
+#: classes/admin/class-admin.php:2012
+msgid "You have entered an invalid Facebook CAPI token."
+msgstr ""
+
+#: classes/admin/class-admin.php:2020
 msgid "You have entered an invalid Bing Ads UET tag ID. It only contains 7 to 9 digits."
 msgstr ""
 
-#: classes/admin/class-admin.php:1986
+#: classes/admin/class-admin.php:2028
 msgid "You have entered an invalid Twitter pixel ID. It only contains 5 to 7 lowercase letters and numbers."
 msgstr ""
 
-#: classes/admin/class-admin.php:1994
+#: classes/admin/class-admin.php:2036
 msgid "You have entered an invalid Pinterest pixel ID. It only contains 13 digits."
 msgstr ""
 
-#: classes/admin/class-admin.php:2002
+#: classes/admin/class-admin.php:2044
 msgid "You have entered an invalid Hotjar site ID. It only contains 7 to 9 digits."
 msgstr ""
 
 #. translators: %d: the amount of purchase conversions that have been measured
-#: classes/admin/class-ask-for-rating.php:132
+#: classes/admin/class-ask-for-rating.php:133
 msgid "Hey, I noticed that you tracked more than %d purchase conversions with the Google Ads Conversion Tracking plugin - that's awesome! Could you please do me a BIG favour and give it a 5-star rating on WordPress? Just to help us spread the word and boost our motivation."
 msgstr ""
 
-#: classes/admin/class-ask-for-rating.php:146
+#: classes/admin/class-ask-for-rating.php:147
 msgid "Ok, you deserve it"
 msgstr ""
 
-#: classes/admin/class-ask-for-rating.php:151
+#: classes/admin/class-ask-for-rating.php:152
 msgid "Nope, maybe later"
 msgstr ""
 
-#: classes/admin/class-ask-for-rating.php:156
+#: classes/admin/class-ask-for-rating.php:157
 msgid "I already did"
 msgstr ""
 
-#: classes/admin/class-launch-deal.php:112
+#: classes/admin/class-launch-deal.php:106
 msgid "I am super happy and excited to announce our <a href=\"https://woopt.com/launch-deal-8a63336b/\" target=\"_blank\">special deal</a> for the launch of the <a href=\"https://woopt.com/\" target=\"_blank\">pro version</a> of the <b>woopt WooCommerce Pixel Manager Plugin</b> (formerly known as the <b>WooCommmerce Google Ads Conversion Tracking Plugin</b>)."
 msgstr ""
 
-#: classes/admin/class-launch-deal.php:119
+#: classes/admin/class-launch-deal.php:113
 msgid "Because you are an existing user of this plugin you are eligible to receive a generous discount if you chose to participate in the launch deal. After all, you helped to shape the plugin into what it is today. Go ahead and have a look."
 msgstr ""
 
-#: classes/admin/class-launch-deal.php:132
+#: classes/admin/class-launch-deal.php:126
 msgid "Take me to the deal!"
 msgstr ""
 
-#: classes/admin/class-launch-deal.php:137
+#: classes/admin/class-launch-deal.php:131
 msgid "Maybe later"
 msgstr ""
 
-#: classes/admin/class-launch-deal.php:142
+#: classes/admin/class-launch-deal.php:136
 msgid "Not interested. Close this message."
 msgstr ""
 

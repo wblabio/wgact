@@ -68,36 +68,38 @@ class Ask_For_Rating
 
     public function ask_for_rating_notices_if_not_asked_before()
     {
+        if (current_user_can('administrator')) {
 
-        $wgact_ratings = get_option($this->option_name);
+            $wgact_ratings = get_option($this->option_name);
 
-        if (isset($wgact_ratings['conversions_count'])) {
+            if (isset($wgact_ratings['conversions_count'])) {
 
-            $conversions_count = $wgact_ratings['conversions_count'];
+                $conversions_count = $wgact_ratings['conversions_count'];
 //		    error_log('conversion count: ' . $wgact_ratings['conversions_count'] );
 
-            // in rare cases this option has not been set
-            // in those cases we set it to avoid further errors
-            if (!isset($wgact_ratings['rating_done'])) {
-                $wgact_ratings['rating_done'] = false;
-                update_option($this->option_name, $wgact_ratings);
+                // in rare cases this option has not been set
+                // in those cases we set it to avoid further errors
+                if (!isset($wgact_ratings['rating_done'])) {
+                    $wgact_ratings['rating_done'] = false;
+                    update_option($this->option_name, $wgact_ratings);
+                }
+
+                // in rare cases this option has not been set
+                // in those cases we set it to avoid further errors
+                if (!isset($wgact_ratings['rating_threshold'])) {
+                    $wgact_ratings['rating_threshold'] = 10;
+                    update_option($this->option_name, $wgact_ratings);
+                }
+
+                if ((false === $wgact_ratings['rating_done'] && $conversions_count > $wgact_ratings['rating_threshold']) || (defined('WGACT_ALWAYS_AKS_FOR_RATING') && true === WGACT_ALWAYS_AKS_FOR_RATING)) {
+
+                    $this->ask_for_rating_notices($conversions_count);
+                }
+            } else {
+
+                // set default settings for wgact_ratings
+                update_option($this->option_name, $this->get_default_settings());
             }
-
-            // in rare cases this option has not been set
-            // in those cases we set it to avoid further errors
-            if (!isset($wgact_ratings['rating_threshold'])) {
-                $wgact_ratings['rating_threshold'] = 10;
-                update_option($this->option_name, $wgact_ratings);
-            }
-
-            if ((false === $wgact_ratings['rating_done'] && $conversions_count > $wgact_ratings['rating_threshold']) || (defined('WGACT_ALWAYS_AKS_FOR_RATING') && true === WGACT_ALWAYS_AKS_FOR_RATING)) {
-
-                $this->ask_for_rating_notices($conversions_count);
-            }
-        } else {
-
-            // set default settings for wgact_ratings
-            update_option($this->option_name, $this->get_default_settings());
         }
     }
 
