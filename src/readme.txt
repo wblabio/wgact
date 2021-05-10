@@ -1,18 +1,18 @@
 === WooCommerce Conversion Tracking by woopt ===
 Contributors: alekv, woopt, wolfbaer
-Tags: woocommerce, google ads, google analytics, facebook pixel, conversion tracking, dynamic retargeting, remarketing , adwords, pixel,
+Tags: woocommerce, google ads, google analytics, facebook pixel, conversion tracking, dynamic retargeting, remarketing, adwords, pixel, facebook conversion api
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 7.2
-Stable tag: 1.10.0-beta.2
+Stable tag: 1.10.1-beta.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Track visitors and conversions in Google Ads, Google Analytics, Facebook and more !
+Track visitors and conversions in Google Ads, Google Analytics, Facebook (CAPI) and more !
 
 == Description ==
 
-This plugin <strong>tracks WooCommerce shop visitors and collects valuable data for conversion optimization, dynamic remarketing and reporting.</strong>.
+This plugin <strong>tracks WooCommerce shop visitors and collects valuable data for conversion optimization, dynamic remarketing and reporting</strong>.
 
 While the setup is as simple as it can get, the pixel engine under the hood is very powerful. It tracks all standard events and implements all advanced pixel features like Facebook CAPI (Pro version), Google Enhanced E-Commerce, Google Shopping Cart Item Tracking and more. For advanced users the plugin offers filters which allow to tweak the output very flexibly and fine tune the behaviour to each shop.
 
@@ -32,7 +32,7 @@ You can use it with:
 * Facebook CAPI (Pro version)
 * Google Analytics Enhanced E-Commerce (Pro version)
 * Precise measurement by preventing duplicate reporting effectively, excluding admins and shop managers from tracking, and not counting failed payments.
-* Collects dynamic remarketing audiences for dynamic retargeting: [Google Ads Dynamic Remarketing](https://support.google.com/google-ads/answer/3124536)
+* Collects dynamic remarketing audiences for dynamic retargeting (Google Ads, Facebook, etc.)
 * Implements the new Google Add Cart Data functionality. More info about the new feature: [add cart data to the conversion](https://support.google.com/google-ads/answer/9028254)
 * Support for various cookie consent management systems
 
@@ -56,9 +56,9 @@ Have a look at the full feature list over [here](https://docs.woopt.com/wgact/#/
 
 <strong>Premium Features</strong>
 
-* Facebook CAPI (Pro version)
+* Facebook CAPI
 * Facebook Microdata Output
-* Google Analytics Universal and Google Analytics 4 Enhanced E-Commerce (Pro version)
+* Google Analytics Universal and Google Analytics 4 Enhanced E-Commerce
 * Google Consent Mode
 * Google Dynamic Remarketing Choice for all Business Verticals
 * Microsoft Advertising Pixel with Purchase and all Remarketing Events
@@ -68,7 +68,7 @@ Have a look at the full feature list over [here](https://docs.woopt.com/wgact/#/
 
 Have a look at the full feature list over [here](https://docs.woopt.com/wgact/#/features?id=available-features).
 
-Are interested to purchase the [Pro version](https://woopt.com)? Come and visit us [here](https://woopt.com)
+Are you interested to purchase the [Pro version](https://woopt.com)? Come and visit us [here](https://woopt.com).
 
 <strong>Plugin Compatibility</strong>
 
@@ -165,6 +165,13 @@ You can send the link to the front page of your shop too if you think it would b
 1. Settings page
 
 == Changelog ==
+
+= 1.10.1 =
+[//]: # fs_premium_only_begin
+* Tweak: Fire the Facebook CAPI event even when order goes into status on-hold. Otherwise FB complains because of delayed reporting.
+* Tweak: Added more Facebook CAPI visitor identifiers
+[//]: # fs_premium_only_end
+* Fix: Fire view_item event on products that are out of stock
 
 = 1.10.0 =
 

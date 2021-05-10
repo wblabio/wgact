@@ -20,7 +20,7 @@ class Http
     public function __construct($options)
     {
 //        $this->options     = get_option(WGACT_DB_OPTIONS_NAME);
-        $this->options = $options;
+        $this->options     = $options;
         $this->options_obj = json_decode(json_encode($this->options));
 
         $this->post_request_args = [
@@ -71,19 +71,16 @@ class Http
 
     protected function send_hit($request_url, $payload = null)
     {
-//        error_log('request url: ' . $request_url);
-
-//        error_log(print_r($payload, true));
-
-
         if ($payload) {
             $this->post_request_args['body'] = json_encode($payload);
         }
 
-//        error_log(print_r($this->post_request_args, true));
-
         // if we're sending the request non-blocking we won't receive a response back
         if ($this->post_request_args['blocking'] === true) {
+
+            error_log(print_r($this->post_request_args, true));
+            error_log('request url: ' . $request_url);
+            error_log(print_r($payload, true));
 
             $response = wp_safe_remote_post($request_url, $this->post_request_args);
 

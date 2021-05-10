@@ -238,23 +238,41 @@ class Facebook_CAPI extends Http
         if (array_key_exists('fbc', $facebook_identifiers)) $user_data['fbc'] = $facebook_identifiers['fbc'];
 
         // https://developers.facebook.com/docs/marketing-api/audiences/guides/custom-audiences/#example_sha256
-        if ($order) {
-            if ($this->options_obj->facebook->capi->user_transparency->send_additional_client_identifiers) {
-                // set user_id
-                $user_data['external_id'] = hash('sha256', $order->get_user_id());
+        if ($this->options_obj->facebook->capi->user_transparency->send_additional_client_identifiers) {
 
-                // set em (email)
-                $wp_user_info    = get_userdata($order->get_user_id());
-                $user_data['em'] = hash('sha256', $wp_user_info->user_email);
-            }
-        } else if (get_current_user_id() !== 0) {
-            if ($this->options_obj->facebook->capi->user_transparency->send_additional_client_identifiers) {
-                // set user_id
-                $user_data['external_id'] = hash('sha256', get_current_user_id());
+//            error_log('adding more identifiers');
+//            error_log('get_current_user_id(): ' . get_current_user_id());
 
-                // set em (email)
-                $wp_user_info    = get_userdata(get_current_user_id());
-                $user_data['em'] = hash('sha256', $wp_user_info->user_email);
+            if ($order || get_current_user_id() !== 0) {
+                $wp_user_info = null;
+
+                if ($order) {
+                    // set user_id
+                    $user_data['external_id'] = hash('sha256', $order->get_user_id());
+
+                    // set em (email)
+                    $user_data['em'] = hash('sha256', $order->get_billing_email());
+                    if ($order->get_billing_phone()) $user_data['ph'] = hash('sha256', $order->get_billing_phone());
+                    if ($order->get_billing_first_name()) $user_data['fn'] = hash('sha256', $order->get_billing_first_name());
+                    if ($order->get_billing_last_name())$user_data['ln'] = hash('sha256', $order->get_billing_last_name());
+                    if ($order->get_billing_city()) $user_data['ct'] = hash('sha256', $order->get_billing_city());
+                    if ($order->get_billing_state()) $user_data['st'] = hash('sha256', $order->get_billing_state());
+                    if ($order->get_billing_postcode()) $user_data['zp'] = hash('sha256', $order->get_billing_postcode());
+                    if ($order->get_billing_country()) $user_data['country'] = hash('sha256', $order->get_billing_country());
+
+                } else if (get_current_user_id() !== 0) {
+
+                    // set user_id
+                    $user_data['external_id'] = hash('sha256', get_current_user_id());
+
+                    $wp_user_info = get_userdata(get_current_user_id());
+
+                    // set em (email)
+                    $user_data['em'] = hash('sha256', $wp_user_info->user_email);
+
+                    if (isset($wp_user_info->first_name)) $user_data['fn'] = hash('sha256', $wp_user_info->first_name);
+                    if (isset($wp_user_info->last_name)) $user_data['ln'] = hash('sha256', $wp_user_info->last_name);
+                }
             }
         }
 

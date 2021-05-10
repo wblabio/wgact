@@ -127,12 +127,11 @@ class Pixel_Manager extends Pixel_Manager_Base
 
         add_action('woocommerce_after_shop_loop_item', [$this, 'action_woocommerce_after_shop_loop_item'], 10, 1);
         add_filter('woocommerce_blocks_product_grid_item_html', [$this, 'wc_add_date_to_gutenberg_block'], 10, 3);
-        add_filter('woocommerce_after_add_to_cart_form', [$this, 'woocommerce_after_add_to_cart_form']);
-
+        add_filter('woocommerce_after_single_product_summary', [$this, 'woocommerce_inject_product_data_on_product_page']);
     }
 
     // on product page
-    public function woocommerce_after_add_to_cart_form()
+    public function woocommerce_inject_product_data_on_product_page()
     {
         global $product;
 

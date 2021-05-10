@@ -367,11 +367,12 @@ varExists('jQuery').then(function () {
         wooptpm.getMainProductIdFromProductPage = function () {
             try {
                 if (wooptpmDataLayer.shop.product_type === 'simple') {
-                    return jQuery('.single_add_to_cart_button').val();
+                    return jQuery('.wooptpmProductId:first').data('id');
                 } else if (wooptpmDataLayer.shop.product_type === 'variable') {
-                    return jQuery('.woocommerce-variation-add-to-cart').find('[name="add-to-cart"]').val();
+                    return jQuery('.wooptpmProductId:first').data('id');
                 } else if (wooptpmDataLayer.shop.product_type === 'grouped') {
-                    return jQuery('.grouped_form').find('[name="add-to-cart"]').val();
+                    // return jQuery('.grouped_form').find('[name="add-to-cart"]').val();
+                    return jQuery('.wooptpmProductId:first').data('id');
                 } else {
                     return false;
                 }

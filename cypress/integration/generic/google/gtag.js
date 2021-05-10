@@ -424,7 +424,7 @@ describe('Google gtag events', () => {
         cy.visit('/shop/')
 
         // wait for events to get registered
-        cy.wait(400)
+        cy.wait(800)
 
         // add to an item to the cart
         cy.get('.add_to_cart_button')
@@ -468,7 +468,7 @@ describe('Google gtag events', () => {
             })
 
         // wait for WC Ajax to add all products internally
-        cy.wait(500)
+        cy.wait(800)
 
         cy.visit('/cart/')
 
@@ -630,7 +630,7 @@ describe('Google gtag events', () => {
         cy.visit('/shop/')
 
         // wait for events to get registered
-        cy.wait(400)
+        cy.wait(800)
 
         // add to an item to the cart
         cy.get('.add_to_cart_button')
@@ -644,7 +644,7 @@ describe('Google gtag events', () => {
         // WC has a slow Ajax call to update the cart
         // We should replace cy.wait() with a cy.intercept() and wait until the call is finished
         // https://docs.cypress.io/guides/guides/network-requests#Waiting
-        cy.wait(400)
+        cy.wait(800)
 
         cy.visit('/cart/')
 

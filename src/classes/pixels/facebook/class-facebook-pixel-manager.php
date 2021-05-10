@@ -32,6 +32,7 @@ class Facebook_Pixel_Manager extends Pixel_Manager_Base
             // Process the purchase through Facebook CAPI when they are paid,
             // or when they are manually completed.
 
+            add_action('woocommerce_order_status_on-hold', [$this, 'facebook_capi_report_purchase__premium_only']);
             add_action('woocommerce_order_status_processing', [$this, 'facebook_capi_report_purchase__premium_only']);
             add_action('woocommerce_payment_complete', [$this, 'facebook_capi_report_purchase__premium_only']);
             add_action('woocommerce_order_status_completed', [$this, 'facebook_capi_report_purchase__premium_only']);

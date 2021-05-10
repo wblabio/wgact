@@ -1,6 +1,6 @@
 <?php
 
-//add_filter('wooptpm_send_http_api_facebook_capi_requests_blocking', '__return_true');
+add_filter('wooptpm_send_http_api_facebook_capi_requests_blocking', '__return_true');
 add_filter('wooptpm_facebook_capi_test_event_code', function () {
     return 'TEST38471';
 });
