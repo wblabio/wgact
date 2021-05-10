@@ -1,31 +1,94 @@
-=== WooCommerce Conversion Tracking ===
+=== WooCommerce Conversion Tracking by woopt ===
 Contributors: alekv, woopt, wolfbaer
-Tags: woocommerce, google ads, conversion tracking, dynamic retargeting, remarketing , adwords
+Tags: woocommerce, google ads, google analytics, facebook pixel, conversion tracking, dynamic retargeting, remarketing , adwords, pixel,
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 7.2
-Stable tag: 1.10.0
+Stable tag: 1.10.0-beta.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Track the order value and create dynamic remarketing lists in Google Ads from WooCommerce and much more !
+Track visitors and conversions in Google Ads, Google Analytics, Facebook and more !
 
 == Description ==
 
-This plugin <strong>tracks the value of WooCommerce orders and collects data for dynamic remarketing lists in Google Ads</strong>.
+This plugin <strong>tracks WooCommerce shop visitors and collects valuable data for conversion optimization, dynamic remarketing and reporting.</strong>.
 
-With this data you can optimize all your Google Ads campaigns to achieve maximum efficiency.
+While the setup is as simple as it can get, the pixel engine under the hood is very powerful. It tracks all standard events and implements all advanced pixel features like Facebook CAPI (Pro version), Google Enhanced E-Commerce, Google Shopping Cart Item Tracking and more. For advanced users the plugin offers filters which allow to tweak the output very flexibly and fine tune the behaviour to each shop.
+
+You can use it with:
+
+* Google Ads
+* Google Analytics (Universal and Google Analytics 4)
+* Facebook
+* Google Optimize
+* HotJar
+* Microsoft Ads (Pro version)
+* Twitter (Pro version)
+* Pinterest (Pro version)
 
 <strong>Highlights</strong>
 
+* Facebook CAPI (Pro version)
+* Google Analytics Enhanced E-Commerce (Pro version)
 * Precise measurement by preventing duplicate reporting effectively, excluding admins and shop managers from tracking, and not counting failed payments.
 * Collects dynamic remarketing audiences for dynamic retargeting: [Google Ads Dynamic Remarketing](https://support.google.com/google-ads/answer/3124536)
 * Implements the new Google Add Cart Data functionality. More info about the new feature: [add cart data to the conversion](https://support.google.com/google-ads/answer/9028254)
 * Support for various cookie consent management systems
 
+<strong>Free Features</strong>
+
+* Google Ads Conversion Tracking
+* Google Ads Dynamic Remarketing
+* Google Ads Cart Item Tracking
+* Google Shopping New Customer Parameter
+* Google Analytics Universal (includes purchase tracking)
+* Google Analytics 4 (includes purchase tracking)
+* Google Optimize
+* Facebook Pixel
+* Facebook Remarketing Events
+* Hotjar Pixel
+* Basic Order Deduplication
+* Many useful filters that help tweak the plugin output
+* Works with lazy loaded product lists
+
+Have a look at the full feature list over [here](https://docs.woopt.com/wgact/#/features?id=available-features).
+
+<strong>Premium Features</strong>
+
+* Facebook CAPI (Pro version)
+* Facebook Microdata Output
+* Google Analytics Universal and Google Analytics 4 Enhanced E-Commerce (Pro version)
+* Google Consent Mode
+* Google Dynamic Remarketing Choice for all Business Verticals
+* Microsoft Advertising Pixel with Purchase and all Remarketing Events
+* Twitter Pixel with Purchase and all Remarketing Events
+* Pinterest Pixel with Purchase and all Remarketing Events
+* Advanced Order Deduplication
+
+Have a look at the full feature list over [here](https://docs.woopt.com/wgact/#/features?id=available-features).
+
+Are interested to purchase the [Pro version](https://woopt.com)? Come and visit us [here](https://woopt.com)
+
+<strong>Plugin Compatibility</strong>
+
+The plugin supports and works with following third party plugins.
+
+* WooCommerce Brands
+* WooCommerce Wishlists
+* WooCommerce Google Product Feed
+* YITH WooCommerce Brands️
+* YITH WooCommerce Wishlist️
+* Woo Discount Rules️
+* WP Marketing Robot Feed Manager
+
 <strong>Documentation</strong>
 
 Link to the full documentation of the plugin: [Open the documentation](https://docs.woopt.com/wgact/?utm_source=wp-org&utm_medium=documentation-link&utm_campaign=wp-org-documentation-link#/)
+
+<strong>Roadmap</strong>
+
+Take a look at our [roadmap](https://app.productstash.io/woopt-woocommerce-pixel-manager) to see what's coming next.
 
 <strong>Cookie Consent Management</strong>
 

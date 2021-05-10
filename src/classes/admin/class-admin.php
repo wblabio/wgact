@@ -698,38 +698,14 @@ class Admin
             $section_ids['settings_name']
         );
 
-        // add field for the Facebook CAPI user transparency send client ip address
+        // add field for the Facebook CAPI user transparency send additional client identifiers
         add_settings_field(
-            'wgact_setting_facebook_capi_user_transparency_send_client_ip_address',
+            'wgact_setting_facebook_capi_user_transparency_send_additional_client_identifiers',
             esc_html__(
-                'Facebook CAPI: send visitor IP address',
+                'Facebook CAPI: send additional visitor identifiers',
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ),
-            [$this, 'wgact_setting_facebook_capi_user_transparency_send_client_ip_address'],
-            'wgact_plugin_options_page',
-            $section_ids['settings_name']
-        );
-
-        // add field for the Facebook CAPI user transparency send client email
-        add_settings_field(
-            'wgact_setting_facebook_capi_user_transparency_send_client_email',
-            esc_html__(
-                'Facebook CAPI: send visitor email',
-                'woocommerce-google-adwords-conversion-tracking-tag'
-            ),
-            [$this, 'wgact_setting_facebook_capi_user_transparency_send_client_email'],
-            'wgact_plugin_options_page',
-            $section_ids['settings_name']
-        );
-
-        // add field for the Facebook CAPI user transparency send shop ID
-        add_settings_field(
-            'wgact_setting_facebook_capi_user_transparency_send_client_shop_id',
-            esc_html__(
-                'Facebook CAPI: send visitor shop ID',
-                'woocommerce-google-adwords-conversion-tracking-tag'
-            ),
-            [$this, 'wgact_setting_facebook_capi_user_transparency_send_client_shop_id'],
+            [$this, 'wgact_setting_facebook_capi_user_transparency_send_additional_client_identifiers'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
@@ -1589,7 +1565,7 @@ class Admin
         }
     }
 
-    public function wgact_setting_facebook_capi_user_transparency_send_client_ip_address()
+    public function wgact_setting_facebook_capi_user_transparency_send_additional_client_identifiers()
     {
         // adding the hidden input is a hack to make WordPress save the option with the value zero,
         // instead of not saving it and remove that array key entirely
@@ -1597,79 +1573,21 @@ class Admin
         ?>
         <label>
             <input type='hidden' value='0'
-                   name='wgact_plugin_options[facebook][capi][user_transparency][send_client_ip_address]'>
-            <input type='checkbox' id='wgact_setting_facebook_capi_user_transparency_send_client_ip_address'
-                   name='wgact_plugin_options[facebook][capi][user_transparency][send_client_ip_address]'
+                   name='wgact_plugin_options[facebook][capi][user_transparency][send_additional_client_identifiers]'>
+            <input type='checkbox' id='wgact_setting_facebook_capi_user_transparency_send_additional_client_identifiers'
+                   name='wgact_plugin_options[facebook][capi][user_transparency][send_additional_client_identifiers]'
                    value='1'
-                <?php checked($this->options['facebook']['capi']['user_transparency']['send_client_ip_address']); ?>
+                <?php checked($this->options['facebook']['capi']['user_transparency']['send_additional_client_identifiers']); ?>
                 <?php echo $this->disable_if_demo() ?>
             />
             <?php
-            esc_html_e('Include the visitor\'s IP address in the CAPI hit.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+            esc_html_e('Include additional visitor\'s identifiers, such as IP address, email and shop ID in the CAPI hit.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
         </label>
         <?php
-        echo $this->get_status_icon($this->options['facebook']['capi']['user_transparency']['send_client_ip_address'], $this->options['facebook']['pixel_id'], true);
+        echo $this->get_status_icon($this->options['facebook']['capi']['user_transparency']['send_additional_client_identifiers'], $this->options['facebook']['pixel_id'], true);
         echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=facebook-capi-token#/pixels/facebook?id=user-transparency-settings');
         echo $this->svg_pro_feature();
-        if ($this->options['facebook']['capi']['user_transparency']['send_client_ip_address'] && !$this->options['facebook']['pixel_id']) {
-            echo '<p></p><span class="dashicons dashicons-info"></span>';
-            esc_html_e('You need to activate the Facebook pixel', 'woocommerce-google-adwords-conversion-tracking-tag');
-            echo '</p><br>';
-        }
-    }
-
-    public function wgact_setting_facebook_capi_user_transparency_send_client_email()
-    {
-        // adding the hidden input is a hack to make WordPress save the option with the value zero,
-        // instead of not saving it and remove that array key entirely
-        // https://stackoverflow.com/a/1992745/4688612
-        ?>
-        <label>
-            <input type='hidden' value='0'
-                   name='wgact_plugin_options[facebook][capi][user_transparency][send_client_email]'>
-            <input type='checkbox' id='wgact_setting_facebook_capi_user_transparency_send_client_email'
-                   name='wgact_plugin_options[facebook][capi][user_transparency][send_client_email]'
-                   value='1'
-                <?php checked($this->options['facebook']['capi']['user_transparency']['send_client_email']); ?>
-                <?php echo $this->disable_if_demo() ?>
-            />
-            <?php
-            esc_html_e('Include the visitor\'s email in the CAPI hit.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
-        </label>
-        <?php
-        echo $this->get_status_icon($this->options['facebook']['capi']['user_transparency']['send_client_email'], $this->options['facebook']['pixel_id'], true);
-        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=facebook-capi-token#/pixels/facebook?id=user-transparency-settings');
-        echo $this->svg_pro_feature();
-        if ($this->options['facebook']['capi']['user_transparency']['send_client_email'] && !$this->options['facebook']['pixel_id']) {
-            echo '<p></p><span class="dashicons dashicons-info"></span>';
-            esc_html_e('You need to activate the Facebook pixel', 'woocommerce-google-adwords-conversion-tracking-tag');
-            echo '</p><br>';
-        }
-    }
-
-    public function wgact_setting_facebook_capi_user_transparency_send_client_shop_id()
-    {
-        // adding the hidden input is a hack to make WordPress save the option with the value zero,
-        // instead of not saving it and remove that array key entirely
-        // https://stackoverflow.com/a/1992745/4688612
-        ?>
-        <label>
-            <input type='hidden' value='0'
-                   name='wgact_plugin_options[facebook][capi][user_transparency][send_client_shop_id]'>
-            <input type='checkbox' id='wgact_setting_facebook_capi_user_transparency_send_client_shop_id'
-                   name='wgact_plugin_options[facebook][capi][user_transparency][send_client_shop_id]'
-                   value='1'
-                <?php checked($this->options['facebook']['capi']['user_transparency']['send_client_shop_id']); ?>
-                <?php echo $this->disable_if_demo() ?>
-            />
-            <?php
-            esc_html_e('Include the visitor\'s shop ID in the CAPI hit.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
-        </label>
-        <?php
-        echo $this->get_status_icon($this->options['facebook']['capi']['user_transparency']['send_client_shop_id'], $this->options['facebook']['pixel_id'], true);
-        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=facebook-capi-token#/pixels/facebook?id=user-transparency-settings');
-        echo $this->svg_pro_feature();
-        if ($this->options['facebook']['capi']['user_transparency']['send_client_shop_id'] && !$this->options['facebook']['pixel_id']) {
+        if ($this->options['facebook']['capi']['user_transparency']['send_additional_client_identifiers'] && !$this->options['facebook']['pixel_id']) {
             echo '<p></p><span class="dashicons dashicons-info"></span>';
             esc_html_e('You need to activate the Facebook pixel', 'woocommerce-google-adwords-conversion-tracking-tag');
             echo '</p><br>';

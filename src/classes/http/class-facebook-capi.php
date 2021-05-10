@@ -162,7 +162,7 @@ class Facebook_CAPI extends Http
             'event_time'       => (int)time(),
             'opt_out'          => (bool)$this->opt_out,
             'action_source'    => 'website',
-            'event_source_url' => (string)get_site_url(),
+            'event_source_url' => (string)$browser_event_data['event_source_url'],
         ];
 
         // Add user data
@@ -192,8 +192,8 @@ class Facebook_CAPI extends Http
             $payload['test_event_code'] = $this->test_event_code;
         }
 
-        error_log('payload');
-        error_log(print_r($payload, true));
+//        error_log('payload');
+//        error_log(print_r($payload, true));
 
         $this->send_hit($this->request_url, $payload);
     }
@@ -220,7 +220,7 @@ class Facebook_CAPI extends Http
 
             // set client_ip_address
             if (
-                $this->options_obj->facebook->capi->user_transparency->send_client_ip_address &&
+                $this->options_obj->facebook->capi->user_transparency->send_additional_client_identifiers &&
                 array_key_exists('client_ip_address', $facebook_identifiers) &&
                 $facebook_identifiers['client_ip_address']
             ) {
@@ -239,24 +239,20 @@ class Facebook_CAPI extends Http
 
         // https://developers.facebook.com/docs/marketing-api/audiences/guides/custom-audiences/#example_sha256
         if ($order) {
-            // set user_id
-            if ($this->options_obj->facebook->capi->user_transparency->send_client_shop_id) {
+            if ($this->options_obj->facebook->capi->user_transparency->send_additional_client_identifiers) {
+                // set user_id
                 $user_data['external_id'] = hash('sha256', $order->get_user_id());
-            }
 
-            // set em (email)
-            if ($this->options_obj->facebook->capi->user_transparency->send_client_email) {
+                // set em (email)
                 $wp_user_info    = get_userdata($order->get_user_id());
                 $user_data['em'] = hash('sha256', $wp_user_info->user_email);
             }
         } else if (get_current_user_id() !== 0) {
-            // set user_id
-            if ($this->options_obj->facebook->capi->user_transparency->send_client_shop_id) {
+            if ($this->options_obj->facebook->capi->user_transparency->send_additional_client_identifiers) {
+                // set user_id
                 $user_data['external_id'] = hash('sha256', get_current_user_id());
-            }
 
-            // set em (email)
-            if ($this->options_obj->facebook->capi->user_transparency->send_client_email) {
+                // set em (email)
                 $wp_user_info    = get_userdata(get_current_user_id());
                 $user_data['em'] = hash('sha256', $wp_user_info->user_email);
             }

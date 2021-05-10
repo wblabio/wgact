@@ -70,6 +70,7 @@ varExists('jQuery').then(function () {
                 "user_data"   : wooptpm.getFbUserData(),
                 "product_data": product,
                 "product_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.facebook.dynamic_remarketing.id_type],
+                "event_source_url": window.location.href
             });
         }
 
@@ -83,9 +84,11 @@ varExists('jQuery').then(function () {
             jQuery(document).on('wooptpmAddToCart', function (event, product) {
 
                 // console.log('firing facebook ads AddToCart event');
-                // console.log(data);
+                // console.log(product);
 
                 let eventId = wooptpm.getRandomEventId();
+
+                // console.log('eventId: ' + eventId);
 
                 fbq("track", "AddToCart", {
                     "content_type": "product",
@@ -105,6 +108,7 @@ varExists('jQuery').then(function () {
                     "user_data"   : wooptpm.getFbUserData(),
                     "product_data": product,
                     "product_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.facebook.dynamic_remarketing.id_type],
+                    "event_source_url": window.location.href
                 });
             });
 
@@ -124,7 +128,8 @@ varExists('jQuery').then(function () {
                 jQuery(document).trigger('wooptpmFbCapiEvent', {
                     "event_name": "InitiateCheckout",
                     "event_id"  : eventId,
-                    "user_data" : wooptpm.getFbUserData()
+                    "user_data" : wooptpm.getFbUserData(),
+                    "event_source_url": window.location.href
                 });
             });
 
@@ -154,6 +159,7 @@ varExists('jQuery').then(function () {
                     "user_data"   : wooptpm.getFbUserData(),
                     "product_data": product,
                     "product_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.facebook.dynamic_remarketing.id_type],
+                    "event_source_url": window.location.href
                 });
             });
 
@@ -197,7 +203,8 @@ varExists('jQuery').then(function () {
                         jQuery(document).trigger('wooptpmFbCapiEvent', {
                             "event_name": "Search",
                             "event_id"  : eventId,
-                            "user_data" : wooptpm.getFbUserData()
+                            "user_data" : wooptpm.getFbUserData(),
+                            "event_source_url": window.location.href
                         });
                     }
                 } catch (e) {

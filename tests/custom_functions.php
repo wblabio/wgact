@@ -1,27 +1,27 @@
 <?php
 
 //add_filter('wooptpm_send_http_api_facebook_capi_requests_blocking', '__return_true');
-//add_filter('wooptpm_facebook_capi_test_event_code', function () {
-//    return 'TEST43876';
+add_filter('wooptpm_facebook_capi_test_event_code', function () {
+    return 'TEST38471';
+});
+
+//add_filter('wooptpm_facebook_capi_user_transparency_settings', function ($user_transparency_settings) {
+//
+//    $user_transparency_settings['process_anonymous_hits'] = true;
+//    $user_transparency_settings['use_client_ip_address']  = true;
+//    $user_transparency_settings['use_client_email']       = true;
+//    $user_transparency_settings['use_client_shop_id']     = true;
+//
+//    return $user_transparency_settings;
 //});
 
-add_filter('wooptpm_facebook_capi_user_transparency_settings', function ($user_transparency_settings) {
-
-    $user_transparency_settings['process_anonymous_hits'] = true;
-    $user_transparency_settings['use_client_ip_address']  = true;
-    $user_transparency_settings['use_client_email']       = true;
-    $user_transparency_settings['use_client_shop_id']     = true;
-
-    return $user_transparency_settings;
-});
-
-add_filter('wooptpm_facebook_capi_data_processing_options', function () {
-    return [
-        'data_processing_options'         => ['LDU'],
-        'data_processing_options_country' => 1,
-        'data_processing_options_state'   => 1000,
-    ];
-});
+//add_filter('wooptpm_facebook_capi_data_processing_options', function () {
+//    return [
+//        'data_processing_options'         => ['LDU'],
+//        'data_processing_options_country' => 1,
+//        'data_processing_options_state'   => 1000,
+//    ];
+//});
 
 //add_filter('wooptpm_enable_ga_4_mp_event_debug_mode', '__return_true');
 //add_filter('wooptpm_send_http_api_ga_4_requests_blocking', '__return_true');

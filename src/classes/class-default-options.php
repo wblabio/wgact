@@ -55,9 +55,7 @@ class Default_Options
                     'token'             => '',
                     'user_transparency' => [
                         'process_anonymous_hits' => false,
-                        'send_client_ip_address' => false,
-                        'send_client_email'      => false,
-                        'send_client_shop_id'    => false,
+                        'send_additional_client_identifiers' => false,
                     ]
                 ]
             ],
