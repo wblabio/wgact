@@ -112,6 +112,7 @@ You can send the link to the front page of your shop too if you think it would b
 * Tweak: Added more exclusions for WP Rocket
 * Tweak: Added exclusions for WP Optimize
 * Tweak: Additional exclusions for Autoptimize
+* Tweak: Removed hit on for parent IDs on a variable product page
 
 = 1.9.6 =
 

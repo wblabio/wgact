@@ -11,7 +11,7 @@ if (typeof varExists !== "function") {
 
 varExists('jQuery').then(function () {
 
-    console.log('jq loaded');
+    // console.log('jq loaded');
 
     (function (wooptpm, $, undefined) {
 
