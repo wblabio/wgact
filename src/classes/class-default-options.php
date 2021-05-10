@@ -2,11 +2,12 @@
 
 namespace WGACT\Classes;
 
-if ( ! defined( 'ABSPATH' ) ) {
+if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-class Default_Options {
+class Default_Options
+{
 
     // get the default options
     public function get_default_options(): array
@@ -48,9 +49,17 @@ class Default_Options {
                 'user_id'      => 0,
             ],
             'facebook'   => [
-                'pixel_id'   => '',
-                'capi_token' => '',
-                'microdata'  => 0,
+                'pixel_id'  => '',
+                'microdata' => 0,
+                'capi'      => [
+                    'token'             => '',
+                    'user_transparency' => [
+                        'process_anonymous_hits' => false,
+                        'send_client_ip_address' => false,
+                        'send_client_email'      => false,
+                        'send_client_shop_id'    => false,
+                    ]
+                ]
             ],
             'bing'       => [
                 'uet_tag_id' => ''

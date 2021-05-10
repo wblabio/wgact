@@ -2,13 +2,18 @@
 
 namespace WGACT\Classes\Admin;
 
-use WC_Order;
-
-if ( ! defined( 'ABSPATH' ) ) {
+if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-class Debug_info {
+class Debug_info
+{
+    protected $environment_check;
+
+    public function __construct()
+    {
+        $this->environment_check = new Environment_Check();
+    }
 
     public function get_debug_info(): string
     {
@@ -26,6 +31,9 @@ class Debug_info {
         $html .= 'WooCommerce version: ' . $woocommerce->version . PHP_EOL;
         $html .= 'PHP version: ' . phpversion() . PHP_EOL;
 
+        $curl_available = $this->environment_check->is_curl_active() ? 'yes' : 'no';
+        $html           .= 'curl available: ' . $curl_available . PHP_EOL;
+
         $html .= PHP_EOL;
 
         $multisite_enabled = is_multisite() ? 'yes' : 'no';
@@ -38,7 +46,7 @@ class Debug_info {
 
         $html .= 'WordPress debug mode enabled: ' . $wp_debug . PHP_EOL;
 
-        wp_get_current_user();
+//        wp_get_current_user();
         $html .= 'Logged in user login name: ' . $current_user->user_login . PHP_EOL;
         $html .= 'Logged in user display name: ' . $current_user->display_name . PHP_EOL;
 
@@ -48,12 +56,25 @@ class Debug_info {
         $html .= 'Shop URL: ' . get_home_url() . PHP_EOL;
         $html .= 'Cart URL: ' . wc_get_cart_url() . PHP_EOL;
         $html .= 'Checkout URL: ' . wc_get_checkout_url() . PHP_EOL;
+        $html .= 'Purchase confirmation endpoint: ' . wc_get_endpoint_url('order-received') . PHP_EOL;
 
-        $last_order_id = $this->get_last_order_id();
-//		echo('last order: ' . $last_order_id . PHP_EOL);
-        $last_order = new WC_Order(wc_get_order($last_order_id));
-        $html       .= 'Last order URL: ' . $last_order->get_checkout_order_received_url() . '&nodedupe' . PHP_EOL;
+        $order_received_page_url = wc_get_checkout_url() . ltrim(wc_get_endpoint_url('order-received'), '/');
+        $html                    .= 'is_order_received_page(): ' . $order_received_page_url . PHP_EOL . PHP_EOL;
 
+        $last_order_url                      = $this->environment_check->get_last_order_url();
+        $html                                .= 'Last order URL: ' . $last_order_url . '&nodedupe' . PHP_EOL;
+
+        $last_order_url_contains_order_received_page_url = strpos($this->environment_check->get_last_order_url(), $order_received_page_url) !== false ? 'yes' : 'no';
+        $html .= 'Order received page uses proper is_order_received() url: ' . $last_order_url_contains_order_received_page_url . PHP_EOL;
+
+        $purchase_confirmation_page_redirect = $this->environment_check->does_url_redirect($last_order_url) ? 'yes' : 'no';
+        $html                                .= $this->show_warning($this->environment_check->does_url_redirect($last_order_url)) . 'Purchase confirmation page redirect: ' . $purchase_confirmation_page_redirect . PHP_EOL;
+
+        if ($this->environment_check->does_url_redirect($last_order_url)) {
+            $html .= 'Redirect URL: ' . $this->environment_check->get_redirect_url($this->environment_check->get_last_order_url()) . PHP_EOL;
+        }
+
+//        $html                                .= 'wc_get_page_permalink(\'checkout\'): ' . wc_get_page_permalink('checkout') . PHP_EOL;
 
         $html .= PHP_EOL . '## Theme ##' . PHP_EOL . PHP_EOL;
 
@@ -113,6 +134,15 @@ class Debug_info {
         return $html;
     }
 
+    private function show_warning($test = false): string
+    {
+        if ($test) {
+            return '❗ ';
+        } else {
+            return '';
+        }
+    }
+
     private function is_wp_rocket_js_concatenation(): string
     {
         if (is_plugin_active('wp-rocket/wp-rocket.php')) {
@@ -121,7 +151,7 @@ class Debug_info {
 
             if ($wp_rocket_settings) {
                 if (true == $wp_rocket_settings['minify_concatenate_js']) {
-                   return 'on';
+                    return 'on';
                 } else {
                     return 'off';
                 }
@@ -141,19 +171,5 @@ class Debug_info {
         }
     }
 
-    private function get_last_order_id()
-    {
-        global $wpdb;
-        $statuses = array_keys(wc_get_order_statuses());
-        $statuses = implode("','", $statuses);
 
-        // Getting last Order ID (max value)
-        $results = $wpdb->get_col("
-            SELECT MAX(ID) FROM {$wpdb->prefix}posts
-            WHERE post_type LIKE 'shop_order'
-            AND post_status IN ('$statuses')
-        ");
-
-        return reset($results);
-    }
 }

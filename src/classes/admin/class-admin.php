@@ -155,7 +155,7 @@ class Admin
     public function add_section_main()
     {
         $section_ids = [
-            'title'         => 'Main',
+            'title'         => esc_html__('Main', 'woocommerce-google-adwords-conversion-tracking-tag'),
             'slug'          => 'main',
             'settings_name' => 'wgact_plugin_main_section',
         ];
@@ -177,7 +177,10 @@ class Admin
     public function add_section_main_subsection_google_ads($section_ids)
     {
         $sub_section_ids = [
-            'title' => 'Google',
+            'title' => esc_html__(
+                'Google',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ),
             'slug'  => 'google'
         ];
 
@@ -255,7 +258,10 @@ class Admin
     public function add_section_main_subsection_facebook($section_ids)
     {
         $sub_section_ids = [
-            'title' => 'Facebook',
+            'title' => esc_html__(
+                'Facebook',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ),
             'slug'  => 'facebook'
         ];
 
@@ -288,7 +294,10 @@ class Admin
     public function add_section_main_subsection_more_pixels($section_ids)
     {
         $sub_section_ids = [
-            'title' => 'more pixels',
+            'title' => esc_html__(
+                'more pixels',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ),
             'slug'  => 'more-pixels'
         ];
 
@@ -360,7 +369,10 @@ class Admin
     public function add_section_advanced()
     {
         $section_ids = [
-            'title'         => 'Advanced',
+            'title'         => esc_html__(
+                'Advanced',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ),
             'slug'          => 'advanced',
             'settings_name' => 'wgact_plugin_advanced_section',
         ];
@@ -477,6 +489,18 @@ class Admin
             );
         }
 
+        // add the field for the aw_merchant_id
+        add_settings_field(
+            'wgact_plugin_aw_merchant_id',
+            esc_html__(
+                'Conversion Cart Data',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ),
+            [$this, 'wgact_plugin_setting_aw_merchant_id'],
+            'wgact_plugin_options_page',
+            $section_ids['settings_name']
+        );
+
         if (wga_fs()->is__premium_only() || $this->pro_version_demo_active()) {
             // add fields for the Google enhanced e-commerce
             add_settings_field(
@@ -496,7 +520,7 @@ class Admin
                 esc_html__(
                     'GA 4 API secret',
                     'woocommerce-google-adwords-conversion-tracking-tag'
-                ) . $this->svg_beta(),
+                ),
                 [$this, 'wgact_setting_html_google_analytics_4_api_secret'],
                 'wgact_plugin_options_page',
                 $section_ids['settings_name']
@@ -522,7 +546,7 @@ class Admin
                 esc_html__(
                     'Google User ID',
                     'woocommerce-google-adwords-conversion-tracking-tag'
-                ) . $this->svg_beta(),
+                ),
                 [$this, 'wgact_setting_html_google_user_id'],
                 'wgact_plugin_options_page',
                 $section_ids['settings_name']
@@ -559,7 +583,10 @@ class Admin
     public function add_section_advanced_subsection_cookie_consent_mgmt($section_ids)
     {
         $sub_section_ids = [
-            'title' => 'Cookie Consent Management',
+            'title' => esc_html__(
+                'Cooke Consent Management',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ),
             'slug'  => 'cookie-consent-mgmt'
         ];
 
@@ -648,16 +675,64 @@ class Admin
         );
 
         // add field for the Facebook CAPI token
-//        add_settings_field(
-//            'wgact_setting_facebook_capi_token',
-//            esc_html__(
-//                'Facebook CAPI token',
-//                'woocommerce-google-adwords-conversion-tracking-tag'
-//            ) . $this->svg_beta(),
-//            [$this, 'wgact_setting_html_facebook_capi_token'],
-//            'wgact_plugin_options_page',
-//            $section_ids['settings_name']
-//        );
+        add_settings_field(
+            'wgact_setting_facebook_capi_token',
+            esc_html__(
+                'Facebook CAPI: token',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ),
+            [$this, 'wgact_setting_html_facebook_capi_token'],
+            'wgact_plugin_options_page',
+            $section_ids['settings_name']
+        );
+
+        // add field for the Facebook CAPI user transparency process anonymous hits
+        add_settings_field(
+            'wgact_setting_facebook_capi_user_transparency_process_anonymous_hits',
+            esc_html__(
+                'Facebook CAPI: process anonymous hits',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ),
+            [$this, 'wgact_setting_facebook_capi_user_transparency_process_anonymous_hits'],
+            'wgact_plugin_options_page',
+            $section_ids['settings_name']
+        );
+
+        // add field for the Facebook CAPI user transparency send client ip address
+        add_settings_field(
+            'wgact_setting_facebook_capi_user_transparency_send_client_ip_address',
+            esc_html__(
+                'Facebook CAPI: send visitor IP address',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ),
+            [$this, 'wgact_setting_facebook_capi_user_transparency_send_client_ip_address'],
+            'wgact_plugin_options_page',
+            $section_ids['settings_name']
+        );
+
+        // add field for the Facebook CAPI user transparency send client email
+        add_settings_field(
+            'wgact_setting_facebook_capi_user_transparency_send_client_email',
+            esc_html__(
+                'Facebook CAPI: send visitor email',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ),
+            [$this, 'wgact_setting_facebook_capi_user_transparency_send_client_email'],
+            'wgact_plugin_options_page',
+            $section_ids['settings_name']
+        );
+
+        // add field for the Facebook CAPI user transparency send shop ID
+        add_settings_field(
+            'wgact_setting_facebook_capi_user_transparency_send_client_shop_id',
+            esc_html__(
+                'Facebook CAPI: send visitor shop ID',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ),
+            [$this, 'wgact_setting_facebook_capi_user_transparency_send_client_shop_id'],
+            'wgact_plugin_options_page',
+            $section_ids['settings_name']
+        );
 
         // add fields for Facebook microdata
         add_settings_field(
@@ -675,8 +750,11 @@ class Admin
     public function add_section_beta()
     {
         $section_ids = [
-            'title'         => 'Beta',
-            'slug'          => 'beta',
+            'title'         => esc_html__(
+                'Dynamic Remarketing',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ),
+            'slug'          => 'dynamic-remarketing',
             'settings_name' => 'wgact_plugin_beta_section',
         ];
 
@@ -686,7 +764,7 @@ class Admin
         add_settings_section(
             'wgact_plugin_beta_section',
             esc_html__(
-                'Beta',
+                'Dynamic Remarketing',
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ),
             [$this, 'wgact_plugin_section_add_cart_data_description'],
@@ -704,18 +782,6 @@ class Admin
 //            'wgact_plugin_options_page',
 //            'wgact_plugin_beta_section'
 //        );
-
-        // add the field for the aw_merchant_id
-        add_settings_field(
-            'wgact_plugin_aw_merchant_id',
-            esc_html__(
-                'Conversion Cart Data',
-                'woocommerce-google-adwords-conversion-tracking-tag'
-            ),
-            [$this, 'wgact_plugin_setting_aw_merchant_id'],
-            'wgact_plugin_options_page',
-            'wgact_plugin_beta_section'
-        );
 
         // add the field for the aw_feed_country
 //        add_settings_field(
@@ -741,18 +807,6 @@ class Admin
 //            'wgact_plugin_beta_section'
 //        );
 
-        // add fields for the product identifier
-        add_settings_field(
-            'wgact_plugin_option_product_identifier',
-            esc_html__(
-                'Product Identifier',
-                'woocommerce-google-adwords-conversion-tracking-tag'
-            ),
-            [$this, 'wgact_plugin_option_product_identifier'],
-            'wgact_plugin_options_page',
-            'wgact_plugin_beta_section'
-        );
-
         // add checkbox for dynamic remarketing
         add_settings_field(
             'wgact_plugin_option_dynamic_remarketing',
@@ -761,6 +815,18 @@ class Admin
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ),
             [$this, 'wgact_option_html_google_ads_dynamic_remarketing'],
+            'wgact_plugin_options_page',
+            'wgact_plugin_beta_section'
+        );
+
+        // add fields for the product identifier
+        add_settings_field(
+            'wgact_plugin_option_product_identifier',
+            esc_html__(
+                'Product Identifier',
+                'woocommerce-google-adwords-conversion-tracking-tag'
+            ),
+            [$this, 'wgact_plugin_option_product_identifier'],
             'wgact_plugin_options_page',
             'wgact_plugin_beta_section'
         );
@@ -795,7 +861,7 @@ class Admin
     public function add_section_support()
     {
         $section_ids = [
-            'title'         => 'Support',
+            'title'         => esc_html__('Support', 'woocommerce-google-adwords-conversion-tracking-tag'),
             'slug'          => 'support',
             'settings_name' => 'wgact_plugin_support_section',
         ];
@@ -813,7 +879,7 @@ class Admin
     public function add_section_author()
     {
         $section_ids = [
-            'title'         => 'Author',
+            'title'         => esc_html__('Author', 'woocommerce-google-adwords-conversion-tracking-tag'),
             'slug'          => 'author',
             'settings_name' => 'wgact_plugin_author_section',
         ];
@@ -1338,7 +1404,7 @@ class Admin
             esc_html_e('Google Analytics 4 activation required', 'woocommerce-google-adwords-conversion-tracking-tag');
             echo '</p>';
         }
-        if (!$this->options['google']['analytics']['eec'] ) {
+        if (!$this->options['google']['analytics']['eec']) {
             echo '<p></p><span class="dashicons dashicons-info" style="margin-right: 10px"></span>';
             esc_html_e('Enhanced E-Commerce activation required', 'woocommerce-google-adwords-conversion-tracking-tag');
             echo '</p><br>';
@@ -1474,14 +1540,14 @@ class Admin
     public function wgact_setting_html_facebook_capi_token()
     {
         ?><textarea id='wgact_setting_facebook_capi_token'
-                        name='wgact_plugin_options[facebook][capi_token]'
-                        cols='60'
-                        rows='5'
-                        value='<?php echo $this->options['facebook']['capi_token'] ?>'
-                        <?php echo $this->disable_if_demo() ?>
-                        ><?php echo $this->options['facebook']['capi_token'] ?></textarea>
+                    name='wgact_plugin_options[facebook][capi][token]'
+                    cols='60'
+                    rows='5'
+        <?php echo $this->disable_if_demo() ?>
+        ><?php echo $this->options['facebook']['capi']['token'] ?></textarea>
         <?php
-        echo $this->get_status_icon($this->options['facebook']['capi_token'], $this->options['facebook']['pixel_id']);
+        echo $this->get_status_icon($this->options['facebook']['capi']['token'], $this->options['facebook']['pixel_id']);
+        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=facebook-capi-token#/pixels/facebook?id=facebook-conversion-api-capi');
         echo $this->svg_pro_feature();
         if (!$this->options['facebook']['pixel_id']) {
             echo '<p></p><span class="dashicons dashicons-info"></span>';
@@ -1492,6 +1558,122 @@ class Admin
         echo '<br><br>';
 //        esc_html_e('The conversion ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
 //        echo '&nbsp;<i>123456789</i>';
+    }
+
+    public function wgact_setting_facebook_capi_user_transparency_process_anonymous_hits()
+    {
+        // adding the hidden input is a hack to make WordPress save the option with the value zero,
+        // instead of not saving it and remove that array key entirely
+        // https://stackoverflow.com/a/1992745/4688612
+        ?>
+        <label>
+            <input type='hidden' value='0'
+                   name='wgact_plugin_options[facebook][capi][user_transparency][process_anonymous_hits]'>
+            <input type='checkbox' id='wgact_setting_facebook_capi_user_transparency_process_anonymous_hits'
+                   name='wgact_plugin_options[facebook][capi][user_transparency][process_anonymous_hits]'
+                   value='1'
+                <?php checked($this->options['facebook']['capi']['user_transparency']['process_anonymous_hits']); ?>
+                <?php echo $this->disable_if_demo() ?>
+            />
+            <?php
+            esc_html_e('Send CAPI hits for anonymous visitors who likely have blocked the Facebook pixel.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+        </label>
+        <?php
+        echo $this->get_status_icon($this->options['facebook']['capi']['user_transparency']['process_anonymous_hits'], $this->options['facebook']['pixel_id'], true);
+        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=facebook-capi-token#/pixels/facebook?id=user-transparency-settings');
+        echo $this->svg_pro_feature();
+        if ($this->options['facebook']['capi']['user_transparency']['process_anonymous_hits'] && !$this->options['facebook']['pixel_id']) {
+            echo '<p></p><span class="dashicons dashicons-info"></span>';
+            esc_html_e('You need to activate the Facebook pixel', 'woocommerce-google-adwords-conversion-tracking-tag');
+            echo '</p><br>';
+        }
+    }
+
+    public function wgact_setting_facebook_capi_user_transparency_send_client_ip_address()
+    {
+        // adding the hidden input is a hack to make WordPress save the option with the value zero,
+        // instead of not saving it and remove that array key entirely
+        // https://stackoverflow.com/a/1992745/4688612
+        ?>
+        <label>
+            <input type='hidden' value='0'
+                   name='wgact_plugin_options[facebook][capi][user_transparency][send_client_ip_address]'>
+            <input type='checkbox' id='wgact_setting_facebook_capi_user_transparency_send_client_ip_address'
+                   name='wgact_plugin_options[facebook][capi][user_transparency][send_client_ip_address]'
+                   value='1'
+                <?php checked($this->options['facebook']['capi']['user_transparency']['send_client_ip_address']); ?>
+                <?php echo $this->disable_if_demo() ?>
+            />
+            <?php
+            esc_html_e('Include the visitor\'s IP address in the CAPI hit.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+        </label>
+        <?php
+        echo $this->get_status_icon($this->options['facebook']['capi']['user_transparency']['send_client_ip_address'], $this->options['facebook']['pixel_id'], true);
+        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=facebook-capi-token#/pixels/facebook?id=user-transparency-settings');
+        echo $this->svg_pro_feature();
+        if ($this->options['facebook']['capi']['user_transparency']['send_client_ip_address'] && !$this->options['facebook']['pixel_id']) {
+            echo '<p></p><span class="dashicons dashicons-info"></span>';
+            esc_html_e('You need to activate the Facebook pixel', 'woocommerce-google-adwords-conversion-tracking-tag');
+            echo '</p><br>';
+        }
+    }
+
+    public function wgact_setting_facebook_capi_user_transparency_send_client_email()
+    {
+        // adding the hidden input is a hack to make WordPress save the option with the value zero,
+        // instead of not saving it and remove that array key entirely
+        // https://stackoverflow.com/a/1992745/4688612
+        ?>
+        <label>
+            <input type='hidden' value='0'
+                   name='wgact_plugin_options[facebook][capi][user_transparency][send_client_email]'>
+            <input type='checkbox' id='wgact_setting_facebook_capi_user_transparency_send_client_email'
+                   name='wgact_plugin_options[facebook][capi][user_transparency][send_client_email]'
+                   value='1'
+                <?php checked($this->options['facebook']['capi']['user_transparency']['send_client_email']); ?>
+                <?php echo $this->disable_if_demo() ?>
+            />
+            <?php
+            esc_html_e('Include the visitor\'s email in the CAPI hit.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+        </label>
+        <?php
+        echo $this->get_status_icon($this->options['facebook']['capi']['user_transparency']['send_client_email'], $this->options['facebook']['pixel_id'], true);
+        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=facebook-capi-token#/pixels/facebook?id=user-transparency-settings');
+        echo $this->svg_pro_feature();
+        if ($this->options['facebook']['capi']['user_transparency']['send_client_email'] && !$this->options['facebook']['pixel_id']) {
+            echo '<p></p><span class="dashicons dashicons-info"></span>';
+            esc_html_e('You need to activate the Facebook pixel', 'woocommerce-google-adwords-conversion-tracking-tag');
+            echo '</p><br>';
+        }
+    }
+
+    public function wgact_setting_facebook_capi_user_transparency_send_client_shop_id()
+    {
+        // adding the hidden input is a hack to make WordPress save the option with the value zero,
+        // instead of not saving it and remove that array key entirely
+        // https://stackoverflow.com/a/1992745/4688612
+        ?>
+        <label>
+            <input type='hidden' value='0'
+                   name='wgact_plugin_options[facebook][capi][user_transparency][send_client_shop_id]'>
+            <input type='checkbox' id='wgact_setting_facebook_capi_user_transparency_send_client_shop_id'
+                   name='wgact_plugin_options[facebook][capi][user_transparency][send_client_shop_id]'
+                   value='1'
+                <?php checked($this->options['facebook']['capi']['user_transparency']['send_client_shop_id']); ?>
+                <?php echo $this->disable_if_demo() ?>
+            />
+            <?php
+            esc_html_e('Include the visitor\'s shop ID in the CAPI hit.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+        </label>
+        <?php
+        echo $this->get_status_icon($this->options['facebook']['capi']['user_transparency']['send_client_shop_id'], $this->options['facebook']['pixel_id'], true);
+        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=facebook-capi-token#/pixels/facebook?id=user-transparency-settings');
+        echo $this->svg_pro_feature();
+        if ($this->options['facebook']['capi']['user_transparency']['send_client_shop_id'] && !$this->options['facebook']['pixel_id']) {
+            echo '<p></p><span class="dashicons dashicons-info"></span>';
+            esc_html_e('You need to activate the Facebook pixel', 'woocommerce-google-adwords-conversion-tracking-tag');
+            echo '</p><br>';
+        }
     }
 
     public function wgact_setting_html_facebook_microdata()
@@ -1643,7 +1825,7 @@ class Admin
             }
             ?><span class="dashicons dashicons-info"></span>
             <?php
-            esc_html_e('You need to choose the correct product identifier setting in order to match the product identifiers in the Google Merchant Center or your Google Ads business feed', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+            esc_html_e('You need to choose the correct product identifier setting in order to match the product identifiers in the product feeds.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
         </p>
         <?php
     }
@@ -1670,7 +1852,7 @@ class Admin
         echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=dynamic-remarketing#/dynamic-remarketing'); ?>
         <p><span class="dashicons dashicons-info"></span>
             <?php
-            esc_html_e('In order for this to work you need to upload your Google Merchant Center feed including product variations and the item_group_id. Disable it, if you choose only to upload the parent product for variable products.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+            esc_html_e('In order for this to work you need to upload your product feed including product variations and the item_group_id. Disable it, if you choose only to upload the parent product for variable products.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
         </p>
         <?php
     }
@@ -2005,10 +2187,10 @@ class Admin
             }
         }
 
-        // validate ['facebook']['capi_token']
-        if (isset($input['facebook']['capi_token'])) {
-            if (!$this->is_facebook_capi_token($input['facebook']['capi_token'])) {
-                $input['facebook']['capi_token'] = isset($this->options['facebook']['capi_token']) ? $this->options['facebook']['capi_token'] : '';
+        // validate ['facebook']['capi']['token']
+        if (isset($input['facebook']['capi']['token'])) {
+            if (!$this->is_facebook_capi_token($input['facebook']['capi']['token'])) {
+                $input['facebook']['capi']['token'] = isset($this->options['facebook']['capi']['token']) ? $this->options['facebook']['capi']['token'] : '';
                 add_settings_error('wgact_plugin_options', 'invalid-facebook-pixel-id', esc_html__('You have entered an invalid Facebook CAPI token.', 'woocommerce-google-adwords-conversion-tracking-tag'));
             }
         }
@@ -2184,7 +2366,6 @@ class Admin
 
         return $this->validate_with_regex($re, $string);
     }
-
 
 
     public function is_google_analytics_4_api_secret($string): bool

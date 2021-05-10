@@ -2,6 +2,8 @@
 
 namespace WGACT\Classes\Admin;
 
+use WC_Order;
+
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
@@ -149,6 +151,15 @@ class Environment_Check
         }
     }
 
+    public function is_wp_optimize_active(): bool
+    {
+        if (is_plugin_active('wp-optimize/wp-optimize.php')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function disable_yoast_seo_facebook_social($option)
     {
         $option['opengraph'] = false;
@@ -192,12 +203,27 @@ class Environment_Check
             add_filter('autoptimize_filter_js_consider_minified', [$this, 'autoptimize_filter_js_consider_minified']);
             add_filter('autoptimize_filter_js_dontmove', [$this, 'autoptimize_filter_js_dontmove']);
         }
+
+        if($this->is_wp_optimize_active()){
+            // add_filter('wpo_minify_inline_js', '__return_false');
+            add_filter('wp-optimize-minify-default-exclusions', [$this, 'wp_optimize_minify_default_exclusions']);
+        }
+    }
+
+    public function wp_optimize_minify_default_exclusions($default_exclusions): array
+    {
+        // $default_exclusions[] = 'something/else.js';
+        // $default_exclusions[] = 'something/else.css';
+        return array_merge($default_exclusions, $this->get_wooptpm_script_identifiers());
+
     }
 
     // https://github.com/futtta/autoptimize/blob/37b13d4e19269bb2f50df123257de51afa37244f/classes/autoptimizeScripts.php#L387
-    public function autoptimize_filter_js_consider_minified()
+    public function autoptimize_filter_js_consider_minified(): array
     {
         $exclude_js[] = 'wooptpm.js';
+//        $exclude_js[] = 'jquery.js';
+//        $exclude_js[] = 'jquery.min.js';
         return $exclude_js;
     }
 
@@ -205,6 +231,8 @@ class Environment_Check
     public function autoptimize_filter_js_dontmove($dontmove)
     {
         $dontmove[] = 'wooptpm.js';
+        $dontmove[] = 'jquery.js';
+        $dontmove[] = 'jquery.min.js';
         return $dontmove;
     }
 
@@ -213,7 +241,7 @@ class Environment_Check
         return $excludes;
     }
 
-    public function litespeed_optimize_js_excludes($excludes)
+    public function litespeed_optimize_js_excludes($excludes): array
     {
         if (is_array($excludes)) {
             $excludes = array_merge($excludes, $this->get_wooptpm_script_identifiers());
@@ -343,8 +371,14 @@ class Environment_Check
             'wooptpm',
             'wooptpmDataLayer',
             'window.wooptpmDataLayer',
-            //            'wooptpm__premiums_only.js',
             'wooptpm.js',
+            'wooptpm__premiums_only.js',
+//            'facebook.js',
+//            'facebook__premium_only.js',
+//            'google-ads.js',
+//            'google-ga-4-eec__premium_only.js',
+//            'google-ga-us-eec__premium_only.js',
+//            'google__premium_only.js',
             'window.dataLayer',
             //            '/gtag/js',
             'gtag',
@@ -363,5 +397,56 @@ class Environment_Check
             'platform.twitter.com/widgets.js',
             'uetq',
         ];
+    }
+
+    public function is_curl_active(): bool
+    {
+        return function_exists('curl_version');
+    }
+
+    public function does_url_redirect($url): bool
+    {
+        $headers = get_headers($url, 1);
+        if (!empty($headers['Location'])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function get_redirect_url($url): string
+    {
+        $headers = get_headers($url, 1);
+
+        if (!empty($headers['Location'])) {
+            return $headers['Location'];
+        } else {
+            return '';
+        }
+    }
+
+    public function get_last_order_id()
+    {
+        global $wpdb;
+        $statuses = array_keys(wc_get_order_statuses());
+        $statuses = implode("','", $statuses);
+
+        // Getting last Order ID (max value)
+        $results = $wpdb->get_col("
+            SELECT MAX(ID) FROM {$wpdb->prefix}posts
+            WHERE post_type LIKE 'shop_order'
+            AND post_status IN ('$statuses')
+        ");
+
+        return reset($results);
+    }
+
+    public function get_last_order_url(): string
+    {
+        $last_order_id = $this->get_last_order_id();
+        //		echo('last order: ' . $last_order_id . PHP_EOL);
+        $last_order = new WC_Order(wc_get_order($last_order_id));
+
+        return $last_order->get_checkout_order_received_url();
     }
 }

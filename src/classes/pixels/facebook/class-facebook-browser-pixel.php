@@ -26,6 +26,7 @@ class Facebook_Browser_Pixel extends Pixel
                         'id_type' => $this->get_dyn_r_id_type(),
                 ],
                 'pixel_id' => $this->options_obj->facebook->pixel_id,
+                'capi' => $this->options_obj->facebook->capi->token ? true : false,
         ];
 
 
@@ -75,7 +76,9 @@ class Facebook_Browser_Pixel extends Pixel
         echo "
             wooptpmExists().then(function(){
                 if (!wooptpm.isOrderIdStored(". $order->get_order_number() . ")) {
-                    fbq('track', 'Purchase', " . json_encode($data) . ");
+                    fbq('track', 'Purchase', " . json_encode($data) . ", {
+                        'eventID': " . $order->get_order_number() . ",
+                    });
                 }
             });
 

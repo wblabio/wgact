@@ -21,7 +21,7 @@ class Facebook_Pixel_Manager extends Pixel_Manager_Base
         add_action('wp_enqueue_scripts', [$this, 'wooptpm_facebook_front_end_scripts']);
 
         $this->facebook_browser_pixel = new Facebook_Browser_Pixel($options);
-        if (wga_fs()->is__premium_only() && $this->options_obj->facebook->capi_token) {
+        if (wga_fs()->is__premium_only() && $this->options_obj->facebook->capi->token) {
 
             $this->facebook_capi = new Facebook_CAPI($options);
 

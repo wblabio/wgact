@@ -1,128 +1,145 @@
-jQuery(function () {
-
-    if (wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.status) {
-
-        // view_item_list event
-        jQuery(document).on('wooptpmViewItemList', function (event, product) {
-
-            // console.log('firing google view_item_list event');
-            // console.log(product);
-
-            gtag('event', 'view_item_list', {
-                "send_to": wooptpmDataLayer.pixels.google.ads.conversionIds,
-                "items"  : [{
-                    "id"                      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
-                    "google_business_vertical": wooptpmDataLayer.pixels.google.ads.google_business_vertical,
-
-                }]
-            });
-        });
-
-        // add_to_cart event
-        jQuery(document).on('wooptpmAddToCart', function (event, product) {
-
-            // console.log('firing google ads add_to_cart event');
-            // console.log(product);
-            // console.log(wooptpmDataLayer.pixels.google.ads.conversionIds);
-            // console.log('dyn_r_id: ' + product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type]);
-            // console.log('dyn_r_id: ' + product.dyn_r_ids['gpf']);
-
-            gtag("event", "add_to_cart", {
-                "send_to": wooptpmDataLayer.pixels.google.ads.conversionIds,
-                "value"  : product.quantity * product.price,
-                "items"  : [{
-                    "id"                      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
-                    "quantity"                : product.quantity,
-                    "price"                   : product.price,
-                    "google_business_vertical": wooptpmDataLayer.pixels.google.ads.google_business_vertical
-                }]
-            });
-        });
-
-        // select_content
-        // there is no select_content event that is processed by Google Ads: https://support.google.com/google-ads/answer/7305793?hl=en
-        // jQuery(document).on('wooptpmSelectContentGaUa', function (event, product) {
-        //
-        //     // console.log('firing google ads select_content event');
-        //     // console.log('firing google ads select_content event');
-        //     // console.log(product);
-        //
-        //     gtag("event", "select_content", {
-        //         "send_to"     : wooptpmDataLayer.pixels.google.ads.conversionIds,
-        //         "content_type": "product",
-        //         "items"       : [{
-        //                 "id"                      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
-        //                 "quantity"                : product.quantity,
-        //                 "name"                    : product.name,
-        //                 "price"                   : product.price,
-        //                 'google_business_vertical': wooptpmDataLayer.pixels.google.ads.google_business_vertical
-        //             }]
-        //     });
-        // });
-
-        // view_item event
-        jQuery(document).on('wooptpmViewItem', function (event, product) {
-
-            // console.log('firing google ads view_item event');
-            // console.log(product);
-            // console.log(wooptpmDataLayer.pixels.google.ads.conversionIds);
-            // console.log('dyn_r_id: ' + product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type]);
-            // console.log('dyn_r_id: ' + product.dyn_r_ids['gpf']);
-
-            gtag("event", "view_item", {
-                "send_to": wooptpmDataLayer.pixels.google.ads.conversionIds,
-                "value"  : product.quantity * product.price,
-                "items"  : [{
-                    "id"                      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
-                    "quantity"                : 1,
-                    "price"                   : product.price,
-                    "google_business_vertical": wooptpmDataLayer.pixels.google.ads.google_business_vertical
-                }]
-            });
+if (typeof varExists !== "function") {
+    function varExists(varName) {
+        return new Promise(function (resolve, reject) {
+            (function waitForJQuery() {
+                if (typeof window[varName] !== 'undefined') return resolve();
+                setTimeout(waitForJQuery, 30);
+            })();
         });
     }
-})
+}
 
-jQuery(window).on('load', function () {
+varExists('jQuery').then(function () {
 
-    wooptpmExists().then(function () {
+    jQuery(function () {
 
-        try {
-            if (wooptpmDataLayer.shop.page_type === 'product' && wooptpm.getMainProductIdFromProductPage()) {
+        if (wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.status) {
 
-                // console.log('productId: ' + wooptpm.getMainProductIdFromProductPage());
+            // view_item_list event
+            jQuery(document).on('wooptpmViewItemList', function (event, product) {
 
-                let product = wooptpm.getProductDataForViewItemEvent(wooptpm.getMainProductIdFromProductPage());
+                // console.log('firing google view_item_list event');
+                // console.log(product);
 
-                gtag("event", "view_item", {
+                gtag('event', 'view_item_list', {
                     "send_to": wooptpmDataLayer.pixels.google.ads.conversionIds,
-                    "value"  : 1 * product.price,
                     "items"  : [{
                         "id"                      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
+                        "google_business_vertical": wooptpmDataLayer.pixels.google.ads.google_business_vertical,
+
+                    }]
+                });
+            });
+
+            // add_to_cart event
+            jQuery(document).on('wooptpmAddToCart', function (event, product) {
+
+                // console.log('firing google ads add_to_cart event');
+                // console.log(product);
+                // console.log(wooptpmDataLayer.pixels.google.ads.conversionIds);
+                // console.log('dyn_r_id: ' + product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type]);
+                // console.log('dyn_r_id: ' + product.dyn_r_ids['gpf']);
+
+                gtag("event", "add_to_cart", {
+                    "send_to": wooptpmDataLayer.pixels.google.ads.conversionIds,
+                    "value"  : product.quantity * product.price,
+                    "items"  : [{
+                        "id"                      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
+                        "quantity"                : product.quantity,
+                        "price"                   : product.price,
                         "google_business_vertical": wooptpmDataLayer.pixels.google.ads.google_business_vertical
                     }]
                 });
-            } else if (wooptpmDataLayer.shop.page_type === 'search') {
+            });
 
-                let products = [];
+            // select_content
+            // there is no select_content event that is processed by Google Ads: https://support.google.com/google-ads/answer/7305793?hl=en
+            // jQuery(document).on('wooptpmSelectContentGaUa', function (event, product) {
+            //
+            //     // console.log('firing google ads select_content event');
+            //     // console.log('firing google ads select_content event');
+            //     // console.log(product);
+            //
+            //     gtag("event", "select_content", {
+            //         "send_to"     : wooptpmDataLayer.pixels.google.ads.conversionIds,
+            //         "content_type": "product",
+            //         "items"       : [{
+            //                 "id"                      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
+            //                 "quantity"                : product.quantity,
+            //                 "name"                    : product.name,
+            //                 "price"                   : product.price,
+            //                 'google_business_vertical': wooptpmDataLayer.pixels.google.ads.google_business_vertical
+            //             }]
+            //     });
+            // });
 
-                for (const [key, product] of Object.entries(wooptpmDataLayer.products)) {
-                    products.push({
-                        "id"                      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
-                        "google_business_vertical": wooptpmDataLayer.pixels.google.ads.google_business_vertical
-                    });
-                }
+            // view_item event
+            jQuery(document).on('wooptpmViewItem', function (event, product) {
 
-                // console.log(products);
+                // console.log('firing google ads view_item event');
+                // console.log(product);
+                // console.log(wooptpmDataLayer.pixels.google.ads.conversionIds);
+                // console.log('dyn_r_id: ' + product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type]);
+                // console.log('dyn_r_id: ' + product.dyn_r_ids['gpf']);
 
-                gtag("event", "view_search_results", {
+                gtag("event", "view_item", {
                     "send_to": wooptpmDataLayer.pixels.google.ads.conversionIds,
-                    // "value"  : 1 * product.price,
-                    "items": products
+                    "value"  : product.quantity * product.price,
+                    "items"  : [{
+                        "id"                      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
+                        "quantity"                : 1,
+                        "price"                   : product.price,
+                        "google_business_vertical": wooptpmDataLayer.pixels.google.ads.google_business_vertical
+                    }]
                 });
-            }
-        } catch (e) {
-            console.log(e);
+            });
         }
     })
-});
+
+    jQuery(window).on('load', function () {
+
+        wooptpmExists().then(function () {
+
+            try {
+                if (wooptpmDataLayer.shop.page_type === 'product' && wooptpm.getMainProductIdFromProductPage()) {
+
+                    // console.log('productId: ' + wooptpm.getMainProductIdFromProductPage());
+
+                    let product = wooptpm.getProductDataForViewItemEvent(wooptpm.getMainProductIdFromProductPage());
+
+                    gtag("event", "view_item", {
+                        "send_to": wooptpmDataLayer.pixels.google.ads.conversionIds,
+                        "value"  : 1 * product.price,
+                        "items"  : [{
+                            "id"                      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
+                            "google_business_vertical": wooptpmDataLayer.pixels.google.ads.google_business_vertical
+                        }]
+                    });
+                } else if (wooptpmDataLayer.shop.page_type === 'search') {
+
+                    let products = [];
+
+                    for (const [key, product] of Object.entries(wooptpmDataLayer.products)) {
+                        products.push({
+                            "id"                      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
+                            "google_business_vertical": wooptpmDataLayer.pixels.google.ads.google_business_vertical
+                        });
+                    }
+
+                    // console.log(products);
+
+                    gtag("event", "view_search_results", {
+                        "send_to": wooptpmDataLayer.pixels.google.ads.conversionIds,
+                        // "value"  : 1 * product.price,
+                        "items": products
+                    });
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        })
+    });
+
+}).catch(function () {
+    console.log('object couldn\'t be loaded');
+})

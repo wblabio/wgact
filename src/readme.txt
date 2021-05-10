@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, conversion tracking, dynamic retargeting, remarke
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 7.2
-Stable tag: 1.9.7
+Stable tag: 1.10.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,9 +103,15 @@ You can send the link to the front page of your shop too if you think it would b
 
 == Changelog ==
 
-= 1.9.7 =
+= 1.10.0 =
 
-* Tweak: Only show tha rating notice to admins of the shop.
+[//]: # fs_premium_only_begin
+* New: Facebook CAPI
+[//]: # fs_premium_only_end
+* Tweak: Only show the rating notice to admins of the shop.
+* Tweak: Added more exclusions for WP Rocket
+* Tweak: Added exclusions for WP Optimize
+* Tweak: Additional exclusions for Autoptimize
 
 = 1.9.6 =
 
