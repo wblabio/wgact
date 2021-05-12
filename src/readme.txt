@@ -1,6 +1,6 @@
 === WooCommerce Conversion Tracking by woopt ===
 Contributors: alekv, woopt, wolfbaer
-Tags: woocommerce, google ads, google analytics, facebook pixel, conversion tracking, dynamic retargeting, remarketing, adwords, pixel, facebook conversion api
+Tags: woocommerce, google ads, google analytics, facebook pixel, conversion tracking, dynamic retargeting, remarketing, pixel, facebook conversion api, woocommerce google, woocommerce facebook
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 7.2
@@ -16,7 +16,7 @@ This plugin <strong>tracks WooCommerce shop visitors and collects valuable data 
 
 While the setup is as simple as it can get, the pixel engine under the hood is very powerful. It tracks all standard events and implements all advanced pixel features like Facebook CAPI (Pro version), Google Enhanced E-Commerce, Google Shopping Cart Item Tracking and more. For advanced users the plugin offers filters which allow to tweak the output very flexibly and fine tune the behaviour to each shop.
 
-You can use it with:
+The plugin comes with integrations for:
 
 * Google Ads
 * Google Analytics (Universal and Google Analytics 4)
@@ -29,7 +29,7 @@ You can use it with:
 
 <strong>Highlights</strong>
 
-* Facebook CAPI (Pro version)
+* Facebook Conversion API (CAPI) (Pro version)
 * Google Analytics Enhanced E-Commerce (Pro version)
 * Precise measurement by preventing duplicate reporting effectively, excluding admins and shop managers from tracking, and not counting failed payments.
 * Collects dynamic remarketing audiences for dynamic retargeting (Google Ads, Facebook, etc.)
@@ -167,6 +167,8 @@ You can send the link to the front page of your shop too if you think it would b
 == Changelog ==
 
 = 1.10.1 =
+
+* New: Added a debug test to see if the server can reach the outside world with a wp_remote_get() request
 [//]: # fs_premium_only_begin
 * Tweak: Fire the Facebook CAPI event even when order goes into status on-hold. Otherwise FB complains because of delayed reporting.
 * Tweak: Added more Facebook CAPI visitor identifiers

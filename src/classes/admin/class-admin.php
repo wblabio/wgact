@@ -584,7 +584,7 @@ class Admin
     {
         $sub_section_ids = [
             'title' => esc_html__(
-                'Cooke Consent Management',
+                'Cookie Consent Management',
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ),
             'slug'  => 'cookie-consent-mgmt'

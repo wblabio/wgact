@@ -15,7 +15,8 @@ class Http
     protected $mp_purchase_hit_key;
     protected $mp_full_refund_hit_key;
     protected $mp_partial_refund_hit_key;
-    protected $hit_testing;
+    protected $logger;
+    protected $logger_context;
 
     public function __construct($options)
     {
@@ -35,39 +36,10 @@ class Http
         ];
 
         $this->post_request_args = apply_filters('wooptpm_http_post_request_args', $this->post_request_args);
+
+        $this->logger = wc_get_logger();
+        $this->logger_context = ['source' => 'wooptpm-http'];
     }
-
-    protected function full_tracking_enabled(): bool
-    {
-        $full_tracking_enabled = false;
-
-        $full_tracking_enabled = apply_filters('wooptpm_full_tracking_enabled', $full_tracking_enabled);
-
-        return $full_tracking_enabled;
-    }
-
-//    protected function send_hit($payload)
-//    {
-//        $request_url = $this->server_base_path;
-//
-////        error_log(print_r($payload, true));
-//
-//        $this->post_request_args['body'] = json_encode($payload);
-//
-//
-////        error_log(print_r($this->post_request_args['body'], true));
-//
-////        error_log('request url: ' . $request_url);
-//
-//        // if we're sending the request non-blocking we won't receive a response back
-//        if ($this->post_request_args['blocking'] === true) {
-//            $response = wp_safe_remote_post($request_url, $this->post_request_args);
-//            error_log('response code: ' . wp_remote_retrieve_response_code($response));
-//            error_log(print_r($response, true));
-//        } else {
-//            wp_safe_remote_post($request_url, $this->post_request_args);
-//        }
-//    }
 
     protected function send_hit($request_url, $payload = null)
     {
@@ -78,15 +50,22 @@ class Http
         // if we're sending the request non-blocking we won't receive a response back
         if ($this->post_request_args['blocking'] === true) {
 
-            error_log(print_r($this->post_request_args, true));
-            error_log('request url: ' . $request_url);
-            error_log(print_r($payload, true));
+//            error_log(print_r($this->post_request_args, true));
+//            error_log('request url: ' . $request_url);
+//            error_log(print_r($payload, true));
+
+            $this->logger->debug('request url: ' . $request_url, $this->logger_context);
+            $this->logger->debug('payload: ' . print_r($payload, true), $this->logger_context);
 
             $response = wp_safe_remote_post($request_url, $this->post_request_args);
 
-            error_log('hit was sent');
-            error_log('response code: ' . wp_remote_retrieve_response_code($response));
-            error_log(print_r($response, true));
+//            error_log('hit was sent');
+//            error_log('response code: ' . wp_remote_retrieve_response_code($response));
+//            error_log(print_r($response, true));
+
+            $this->logger->debug('response code: ' . wp_remote_retrieve_response_code($response), $this->logger_context);
+            $this->logger->debug('response: ' . print_r($response, true), $this->logger_context);
+
         } else {
             wp_safe_remote_post($request_url, $this->post_request_args);
         }

@@ -42,12 +42,12 @@ class Cookie_Consent_Management {
 			$cookie_prevention = true;
 		}
 
-		// check if the Cooke Notice Plugin third party cookie prevention is on
+		// check if the Cookie Notice Plugin third party cookie prevention is on
 		if ( $this->is_cookie_notice_plugin_cookie_prevention_active() ) {
 			$cookie_prevention = true;
 		}
 
-		// check if the Cooke Law Info third party cookie prevention is on
+		// check if the Cookie Law Info third party cookie prevention is on
 		if ( $this->is_cookie_law_info_cookie_prevention_active() ) {
 			$cookie_prevention = true;
 		}

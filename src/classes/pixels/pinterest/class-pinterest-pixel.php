@@ -33,11 +33,11 @@ class Pinterest_Pixel extends Pixel
             };
 
             !function(e){if(!window.pintrk){window.pintrk = function () {
-                window.pintrk.queue.push(Array.prototype.slice.call(arguments))};var
-                n=window.pintrk;n.queue=[],n.version="3.0";var
-                t=document.createElement("script");t.async=!0,t.src=e;var
-                r=document.getElementsByTagName("script")[0];
-                r.parentNode.insertBefore(t,r)}}("https://s.pinimg.com/ct/core.js");
+            window.pintrk.queue.push(Array.prototype.slice.call(arguments))};var
+            n=window.pintrk;n.queue=[],n.version="3.0";var
+            t=document.createElement("script");t.async=!0,t.src=e;var
+            r=document.getElementsByTagName("script")[0];
+            r.parentNode.insertBefore(t,r)}}("https://s.pinimg.com/ct/core.js");
             // pintrk('load', '1111111111111', {em: '<user_email_address>'});
 
             pintrk('load', '<?php echo $this->options_obj->pinterest->pixel_id ?>');
@@ -49,42 +49,22 @@ class Pinterest_Pixel extends Pixel
 
     public function inject_product_category()
     {
-        ?>
-            pintrk('track', 'viewcategory');
-        <?php
-
+        // handled on front-end
     }
 
     public function inject_search()
     {
-
-        ?>
-            pintrk('track', 'search', {
-                search_query: '<?php echo get_search_query() ?>'
-            });
-        <?php
-
+        // handled on front-end
     }
 
     public function inject_product($product, $product_attributes)
     {
-        ?>
-
-            pintrk('track', 'pagevisit');
-        <?php
+        // handled on front-end
     }
 
     public function inject_cart($cart, $cart_total)
     {
-        ?>
-
-            pintrk('track', 'addtocart', {
-                value         : <?php echo $cart_total ?>,
-                order_quantity: <?php echo count($cart) ?>,
-                currency      : '<?php echo get_woocommerce_currency() ?>'
-            });
-
-        <?php
+        // handled on front-end
     }
 
     public function inject_order_received_page($order, $order_total)

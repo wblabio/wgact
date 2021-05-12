@@ -33,6 +33,10 @@ class Debug_info
 
         $curl_available = $this->environment_check->is_curl_active() ? 'yes' : 'no';
         $html           .= 'curl available: ' . $curl_available . PHP_EOL;
+        $html           .= 'wp_remote_get to Cloudflare: ' . $this->wp_remote_get_response('https://www.cloudflare.com/cdn-cgi/trace') . PHP_EOL;
+        $html           .= 'wp_remote_get to Google Analytics API: ' . $this->wp_remote_get_response('https://www.google-analytics.com/debug/collect') . PHP_EOL;
+        $html           .= 'wp_remote_get to Facebook Graph API: ' . $this->wp_remote_get_response('https://graph.facebook.com/facebook/picture?redirect=false') . PHP_EOL;
+//        $html           .= 'wp_remote_post to Facebook Graph API: ' . $this->wp_remote_get_response('https://graph.facebook.com/') . PHP_EOL;
 
         $html .= PHP_EOL;
 
@@ -61,11 +65,11 @@ class Debug_info
         $order_received_page_url = wc_get_checkout_url() . ltrim(wc_get_endpoint_url('order-received'), '/');
         $html                    .= 'is_order_received_page(): ' . $order_received_page_url . PHP_EOL . PHP_EOL;
 
-        $last_order_url                      = $this->environment_check->get_last_order_url();
-        $html                                .= 'Last order URL: ' . $last_order_url . '&nodedupe' . PHP_EOL;
+        $last_order_url = $this->environment_check->get_last_order_url();
+        $html           .= 'Last order URL: ' . $last_order_url . '&nodedupe' . PHP_EOL;
 
         $last_order_url_contains_order_received_page_url = strpos($this->environment_check->get_last_order_url(), $order_received_page_url) !== false ? 'yes' : 'no';
-        $html .= 'Order received page uses proper is_order_received() url: ' . $last_order_url_contains_order_received_page_url . PHP_EOL;
+        $html                                            .= 'Order received page uses proper is_order_received() url: ' . $last_order_url_contains_order_received_page_url . PHP_EOL;
 
         $purchase_confirmation_page_redirect = $this->environment_check->does_url_redirect($last_order_url) ? 'yes' : 'no';
         $html                                .= $this->show_warning($this->environment_check->does_url_redirect($last_order_url)) . 'Purchase confirmation page redirect: ' . $purchase_confirmation_page_redirect . PHP_EOL;
@@ -132,6 +136,35 @@ class Debug_info
         $html .= PHP_EOL . PHP_EOL . '### End of Information ###';
 
         return $html;
+    }
+
+    // possible way to use a proxy if necessary
+    // https://freemius.com/help/documentation/wordpress-sdk/license-activation-issues/#isp_blockage
+    // https://deliciousbrains.com/php-curl-how-wordpress-makes-http-requests/
+    // possible proxy list
+    // https://www.us-proxy.org/
+    // Google and Facebook might block free proxy requests
+    private function wp_remote_get_response($url)
+    {
+        $response = wp_remote_get($url, [
+            'timeout'             => 2,
+            'sslverify'           => false,
+            'limit_response_size' => 5000,
+        ]);
+
+//        error_log(print_r($response, true));
+
+        if (is_wp_error($response)) {
+            return $this->show_warning(true) . $response->get_error_message();
+        } else {
+            $response_code = wp_remote_retrieve_response_code($response);
+
+            if ($response_code === 200) {
+                return $response_code;
+            } else {
+                return $this->show_warning(true) . $response_code;
+            }
+        }
     }
 
     private function show_warning($test = false): string

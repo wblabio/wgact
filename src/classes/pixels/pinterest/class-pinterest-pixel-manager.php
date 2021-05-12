@@ -17,6 +17,13 @@ class Pinterest_Pixel_Manager extends Pixel_Manager_Base
         parent::__construct($options);
 
         $this->pinterest_pixel = new Pinterest_Pixel($options);
+
+        add_action('wp_enqueue_scripts', [$this, 'wooptpm_pinterest_front_end_scripts__premium_only']);
+    }
+
+    public function wooptpm_pinterest_front_end_scripts__premium_only()
+    {
+        wp_enqueue_script('wooptpm-pinterest-premium-only', plugin_dir_url(__DIR__) . '../../js/public/pinterest__premium_only.js', ['jquery', 'wooptpm'], WGACT_CURRENT_VERSION, true);
     }
 
     public function inject_everywhere()

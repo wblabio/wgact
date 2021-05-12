@@ -21,6 +21,7 @@ class Facebook_CAPI extends Http
     protected $pixel_name;
     protected $request_url;
     protected $opt_out;
+    protected $purchase_logging;
 
     public function __construct($options)
     {
@@ -51,6 +52,9 @@ class Facebook_CAPI extends Http
         $this->post_request_args['headers']  = [
             'Content-Type' => 'application/json; charset=utf-8',
         ];
+
+        $this->purchase_logging = apply_filters('wooptpm_facebook_capi_purchase_logging', false);
+        $this->logger_context   = ['source' => 'wooptpm-facebook-capi'];
 
         add_action('wp_ajax_wooptpm_facebook_set_session_identifiers', [$this, 'wooptpm_facebook_set_session_identifiers']);
         add_action('wp_ajax_nopriv_wooptpm_facebook_set_session_identifiers', [$this, 'wooptpm_facebook_set_session_identifiers']);
@@ -133,10 +137,21 @@ class Facebook_CAPI extends Http
 //        error_log('payload');
 //        error_log(print_r($payload, true));
 
+        if ($this->purchase_logging) {
+
+            $this->logger->info('Facebook CAPI hit on order ' . $order->get_id() . ': start', $this->logger_context);
+
+            $this->post_request_args['blocking'] = true;
+        }
+
         $this->send_hit($this->request_url, $payload);
 
         // Now we let the server know, that the hit has already been successfully sent.
         update_post_meta($order->get_id(), $this->capi_purchase_hit_key, true);
+
+        if ($this->purchase_logging) {
+            $this->logger->info('Facebook CAPI hit on order ' . $order->get_id() . ': end', $this->logger_context);
+        }
     }
 
     public function send_event_hit($browser_event_data)
@@ -254,7 +269,7 @@ class Facebook_CAPI extends Http
                     $user_data['em'] = hash('sha256', $order->get_billing_email());
                     if ($order->get_billing_phone()) $user_data['ph'] = hash('sha256', $order->get_billing_phone());
                     if ($order->get_billing_first_name()) $user_data['fn'] = hash('sha256', $order->get_billing_first_name());
-                    if ($order->get_billing_last_name())$user_data['ln'] = hash('sha256', $order->get_billing_last_name());
+                    if ($order->get_billing_last_name()) $user_data['ln'] = hash('sha256', $order->get_billing_last_name());
                     if ($order->get_billing_city()) $user_data['ct'] = hash('sha256', $order->get_billing_city());
                     if ($order->get_billing_state()) $user_data['st'] = hash('sha256', $order->get_billing_state());
                     if ($order->get_billing_postcode()) $user_data['zp'] = hash('sha256', $order->get_billing_postcode());

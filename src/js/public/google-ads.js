@@ -52,27 +52,6 @@ varExists('jQuery').then(function () {
                 });
             });
 
-            // select_content
-            // there is no select_content event that is processed by Google Ads: https://support.google.com/google-ads/answer/7305793?hl=en
-            // jQuery(document).on('wooptpmSelectContentGaUa', function (event, product) {
-            //
-            //     // console.log('firing google ads select_content event');
-            //     // console.log('firing google ads select_content event');
-            //     // console.log(product);
-            //
-            //     gtag("event", "select_content", {
-            //         "send_to"     : wooptpmDataLayer.pixels.google.ads.conversionIds,
-            //         "content_type": "product",
-            //         "items"       : [{
-            //                 "id"                      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
-            //                 "quantity"                : product.quantity,
-            //                 "name"                    : product.name,
-            //                 "price"                   : product.price,
-            //                 'google_business_vertical': wooptpmDataLayer.pixels.google.ads.google_business_vertical
-            //             }]
-            //     });
-            // });
-
             // view_item event
             jQuery(document).on('wooptpmViewItem', function (event, product) {
 
