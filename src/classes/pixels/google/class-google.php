@@ -23,7 +23,8 @@ class Google extends Pixel
 
         $this->google_ads_conversion_identifiers[$this->conversion_id] = $this->conversion_label;
 
-        $this->google_ads_conversion_identifiers = apply_filters('wgact_google_ads_conversion_identifiers', $this->google_ads_conversion_identifiers);
+        $this->google_ads_conversion_identifiers = apply_filters_deprecated('wgact_google_ads_conversion_identifiers', [$this->google_ads_conversion_identifiers], '1.10.2', 'wooptpm_google_ads_conversion_identifiers');
+        $this->google_ads_conversion_identifiers = apply_filters('wooptpm_google_ads_conversion_identifiers', $this->google_ads_conversion_identifiers);
 
         $this->pixel_name = 'google_ads';
     }
@@ -175,8 +176,8 @@ class Google extends Pixel
             array_push($order_items_array, $item_details_array);
         }
 
-        // apply filter to the $order_items_array array
-        $order_items_array = apply_filters('wgact_filter', $order_items_array, 'order_items_array');
+        // apply filter to $order_items_array
+        $order_items_array = apply_filters_deprecated('wgact_filter', [$order_items_array], '1.10.2');
 
         return $order_items_array;
     }

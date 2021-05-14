@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, google analytics, facebook pixel, conversion trac
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 7.2
-Stable tag: 1.10.1
+Stable tag: 1.10.2-beta.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,12 +20,12 @@ The plugin comes with integrations for:
 
 * Google Ads
 * Google Analytics (Universal and Google Analytics 4)
-* Facebook
+* Facebook Ads
 * Google Optimize
 * HotJar
 * Microsoft Ads (Pro version)
-* Twitter (Pro version)
-* Pinterest (Pro version)
+* Twitter Ads (Pro version)
+* Pinterest Ads (Pro version)
 
 <strong>Highlights</strong>
 
@@ -62,8 +62,8 @@ Have a look at the full feature list over [here](https://docs.woopt.com/wgact/#/
 * Google Consent Mode
 * Google Dynamic Remarketing Choice for all Business Verticals
 * Microsoft Advertising Pixel with Purchase and all Remarketing Events
-* Twitter Pixel with Purchase and all Remarketing Events
-* Pinterest Pixel with Purchase and all Remarketing Events
+* Twitter Ads Pixel with Purchase and all Remarketing Events
+* Pinterest Ads Pixel with Purchase and all Remarketing Events
 * Advanced Order Deduplication
 
 Have a look at the full feature list over [here](https://docs.woopt.com/wgact/#/features?id=available-features).
@@ -165,6 +165,10 @@ You can send the link to the front page of your shop too if you think it would b
 1. Settings page
 
 == Changelog ==
+
+= 1.10.2 =
+
+* Tweak: Renamed and deprecated several old filters
 
 = 1.10.1 =
 

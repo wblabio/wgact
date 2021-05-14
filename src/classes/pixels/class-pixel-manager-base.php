@@ -120,7 +120,9 @@ class Pixel_Manager_Base
                     $order_total = 0 == $this->options_obj->shop->order_total_logic ? $order->get_subtotal() - $order->get_total_discount() : $order->get_total();
 
                     // filter to adjust the order value
-                    $order_total = apply_filters('wgact_conversion_value_filter', $order_total, $order);
+                    $order_total = apply_filters_deprecated('wgact_conversion_value_filter', [$order_total, $order], '1.10.2', 'wooptpm_conversion_value_filter');
+
+                    $order_total = apply_filters('wooptpm_conversion_value_filter', $order_total, $order);
 
                     $this->inject_order_received_page($order, $order_total, $is_new_customer);
                 }
@@ -150,7 +152,8 @@ class Pixel_Manager_Base
     protected function can_order_confirmation_be_processed($order): bool
     {
         $conversion_prevention = false;
-        $conversion_prevention = apply_filters('wgact_conversion_prevention', $conversion_prevention, $order);
+        $conversion_prevention = apply_filters_deprecated('wgact_conversion_prevention', [$conversion_prevention, $order], '1.10.2', 'wooptpm_conversion_prevention');
+        $conversion_prevention = apply_filters('wooptpm_conversion_prevention', $conversion_prevention, $order);
 
 //        error_log('conversion_prevention: ' . $conversion_prevention);
 //        error_log('$this->is_nodedupe_parameter_set(): ' . $this->is_nodedupe_parameter_set());

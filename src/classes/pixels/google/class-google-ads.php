@@ -153,7 +153,7 @@ class Google_Ads extends Google
         }
 
         // apply filter to the $cartprods_items array
-        $cart_items = apply_filters('wgact_filter', $cart_items, 'cart_items');
+        $cart_items = apply_filters_deprecated('wgact_filter', [$cart_items], '1.10.2');
 
         return $cart_items;
     }
