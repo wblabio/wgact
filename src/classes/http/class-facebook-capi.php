@@ -130,7 +130,7 @@ class Facebook_CAPI extends Http
         ];
 
         if ($this->test_event_code) {
-            error_log('Facebook CAPI test event code enabled');
+//            error_log('Facebook CAPI test event code enabled');
             $payload['test_event_code'] = $this->test_event_code;
         }
 
@@ -203,7 +203,7 @@ class Facebook_CAPI extends Http
         ];
 
         if ($this->test_event_code) {
-            error_log('Facebook CAPI test event code enabled');
+//            error_log('Facebook CAPI test event code enabled');
             $payload['test_event_code'] = $this->test_event_code;
         }
 
@@ -263,7 +263,8 @@ class Facebook_CAPI extends Http
 
                 if ($order) {
                     // set user_id
-                    $user_data['external_id'] = hash('sha256', $order->get_user_id());
+                    // must be sent by the browser simultaneously
+//                    $user_data['external_id'] = hash('sha256', get_current_user_id());
 
                     // set em (email)
                     $user_data['em'] = hash('sha256', $order->get_billing_email());
@@ -278,7 +279,8 @@ class Facebook_CAPI extends Http
                 } else if (get_current_user_id() !== 0) {
 
                     // set user_id
-                    $user_data['external_id'] = hash('sha256', get_current_user_id());
+                    // must be sent by the browser simultaneously
+//                    $user_data['external_id'] = hash('sha256', get_current_user_id());
 
                     $wp_user_info = get_userdata(get_current_user_id());
 
@@ -337,6 +339,10 @@ class Facebook_CAPI extends Http
 //        error_log('echo facebook identifiers');
 //        error_log(print_r($facebook_identifiers, true));
 
+        if ( ! WC()->session->has_session() ) {
+            WC()->session->set_customer_session_cookie( true );
+        }
+
         WC()->session->set($this->facebook_key, $facebook_identifiers);
 
         wp_die(); // this is required to terminate immediately and return a proper response
@@ -392,7 +398,24 @@ class Facebook_CAPI extends Http
 //            update_post_meta($order->get_id(), $this->fbc_key, $fbc);
 //        }
 
-        $facebook_identifiers = WC()->session->get($this->facebook_key);
+        if (WC()->session->get($this->facebook_key)) {
+            $facebook_identifiers = WC()->session->get($this->facebook_key);
+        } else if (isset($_COOKIE['_fbp'])) {
+
+            // load random identifiers as fallback
+            $facebook_identifiers = $this->get_random_base_identifiers();
+
+            $facebook_identifiers['fbp'] = $_COOKIE['_fbp'];
+            if ($_COOKIE['_fbc']) $facebook_identifiers['fbc'] = $_COOKIE['_fbc'];
+            if ($_SERVER['HTTP_USER_AGENT']) $facebook_identifiers['client_user_agent'] = $_COOKIE['HTTP_USER_AGENT'];
+
+            $this->logger->debug('Couldn\'t retrieve identifiers from session, but was able to get them directly from browser.', $this->logger_context);
+        } else {
+
+            $facebook_identifiers = $this->get_random_base_identifiers();
+
+            $this->logger->debug('Couldn\'t retrieve identifiers from session and save them on order. Random identifiers have been set.', $this->logger_context);
+        }
 
         $facebook_identifiers['event_time'] = (int)time();
 
@@ -406,13 +429,25 @@ class Facebook_CAPI extends Http
     {
         $facebook_identifiers = get_post_meta($order->get_id(), $this->facebook_key, true);
 
+        if (is_array($facebook_identifiers)) {
+            return $facebook_identifiers;
+        } else {
+            return $this->get_random_base_identifiers();
+        }
+
 //        error_log('echo facebook identifiers');
 //        error_log(print_r($facebook_identifiers, true));
 //        error_log('fbp from server: ' . $facebook_identifiers['fbp']);
 
-        return $facebook_identifiers;
-
 //        return get_post_meta($order->get_id(), $this->facebook_key);
+    }
+
+    protected function get_random_base_identifiers(): array
+    {
+        return [
+            'client_user_agent' => (new User_Agent())->get_random_user_agent(),
+            'event_time'        => (int)time(),
+        ];
     }
 
     // Facebook suggests to user their SDK to generate the random fbp

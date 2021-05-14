@@ -37,7 +37,7 @@ class Http
 
         $this->post_request_args = apply_filters('wooptpm_http_post_request_args', $this->post_request_args);
 
-        $this->logger = wc_get_logger();
+        $this->logger         = wc_get_logger();
         $this->logger_context = ['source' => 'wooptpm-http'];
     }
 
@@ -54,17 +54,20 @@ class Http
 //            error_log('request url: ' . $request_url);
 //            error_log(print_r($payload, true));
 
-            $this->logger->debug('request url: ' . $request_url, $this->logger_context);
-            $this->logger->debug('payload: ' . print_r($payload, true), $this->logger_context);
-
             $response = wp_safe_remote_post($request_url, $this->post_request_args);
 
 //            error_log('hit was sent');
 //            error_log('response code: ' . wp_remote_retrieve_response_code($response));
 //            error_log(print_r($response, true));
 
+            if (is_wp_error($response)) {
+                $this->logger->debug('response error message: ' . $response->get_error_message(), $this->logger_context);
+                $this->logger->debug('request url: ' . $request_url, $this->logger_context);
+                $this->logger->debug('payload: ' . print_r($payload, true), $this->logger_context);
+                $this->logger->debug('response: ' . print_r($response, true), $this->logger_context);
+            }
+
             $this->logger->debug('response code: ' . wp_remote_retrieve_response_code($response), $this->logger_context);
-            $this->logger->debug('response: ' . print_r($response, true), $this->logger_context);
 
         } else {
             wp_safe_remote_post($request_url, $this->post_request_args);

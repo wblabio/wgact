@@ -471,6 +471,9 @@ class Pixel_Manager extends Pixel_Manager_Base
         }
 
         $data['currency'] = get_woocommerce_currency();
+        $data['mini_cart'] = [
+                'track' => apply_filters('wooptpm_track_mini_cart', true),
+        ];
         ?>
 
         <script>

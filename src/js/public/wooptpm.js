@@ -273,6 +273,8 @@ varExists('jQuery').then(function () {
         wooptpm.getCartItemsFromBackEnd = function () {
             // get all cart items from the backend
 
+            // console.log('get cart items');
+
             try {
                 let data = {
                     'action': 'wooptpm_get_cart_items',
@@ -902,7 +904,9 @@ varExists('jQuery').then(function () {
         // console.log('getting cart');
 
         try {
-            wooptpm.getCartItemsFromBackEnd();
+            if (wooptpmDataLayer.shop.page_type === 'cart' || wooptpmDataLayer.shop.mini_cart.track === true) {
+                wooptpm.getCartItemsFromBackEnd();
+            }
         } catch (e) {
             console.log(e);
         }

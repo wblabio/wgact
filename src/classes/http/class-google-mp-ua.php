@@ -55,8 +55,8 @@ class Google_MP_UA extends Google_MP
 
     public function send_purchase_hit($order, $cid = null)
     {
-        // only run, if the hit has not been sent already (check in db)
-        if (get_post_meta($order->get_id(), $this->mp_purchase_hit_key)) {
+        // only approve, if several conditions are met
+        if ($this->approve_purchase_hit_processing($order, $cid) === false) {
             return;
         }
 
@@ -190,7 +190,7 @@ class Google_MP_UA extends Google_MP
         update_post_meta($order->get_id(), $this->mp_partial_refund_hit_key . '_' . $refund_id, true);
     }
 
-    protected function compile_request_url($payload)
+    protected function compile_request_url($payload): string
     {
         // set the locale to avoid issues on a subset of shops
         // https://www.php.net/manual/en/function.http-build-query.php#123906

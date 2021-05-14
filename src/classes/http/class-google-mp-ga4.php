@@ -67,8 +67,11 @@ class Google_MP_GA4 extends Google_MP
 
 //        error_log('processing GA 4 Measurement Protocol purchase hit');
 
-        // only run, if the hit has not been sent already (check in db)
-        if (get_post_meta($order->get_id(), $this->mp_purchase_hit_key)) {
+        // Only run, if the hit has not been sent already (check in db)
+        // Also run it on subscription renewals,
+        // but not on orders before premium activation (orders missing a cid)
+
+        if ($this->approve_purchase_hit_processing($order, $cid) === false) {
             return;
         }
 

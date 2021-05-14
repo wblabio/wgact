@@ -31,8 +31,8 @@ class Google_MP extends Http
 
     public function wooptpm_google_analytics_set_session_cid()
     {
-        if ( ! check_ajax_referer( 'wooptpm-google-premium-only-nonce', 'nonce', false ) ) {
-            wp_send_json_error( 'Invalid security token sent.' );
+        if (!check_ajax_referer('wooptpm-google-premium-only-nonce', 'nonce', false)) {
+            wp_send_json_error('Invalid security token sent.');
             error_log('Invalid security token sent.');
             wp_die();
         }
@@ -43,6 +43,10 @@ class Google_MP extends Http
 //        error_log('target_id: ' . $target_id);
 //        error_log('client_id: ' . $client_id);
 
+        if ( ! WC()->session->has_session() ) {
+            WC()->session->set_customer_session_cookie( true );
+        }
+
         WC()->session->set('google_cid_' . $target_id, $client_id);
 
         wp_die(); // this is required to terminate immediately and return a proper response
@@ -51,7 +55,13 @@ class Google_MP extends Http
     public function set_cid_on_order($order)
     {
         // Get the cid if the client provides one, if not generate an anonymous one
-        $this->cid = $this->get_cid_from_session();
+        if ($this->get_cid_from_session()) {
+            $this->cid = $this->get_cid_from_session();
+        } else if ($_COOKIE['_ga']){
+            $this->cid = substr($_COOKIE['_ga'], 6);
+        } else {
+            $this->cid = $this->get_random_cid();
+        }
 
         update_post_meta($order->get_id(), $this->cid_key, $this->cid);
     }
@@ -66,6 +76,36 @@ class Google_MP extends Http
         } else {
 //            error_log('cid not found. Returning random');
             return $this->get_random_cid();
+        }
+    }
+
+    public function is_cid_set_on_order($order): bool
+    {
+        $cid = get_post_meta($order->get_id(), $this->cid_key, true);
+
+        if ($cid) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    protected function approve_purchase_hit_processing($order, $cid): bool
+    {
+        // Only approve, if the hit has not been sent already (check in db)
+        // Also approve subscription renewals (cid is missing),
+        // but don't approve normal orders before premium activation where the cid is missing
+
+        if (
+            get_post_meta($order->get_id(), $this->mp_purchase_hit_key) ||
+            (
+                $cid === null &&
+                $this->is_cid_set_on_order($order) === false
+            )
+        ) {
+            return false;
+        } else {
+            return true;
         }
     }
 

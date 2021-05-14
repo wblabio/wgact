@@ -204,7 +204,7 @@ class Environment_Check
             add_filter('autoptimize_filter_js_dontmove', [$this, 'autoptimize_filter_js_dontmove']);
         }
 
-        if($this->is_wp_optimize_active()){
+        if ($this->is_wp_optimize_active()) {
             // add_filter('wpo_minify_inline_js', '__return_false');
             add_filter('wp-optimize-minify-default-exclusions', [$this, 'wp_optimize_minify_default_exclusions']);
         }
@@ -373,12 +373,12 @@ class Environment_Check
             'window.wooptpmDataLayer',
             'wooptpm.js',
             'wooptpm__premiums_only.js',
-//            'facebook.js',
-//            'facebook__premium_only.js',
-//            'google-ads.js',
-//            'google-ga-4-eec__premium_only.js',
-//            'google-ga-us-eec__premium_only.js',
-//            'google__premium_only.js',
+            //            'facebook.js',
+            //            'facebook__premium_only.js',
+            //            'google-ads.js',
+            //            'google-ga-4-eec__premium_only.js',
+            //            'google-ga-us-eec__premium_only.js',
+            //            'google__premium_only.js',
             'window.dataLayer',
             //            '/gtag/js',
             'gtag',
@@ -419,7 +419,11 @@ class Environment_Check
         $headers = get_headers($url, 1);
 
         if (!empty($headers['Location'])) {
-            return $headers['Location'];
+            if (is_array($headers['Location'])) {
+                return end($headers['Location']);
+            } else {
+                return $headers['Location'];
+            }
         } else {
             return '';
         }

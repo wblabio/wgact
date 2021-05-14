@@ -4,11 +4,11 @@ Tags: woocommerce, google ads, google analytics, facebook pixel, conversion trac
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 7.2
-Stable tag: 1.10.1-beta.2
+Stable tag: 1.10.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Track visitors and conversions in Google Ads, Google Analytics, Facebook (CAPI) and more !
+Track visitors and conversions in Google Ads, Google Analytics, Facebook (Conversion API) and more !
 
 == Description ==
 
@@ -172,8 +172,11 @@ You can send the link to the front page of your shop too if you think it would b
 [//]: # fs_premium_only_begin
 * Tweak: Fire the Facebook CAPI event even when order goes into status on-hold. Otherwise FB complains because of delayed reporting.
 * Tweak: Added more Facebook CAPI visitor identifiers
+* Tweak: Added filter to disable mini cart tracking
 [//]: # fs_premium_only_end
+* Tweak: Added better fallback for cookie retrievals if cookies can't be saved in the session
 * Fix: Fire view_item event on products that are out of stock
+* Fix: In case the redirect check returns an array of redirects, we return the last array member.
 
 = 1.10.0 =
 
