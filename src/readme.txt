@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, google analytics, facebook pixel, conversion trac
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 7.2
-Stable tag: 1.10.2-beta.1
+Stable tag: 1.10.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -166,9 +166,17 @@ You can send the link to the front page of your shop too if you think it would b
 
 == Changelog ==
 
+= 1.10.3 =
+
+* Tweak: Switch to use different hook on product pages to output main product data
+
 = 1.10.2 =
 
 * Tweak: Renamed and deprecated several old filters
+[//]: # fs_premium_only_begin
+* Fix: Removed unnecessary function call from pinterest__premium_only.js
+[//]: # fs_premium_only_end
+
 
 = 1.10.1 =
 

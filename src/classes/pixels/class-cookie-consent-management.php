@@ -35,7 +35,8 @@ class Cookie_Consent_Management {
 		// use filter to set default to activate prevention
 		// add_filter( 'wgact_cookie_prevention', '__return_true' );
 		// later, turn it off in order to allow cookies in case they have been actively approved
-		$cookie_prevention = apply_filters( $this->pluginPrefix . 'cookie_prevention', $cookie_prevention );
+        $cookie_prevention = apply_filters_deprecated( 'wgact_cookie_prevention', [$cookie_prevention], '1.10.4', 'wooptpm_cookie_prevention' );
+        $cookie_prevention = apply_filters( 'wooptpm_cookie_prevention', $cookie_prevention );
 
 		// check if the Moove third party cookie prevention is on
 		if ( $this->is_moove_cookie_prevention_active() ) {

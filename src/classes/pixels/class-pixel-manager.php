@@ -127,7 +127,19 @@ class Pixel_Manager extends Pixel_Manager_Base
 
         add_action('woocommerce_after_shop_loop_item', [$this, 'action_woocommerce_after_shop_loop_item'], 10, 1);
         add_filter('woocommerce_blocks_product_grid_item_html', [$this, 'wc_add_date_to_gutenberg_block'], 10, 3);
-        add_filter('woocommerce_after_single_product_summary', [$this, 'woocommerce_inject_product_data_on_product_page']);
+
+        // Most of the following actions don't pass the unit tests.
+        // Actions on the add-to-cart form work quite well, but fail on out-of-stock products
+//        add_action('woocommerce_before_main_content', [$this, 'woocommerce_inject_product_data_on_product_page']); // Unit tests fail
+//        add_action('woocommerce_before_single_product', [$this, 'woocommerce_inject_product_data_on_product_page']); // Unit tests fail
+//        add_action('woocommerce_before_single_product_summary', [$this, 'woocommerce_inject_product_data_on_product_page']); // Unit tests fail
+//        add_action('woocommerce_product_thumbnails', [$this, 'woocommerce_inject_product_data_on_product_page']); // Unit tests fail
+//        add_action('woocommerce_single_product_summary', [$this, 'woocommerce_inject_product_data_on_product_page']); // Unit tests fail
+//        add_action('woocommerce_after_single_product_summary', [$this, 'woocommerce_inject_product_data_on_product_page']); // doesn't work on one client shop
+//        add_action('woocommerce_after_add_to_cart_button', [$this, 'woocommerce_inject_product_data_on_product_page']); // doesn't work on out of stock products
+        add_action('woocommerce_after_add_to_cart_form', [$this, 'woocommerce_inject_product_data_on_product_page']); // doesn't work on out of stock products
+//        add_action('woocommerce_after_single_product', [$this, 'woocommerce_inject_product_data_on_product_page']); // works
+        add_action('woocommerce_after_main_content', [$this, 'woocommerce_inject_product_data_on_product_page']);     // works
     }
 
     // on product page
@@ -470,9 +482,9 @@ class Pixel_Manager extends Pixel_Manager_Base
             $data['page_type'] = '';
         }
 
-        $data['currency'] = get_woocommerce_currency();
+        $data['currency']  = get_woocommerce_currency();
         $data['mini_cart'] = [
-                'track' => apply_filters('wooptpm_track_mini_cart', true),
+            'track' => apply_filters('wooptpm_track_mini_cart', true),
         ];
         ?>
 
