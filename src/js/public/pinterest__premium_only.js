@@ -42,8 +42,6 @@ varExists('jQuery').then(function () {
 
         if (wooptpm.objectExists(wooptpmDataLayer.pixels.pinterest)) {
 
-            wooptpm.setFbUserData();
-
             wooptpmExists().then(function () {
 
                 try {

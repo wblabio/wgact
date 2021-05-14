@@ -177,7 +177,7 @@ class Google extends Pixel
         }
 
         // apply filter to $order_items_array
-        $order_items_array = apply_filters_deprecated('wgact_filter', [$order_items_array], '1.10.2');
+        $order_items_array = apply_filters_deprecated('wgact_filter', [$order_items_array], '1.10.2', '', 'This filter has been deprecated without replacement.');
 
         return $order_items_array;
     }

@@ -66,7 +66,7 @@ trait Trait_Product
             }
 
             // apply filter to the $prod_cats_output array
-            $prod_cats_output = apply_filters_deprecated('wgact_filter', [$prod_cats_output], '1.10.2');
+            $prod_cats_output = apply_filters_deprecated('wgact_filter', [$prod_cats_output], '1.10.2', '', 'This filter has been deprecated without replacement.');
         }
 
         return $prod_cats_output;
