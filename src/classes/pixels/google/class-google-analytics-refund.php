@@ -52,35 +52,41 @@ class Google_Analytics_Refund extends Google_Analytics
 
                     $product = new WC_Product($refund_item->get_product_id());
 
-                    $dyn_r_ids = $this->get_dyn_r_ids($product);
+                    if (is_object($product)) {
 
-                    $dataLayer_refund_items_ga_ua[] = [
-                        'id'       => (string)$dyn_r_ids[$this->get_ga_id_type()],
-                        'name'     => (string)$refund_item->get_name(),
-                        'brand'    => (string)$this->get_brand_name($refund_item->get_product_id()),
-                        'category' => (array)$this->get_product_category($refund_item->get_product_id()),
-                        //                        'coupon'        => '',
-                        //                        'list_name' => '',
-                        //                        'list_position' => 0,
-                        'price'    => (float)$product->get_price(),
-                        'quantity' => -1 * (int)$refund_item->get_quantity(),
-                        //                        'variant'  => '',
-                    ];
+                        $dyn_r_ids = $this->get_dyn_r_ids($product);
 
-                    $dataLayer_refund_items_ga_4[] = [
-                        'item_id'       => (string)$dyn_r_ids[$this->get_ga_id_type()],
-                        'item_name'     => (string)$refund_item->get_name(),
-                        'quantity'      => -1 * (int)$refund_item->get_quantity(),
-                        //                        'affiliation'   => '',
-                        //                        'coupon'        => '',
-                        //                        'discount'      => 0,
-                        'item_brand'    => (string)$this->get_brand_name($refund_item->get_product_id()),
-                        'item_category' => (array)$this->get_product_category($refund_item->get_product_id()),
-                        //                        'item_variant'  => '',
-                        //                        'tax'           => 0,
-                        'price'         => (float)$product->get_price(),
-                        //                        'currency'      => '',
-                    ];
+                        $dataLayer_refund_items_ga_ua[] = [
+                            'id'       => (string)$dyn_r_ids[$this->get_ga_id_type()],
+                            'name'     => (string)$refund_item->get_name(),
+                            'brand'    => (string)$this->get_brand_name($refund_item->get_product_id()),
+                            'category' => (array)$this->get_product_category($refund_item->get_product_id()),
+                            //                        'coupon'        => '',
+                            //                        'list_name' => '',
+                            //                        'list_position' => 0,
+                            'price'    => (float)$product->get_price(),
+                            'quantity' => -1 * (int)$refund_item->get_quantity(),
+                            //                        'variant'  => '',
+                        ];
+
+                        $dataLayer_refund_items_ga_4[] = [
+                            'item_id'       => (string)$dyn_r_ids[$this->get_ga_id_type()],
+                            'item_name'     => (string)$refund_item->get_name(),
+                            'quantity'      => -1 * (int)$refund_item->get_quantity(),
+                            //                        'affiliation'   => '',
+                            //                        'coupon'        => '',
+                            //                        'discount'      => 0,
+                            'item_brand'    => (string)$this->get_brand_name($refund_item->get_product_id()),
+                            'item_category' => (array)$this->get_product_category($refund_item->get_product_id()),
+                            //                        'item_variant'  => '',
+                            //                        'tax'           => 0,
+                            'price'         => (float)$product->get_price(),
+                            //                        'currency'      => '',
+                        ];
+                    } else {
+
+                        $this->log_problematic_product_id($refund_item->get_product_id());
+                    }
                 }
 
 //                (new Google_Analytics_Refund_UA())->output_refund_to_frontend($order, $refund, $dataLayer_refund_items_ga_ua);

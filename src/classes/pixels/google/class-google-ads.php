@@ -57,10 +57,10 @@ class Google_Ads extends Google
             if ($this->options_obj->google->ads->conversion_label): ?>
 
                 gtag('event', 'conversion', {
-                    'send_to'       : <?php echo json_encode($this->get_google_ads_conversion_ids(true)) ?>,
-                    'value'         : <?php echo $order_total; ?>,
-                    'currency'      : '<?php echo $order_currency; ?>',
-                    'transaction_id': '<?php echo $order->get_order_number(); ?>',
+                'send_to'       : <?php echo json_encode($this->get_google_ads_conversion_ids(true)) ?>,
+                'value'         : <?php echo $order_total; ?>,
+                'currency'      : '<?php echo $order_currency; ?>',
+                'transaction_id': '<?php echo $order->get_order_number(); ?>',
                 });
             <?php
             endif; ?>
@@ -74,7 +74,7 @@ class Google_Ads extends Google
         if ($this->add_cart_data == true && $this->conversion_id && $this->conversion_label) {
             ?>
 
-                gtag('event', 'purchase', <?php echo $this->get_event_purchase_json($order, $order_total, $order_currency, $is_new_customer, 'ads') ?>);
+            gtag('event', 'purchase', <?php echo $this->get_event_purchase_json($order, $order_total, $order_currency, $is_new_customer, 'ads') ?>);
             <?php
         }
     }
@@ -96,7 +96,7 @@ class Google_Ads extends Google
                 $product = wc_get_product($post->ID);
 
                 // only continue if WC retrieves a valid product
-                if (!is_bool($product)) {
+                if (is_object($product)) {
 
                     $dyn_r_ids = $this->get_dyn_r_ids($product);
 
@@ -104,6 +104,9 @@ class Google_Ads extends Google
                     $item_details['google_business_vertical'] = $this->google_business_vertical;
 
                     array_push($items, $item_details);
+                } else {
+
+                    $this->log_problematic_product_id($post->ID);
                 }
             }
         }
@@ -115,16 +118,22 @@ class Google_Ads extends Google
     {
         $product = wc_get_product($product_id);
 
-        $dyn_r_ids = $this->get_dyn_r_ids($product);
+        if (is_object($product)) {
 
-        $product_details['id']       = $dyn_r_ids[$this->get_dyn_r_id_type()];
-        $product_details['category'] = $this->get_product_category($product_id);
-        // $product_details['list_position'] = 1;
-        $product_details['quantity']                 = 1;
-        $product_details['price']                    = (float)$product->get_price();
-        $product_details['google_business_vertical'] = $this->google_business_vertical;
+            $dyn_r_ids = $this->get_dyn_r_ids($product);
 
-        return $product_details;
+            $product_details['id']       = $dyn_r_ids[$this->get_dyn_r_id_type()];
+            $product_details['category'] = $this->get_product_category($product_id);
+            // $product_details['list_position'] = 1;
+            $product_details['quantity']                 = 1;
+            $product_details['price']                    = (float)$product->get_price();
+            $product_details['google_business_vertical'] = $this->google_business_vertical;
+
+            return $product_details;
+        } else {
+
+            $this->log_problematic_product_id($product_id);
+        }
     }
 
     // get an array with all cart product ids
@@ -142,14 +151,20 @@ class Google_Ads extends Google
 //            error_log('id: ' . $product_id);
             $product = wc_get_product($product_id);
 
-            $dyn_r_ids = $this->get_dyn_r_ids($product);
+            if (is_object($product)) {
 
-            $item_details['id']                       = $dyn_r_ids[$this->get_dyn_r_id_type()];
-            $item_details['quantity']                 = (int)$cart_item['quantity'];
-            $item_details['price']                    = (int)$product->get_price();
-            $item_details['google_business_vertical'] = $this->google_business_vertical;
+                $dyn_r_ids = $this->get_dyn_r_ids($product);
 
-            array_push($cart_items, $item_details);
+                $item_details['id']                       = $dyn_r_ids[$this->get_dyn_r_id_type()];
+                $item_details['quantity']                 = (int)$cart_item['quantity'];
+                $item_details['price']                    = (int)$product->get_price();
+                $item_details['google_business_vertical'] = $this->google_business_vertical;
+
+                array_push($cart_items, $item_details);
+            } else {
+
+                $this->log_problematic_product_id($product_id);
+            }
         }
 
         // apply filter to the $cartprods_items array

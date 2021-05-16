@@ -78,7 +78,7 @@ describe('Google Analytics eec events', () => {
         cy.visit('/product/album/')
 
         // wait in order for the add_to_cart events to register
-        cy.wait(400)
+        cy.wait(800)
 
         // cy.intercept('POST', 'https://wordpress-deployment.test/?wc-ajax=get_refreshed_fragments').as('atc')
 

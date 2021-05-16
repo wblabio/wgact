@@ -101,7 +101,6 @@ varExists('jQuery').then(function () {
             jQuery(document).on('wooptpmSelectContentGaUa', function (event, product) {
 
                 // console.log('firing google select_content event');
-                // console.log('firing google select_content event');
                 // console.log(product);
 
                 gtag('event', 'select_content', {

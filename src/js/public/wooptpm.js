@@ -20,6 +20,54 @@ varExists('jQuery').then(function () {
             cookieExpiresDays: 365
         };
 
+        const wooptpmRestSettings = {
+            cookiesAvailable                  : '_wooptpm_cookies_are_available',
+            cookieWooptpmRestEndpointAvailable: '_wooptpm_endpoint_available',
+            restEndpoint                      : '/wp-json/',
+            restFailsThreshold                : 10,
+        }
+
+        wooptpm.checkIfCookiesAvailable = function () {
+
+            // read the cookie if previously set, if it is return true, otherwise continue
+            if (Cookies.get(wooptpmRestSettings.cookiesAvailable)) {
+                return true;
+            }
+
+            // set the cookie for the session
+            Cookies.set(wooptpmRestSettings.cookiesAvailable, true);
+
+            // read cookie, true if ok, false if not ok
+            return !!Cookies.get(wooptpmRestSettings.cookiesAvailable);
+        }
+
+        wooptpm.testEndpoint = function (
+            url        = location.protocol + "//" + location.host + wooptpmRestSettings.restEndpoint,
+            cookieName = wooptpmRestSettings.cookieWooptpmRestEndpointAvailable
+        ) {
+
+            jQuery.ajax(url, {
+                type      : "HEAD",
+                timeout   : 1000,
+                statusCode: {
+                    200: function (response) {
+                        Cookies.set(cookieName, true);
+                    },
+                    404: function (response) {
+                        Cookies.set(cookieName, false);
+                    },
+                    0  : function (response) {
+                        Cookies.set(cookieName, false);
+                    }
+                }
+            });
+        }
+
+        wooptpm.isWooptpmRestEndpointAvailable = function (cookieName = wooptpmRestSettings.cookieWooptpmRestEndpointAvailable) {
+
+            return !!Cookies.get(cookieName);
+        }
+
         wooptpm.objectExists = function (obj) {
 
             for (let i = 1; i < arguments.length; i++) {

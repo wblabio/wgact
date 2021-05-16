@@ -92,7 +92,7 @@ trait Trait_Product
     {
         $dyn_r_ids = [
             'post_id' => (string)$product->get_id(),
-            'sku'     => (string) $product->get_sku() ? $product->get_sku() : $product->get_id(),
+            'sku'     => (string)$product->get_sku() ? $product->get_sku() : $product->get_id(),
             'gpf'     => 'woocommerce_gpf_' . (string)$product->get_id(),
         ];
 
@@ -100,6 +100,14 @@ trait Trait_Product
         $dyn_r_ids = apply_filters('wooptpm_product_ids', $dyn_r_ids, $product);
 
         return $dyn_r_ids;
+    }
+
+    protected function log_problematic_product_id($product_id = 0)
+    {
+        wc_get_logger()->debug(
+            'WooCommerce detects the page ID ' . $product_id . ' as product, but when invoked by wc_get_product( ' . $product_id . ' ) it returns no product object',
+            ['source' => 'wooptpm']
+        );
     }
 
     protected function get_order_item_ids($order): array
@@ -114,28 +122,31 @@ trait Trait_Product
             $product = wc_get_product($product_id);
 
             // only continue if WC retrieves a valid product
-            if (!is_bool($product)) {
+            if (is_object($product)) {
 
-                $dyn_r_ids = $this->get_dyn_r_ids($product);
+                $dyn_r_ids           = $this->get_dyn_r_ids($product);
                 $product_id_compiled = $dyn_r_ids[$this->get_dyn_r_id_type()];
 //                $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku(), $this->options, '');
                 array_push($order_items_array, $product_id_compiled);
+            } else {
+
+                $this->log_problematic_product_id($product_id);
             }
         }
 
         return $order_items_array;
     }
 
-    protected function get_dyn_r_id_type (): string
+    protected function get_dyn_r_id_type(): string
     {
 //        $dyn_r_id_type = '';
 
-        if($this->options_obj->google->ads->product_identifier == 0) {
+        if ($this->options_obj->google->ads->product_identifier == 0) {
             $this->dyn_r_id_type = 'post_id';
         } elseif ($this->options_obj->google->ads->product_identifier == 1) {
-            $this->dyn_r_id_type =  'gpf';
+            $this->dyn_r_id_type = 'gpf';
         } elseif ($this->options_obj->google->ads->product_identifier == 2) {
-            $this->dyn_r_id_type =  'sku';
+            $this->dyn_r_id_type = 'sku';
         }
 
         // if you want to change the dyn_r_id type for Google programmatically

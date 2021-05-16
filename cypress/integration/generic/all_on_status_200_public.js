@@ -81,6 +81,10 @@ describe('status 200 public', () => {
         cy.visit('/shop/?color=Blue')
     })
 
+    it('visit WC search attribute page with zero resuls', () => {
+        cy.visit('/?s=abcd&post_type=product')
+    })
+
     it('visit WC purchase confirmation generic page', () => {
         cy.visit('/checkout/order-received/')
     })

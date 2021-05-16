@@ -88,8 +88,23 @@ class Google extends Pixel
             window.gtag = function gtag() {
                 dataLayer.push(arguments);
             }
-    " . $this->consent_mode_gtag_html() . "
+    " . $this->consent_mode_gtag_html()
+      . $this->linker_html() . "
             gtag('js', new Date());";
+    }
+
+    // https://developers.google.com/gtagjs/devguide/linker
+    private function linker_html(): string
+    {
+        $linker_domains = apply_filters('wooptpm_google_cross_domain_linker_settings', null);
+
+        if ($linker_domains) {
+
+            return "\t\t" . "gtag('set', 'linker', " . json_encode($linker_domains) . ");";
+        } else {
+
+            return '';
+        }
     }
 
     private function consent_mode_gtag_html(): string
@@ -145,6 +160,12 @@ class Google extends Pixel
 
             $product_id = $this->get_variation_or_product_id($order_item->get_data(), $this->options_obj->general->variations_output);
             $product    = wc_get_product($product_id);
+
+            if (!is_object($product)) {
+
+                $this->log_problematic_product_id($product_id);
+                continue;
+            }
 
             $item_details_array = [];
 

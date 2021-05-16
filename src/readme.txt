@@ -166,6 +166,12 @@ You can send the link to the front page of your shop too if you think it would b
 
 == Changelog ==
 
+= 1.10.4 =
+
+* New: Added filter for Google cross domain filter setting
+* Tweak: Added more safeguards in case WC processes a product ID which is not a product
+* Fix: Product data output on some pages triggered a critical error
+
 = 1.10.3 =
 
 * Tweak: Switch to use different hook on product pages to output main product data

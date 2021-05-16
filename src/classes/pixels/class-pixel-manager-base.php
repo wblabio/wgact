@@ -75,22 +75,22 @@ class Pixel_Manager_Base
                     // In case a variable product is misconfigured, wc_get_product($product_id) will not
                     // get a product but a bool. So we need to test it and only run it if
                     // we actually get a product. Basically we fall back to the parent product.
-                    if (!is_bool(wc_get_product($product_id))) {
+                    if (is_object(wc_get_product($product_id))) {
                         $product = wc_get_product($product_id);
                     }
                 }
             }
 
-//            if (is_bool($product)) {
-////               error_log( 'WooCommerce detects the page ID ' . $product_id . ' as product, but when invoked by wc_get_product( ' . $product_id . ' ) it returns no product object' );
-//                return;
-//            }
+            if (is_object($product)) {
 
-            $product_attributes['product_id_compiled'] = $this->get_compiled_product_id($product_id, $product->get_sku(), $this->options, '');
+                $product_attributes['product_id_compiled'] = $this->get_compiled_product_id($product_id, $product->get_sku(), $this->options, '');
+                $product_attributes['dyn_r_ids'] = $this->get_dyn_r_ids($product);
+                $this->inject_product($product, $product_attributes);
+            } else {
 
-            $product_attributes['dyn_r_ids'] = $this->get_dyn_r_ids($product);
+                $this->log_problematic_product_id($product_id);
+            }
 
-            $this->inject_product($product, $product_attributes);
         } elseif ($this->is_shop_top_page()) {
             $this->inject_shop_top_page();
         } elseif (is_cart() && !empty($woocommerce->cart->get_cart())) {

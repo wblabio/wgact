@@ -1,5 +1,16 @@
 <?php
 
+//add_filter('wooptpm_google_cross_domain_linker_settings', function (){
+//
+//    return [
+//        "domains" => [
+//            'wordpress.test',
+//            'example.store.co.uk',
+//            'example.store.com',
+//        ]
+//    ];
+//});
+
 //add_filter('wooptpm_track_mini_cart', '__return_false');
 
 //add_filter('wooptpm_send_http_api_facebook_capi_requests_blocking', '__return_true');

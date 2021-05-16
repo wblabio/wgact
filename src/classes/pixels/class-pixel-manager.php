@@ -67,7 +67,6 @@ class Pixel_Manager extends Pixel_Manager_Base
 
         add_action('wp_head', function () {
             $this->inject_woopt_opening();
-
             $this->inject_data_layer_init();
             $this->inject_data_layer_shop();
             $this->inject_data_layer_general();
@@ -127,43 +126,50 @@ class Pixel_Manager extends Pixel_Manager_Base
 
         add_action('woocommerce_after_shop_loop_item', [$this, 'action_woocommerce_after_shop_loop_item'], 10, 1);
         add_filter('woocommerce_blocks_product_grid_item_html', [$this, 'wc_add_date_to_gutenberg_block'], 10, 3);
-
-        // Most of the following actions don't pass the unit tests.
-        // Actions on the add-to-cart form work quite well, but fail on out-of-stock products
-//        add_action('woocommerce_before_main_content', [$this, 'woocommerce_inject_product_data_on_product_page']); // Unit tests fail
-//        add_action('woocommerce_before_single_product', [$this, 'woocommerce_inject_product_data_on_product_page']); // Unit tests fail
-//        add_action('woocommerce_before_single_product_summary', [$this, 'woocommerce_inject_product_data_on_product_page']); // Unit tests fail
-//        add_action('woocommerce_product_thumbnails', [$this, 'woocommerce_inject_product_data_on_product_page']); // Unit tests fail
-//        add_action('woocommerce_single_product_summary', [$this, 'woocommerce_inject_product_data_on_product_page']); // Unit tests fail
-//        add_action('woocommerce_after_single_product_summary', [$this, 'woocommerce_inject_product_data_on_product_page']); // doesn't work on one client shop
-//        add_action('woocommerce_after_add_to_cart_button', [$this, 'woocommerce_inject_product_data_on_product_page']); // doesn't work on out of stock products
-        add_action('woocommerce_after_add_to_cart_form', [$this, 'woocommerce_inject_product_data_on_product_page']); // doesn't work on out of stock products
-//        add_action('woocommerce_after_single_product', [$this, 'woocommerce_inject_product_data_on_product_page']); // works
-        add_action('woocommerce_after_main_content', [$this, 'woocommerce_inject_product_data_on_product_page']);     // works
+        add_action('wp_head', [$this, 'woocommerce_inject_product_data_on_product_page']);
     }
 
     // on product page
     public function woocommerce_inject_product_data_on_product_page()
     {
-        global $product;
+        if (is_product()) {
 
-        echo $this->get_product_data_layer_script($product, false);
+            $product = wc_get_product(get_the_id());
 
-        if ($product->is_type('grouped')) {
+            if (is_object($product)) {
 
-            foreach ($product->get_children() as $product_id) {
-                $product = wc_get_product($product_id);
                 echo $this->get_product_data_layer_script($product, false);
+            } else {
+
+                wc_get_logger()->debug('woocommerce_inject_product_data_on_product_page provided no product on a product page: .' . get_the_id(), ['source' => 'wooptpm']);
             }
-        }
 
-        if ($product->is_type('variable')) {
-            foreach ($product->get_available_variations() as $key => $variation) {
+            if ($product->is_type('grouped')) {
 
-                $variable_product = wc_get_product($variation['variation_id']);
+                foreach ($product->get_children() as $product_id) {
+                    $product = wc_get_product($product_id);
 
-                if (!is_bool($variable_product)) {
-                    echo $this->get_product_data_layer_script($variable_product, false);
+                    if (is_object($product)) {
+
+                        echo $this->get_product_data_layer_script($product, false);
+                    } else {
+                        $this->log_problematic_product_id($product_id);
+                    }
+                }
+            }
+
+            if ($product->is_type('variable')) {
+                /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+                foreach ($product->get_available_variations() as $key => $variation) {
+
+                    $variable_product = wc_get_product($variation['variation_id']);
+
+                    if (is_object($variable_product)) {
+                        echo $this->get_product_data_layer_script($variable_product, false);
+                    } else {
+
+                        $this->log_problematic_product_id($variation['variation_id']);
+                    }
                 }
             }
         }
@@ -186,6 +192,14 @@ class Pixel_Manager extends Pixel_Manager_Base
     private function get_product_data_layer_script($product, $set_position = true): string
     {
         global $woocommerce_wpml;
+
+        if (!is_object($product)) {
+
+//            $this->log_problematic_product_id();
+            wc_get_logger()->debug('get_product_data_layer_script received an invalid product', ['source' => 'wooptpm']);
+
+            return '';
+        }
 
         $this->dyn_r_ids = $this->get_dyn_r_ids($product);
 
@@ -344,6 +358,12 @@ class Pixel_Manager extends Pixel_Manager_Base
 
             $product = wc_get_product($value['data']->get_id());
 
+            if (!is_object($product)) {
+
+                $this->log_problematic_product_id($value['data']->get_id());
+                continue;
+            }
+
             $data['cart_item_keys'][$cart_item] = [
                 'id'          => (string)$product->get_id(),
                 'isVariation' => false,
@@ -411,7 +431,7 @@ class Pixel_Manager extends Pixel_Manager_Base
 
     public function wooptpm_front_end_scripts()
     {
-        wp_enqueue_script('wooptpm', plugin_dir_url(__DIR__) . '../js/public/wooptpm.js', ['jquery'], WGACT_CURRENT_VERSION, false);
+        wp_enqueue_script('wooptpm', plugin_dir_url(__DIR__) . '../js/public/wooptpm.js', ['jquery', 'jquery-cookie'], WGACT_CURRENT_VERSION, false);
         wp_localize_script('wooptpm', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
 
         if (wga_fs()->is__premium_only()) {
@@ -541,7 +561,7 @@ class Pixel_Manager extends Pixel_Manager_Base
                 $product = wc_get_product($values['data']->get_id());
 
                 // only continue if WC retrieves a valid product
-                if (!is_bool($product)) {
+                if (is_object($product)) {
                     $single_product_upsell_ids = $product->get_upsell_ids();
 //                error_log(print_r($single_product_upsell_ids,true));
 
@@ -609,7 +629,7 @@ class Pixel_Manager extends Pixel_Manager_Base
             $product = wc_get_product($product_id);
 
             // only continue if WC retrieves a valid product
-            if (!is_bool($product)) {
+            if (is_object($product)) {
 
                 $this->dyn_r_ids = $this->get_dyn_r_ids($product);
 
@@ -626,6 +646,9 @@ class Pixel_Manager extends Pixel_Manager_Base
                     'dyn_r_ids' => $this->dyn_r_ids,
                 ];
                 $position++;
+            } else {
+
+                $this->log_problematic_product_id($product_id);
             }
         }
 
