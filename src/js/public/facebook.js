@@ -65,11 +65,11 @@ varExists('jQuery').then(function () {
             product['currency'] = wooptpmDataLayer.shop.currency;
 
             jQuery(document).trigger('wooptpmFbCapiEvent', {
-                "event_name"  : "ViewContent",
-                "event_id"    : eventId,
-                "user_data"   : wooptpm.getFbUserData(),
-                "product_data": product,
-                "product_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.facebook.dynamic_remarketing.id_type],
+                "event_name"      : "ViewContent",
+                "event_id"        : eventId,
+                "user_data"       : wooptpm.getFbUserData(),
+                "product_data"    : product,
+                "product_id"      : product.dyn_r_ids[wooptpmDataLayer.pixels.facebook.dynamic_remarketing.id_type],
                 "event_source_url": window.location.href
             });
         }
@@ -94,7 +94,7 @@ varExists('jQuery').then(function () {
                     "content_type": "product",
                     "content_name": product.name,
                     "content_ids" : product.dyn_r_ids[wooptpmDataLayer.pixels.facebook.dynamic_remarketing.id_type],
-                    "value"       : product.quantity * product.price,
+                    "value"       : parseFloat(product.quantity * product.price),
                     "currency"    : product.currency,
                 }, {
                     "eventID": eventId,
@@ -103,11 +103,11 @@ varExists('jQuery').then(function () {
                 product['currency'] = wooptpmDataLayer.shop.currency;
 
                 jQuery(document).trigger('wooptpmFbCapiEvent', {
-                    "event_name"  : "AddToCart",
-                    "event_id"    : eventId,
-                    "user_data"   : wooptpm.getFbUserData(),
-                    "product_data": product,
-                    "product_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.facebook.dynamic_remarketing.id_type],
+                    "event_name"      : "AddToCart",
+                    "event_id"        : eventId,
+                    "user_data"       : wooptpm.getFbUserData(),
+                    "product_data"    : product,
+                    "product_id"      : product.dyn_r_ids[wooptpmDataLayer.pixels.facebook.dynamic_remarketing.id_type],
                     "event_source_url": window.location.href
                 });
             });
@@ -126,9 +126,9 @@ varExists('jQuery').then(function () {
 
 
                 jQuery(document).trigger('wooptpmFbCapiEvent', {
-                    "event_name": "InitiateCheckout",
-                    "event_id"  : eventId,
-                    "user_data" : wooptpm.getFbUserData(),
+                    "event_name"      : "InitiateCheckout",
+                    "event_id"        : eventId,
+                    "user_data"       : wooptpm.getFbUserData(),
                     "event_source_url": window.location.href
                 });
             });
@@ -145,7 +145,7 @@ varExists('jQuery').then(function () {
                     "content_type": "product",
                     "content_name": product.name,
                     "content_ids" : product.dyn_r_ids[wooptpmDataLayer.pixels.facebook.dynamic_remarketing.id_type],
-                    "value"       : product.quantity * product.price,
+                    "value"       : parseFloat(product.quantity * product.price),
                     "currency"    : product.currency,
                 }, {
                     "eventID": eventId,
@@ -154,11 +154,11 @@ varExists('jQuery').then(function () {
                 product['currency'] = wooptpmDataLayer.shop.currency;
 
                 jQuery(document).trigger('wooptpmFbCapiEvent', {
-                    "event_name"  : "AddToWishlist",
-                    "event_id"    : eventId,
-                    "user_data"   : wooptpm.getFbUserData(),
-                    "product_data": product,
-                    "product_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.facebook.dynamic_remarketing.id_type],
+                    "event_name"      : "AddToWishlist",
+                    "event_id"        : eventId,
+                    "user_data"       : wooptpm.getFbUserData(),
+                    "product_data"    : product,
+                    "product_id"      : product.dyn_r_ids[wooptpmDataLayer.pixels.facebook.dynamic_remarketing.id_type],
                     "event_source_url": window.location.href
                 });
             });
@@ -201,9 +201,9 @@ varExists('jQuery').then(function () {
                         });
 
                         jQuery(document).trigger('wooptpmFbCapiEvent', {
-                            "event_name": "Search",
-                            "event_id"  : eventId,
-                            "user_data" : wooptpm.getFbUserData(),
+                            "event_name"      : "Search",
+                            "event_id"        : eventId,
+                            "user_data"       : wooptpm.getFbUserData(),
                             "event_source_url": window.location.href
                         });
                     }

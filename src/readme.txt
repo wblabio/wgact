@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, google analytics, facebook pixel, conversion trac
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 7.2
-Stable tag: 1.10.4
+Stable tag: 1.10.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,7 +14,7 @@ Track visitors and conversions in Google Ads, Google Analytics, Facebook (Conver
 
 This plugin <strong>tracks WooCommerce shop visitors and collects valuable data for conversion optimization, dynamic remarketing and reporting</strong>.
 
-While the setup is as simple as it can get, the pixel engine under the hood is very powerful. It tracks all standard events and implements all advanced pixel features like Facebook CAPI (Pro version), Google Enhanced E-Commerce, Google Shopping Cart Item Tracking and more. For advanced users the plugin offers filters which allow to tweak the output very flexibly and fine tune the behaviour to each shop.
+While the setup is as simple as it can get, the pixel engine under the hood is very powerful. It tracks all standard events and implements all advanced pixel features like Facebook CAPI (Pro version), Google Enhanced E-Commerce, Google Shopping Cart Item Tracking and much more. For advanced users the plugin offers filters which allow to tweak the output very flexibly and fine tune the behaviour to each shop.
 
 The plugin comes with integrations for:
 
@@ -165,6 +165,10 @@ You can send the link to the front page of your shop too if you think it would b
 1. Settings page
 
 == Changelog ==
+
+= 1.10.5 =
+
+* Tweak: parseFloat for value in Facebook and Pinterest just in case no proper input is received
 
 = 1.10.4 =
 

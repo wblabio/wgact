@@ -22,7 +22,7 @@ varExists('jQuery').then(function () {
                 // console.log(product);
 
                 pintrk("track", "addtocart", {
-                    "value"     : product.quantity * product.price,
+                    "value"     : parseFloat(product.quantity * product.price),
                     "currency"  : product.currency,
                     "line_items": [{
                         "product_name"    : product.name,
