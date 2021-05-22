@@ -18,7 +18,7 @@ varExists('jQuery').then(function () {
             try {
                 // save the state in the database
                 let data = {
-                    'action'  : 'wgact_purchase_pixels_fired',
+                    'action'  : 'wooptpm_purchase_pixels_fired',
                     'order_id': orderId,
                     'nonce'   : wooptpm_premium_only_ajax_object.nonce,
                 };

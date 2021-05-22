@@ -162,7 +162,7 @@ class Pixel_Manager_Base
 //        error_log("this->options['shop']['order_deduplication']: " . $this->options['shop']['order_deduplication']);
 //        error_log('order id: ' . $order->get_id());
 //        error_log('order number: ' . $order->get_order_number());
-//        error_log('get_post_meta($order->get_order_number(), \'_WGACT_conversion_pixel_fired\', true): ' . get_post_meta($order->get_order_number(), '_WGACT_conversion_pixel_fired', true));
+//        error_log('get_post_meta($order->get_order_number(), \'_wooptpm_conversion_pixel_fired\', true): ' . get_post_meta($order->get_order_number(), '_wooptpm_conversion_pixel_fired', true));
 
 
         if ($this->is_nodedupe_parameter_set() ||
@@ -170,7 +170,7 @@ class Pixel_Manager_Base
                 !current_user_can('edit_others_pages') &&
                 $conversion_prevention == false &&
                 (!$this->options['shop']['order_deduplication'] ||
-                    get_post_meta($order->get_order_number(), '_WGACT_conversion_pixel_fired', true) != true))) {
+                    get_post_meta($order->get_order_number(), '_wooptpm_conversion_pixel_fired', true) != true))) {
 //            error_log('fire pixels: true' . PHP_EOL);
             return true;
         } else {

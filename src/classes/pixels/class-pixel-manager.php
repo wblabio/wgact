@@ -100,8 +100,8 @@ class Pixel_Manager extends Pixel_Manager_Base
         add_action('wp_ajax_nopriv_wooptpm_get_cart_items', [$this, 'ajax_wooptpm_get_cart_items']);
 
         if (wga_fs()->is__premium_only()) {
-            add_action('wp_ajax_wgact_purchase_pixels_fired', [$this, 'ajax_purchase_pixels_fired_handler__premium_only']);
-            add_action('wp_ajax_nopriv_wgact_purchase_pixels_fired', [$this, 'ajax_purchase_pixels_fired_handler__premium_only']);
+            add_action('wp_ajax_wooptpm_purchase_pixels_fired', [$this, 'ajax_purchase_pixels_fired_handler__premium_only']);
+            add_action('wp_ajax_nopriv_wooptpm_purchase_pixels_fired', [$this, 'ajax_purchase_pixels_fired_handler__premium_only']);
         }
 
         /*
@@ -254,6 +254,7 @@ class Pixel_Manager extends Pixel_Manager_Base
         }
     }
 
+    // https://support.cloudflare.com/hc/en-us/articles/200169436-How-can-I-have-Rocket-Loader-ignore-specific-JavaScripts-
     private function inject_data_layer_init()
     {
         $data = [
@@ -268,7 +269,7 @@ class Pixel_Manager extends Pixel_Manager_Base
 
         ?>
 
-        <script>
+        <script data-cfasync="false" >
 
             function wooptpmExists() {
                 return new Promise(function (resolve, reject) {
@@ -425,7 +426,7 @@ class Pixel_Manager extends Pixel_Manager_Base
         }
 
         $order_id = filter_var($_POST['order_id'], FILTER_SANITIZE_STRING);
-        update_post_meta($order_id, '_WGACT_conversion_pixel_fired', true);
+        update_post_meta($order_id, '_wooptpm_conversion_pixel_fired', true);
         wp_die(); // this is required to terminate immediately and return a proper response
     }
 
@@ -664,7 +665,7 @@ class Pixel_Manager extends Pixel_Manager_Base
             jQuery(function () {
                 setTimeout(function () {
                     wooptpmExists().then(function () {
-                        wooptpm.writeOrderIdToStorage(<?php echo $order_id ?>);
+                        wooptpm.writeOrderIdToStorage('<?php echo $order_id ?>');
                     });
                 }, <?php echo $this->transaction_deduper_timeout ?>);
             });

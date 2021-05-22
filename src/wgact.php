@@ -5,7 +5,7 @@
  * Author:       woopt
  * Plugin URI:   https://wordpress.org/plugins/woocommerce-google-adwords-conversion-tracking-tag/
  * Author URI:   https://woopt.com
- * Version:      1.10.5
+ * Version:      1.10.5-beta.2
  * License:      GPLv2 or later
  * Text Domain:  woocommerce-google-adwords-conversion-tracking-tag
  * WC requires at least: 2.6
@@ -24,7 +24,6 @@
 use WGACT\Classes\Admin\Admin;
 use WGACT\Classes\Admin\Ask_For_Rating;
 use WGACT\Classes\Admin\Environment_Check;
-use WGACT\Classes\Admin\Launch_Deal;
 use WGACT\Classes\Db_Upgrade;
 use WGACT\Classes\Default_Options;
 use WGACT\Classes\Pixels\Cookie_Consent_Management;
@@ -152,8 +151,6 @@ if (function_exists('wga_fs')) {
                 // load the options
                 $this->wgact_options_init();
 
-                new Launch_Deal();
-
                 if (isset($this->options['google']['gads']['dynamic_remarketing']) && $this->options['google']['gads']['dynamic_remarketing']) {
                     // make sure to disable the WGDR plugin in case we use dynamic remarketing in this plugin
                     add_filter('wgdr_third_party_cookie_prevention', '__return_true');
@@ -232,16 +229,6 @@ if (function_exists('wga_fs')) {
 
             if (false === $this->options) { // if no options have been set yet, initiate default options
 
-                // launch deal prep
-                $wooptpm_launch_deal = [
-                    'eligible'   => false,
-                    'dismissed'  => false,
-                    'later'      => false,
-                    'later_date' => ''
-                ];
-
-                update_option('wooptpm_launch_deal', $wooptpm_launch_deal);
-
 //            error_log('options empty, loading default');
 //                $this->options = $this->wgact_get_default_options();
                 $this->options = (new Default_Options())->get_default_options();
@@ -252,18 +239,6 @@ if (function_exists('wga_fs')) {
 //		    error_log(print_r($options, true));
 
             } else {  // Check if each single option has been set. If not, set them. That is necessary when new options are introduced.
-
-                if (get_option('wooptpm_launch_deal') === false) {
-                    // launch deal prep
-                    $wooptpm_launch_deal = [
-                        'eligible'   => true,
-                        'dismissed'  => false,
-                        'later'      => false,
-                        'later_date' => ''
-                    ];
-
-                    update_option('wooptpm_launch_deal', $wooptpm_launch_deal);
-                }
 
                 // cleanup the db of this setting
                 // remove by end of 2021 latest

@@ -20,7 +20,7 @@ class Google_Analytics_UA extends Google_Analytics
 
         echo "
                 wooptpmExists().then(function(){
-                    if  (!wooptpm.isOrderIdStored(" . $order->get_order_number() . ")) {
+                    if  (!wooptpm.isOrderIdStored('" . $order->get_order_number() . "')) {
                         gtag('event', 'purchase', " . $this->get_event_purchase_json($order, $order_total, $order_currency, $is_new_customer) . ")
                     }
                 }).catch(() => {

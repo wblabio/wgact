@@ -85,6 +85,7 @@ varExists('jQuery').then(function () {
 
                 // console.log('firing facebook ads AddToCart event');
                 // console.log(product);
+                // console.log('value: ' + product.quantity * product.price);
 
                 let eventId = wooptpm.getRandomEventId();
 
@@ -116,7 +117,6 @@ varExists('jQuery').then(function () {
             jQuery(document).on('wooptpmBeginCheckout', function (event) {
 
                 // console.log('firing facebook ads InitiateCheckout event');
-                // console.log(data);
 
                 let eventId = wooptpm.getRandomEventId();
 
@@ -137,7 +137,7 @@ varExists('jQuery').then(function () {
             jQuery(document).on('wooptpmAddToWishlist', function (event, product) {
 
                 // console.log('firing facebook ads AddToWishlist event');
-                // console.log(data);
+                // console.log(product);
 
                 let eventId = wooptpm.getRandomEventId();
 
@@ -167,7 +167,7 @@ varExists('jQuery').then(function () {
             jQuery(document).on('wooptpmViewItem', function (event, product) {
 
                 // console.log('firing facebook ads AddToWishlist event');
-                // console.log(data);
+                // console.log(product);
 
                 wooptpm.fbViewContent(product);
             });

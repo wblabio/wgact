@@ -49,11 +49,12 @@ class Bing_Pixel_Manager extends Pixel_Manager_Base
         $this->bing_pixel->inject_order_received_page($order, $order_total);
     }
 
+    // https://support.cloudflare.com/hc/en-us/articles/200169436-How-can-I-have-Rocket-Loader-ignore-specific-JavaScripts-
     protected function inject_opening_script_tag()
     {
         echo PHP_EOL;
         echo '      <!-- START Bing scripts -->' . PHP_EOL;
-        echo '            <script>';
+        echo '            <script data-cfasync="false">';
         echo PHP_EOL;
     }
 

@@ -16,7 +16,7 @@ varExists('jQuery').then(function () {
     (function (wooptpm, $, undefined) {
 
         const wgactDeduper = {
-            keyName          : '_wgact_order_ids',
+            keyName          : '_wooptpm_order_ids',
             cookieExpiresDays: 365
         };
 
@@ -677,7 +677,14 @@ varExists('jQuery').then(function () {
                         if (wooptpmDataLayer.shop.product_type === 'simple') {
 
                             // console.log('test');
-                            let quantity  = Number(jQuery('.input-text.qty').val());
+                            let quantity;
+
+                            if (jQuery('.input-text.qty').val()) {
+                                quantity = Number(jQuery('.input-text.qty').val());
+                            } else {
+                                quantity = 1;
+                            }
+
                             let productId = jQuery(this).val();
                             // console.log('productId: ' + productId);
                             wooptpm.addProductToCart(productId, quantity);
@@ -686,7 +693,14 @@ varExists('jQuery').then(function () {
 
                             // console.log('variable');
 
-                            let quantity  = Number(jQuery('.input-text.qty').val());
+                            let quantity;
+
+                            if (jQuery('.input-text.qty').val()) {
+                                quantity = Number(jQuery('.input-text.qty').val());
+                            } else {
+                                quantity = 1;
+                            }
+
                             let productId = jQuery("[name='variation_id']").val();
                             wooptpm.addProductToCart(productId, quantity);
 
@@ -695,7 +709,15 @@ varExists('jQuery').then(function () {
                             // console.log('grouped');
 
                             jQuery('.woocommerce-grouped-product-list-item').each(function () {
-                                let quantity  = Number(jQuery(this).find('.input-text.qty').val());
+
+                                let quantity;
+
+                                if(Number(jQuery(this).find('.input-text.qty').val())){
+                                    quantity = Number(jQuery(this).find('.input-text.qty').val());
+                                } else {
+                                    quantity = 1;
+                                }
+
                                 let classes   = jQuery(this).attr('class');
                                 let productId = wooptpm.getPostIdFromString(classes);
                                 wooptpm.addProductToCart(productId, quantity);

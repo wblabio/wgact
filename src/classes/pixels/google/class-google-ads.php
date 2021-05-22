@@ -177,7 +177,7 @@ class Google_Ads extends Google
     {
         echo "
                 wooptpmExists().then(function(){
-                    if (!wooptpm.isOrderIdStored(" . $order->get_order_number() . ")) {
+                    if (!wooptpm.isOrderIdStored('" . $order->get_order_number() . "')) {
                         gtag('event', 'purchase', {
                             'send_to': " . json_encode($this->get_google_ads_conversion_ids()) . ",
                             'value'  : " . $order_total . ",
