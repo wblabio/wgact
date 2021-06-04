@@ -406,7 +406,14 @@ class Environment_Check
 
     public function does_url_redirect($url): bool
     {
-        $headers = get_headers($url, 1);
+        $context = stream_context_create( [
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+            ],
+        ]);
+
+        $headers = get_headers($url, 1, $context);
         if (!empty($headers['Location'])) {
             return true;
         } else {

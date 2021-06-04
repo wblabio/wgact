@@ -78,7 +78,7 @@ describe('Google Analytics eec events', () => {
         cy.visit('/product/album/')
 
         // wait in order for the add_to_cart events to register
-        cy.wait(800)
+        cy.wait(1200)
 
         // cy.intercept('POST', 'https://wordpress-deployment.test/?wc-ajax=get_refreshed_fragments').as('atc')
 
@@ -90,7 +90,7 @@ describe('Google Analytics eec events', () => {
         // cy.wait('@atc')
 
         // wait for WC Ajax event to update cart
-        cy.wait(400)
+        cy.wait(800)
 
         cy.window()
             .its('wooptpmDataLayer.cart')
@@ -99,12 +99,12 @@ describe('Google Analytics eec events', () => {
         //remove the product from the cart
         cy.get('[id="site-header-cart"]')
             .trigger('mouseover')
-            .wait(200)
+            .wait(400)
 
         cy.get('.woocommerce-mini-cart-item')
             .get('.remove_from_cart_button')
             .click({force: true})
-            .wait(400)
+            .wait(800)
     })
 
     it('ado to cart WC product page: variable product', () => {
@@ -113,7 +113,7 @@ describe('Google Analytics eec events', () => {
         cy.visit('/product/hoodie/')
 
         // wait in order for the add_to_cart events to register
-        cy.wait(400)
+        cy.wait(800)
 
         cy.get('#pa_color')
             .select('Blue')
@@ -128,7 +128,7 @@ describe('Google Analytics eec events', () => {
         // cy.wait('@atc')
 
         // wait for WC Ajax event to update cart
-        cy.wait(400)
+        cy.wait(800)
 
         cy.window()
             .its('wooptpmDataLayer.cart')
@@ -137,12 +137,12 @@ describe('Google Analytics eec events', () => {
         //remove the product from the cart
         cy.get('[id="site-header-cart"]')
             .trigger('mouseover')
-            .wait(200)
+            .wait(800)
 
         cy.get('.woocommerce-mini-cart-item')
             .get('.remove_from_cart_button')
             .click({force: true})
-            .wait(400)
+            .wait(800)
     })
 
     it('ado to cart WC product page: grouped product', () => {
@@ -151,7 +151,7 @@ describe('Google Analytics eec events', () => {
         cy.visit('/product/logo-collection/')
 
         // wait in order for the add_to_cart events to register
-        cy.wait(400)
+        cy.wait(800)
 
         cy.get('.input-text.qty')
             .eq(0)
@@ -171,7 +171,7 @@ describe('Google Analytics eec events', () => {
         // cy.wait('@atc')
 
         // wait for WC Ajax event to update cart
-        cy.wait(400)
+        cy.wait(800)
 
             cy.window()
                 .its('wooptpmDataLayer.cart')
@@ -180,21 +180,21 @@ describe('Google Analytics eec events', () => {
         //remove the product from the cart
         cy.get('[id="site-header-cart"]')
             .trigger('mouseover')
-            .wait(200)
+            .wait(800)
 
         cy.get('.woocommerce-mini-cart-item')
             .get('.remove_from_cart_button')
             .eq(0)
             .click({force: true})
-            .wait(400)
+            .wait(800)
             .get('.remove_from_cart_button')
             .eq(0)
             .click({force: true})
-            .wait(400)
+            .wait(800)
             .get('.remove_from_cart_button')
             .eq(0)
             .click({force: true})
-            .wait(400)
+            .wait(800)
     })
 
     // it('ado to cart WC product page: external product', () => {

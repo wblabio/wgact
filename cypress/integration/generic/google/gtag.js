@@ -307,7 +307,7 @@ describe('Google gtag events', () => {
         cy.visit('/shop/')
 
         // wait for events to register
-        cy.wait(400)
+        cy.wait(800)
 
         // cy.visit('/shop/',{
         //     onBeforeLoad: spyOnAddEventListener
@@ -338,7 +338,7 @@ describe('Google gtag events', () => {
             .eq(0)
             .click()
 
-        cy.wait(400)
+        cy.wait(800)
 
         cy.get('[id="site-header-cart"]')
             .trigger('mouseover')
@@ -373,7 +373,7 @@ describe('Google gtag events', () => {
         cy.visit('/shop/')
 
         // wait for events to get registered
-        cy.wait(400)
+        cy.wait(800)
 
         // add to an item to the cart
         cy.get('.add_to_cart_button')
@@ -395,11 +395,11 @@ describe('Google gtag events', () => {
             .eq(2)
             .click()
 
-        cy.wait(400)
+        cy.wait(800)
 
         cy.visit('/cart/')
 
-        cy.wait(400)
+        cy.wait(800)
 
 
         cy.window().then((win) => {
@@ -424,7 +424,7 @@ describe('Google gtag events', () => {
         cy.visit('/shop/')
 
         // wait for events to get registered
-        cy.wait(800)
+        cy.wait(1200)
 
         // add to an item to the cart
         cy.get('.add_to_cart_button')
@@ -445,6 +445,8 @@ describe('Google gtag events', () => {
         cy.get('.add_to_cart_button')
             .eq(2)
             .click()
+
+        cy.wait(800)
 
         // https://glebbahmutov.com/cypress-examples/7.0.1/recipes/find-object.html
         cy.window()
@@ -676,7 +678,7 @@ describe('Google gtag events', () => {
         cy.visit('/shop/')
 
         // wait for events to get registered
-        cy.wait(400)
+        cy.wait(1200)
 
         // add to an item to the cart
         cy.get('.add_to_cart_button')
