@@ -77,7 +77,7 @@ class Facebook_Browser_Pixel extends Pixel
             wooptpmExists().then(function(){
                 if (!wooptpm.isOrderIdStored('". $order->get_order_number() . "')) {
                     fbq('track', 'Purchase', " . json_encode($data) . ", {
-                        'eventID': " . $order->get_order_number() . ",
+                        'eventID': '" . $order->get_order_number() . "',
                     });
                 }
             });

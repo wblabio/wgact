@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, google analytics, facebook pixel, conversion trac
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 7.2
-Stable tag: 1.10.5-beta.2
+Stable tag: 1.10.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -172,6 +172,7 @@ You can send the link to the front page of your shop too if you think it would b
 * Tweak: Added an exclusion to fix an issue with Microsoft Ads, caused by Cloudflare Rocket Loader
 * Tweak: Removed launch deal code
 * Tweak: Cleaned up some cruft
+* Tweak: Added new element selector for the intersection observer for product templates that pack the wooptpmProductId into a child > child hierarchy
 * Fix: Added default quantity if quantity field has been removed on a product page
 * Fix: Switched to treat order IDs as strings. Otherwise it would throw an error if a shop owner changes order IDs to also use letters.
 

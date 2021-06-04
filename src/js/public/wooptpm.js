@@ -527,6 +527,8 @@ varExists('jQuery').then(function () {
                         jQuery(elem).prev().hasClass('woocommerce-LoopProduct-link')
                     ) {
                         return jQuery(this).prev();
+                    } else if (jQuery(elem).closest('.product').length) {
+                        return jQuery(elem).closest('.product');
                     }
                 });
         }
@@ -712,7 +714,7 @@ varExists('jQuery').then(function () {
 
                                 let quantity;
 
-                                if(Number(jQuery(this).find('.input-text.qty').val())){
+                                if (Number(jQuery(this).find('.input-text.qty').val())) {
                                     quantity = Number(jQuery(this).find('.input-text.qty').val());
                                 } else {
                                     quantity = 1;
