@@ -23,7 +23,8 @@ class Pinterest_Pixel_Manager extends Pixel_Manager_Base
 
     public function wooptpm_pinterest_front_end_scripts__premium_only()
     {
-        wp_enqueue_script('wooptpm-pinterest-premium-only', plugin_dir_url(__DIR__) . '../../js/public/pinterest__premium_only.js', ['jquery', 'wooptpm'], WGACT_CURRENT_VERSION, true);
+//        wp_enqueue_script('wooptpm-pinterest-premium-only', plugin_dir_url(__DIR__) . '../../js/public/pinterest__premium_only.js', ['jquery', 'wooptpm'], WGACT_CURRENT_VERSION, true);
+        wp_enqueue_script('wooptpm-pinterest-premium-only', WGACT_PLUGIN_DIR_PATH . 'js/public/pinterest__premium_only.js', ['jquery', 'wooptpm'], WGACT_CURRENT_VERSION, true);
     }
 
     public function inject_everywhere()

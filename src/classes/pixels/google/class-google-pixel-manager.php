@@ -168,7 +168,8 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
         if (wga_fs()->is__premium_only()) {
 
             if ($this->options_obj->google->analytics->universal->property_id || $this->options_obj->google->analytics->ga4->measurement_id) {
-                wp_enqueue_script('wooptpm-google-premium-only', plugin_dir_url(__DIR__) . '../../js/public/google__premium_only.js', ['jquery', 'wooptpm', 'wooptpm-premium-only'], WGACT_CURRENT_VERSION, false);
+//                wp_enqueue_script('wooptpm-google-premium-only', plugin_dir_url(__DIR__) . '../../js/public/google__premium_only.js', ['jquery', 'wooptpm', 'wooptpm-premium-only'], WGACT_CURRENT_VERSION, false);
+                wp_enqueue_script('wooptpm-google-premium-only', WGACT_PLUGIN_DIR_PATH . 'js/public/google__premium_only.js', ['jquery', 'wooptpm', 'wooptpm-premium-only'], WGACT_CURRENT_VERSION, false);
 
                 wp_localize_script(
                     'wooptpm-google-premium-only',
@@ -181,12 +182,16 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
             }
 
             if ($this->options_obj->google->analytics->universal->property_id) {
-                wp_enqueue_script('wooptpm-ga-ua-eec', plugin_dir_url(__DIR__) . '../../js/public/google-ga-ua-eec__premium_only.js', ['jquery', 'wooptpm', 'wooptpm-premium-only'], WGACT_CURRENT_VERSION, true);
+//                wp_enqueue_script('wooptpm-ga-ua-eec', plugin_dir_url(__DIR__) . '../../js/public/google-ga-ua-eec__premium_only.js', ['jquery', 'wooptpm', 'wooptpm-premium-only'], WGACT_CURRENT_VERSION, true);
+                wp_enqueue_script('wooptpm-ga-ua-eec', WGACT_PLUGIN_DIR_PATH . 'js/public/google-ga-ua-eec__premium_only.js', ['jquery', 'wooptpm', 'wooptpm-premium-only'], WGACT_CURRENT_VERSION, true);
+
                 wp_localize_script('wooptpm-ga-ua-eec', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
             }
 
             if ($this->options_obj->google->analytics->ga4->measurement_id) {
-                wp_enqueue_script('wooptpm-ga4-eec', plugin_dir_url(__DIR__) . '../../js/public/google-ga-4-eec__premium_only.js', ['jquery', 'wooptpm', 'wooptpm-premium-only'], WGACT_CURRENT_VERSION, true);
+//                wp_enqueue_script('wooptpm-ga4-eec', plugin_dir_url(__DIR__) . '../../js/public/google-ga-4-eec__premium_only.js', ['jquery', 'wooptpm', 'wooptpm-premium-only'], WGACT_CURRENT_VERSION, true);
+                wp_enqueue_script('wooptpm-ga4-eec', WGACT_PLUGIN_DIR_PATH . 'js/public/google-ga-4-eec__premium_only.js', ['jquery', 'wooptpm', 'wooptpm-premium-only'], WGACT_CURRENT_VERSION, true);
+
                 wp_localize_script('wooptpm-ga4-eec', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
             }
         }

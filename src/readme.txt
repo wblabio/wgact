@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, google analytics, facebook pixel, conversion trac
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 7.2
-Stable tag: 1.10.5
+Stable tag: 1.10.6-beta.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -165,6 +165,11 @@ You can send the link to the front page of your shop too if you think it would b
 1. Settings page
 
 == Changelog ==
+
+= 1.10.6 =
+
+* New: Added conversion accuracy warning if the PayPal standard payment gateway is active
+* Tweak: Implemented better way to reference .js and .css files
 
 = 1.10.5 =
 

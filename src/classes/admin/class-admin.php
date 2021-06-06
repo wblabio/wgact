@@ -122,13 +122,21 @@ class Admin
             return;
         }
 
-        wp_enqueue_script('wooptpm-script-blocker-warning', plugin_dir_url(__DIR__) . '../js/admin/script-blocker-warning.js', ['jquery'], WGACT_CURRENT_VERSION, false);
-        wp_enqueue_script('wooptpm-admin-helpers', plugin_dir_url(__DIR__) . '../js/admin/helpers.js', ['jquery'], WGACT_CURRENT_VERSION, false);
-        wp_enqueue_script('wooptpm-admin-tabs', plugin_dir_url(__DIR__) . '../js/admin/tabs.js', ['jquery'], WGACT_CURRENT_VERSION, false);
-        wp_enqueue_script('wooptpm-selectWoo', plugin_dir_url(__DIR__) . '../js/admin/selectWoo.full.min.js', ['jquery'], WGACT_CURRENT_VERSION, false);
+//        wp_enqueue_script('wooptpm-script-blocker-warning', plugin_dir_url(__DIR__) . '../js/admin/script-blocker-warning.js', ['jquery'], WGACT_CURRENT_VERSION, false);
+//        wp_enqueue_script('wooptpm-admin-helpers', plugin_dir_url(__DIR__) . '../js/admin/helpers.js', ['jquery'], WGACT_CURRENT_VERSION, false);
+//        wp_enqueue_script('wooptpm-admin-tabs', plugin_dir_url(__DIR__) . '../js/admin/tabs.js', ['jquery'], WGACT_CURRENT_VERSION, false);
+//        wp_enqueue_script('wooptpm-selectWoo', plugin_dir_url(__DIR__) . '../js/admin/selectWoo.full.min.js', ['jquery'], WGACT_CURRENT_VERSION, false);
+//
+//        wp_enqueue_style('wooptpm-admin', plugin_dir_url(__DIR__) . '../css/admin.css', [], WGACT_CURRENT_VERSION);
+//        wp_enqueue_style('wooptpm-selectWoo', plugin_dir_url(__DIR__) . '../css/selectWoo.min.css', [], WGACT_CURRENT_VERSION);
 
-        wp_enqueue_style('wooptpm-admin', plugin_dir_url(__DIR__) . '../css/admin.css', [], WGACT_CURRENT_VERSION);
-        wp_enqueue_style('wooptpm-selectWoo', plugin_dir_url(__DIR__) . '../css/selectWoo.min.css', [], WGACT_CURRENT_VERSION);
+        wp_enqueue_script('wooptpm-script-blocker-warning', WGACT_PLUGIN_DIR_PATH . 'js/admin/script-blocker-warning.js', ['jquery'], WGACT_CURRENT_VERSION, false);
+        wp_enqueue_script('wooptpm-admin-helpers', WGACT_PLUGIN_DIR_PATH . 'js/admin/helpers.js', ['jquery'], WGACT_CURRENT_VERSION, false);
+        wp_enqueue_script('wooptpm-admin-tabs', WGACT_PLUGIN_DIR_PATH . 'js/admin/tabs.js', ['jquery'], WGACT_CURRENT_VERSION, false);
+        wp_enqueue_script('wooptpm-selectWoo', WGACT_PLUGIN_DIR_PATH . 'js/admin/selectWoo.full.min.js', ['jquery'], WGACT_CURRENT_VERSION, false);
+
+        wp_enqueue_style('wooptpm-admin', WGACT_PLUGIN_DIR_PATH . 'css/admin.css', [], WGACT_CURRENT_VERSION);
+        wp_enqueue_style('wooptpm-selectWoo', WGACT_PLUGIN_DIR_PATH . 'css/selectWoo.min.css', [], WGACT_CURRENT_VERSION);
 
     }
 

@@ -5,7 +5,7 @@
  * Author:       woopt
  * Plugin URI:   https://wordpress.org/plugins/woocommerce-google-adwords-conversion-tracking-tag/
  * Author URI:   https://woopt.com
- * Version:      1.10.5
+ * Version:      1.10.6-beta.1
  * License:      GPLv2 or later
  * Text Domain:  woocommerce-google-adwords-conversion-tracking-tag
  * WC requires at least: 2.6
@@ -102,12 +102,11 @@ if (function_exists('wga_fs')) {
 
     // ... Your plugin's main file logic ...
 
-
     define('WGACT_PLUGIN_PREFIX', 'wooptpm_');
     define('WGACT_DB_VERSION', '3');
     define('WGACT_DB_OPTIONS_NAME', 'wgact_plugin_options');
     define('WGACT_DB_RATINGS', 'wgact_ratings');
-
+    DEFINE('WGACT_PLUGIN_DIR_PATH', plugin_dir_url(__FILE__));
 
     class WGACT
     {
@@ -129,6 +128,7 @@ if (function_exists('wga_fs')) {
 
 //        $options = get_option('wgact_options_backup');
 //        error_log(print_r($options, true));
+//            error_log('test');
 
 
             // check if WooCommerce is running
@@ -158,12 +158,19 @@ if (function_exists('wga_fs')) {
 
                 // run environment workflows
                 add_action('admin_notices', [$this, 'run_admin_compatibility_checks']);
+                add_action('admin_notices', [$this, 'environment_check_admin_notices']);
                 (new Environment_Check())->permanent_compatibility_mode();
                 $this->run_compatibility_modes();
 
                 $this->init();
             }
         }
+
+        public function environment_check_admin_notices()
+        {
+            (new Environment_Check())->check_active_off_site_payment_gateways();
+        }
+
 
         private function run_compatibility_modes()
         {

@@ -3,6 +3,7 @@
 namespace WGACT\Classes\Admin;
 
 use WC_Order;
+use WC_Tracker;
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
@@ -15,7 +16,47 @@ class Environment_Check
         if (is_admin()) {
             add_action('admin_enqueue_scripts', [$this, 'environment_check_script']);
             add_action('wp_ajax_environment_check_handler', [$this, 'ajax_environment_check_handler']);
+
+            // get all active payment gateways
+//            add_action('plugins_loaded', [$this, 'get_active_payment_gateways_after_plugins_loaded']);
+
+            //check for active off-site payment gateways
+//            $this->check_active_off_site_payment_gateways();
         }
+    }
+
+    public function check_active_off_site_payment_gateways()
+    {
+        $wgact_notifications = get_option('wgact_notifications');
+
+        if ($wgact_notifications['dismiss_paypal_standard_warning'] !== true) {
+
+            if ($this->is_paypal_standard_active()) {
+                // run off-site payment gateway warning
+                (new Notifications())->paypal_standard_active_warning();
+            }
+        }
+    }
+
+    public function get_active_payment_gateways_after_plugins_loaded()
+    {
+        error_log(print_r($this->get_active_payment_gateways(), true));
+    }
+
+    private static function get_active_payment_gateways(): array
+    {
+        $active_gateways = [];
+        $gateways        = WC()->payment_gateways->payment_gateways();
+        foreach ($gateways as $id => $gateway) {
+            if (isset($gateway->enabled) && 'yes' === $gateway->enabled) {
+                $active_gateways[$id] = [
+                    'title'    => $gateway->title,
+                    'supports' => $gateway->supports,
+                ];
+            }
+        }
+
+        return $active_gateways;
     }
 
     public function run_checks()
@@ -26,7 +67,8 @@ class Environment_Check
 
     public function environment_check_script()
     {
-        wp_enqueue_script('wooptpm-environment-check', plugin_dir_url(__DIR__) . '../js/admin/environment-check.js', ['jquery'], WGACT_CURRENT_VERSION, true);
+//        wp_enqueue_script('wooptpm-environment-check', plugin_dir_url(__DIR__) . '../js/admin/environment-check.js', ['jquery'], WGACT_CURRENT_VERSION, true);
+        wp_enqueue_script('wooptpm-environment-check', WGACT_PLUGIN_DIR_PATH . 'js/admin/environment-check.js', ['jquery'], WGACT_CURRENT_VERSION, true);
     }
 
     public function ajax_environment_check_handler()
@@ -53,6 +95,12 @@ class Environment_Check
         if ('dismiss_litespeed_inline_js_dom_ready' == $set) {
             $wgact_notifications                                                = get_option('wgact_notifications');
             $wgact_notifications['dismiss_litespeed_inline_js_dom_ready_error'] = true;
+            update_option('wgact_notifications', $wgact_notifications);
+        }
+
+        if ('dismiss_paypal_standard_warning' == $set) {
+            $wgact_notifications                                    = get_option('wgact_notifications');
+            $wgact_notifications['dismiss_paypal_standard_warning'] = true;
             update_option('wgact_notifications', $wgact_notifications);
         }
 
@@ -90,6 +138,17 @@ class Environment_Check
                     (new Notifications())->litespeed_js_defer_error();
                 }
             }
+        }
+    }
+
+    public function is_paypal_standard_active(): bool
+    {
+        $woocommerce_paypal_settings = get_option('woocommerce_paypal_settings');
+
+        if ($woocommerce_paypal_settings['enabled'] === 'yes') {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -406,9 +465,9 @@ class Environment_Check
 
     public function does_url_redirect($url): bool
     {
-        $context = stream_context_create( [
+        $context = stream_context_create([
             'ssl' => [
-                'verify_peer' => false,
+                'verify_peer'      => false,
                 'verify_peer_name' => false,
             ],
         ]);

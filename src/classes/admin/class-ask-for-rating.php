@@ -30,7 +30,8 @@ class Ask_For_Rating
     public function wgact_rating_script()
     {
 
-        wp_enqueue_script('wooptpm-ask-for-rating', plugin_dir_url(__DIR__) . '../js/admin/ask-for-rating.js', ['jquery'], WGACT_CURRENT_VERSION, true);
+//        wp_enqueue_script('wooptpm-ask-for-rating', plugin_dir_url(__DIR__) . '../js/admin/ask-for-rating.js', ['jquery'], WGACT_CURRENT_VERSION, true);
+        wp_enqueue_script('wooptpm-ask-for-rating', WGACT_PLUGIN_DIR_PATH . 'js/admin/ask-for-rating.js', ['jquery'], WGACT_CURRENT_VERSION, true);
 
 //	    wp_localize_script(
 //		    'ask-for-rating', // Handle

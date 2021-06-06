@@ -21,45 +21,93 @@ varExists('jQuery').then(function () {
         };
 
         const wooptpmRestSettings = {
-            cookiesAvailable                  : '_wooptpm_cookies_are_available',
+            // cookiesAvailable                  : '_wooptpm_cookies_are_available',
             cookieWooptpmRestEndpointAvailable: '_wooptpm_endpoint_available',
             restEndpoint                      : '/wp-json/',
+            restFails                         : 0,
             restFailsThreshold                : 10,
         }
 
-        wooptpm.checkIfCookiesAvailable = function () {
+        // wooptpm.checkIfCookiesAvailable = function () {
+        //
+        //     // read the cookie if previously set, if it is return true, otherwise continue
+        //     if (Cookies.get(wooptpmRestSettings.cookiesAvailable)) {
+        //         return true;
+        //     }
+        //
+        //     // set the cookie for the session
+        //     Cookies.set(wooptpmRestSettings.cookiesAvailable, true);
+        //
+        //     // read cookie, true if ok, false if not ok
+        //     return !!Cookies.get(wooptpmRestSettings.cookiesAvailable);
+        // }
 
-            // read the cookie if previously set, if it is return true, otherwise continue
-            if (Cookies.get(wooptpmRestSettings.cookiesAvailable)) {
-                return true;
+        wooptpm.useRestEndpoint = function () {
+
+            // only if sessionStorage is available
+
+            // only if REST API endpoint is generally accessible
+            // check in sessionStorage if we checked before and return answer
+            // otherwise check if the endpoint is available, save answer in sessionStorage and return answer
+
+            // only if not too many REST API errors happened
+
+            return wooptpm.isSessionStorageAvailable() &&
+                wooptpm.isRestEndpointAvailable() &&
+                wooptpm.isBelowRestErrorThreshold();
+        }
+
+        wooptpm.isBelowRestErrorThreshold = function () {
+            return window.sessionStorage.getItem(wooptpmRestSettings.restFails) <= wooptpmRestSettings.restFailsThreshold;
+        }
+
+        wooptpm.isRestEndpointAvailable = function () {
+
+            if (window.sessionStorage.getItem(wooptpmRestSettings.cookieWooptpmRestEndpointAvailable)) {
+                return JSON.parse(window.sessionStorage.getItem(wooptpmRestSettings.cookieWooptpmRestEndpointAvailable));
+            } else {
+                // return wooptpm.testEndpoint();
+                // just set the value whenever possible in order not to wait or block the main thread
+                wooptpm.testEndpoint();
             }
+        }
 
-            // set the cookie for the session
-            Cookies.set(wooptpmRestSettings.cookiesAvailable, true);
+        wooptpm.isSessionStorageAvailable = function () {
 
-            // read cookie, true if ok, false if not ok
-            return !!Cookies.get(wooptpmRestSettings.cookiesAvailable);
+            return !!window.sessionStorage;
         }
 
         wooptpm.testEndpoint = function (
             url        = location.protocol + "//" + location.host + wooptpmRestSettings.restEndpoint,
             cookieName = wooptpmRestSettings.cookieWooptpmRestEndpointAvailable
         ) {
+            // console.log('testing endpoint');
 
             jQuery.ajax(url, {
-                type      : "HEAD",
-                timeout   : 1000,
+                type   : "HEAD",
+                timeout: 1000,
+                // async: false,
                 statusCode: {
                     200: function (response) {
-                        Cookies.set(cookieName, true);
+                        // Cookies.set(cookieName, true);
+                        // console.log('endpoint works');
+                        window.sessionStorage.setItem(cookieName, JSON.stringify(true));
                     },
                     404: function (response) {
-                        Cookies.set(cookieName, false);
+                        // Cookies.set(cookieName, false);
+                        // console.log('endpoint doesn\'t work');
+                        window.sessionStorage.setItem(cookieName, JSON.stringify(false));
                     },
                     0  : function (response) {
-                        Cookies.set(cookieName, false);
+                        // Cookies.set(cookieName, false);
+                        // console.log('endpoint doesn\'t work');
+                        window.sessionStorage.setItem(cookieName, JSON.stringify(false));
                     }
                 }
+            }).then(r => {
+                // console.log('test done')
+                // console.log('result: ' + JSON.parse(window.sessionStorage.getItem(cookieName)));
+                // return JSON.parse(window.sessionStorage.getItem(cookieName));
             });
         }
 

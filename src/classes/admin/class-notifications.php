@@ -89,4 +89,43 @@ class Notifications
         </div>
         <?php
     }
+
+    public function paypal_standard_active_warning()
+    {
+        ?>
+        <div class="notice notice-error wooptpm-paypal-standard-error" style="position:relative;">
+            <p style="color:red;">
+                <span>
+                        <?php esc_html_e('The WooCommerce Pixel Manager plugin detected that the PayPal standard payment gateway is active. The PayPal standard payment gateway is an off-site payment gateway which impairs conversion tracking significantly. Please switch to an on-site payment gateway as soon as possible in order to increase your conversion tracking accuracy.', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+                </span><br>
+            </p>
+            <p>
+                <a href="https://docs.woopt.com/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=paypal-standard-warning#/requirements?id=payment-gateways"
+                   target="_blank">
+                    <?php esc_html_e('Learn more', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+                </a>
+            </p>
+            <p>
+                <a href="<?php echo get_admin_url() . 'admin.php?page=wc-settings&tab=checkout' ?>">
+                    <?php esc_html_e('Open the WooCommerce payment methods settings', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+                </a>
+            </p>
+            <p>
+            <div id="wooptpm-paypal-standard-error-dismissal-button" class="button" style="white-space:normal;">
+                <?php esc_html_e('Click here to dismiss this warning forever.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+            </div>
+            </p>
+            <p>
+
+            <div id="wooptpm-paypal-standard-error-dismissal-button"
+                 style="white-space:normal; position:absolute; bottom:0; right: 0; margin-bottom: 2px; margin-right: 5px">
+                <a href="https://docs.woopt.com/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=dismiss-button-info#/faq?id=the-dismiss-button-doesnt-work-why" target="_blank">
+                    <?php esc_html_e('The dismiss button doesn\'t work. Why? >>', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+                </a>
+            </div>
+            </p>
+
+        </div>
+        <?php
+    }
 }

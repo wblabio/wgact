@@ -47,6 +47,19 @@ jQuery(function () {
 
         wgact_send_ajax_data(data);
     });
+
+    // dismiss PayPal standard payment gateway warning
+    jQuery(document).on('click', '#wooptpm-paypal-standard-error-dismissal-button', function (e) {
+        e.preventDefault();
+
+        let data = {
+            'action': 'environment_check_handler',
+            'set'   : 'dismiss_paypal_standard_warning'
+        };
+
+        wgact_send_ajax_data(data);
+    });
+
 });
 
 function wgact_send_ajax_data(data){
