@@ -14,42 +14,53 @@ varExists('jQuery').then(function () {
     (function (wooptpm, $, undefined) {
 
 
-    wooptpm.setGoogleCidOnServer = function (targetID) {
+        wooptpm.setGoogleCidOnServer = function (targetID) {
 
-        try {
+            try {
 
-            gtag('get', targetID, 'client_id', (clientID) => {
-                // console.log('Google cid: ' + clientID);
+                gtag('get', targetID, 'client_id', (clientID) => {
+                    // console.log('Google cid: ' + clientID);
 
-                // save the state in the database
-                let data = {
-                    'action'   : 'wooptpm_google_analytics_set_session_cid',
-                    'nonce': wooptpm_google_premium_only_ajax_object.nonce,
-                    'target_id': targetID,
-                    'client_id': clientID,
-                };
+                    if (window.sessionStorage && window.sessionStorage.getItem('wooptpm_cid_' + targetID + '_' + clientID + '_set')) {
+                        return;
+                    }
 
-                jQuery.ajax(
-                    {
-                        type    : "post",
-                        dataType: "json",
-                        url     : wooptpm_google_premium_only_ajax_object.ajax_url,
-                        data    : data,
-                        success : function (msg) {
-                            // console.log(msg);
-                        },
-                        error : function (msg) {
-                            // console.log(msg);
-                        },
-                    });
-            });
+                    // save the state in the database
+                    let data = {
+                        'action'   : 'wooptpm_google_analytics_set_session_cid',
+                        'nonce'    : wooptpm_google_premium_only_ajax_object.nonce,
+                        'target_id': targetID,
+                        'client_id': clientID,
+                    };
 
-        } catch (e) {
-            console.log(e);
+                    jQuery.ajax(
+                        {
+                            type    : "post",
+                            dataType: "json",
+                            url     : wooptpm_google_premium_only_ajax_object.ajax_url,
+                            data    : data,
+                            success : function (response) {
+                                // console.log('cid response:');
+                                // console.log(response);
+                                // console.log(response['cid_set'])
+
+                                if(window.sessionStorage && response['success'] === true ){
+                                    // console.log('setting session storage');
+                                    window.sessionStorage.setItem('wooptpm_cid_' + targetID + '_' + clientID + '_set', JSON.stringify(true));
+                                }
+                            },
+                            error   : function (response) {
+                                console.log(response);
+                            },
+                        });
+                });
+
+            } catch (e) {
+                console.log(e);
+            }
         }
-    }
 
-}(window.wooptpm = window.wooptpm || {}, jQuery));
+    }(window.wooptpm = window.wooptpm || {}, jQuery));
 
 }).catch(function () {
     console.log('object couldn\'t be loaded');

@@ -301,11 +301,13 @@ class Facebook_CAPI extends Http
     // https://developers.facebook.com/docs/marketing-api/conversions-api/parameters/fbp-and-fbc
     public function wooptpm_facebook_set_session_identifiers()
     {
-        if (!check_ajax_referer('wooptpm-facebook-premium-only-nonce', 'nonce', false)) {
-            wp_send_json_error('Invalid security token sent.');
-            error_log('Invalid security token sent.');
-            wp_die();
-        }
+        // ! we can't check for a nonce since we'd run into issues with caching systems
+
+//        if (!check_ajax_referer('wooptpm-facebook-premium-only-nonce', 'nonce', false)) {
+//            wp_send_json_error('Invalid security token sent.');
+//            error_log('Invalid security token sent.');
+//            wp_die();
+//        }
 
 //        error_log('fbp from browser: ' . $_POST['fbp']);
 
@@ -345,16 +347,22 @@ class Facebook_CAPI extends Http
 
         WC()->session->set($this->facebook_key, $facebook_identifiers);
 
+        wp_send_json_success();
+
         wp_die(); // this is required to terminate immediately and return a proper response
     }
 
     public function wooptpm_facebook_capi_event()
     {
-        if (!check_ajax_referer('wooptpm-facebook-premium-only-nonce', 'nonce', false)) {
-            wp_send_json_error('Invalid security token sent.');
-            error_log('Invalid security token sent.');
-            wp_die();
-        }
+        // don't check the nonce since it could have been cached on the front end
+
+        // build in a way to only use nonces for logged in users
+
+//        if (!check_ajax_referer('wooptpm-facebook-premium-only-nonce', 'nonce', false)) {
+//            wp_send_json_error('Invalid security token sent.');
+//            error_log('Invalid security token sent.');
+//            wp_die();
+//        }
 
         if (!isset($_POST['data'])) {
             wp_die();

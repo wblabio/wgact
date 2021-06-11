@@ -63,7 +63,7 @@ class Facebook_Pixel_Manager extends Pixel_Manager_Base
 
         if (wga_fs()->is__premium_only()) {
 //            wp_enqueue_script('wooptpm-facebook-premium-only', plugin_dir_url(__DIR__) . '../../js/public/facebook__premium_only.js', ['jquery', 'jquery-cookie', 'wooptpm', 'wooptpm-premium-only', 'wooptpm-facebook'], WGACT_CURRENT_VERSION, true);
-            wp_enqueue_script('wooptpm-facebook-premium-only', WGACT_PLUGIN_DIR_PATH . 'js/public/facebook__premium_only.js', ['jquery', 'jquery-cookie', 'wooptpm', 'wooptpm-premium-only', 'wooptpm-facebook'], WGACT_CURRENT_VERSION, true);
+            wp_enqueue_script('wooptpm-facebook-premium-only', WGACT_PLUGIN_DIR_PATH . 'js/public/facebook__premium_only.js', ['jquery', 'wooptpm', 'wooptpm-premium-only', 'wooptpm-facebook'], WGACT_CURRENT_VERSION, true);
 
             wp_localize_script(
                 'wooptpm-facebook-premium-only',

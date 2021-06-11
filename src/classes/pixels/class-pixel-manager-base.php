@@ -84,7 +84,7 @@ class Pixel_Manager_Base
             if (is_object($product)) {
 
                 $product_attributes['product_id_compiled'] = $this->get_compiled_product_id($product_id, $product->get_sku(), $this->options, '');
-                $product_attributes['dyn_r_ids'] = $this->get_dyn_r_ids($product);
+                $product_attributes['dyn_r_ids']           = $this->get_dyn_r_ids($product);
                 $this->inject_product($product, $product_attributes);
             } else {
 
@@ -165,12 +165,17 @@ class Pixel_Manager_Base
 //        error_log('get_post_meta($order->get_order_number(), \'_wooptpm_conversion_pixel_fired\', true): ' . get_post_meta($order->get_order_number(), '_wooptpm_conversion_pixel_fired', true));
 
 
-        if ($this->is_nodedupe_parameter_set() ||
+        if (
+            $this->is_nodedupe_parameter_set() ||
             (!$order->has_status('failed') &&
                 !current_user_can('edit_others_pages') &&
                 $conversion_prevention == false &&
-                (!$this->options['shop']['order_deduplication'] ||
-                    get_post_meta($order->get_order_number(), '_wooptpm_conversion_pixel_fired', true) != true))) {
+                (
+                    !$this->options['shop']['order_deduplication'] ||
+                    get_post_meta($order->get_id(), '_wooptpm_conversion_pixel_fired', true) != true
+                )
+            )
+        ) {
 //            error_log('fire pixels: true' . PHP_EOL);
             return true;
         } else {

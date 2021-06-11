@@ -33,7 +33,7 @@ class Pixel_Manager extends Pixel_Manager_Base
     protected $cart;
     protected $facebook_active;
     protected $google_active;
-    protected $transaction_deduper_timeout = 2000;
+    protected $transaction_deduper_timeout = 1000;
     protected $hotjar_pixel;
     protected $dyn_r_ids;
     protected $position = 1;
@@ -89,6 +89,10 @@ class Pixel_Manager extends Pixel_Manager_Base
 
         add_action('wp_head', function () {
             $this->inject_woopt_closing();
+//            if( isset(WC()->session)) {
+//                error_log('session is set');
+//                error_log(print_r(WC()->session,true));
+//            }
         });
 
         /*
@@ -269,7 +273,7 @@ class Pixel_Manager extends Pixel_Manager_Base
 
         ?>
 
-        <script data-cfasync="false" >
+        <script data-cfasync="false">
 
             function wooptpmExists() {
                 return new Promise(function (resolve, reject) {
@@ -319,7 +323,8 @@ class Pixel_Manager extends Pixel_Manager_Base
             if ($this->get_order_from_order_received_page()) {
 
                 $order = new WC_Order($this->get_order_from_order_received_page());
-                $this->inject_transaction_deduper_script($order->get_order_number());
+//                $this->inject_transaction_deduper_script($order->get_order_number());
+                $this->inject_transaction_deduper_script($order->get_id());
 
                 $this->increase_conversion_count_for_ratings($order);
             }
@@ -419,7 +424,11 @@ class Pixel_Manager extends Pixel_Manager_Base
 
     public function ajax_purchase_pixels_fired_handler__premium_only()
     {
-        if (!check_ajax_referer('wooptpm-premium-only-nonce', 'nonce', false)) {
+//        error_log('test save');
+//        if (!check_ajax_referer('wooptpm-premium-only-nonce', 'nonce', false)) {
+//        error_log('post nonce: ' . $_POST['nonce']);
+
+        if (!wp_verify_nonce($_POST['nonce'], $_POST['action'])) {
             wp_send_json_error('Invalid security token sent.');
             error_log('Invalid security token sent.');
             wp_die();
@@ -427,6 +436,9 @@ class Pixel_Manager extends Pixel_Manager_Base
 
         $order_id = filter_var($_POST['order_id'], FILTER_SANITIZE_STRING);
         update_post_meta($order_id, '_wooptpm_conversion_pixel_fired', true);
+
+        wp_send_json_success();
+
         wp_die(); // this is required to terminate immediately and return a proper response
     }
 
@@ -442,12 +454,14 @@ class Pixel_Manager extends Pixel_Manager_Base
 //            wp_enqueue_script('wooptpm-premium-only', plugin_dir_url(__DIR__) . '../js/public/wooptpm__premium_only.js', ['jquery', 'wooptpm'], WGACT_CURRENT_VERSION, false);
             wp_enqueue_script('wooptpm-premium-only', WGACT_PLUGIN_DIR_PATH . 'js/public/wooptpm__premium_only.js', ['jquery', 'wooptpm'], WGACT_CURRENT_VERSION, false);
 
+//            $nonce = wp_create_nonce('wooptpm_purchase_pixels_fired');
+//            error_log('nonce: ' . $nonce);
             wp_localize_script(
                 'wooptpm-premium-only',
                 'wooptpm_premium_only_ajax_object',
                 [
                     'ajax_url' => admin_url('admin-ajax.php'),
-                    'nonce'    => wp_create_nonce('wooptpm-premium-only-nonce'),
+                    'nonce'    => wp_create_nonce('wooptpm_purchase_pixels_fired')
                 ]
             );
         }
@@ -664,6 +678,8 @@ class Pixel_Manager extends Pixel_Manager_Base
 
     protected function inject_transaction_deduper_script($order_id)
     {
+//        error_log('order id: ' . $order_id);
+
         ?>
 
         <script>

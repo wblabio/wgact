@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, google analytics, facebook pixel, conversion trac
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 7.2
-Stable tag: 1.10.6-beta.1
+Stable tag: 1.10.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +16,15 @@ This plugin <strong>tracks WooCommerce shop visitors and collects valuable data 
 
 While the setup is as simple as it can get, the pixel engine under the hood is very powerful. It tracks all standard events and implements all advanced pixel features like Facebook CAPI (Pro version), Google Enhanced E-Commerce, Google Shopping Cart Item Tracking and much more. For advanced users the plugin offers filters which allow to tweak the output very flexibly and fine tune the behaviour to each shop.
 
-The plugin comes with integrations for:
+<strong>What sets us apart from other, similar plugins?</strong>
+
+Well, out of many things, probably high tracking accuracy is the most important property that sets our plugin apart from others. While other plugin developers spend much of their time making the setup pages look fancy, we keep the settings pages as simple as possible, save that time and spend it on making the visitor and conversion tracking as accurate as possible.
+
+Our plugin is optimized for tracking accuracy for all included pixels. We've built many features into the plugin which help measure visitors and conversions as accurate as technically possible. For instance, if the plugin detects problems in the shop setup that might lower or prevent accurate tracking, it either fixes them seamlessly, or shows warnings with guidance on how to fix the problems.
+
+Read more about the importance of tracking accuracy over [here](https://docs.woopt.com/wgact/?utm_source=wordpress.org&utm_medium=wooptpm-plugin-page&utm_campaign=woopt-pixel-manager-docs#/faq?id=why-is-tracking-accuracy-so-important).
+
+<strong>The plugin comes with integrations for:</strong>
 
 * Google Ads
 * Google Analytics (Universal and Google Analytics 4)
@@ -168,8 +176,18 @@ You can send the link to the front page of your shop too if you think it would b
 
 = 1.10.6 =
 
+[//]: # fs_premium_only_begin
+* New: Added the new Google Ads enhanced conversions feature
+[//]: # fs_premium_only_end
 * New: Added conversion accuracy warning if the PayPal standard payment gateway is active
+* New: Added support for WooCommerce composite products
+[//]: # fs_premium_only_begin
+* Tweak: Lowered ajax requests on Google cid setter significantly
+* Tweak: Lowered ajax requests on Facebook session id setter significantly
+* Tweak: Switched order duplication prevention to process internal order ID (not order number)
+[//]: # fs_premium_only_end
 * Tweak: Implemented better way to reference .js and .css files
+* Tweak: Removed jquery.cookie.js dependency
 
 = 1.10.5 =
 

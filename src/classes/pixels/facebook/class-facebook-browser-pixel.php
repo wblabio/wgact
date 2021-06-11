@@ -75,7 +75,7 @@ class Facebook_Browser_Pixel extends Pixel
 
         echo "
             wooptpmExists().then(function(){
-                if (!wooptpm.isOrderIdStored('". $order->get_order_number() . "')) {
+                if (!wooptpm.isOrderIdStored('". $order->get_id() . "')) {
                     fbq('track', 'Purchase', " . json_encode($data) . ", {
                         'eventID': '" . $order->get_order_number() . "',
                     });

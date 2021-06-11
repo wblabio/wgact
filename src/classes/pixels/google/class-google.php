@@ -89,7 +89,7 @@ class Google extends Pixel
                 dataLayer.push(arguments);
             }
     " . $this->consent_mode_gtag_html()
-      . $this->linker_html() . "
+            . $this->linker_html() . "
             gtag('js', new Date());";
     }
 
@@ -309,7 +309,13 @@ class Google extends Pixel
     protected function gtag_config($id, $channel = ''): string
     {
         if ('ads' === $channel) {
-            return PHP_EOL . "\t\t\t" . "gtag('config', 'AW-" . $id . "');" . PHP_EOL;
+
+            if ($this->options_obj->google->ads->enhanced_conversions) {
+                return PHP_EOL . "\t\t\t" . "gtag('config', 'AW-" . $id . "', {'allow_enhanced_conversions':true});" . PHP_EOL;
+            } else {
+                return PHP_EOL . "\t\t\t" . "gtag('config', 'AW-" . $id . "');" . PHP_EOL;
+            }
+
         } elseif ('ga_ua' === $channel) {
 
             $ga_ua_parameters = [

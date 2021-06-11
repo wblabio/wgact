@@ -44,11 +44,27 @@ class Google_Ads extends Google
 
     public function inject_order_received_page($order, $order_total, $is_new_customer)
     {
+        if($this->options_obj->google->ads->enhanced_conversions){
+
+        $customer_data = [];
+
+            if ($order->get_billing_email()) $customer_data['email'] = (string)$order->get_billing_email();
+            if ($order->get_billing_phone()) $customer_data['phone_number'] = (string)$order->get_billing_phone();
+            if ($order->get_billing_first_name()) $customer_data['first_name'] = (string)$order->get_billing_first_name();
+            if ($order->get_billing_last_name()) $customer_data['last_name'] = (string)$order->get_billing_last_name();
+            if ($order->get_billing_address_1()) $customer_data['home_address']['street'] = (string)$order->get_billing_address_1();
+            if ($order->get_billing_city()) $customer_data['home_address']['city'] = (string)$order->get_billing_city();
+            if ($order->get_billing_state()) $customer_data['home_address']['region'] = (string)$order->get_billing_state();
+            if ($order->get_billing_postcode()) $customer_data['home_address']['postal_code'] = (string)$order->get_billing_postcode();
+            if ($order->get_billing_country()) $customer_data['home_address']['country'] = (string)$order->get_billing_country();
+
+            ?>
+
+            let enhanced_conversion_data = <?php echo json_encode($customer_data) ?>;
+            <?php
+        }
+
         $order_currency = $this->get_order_currency($order);
-
-        ?>
-
-        <?php
 
         // if cart data beta is off and conversion id has been set
         if ($this->add_cart_data == false && $this->options_obj->google->ads->conversion_id) {
@@ -178,7 +194,7 @@ class Google_Ads extends Google
     {
         echo "
                 wooptpmExists().then(function(){
-                    if (!wooptpm.isOrderIdStored('" . $order->get_order_number() . "')) {
+                    if (!wooptpm.isOrderIdStored('" . $order->get_id() . "')) {
                         gtag('event', 'purchase', {
                             'send_to': " . json_encode($this->get_google_ads_conversion_ids()) . ",
                             'value'  : " . $order_total . ",

@@ -15,6 +15,12 @@ varExists('jQuery').then(function () {
 
         wooptpm.storeOrderIdOnServer = function (orderId) {
 
+            // console.log('saving wooptpm_purchase_pixels_fired');
+
+            // console.log('url: ' + wooptpm_premium_only_ajax_object.ajax_url);
+            // console.log('nonce: ' + wooptpm_premium_only_ajax_object.nonce);
+
+
             try {
                 // save the state in the database
                 let data = {
@@ -29,13 +35,14 @@ varExists('jQuery').then(function () {
                         dataType: "json",
                         url     : wooptpm_premium_only_ajax_object.ajax_url,
                         data    : data,
-                        success : function (msg) {
-                            // console.log(msg);
+                        success : function (response) {
+                            if (response.success === false) {
+                                console.log(response);
+                            }
                         },
-                        error   : function (msg) {
-                            // console.log(msg);
+                        error   : function (response) {
+                            console.log(response);
                         }
-
                     });
             } catch (e) {
                 console.log(e);

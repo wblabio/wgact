@@ -31,7 +31,7 @@ varExists('jQuery').then(function () {
         // wooptpm.checkIfCookiesAvailable = function () {
         //
         //     // read the cookie if previously set, if it is return true, otherwise continue
-        //     if (Cookies.get(wooptpmRestSettings.cookiesAvailable)) {
+        //     if (wooptpm.getCookie(wooptpmRestSettings.cookiesAvailable)) {
         //         return true;
         //     }
         //
@@ -39,7 +39,7 @@ varExists('jQuery').then(function () {
         //     Cookies.set(wooptpmRestSettings.cookiesAvailable, true);
         //
         //     // read cookie, true if ok, false if not ok
-        //     return !!Cookies.get(wooptpmRestSettings.cookiesAvailable);
+        //     return !!wooptpm.getCookie(wooptpmRestSettings.cookiesAvailable);
         // }
 
         wooptpm.useRestEndpoint = function () {
@@ -113,7 +113,7 @@ varExists('jQuery').then(function () {
 
         wooptpm.isWooptpmRestEndpointAvailable = function (cookieName = wooptpmRestSettings.cookieWooptpmRestEndpointAvailable) {
 
-            return !!Cookies.get(cookieName);
+            return !!wooptpm.getCookie(cookieName);
         }
 
         wooptpm.objectExists = function (obj) {
@@ -437,7 +437,7 @@ varExists('jQuery').then(function () {
             jQuery(document).trigger('wooptpmViewItemList', wooptpm.getProductDataForViewItemEvent(productId));
         }
 
-        wooptpm.getProductDataForViewItemEvent = function (productId) {
+        wooptpm.getProductDataForViewItemEvent  = function (productId) {
 
             if (!productId) throw Error('Wasn\'t able to retrieve a productId');
 
@@ -461,15 +461,9 @@ varExists('jQuery').then(function () {
                 console.log(e);
             }
         }
-
         wooptpm.getMainProductIdFromProductPage = function () {
             try {
-                if (wooptpmDataLayer.shop.product_type === 'simple') {
-                    return jQuery('.wooptpmProductId:first').data('id');
-                } else if (wooptpmDataLayer.shop.product_type === 'variable') {
-                    return jQuery('.wooptpmProductId:first').data('id');
-                } else if (wooptpmDataLayer.shop.product_type === 'grouped') {
-                    // return jQuery('.grouped_form').find('[name="add-to-cart"]').val();
+                if (['simple', 'variable', 'grouped', 'composite'].indexOf(wooptpmDataLayer.shop.product_type) >= 0) {
                     return jQuery('.wooptpmProductId:first').data('id');
                 } else {
                     return false;
@@ -659,6 +653,29 @@ varExists('jQuery').then(function () {
         let hasWooptpmProductIdElement = function (elem) {
             return !!(jQuery(elem).find('.wooptpmProductId').length ||
                 jQuery(elem).siblings('.wooptpmProductId').length);
+        }
+
+        wooptpm.setCookie = function (cookieName, cookieValue = '', expiryDays = 365) {
+            let d = new Date();
+            d.setTime(d.getTime() + (expiryDays * 24 * 60 * 60 * 1000));
+            let expires     = "expires=" + d.toUTCString();
+            document.cookie = cookieName + "=" + cookieValue + ";" + expires + ";path=/";
+        }
+
+        wooptpm.getCookie = function (cookieName) {
+            let name          = cookieName + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca            = decodedCookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
         }
 
         // wooptpm['load'] = {

@@ -152,8 +152,8 @@ class Admin
         //add_options_page('WGACT Plugin Page', 'WGACT Plugin Menu', 'manage_options', 'wgact', array($this, 'wgact_plugin_options_page'));
         add_submenu_page(
             'woocommerce',
-            esc_html__('Google Ads Conversion Tracking', 'woocommerce-google-adwords-conversion-tracking-tag'),
-            esc_html__('Google Ads Conversion Tracking', 'woocommerce-google-adwords-conversion-tracking-tag'),
+            esc_html__('woopt Pixel Manager', 'woocommerce-google-adwords-conversion-tracking-tag'),
+            esc_html__('woopt Pixel Manager', 'woocommerce-google-adwords-conversion-tracking-tag'),
             'manage_options',
             'wgact',
             [$this, 'wgact_plugin_options_page']
@@ -572,6 +572,18 @@ class Admin
                     'woocommerce-google-adwords-conversion-tracking-tag'
                 ),
                 [$this, 'wgact_setting_html_google_user_id'],
+                'wgact_plugin_options_page',
+                $section_ids['settings_name']
+            );
+
+            // add Google Ads enhanced conversions
+            add_settings_field(
+                'wooptpm_setting_google_ads_enhanced_conversions',
+                esc_html__(
+                    'Google Ads enhanced conversions',
+                    'woocommerce-google-adwords-conversion-tracking-tag'
+                ) . $this->svg_beta(),
+                [$this, 'wooptpm_setting_html_google_ads_enhanced_conversions'],
                 'wgact_plugin_options_page',
                 $section_ids['settings_name']
             );
@@ -1466,6 +1478,36 @@ class Admin
         if ($this->options['google']['analytics']['eec'] && (!$this->options['google']['analytics']['universal']['property_id'] && !$this->options['google']['analytics']['ga4']['measurement_id'])) {
             echo '<p></p><span class="dashicons dashicons-info"></span>';
             esc_html_e('You need to activate at least Google Analytics UA or Google Analytics 4', 'woocommerce-google-adwords-conversion-tracking-tag');
+            echo '</p><br>';
+        }
+    }
+
+    public function wooptpm_setting_html_google_ads_enhanced_conversions()
+    {
+        // adding the hidden input is a hack to make WordPress save the option with the value zero,
+        // instead of not saving it and remove that array key entirely
+        // https://stackoverflow.com/a/1992745/4688612
+        ?>
+        <label>
+            <input type='hidden' value='0' name='wgact_plugin_options[google][ads][enhanced_conversions]'>
+            <input type='checkbox' id='wgact_setting_google_user_id'
+                   name='wgact_plugin_options[google][ads][enhanced_conversions]'
+                   value='1'
+                <?php checked($this->options['google']['ads']['enhanced_conversions']); ?>
+                <?php echo $this->disable_if_demo() ?>
+            />
+            <?php
+            esc_html_e('Enable Google Ads enhanced conversions', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+        </label>
+        <?php
+        echo $this->get_status_icon($this->options['google']['ads']['enhanced_conversions'], $this->is_google_ads_active(), true);
+        echo $this->svg_pro_feature();
+        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-ads-enhanced-conversions#/pixels/google-ads?id=enhanced-conversions');
+        ?>
+        <?php
+        if (!$this->is_google_ads_active()) {
+            echo '<p></p><span class="dashicons dashicons-info"></span>';
+            esc_html_e('You need to activate Google Ads', 'woocommerce-google-adwords-conversion-tracking-tag');
             echo '</p><br>';
         }
     }

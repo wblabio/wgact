@@ -2,6 +2,8 @@
 
 namespace WGACT\Classes\Admin;
 
+use WC_Order_Query;
+
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
@@ -79,6 +81,30 @@ class Debug_info
         }
 
 //        $html                                .= 'wc_get_page_permalink(\'checkout\'): ' . wc_get_page_permalink('checkout') . PHP_EOL;
+
+        $html .= PHP_EOL . '## WooCommerce Payment Gateways##' . PHP_EOL . PHP_EOL;
+        $html .= 'Active payment gateways: ' . PHP_EOL;
+
+//        $this->get_enabled_payment_gateways();
+
+        foreach ($this->get_enabled_payment_gateways() as $key => $value) {
+//            error_log(get_class($value));
+//            error_log($value->method_title);
+
+            $html .= "\t" . get_class($value) . '(' . $value->method_title . ')' . PHP_EOL;
+        }
+
+        if (wga_fs()->is__premium_only()) {
+
+            $max_order_amount = 100;
+            $html             .= PHP_EOL . "Purchase confirmation page reached per gateway (of last $max_order_amount orders):" . PHP_EOL;
+
+            foreach ($this->get_gateway_analysis_array($max_order_amount) as $text) {
+                $html .= "\t" . $text . PHP_EOL;
+            }
+        }
+
+//        $html .= PHP_EOL;
 
         $html .= PHP_EOL . '## Theme ##' . PHP_EOL . PHP_EOL;
 
@@ -204,5 +230,121 @@ class Debug_info
         }
     }
 
+    private function get_enabled_payment_gateways(): array
+    {
+        $gateways         = WC()->payment_gateways->get_available_payment_gateways();
+        $enabled_gateways = [];
 
+        if ($gateways) {
+            foreach ($gateways as $gateway) {
+
+                if ($gateway->enabled == 'yes') $enabled_gateways[] = $gateway;
+            }
+        }
+
+//        error_log(print_r($enabled_gateways, true)); // Should return an array of enabled gateways
+
+        return $enabled_gateways;
+    }
+
+    private function get_last_orders($limit = 100)
+    {
+        // Get 10 most recent order ids in date descending order.
+        $query = new WC_Order_Query([
+            'limit'   => $limit,
+            'type' => 'shop_order',
+            'orderby' => 'date',
+            'order'   => 'DESC',
+            'return'  => 'ids',
+        ]);
+
+        return $query->get_orders();
+    }
+
+    private function list_gateways_of_orders($limit = 100): array
+    {
+        $last_orders = $this->get_last_orders($limit);
+
+//        error_log(print_r(array_flip($last_orders), true));
+//        error_log(min($last_orders));
+
+        $earliest_relevant_order_id = $this->get_earliest_order_with_pixel_fired_tag($last_orders, $limit);
+
+        // only keep orders up until the oldest one with _wooptpm_conversion_pixel_fired
+        $last_orders = array_filter($last_orders, function ($x) use ($earliest_relevant_order_id) {
+            return $x >= $earliest_relevant_order_id;
+        });
+
+//        error_log(print_r(array_flip($last_orders), true));
+
+        $data = [];
+
+        foreach ($last_orders as $order_id) {
+            $order = wc_get_order($order_id);
+
+//            error_log(print_r(get_post_meta($order_id, '_wooptpm_conversion_pixel_fired', true), true));
+//            error_log('payment method: ' . $order->get_payment_method() . ', ' . $order->get_payment_method_title());
+
+            if (!array_key_exists($order->get_payment_method(), $data)) {
+                $data[$order->get_payment_method()]                 = [];
+                $data[$order->get_payment_method()]['fired']        = 0;
+                $data[$order->get_payment_method()]['not_fired']    = 0;
+                $data[$order->get_payment_method()]['method_title'] = $order->get_payment_method_title();
+            }
+
+            $fired = get_post_meta($order_id, '_wooptpm_conversion_pixel_fired', true);
+
+//            error_log('order_id: ' . $order_id . ', payment method: ' . $order->get_payment_method() . ', ' . $order->get_payment_method_title() . ', ' . $fired);
+
+            if ($fired) {
+                $data[$order->get_payment_method()]['fired'] += 1;
+            } else {
+                $data[$order->get_payment_method()]['not_fired'] += 1;
+            }
+//            error_log('payment method title: ' . $order->get_payment_method_title());
+        }
+
+//        error_log(print_r($data, true));
+
+        return $data;
+
+    }
+
+    private function get_gateway_analysis_array($limit = 100): array
+    {
+        $data = [];
+
+        foreach ($this->list_gateways_of_orders($limit) as $gateway => $value) {
+
+            $fired      = $value['fired'];
+            $not_fired  = $value['not_fired'];
+            $total      = $fired + $not_fired;
+            $percentage = number_format((float)($fired / $total), 2, '.', '');
+
+            $text = $gateway . ' (' . $value['method_title'] . '): ' . $fired . ' / ' . $total . ' => ' . $percentage * 100 . '% accuracy';
+//            error_log($text);
+
+            $data[] = $text;
+        }
+
+        return $data;
+    }
+
+    public function get_earliest_order_with_pixel_fired_tag($order_ids, $limit)
+    {
+        $query = new WC_Order_Query([
+             'limit'    => $limit,
+            // 'orderby'  => 'date',
+            // 'order'    => 'DESC',
+             'type' => 'shop_order',
+             'return'   => 'ids',
+            'post__in' => $order_ids,
+            'meta_key' => '_wooptpm_conversion_pixel_fired'
+        ]);
+
+//        error_log(print_r($query->get_orders(), true));
+//        error_log('min: ' . min($query->get_orders()));
+
+        return min($query->get_orders());
+    }
 }

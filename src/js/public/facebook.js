@@ -23,10 +23,10 @@ varExists('jQuery').then(function () {
         wooptpm.getFbUserData = function () {
             // We need the first one for InitiateCheckout
             // where getting the the user_data from the browser is too slow
-            // using Cookies.get(), so we cache the user_data earlier.
+            // using wooptpm.getCookie(), so we cache the user_data earlier.
             // And we need the second one because the ViewContent hit happens too fast
             // after adding a variation to the cart because the function to cache
-            // the user_data is too slow. But we can get the user_data using Cookies.get()
+            // the user_data is too slow. But we can get the user_data using wooptpm.getCookie()
             // because we don't move away from the page and can wait for the browser
             // to get it.
             if (fBUserData) {
@@ -42,8 +42,8 @@ varExists('jQuery').then(function () {
 
         wooptpm.getFbUserDataFromBrowser = function () {
             return {
-                "fbp"              : Cookies.get('_fbp'),
-                "fbc"              : Cookies.get('_fbc'),
+                "fbp"              : wooptpm.getCookie('_fbp'),
+                "fbc"              : wooptpm.getCookie('_fbc'),
                 "client_user_agent": navigator.userAgent
             }
         }

@@ -49,6 +49,8 @@ class Google_MP extends Http
 
         WC()->session->set('google_cid_' . $target_id, $client_id);
 
+        wp_send_json_success();
+
         wp_die(); // this is required to terminate immediately and return a proper response
     }
 

@@ -24,6 +24,7 @@ class Default_Options
                     'dynamic_remarketing'      => 0,
                     'phone_conversion_number'  => '',
                     'phone_conversion_label'   => '',
+                    'enhanced_conversions'     => 0,
                 ],
                 'analytics'    => [
                     'universal'        => [
@@ -54,7 +55,7 @@ class Default_Options
                 'capi'      => [
                     'token'             => '',
                     'user_transparency' => [
-                        'process_anonymous_hits' => false,
+                        'process_anonymous_hits'             => false,
                         'send_additional_client_identifiers' => false,
                     ]
                 ]

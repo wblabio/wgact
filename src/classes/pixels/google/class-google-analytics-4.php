@@ -22,7 +22,7 @@ class Google_Analytics_4 extends Google_Analytics
 
         echo "       
                 wooptpmExists().then(function(){
-                    if  (!wooptpm.isOrderIdStored('" . $order->get_order_number() . "')) {
+                    if  (!wooptpm.isOrderIdStored('" . $order->get_id() . "')) {
                         gtag('event', 'purchase', " . $this->get_event_purchase_json($order, $order_total, $order_currency, $is_new_customer) . ");
                     }
                 });

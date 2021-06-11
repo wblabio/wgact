@@ -29,7 +29,7 @@ class Environment_Check
     {
         $wgact_notifications = get_option('wgact_notifications');
 
-        if ($wgact_notifications['dismiss_paypal_standard_warning'] !== true) {
+        if (!is_array($wgact_notifications) || !array_key_exists('dismiss_paypal_standard_warning', $wgact_notifications) || $wgact_notifications['dismiss_paypal_standard_warning'] !== true) {
 
             if ($this->is_paypal_standard_active()) {
                 // run off-site payment gateway warning

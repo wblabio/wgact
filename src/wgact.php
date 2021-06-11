@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name:  WooCommerce Conversion Tracking
- * Description:  Google Ads conversion value tracking for WooCommerce.
+ * Description:  Visitor and conversion value tracking for WooCommerce. Highly optimized for data accuracy (which drives optimal campaign performance).
  * Author:       woopt
  * Plugin URI:   https://wordpress.org/plugins/woocommerce-google-adwords-conversion-tracking-tag/
  * Author URI:   https://woopt.com
- * Version:      1.10.6-beta.1
+ * Version:      1.10.6
  * License:      GPLv2 or later
  * Text Domain:  woocommerce-google-adwords-conversion-tracking-tag
  * WC requires at least: 2.6

@@ -23,13 +23,16 @@ varExists('jQuery').then(function () {
 
                 // send the cookies to the server in order to save them on the session
 
-
                 let data = {
                     'action': 'wooptpm_facebook_set_session_identifiers',
                     'nonce' : wooptpm_facebook_premium_only_ajax_object.nonce,
-                    'fbp'   : Cookies.get("_fbp"),
-                    'fbc'   : Cookies.get("_fbc"),
+                    'fbp'   : wooptpm.getCookie("_fbp"),
+                    'fbc'   : wooptpm.getCookie("_fbc"),
                 };
+
+                if (data.fbp && window.sessionStorage && window.sessionStorage.getItem('wooptpm_fb_session_id_' + data.fbp + '_set')) {
+                    return;
+                }
 
                 jQuery.ajax(
                     {
@@ -39,9 +42,14 @@ varExists('jQuery').then(function () {
                         data    : data,
                         success : function (response) {
                             // console.log(response);
+
+                            if(window.sessionStorage && response['success'] === true ){
+                                // console.log('setting session storage');
+                                window.sessionStorage.setItem('wooptpm_fb_session_id_' + data.fbp + '_set', JSON.stringify(true));
+                            }
                         },
-                        error   : function (msg) {
-                            // console.log(msg);
+                        error   : function (response) {
+                            // console.log(response);
                         },
                     });
 

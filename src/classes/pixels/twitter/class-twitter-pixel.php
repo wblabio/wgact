@@ -75,7 +75,7 @@ class Twitter_Pixel extends Pixel
 
         echo "
             wooptpmExists().then(function(){
-                if (!wooptpm.isOrderIdStored( '" . $order->get_order_number() . "')) {
+                if (!wooptpm.isOrderIdStored( '" . $order->get_id() . "')) {
                     twq('track', 'Purchase', {
                         value       : '" . $order_total . "',
                         currency    : '" . $order->get_currency() . "',
