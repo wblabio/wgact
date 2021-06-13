@@ -116,9 +116,14 @@ class Admin
         return '<script async src="https://www.googletagmanager.com/gtag/js?id=UA-39746956-10"></script>' . $html;
     }
 
-    public function wgact_admin_scripts($hook)
+    public function wgact_admin_scripts($hook_suffix)
     {
-        if ($this->plugin_hook != $hook) {
+        // only output the admin scripts on the plugin pages
+//        if ($this->plugin_hook != $hook_suffix) {
+//            return;
+//        }
+
+        if (!strpos($hook_suffix, 'page_wgact')) {
             return;
         }
 

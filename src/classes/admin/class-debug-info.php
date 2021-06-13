@@ -19,7 +19,7 @@ class Debug_info
 
     public function get_debug_info(): string
     {
-        global $woocommerce, $wp_version, $current_user;
+        global $woocommerce, $wp_version, $current_user, $hook_suffix;
 
         $html = '### Debugging Information ###' . PHP_EOL . PHP_EOL;
 
@@ -55,6 +55,8 @@ class Debug_info
 //        wp_get_current_user();
         $html .= 'Logged in user login name: ' . $current_user->user_login . PHP_EOL;
         $html .= 'Logged in user display name: ' . $current_user->display_name . PHP_EOL;
+
+        $html .= 'hook_suffix: ' . $hook_suffix . PHP_EOL;
 
         $html .= PHP_EOL . '## WooCommerce ##' . PHP_EOL . PHP_EOL;
 

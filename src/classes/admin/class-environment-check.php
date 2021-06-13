@@ -274,7 +274,6 @@ class Environment_Check
         // $default_exclusions[] = 'something/else.js';
         // $default_exclusions[] = 'something/else.css';
         return array_merge($default_exclusions, $this->get_wooptpm_script_identifiers());
-
     }
 
     // https://github.com/futtta/autoptimize/blob/37b13d4e19269bb2f50df123257de51afa37244f/classes/autoptimizeScripts.php#L387
