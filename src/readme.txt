@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, google analytics, facebook pixel, conversion trac
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 7.2
-Stable tag: 1.10.7-beta.1
+Stable tag: 1.10.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -176,7 +176,13 @@ You can send the link to the front page of your shop too if you think it would b
 
 = 1.10.7 =
 
+[//]: # fs_premium_only_begin
+* New: Added link for affiliate program
+[//]: # fs_premium_only_end
 * New: Added hook_suffix into debug info
+[//]: # fs_premium_only_begin
+* Tweak: Only save fbp on server if FB CAPI is enabled, and only do it on checkout and cart pages
+[//]: # fs_premium_only_end
 * Tweak: Adjusted the $hook_suffix check in admin.php because on some installs the $hook_suffix output is buggy
 
 = 1.10.6 =

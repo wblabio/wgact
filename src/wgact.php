@@ -5,7 +5,7 @@
  * Author:       woopt
  * Plugin URI:   https://wordpress.org/plugins/woocommerce-google-adwords-conversion-tracking-tag/
  * Author URI:   https://woopt.com
- * Version:      1.10.7-beta.1
+ * Version:      1.10.7
  * License:      GPLv2 or later
  * Text Domain:  woocommerce-google-adwords-conversion-tracking-tag
  * WC requires at least: 2.6
@@ -66,6 +66,7 @@ if (function_exists('wga_fs')) {
                         'days'               => 14,
                         'is_require_payment' => true,
                     ],
+                    'has_affiliation'     => 'customers',
                     'menu'                => [
                         'slug'           => 'wgact',
                         'override_exact' => true,

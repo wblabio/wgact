@@ -116,12 +116,11 @@ varExists('jQuery').then(function () {
         wooptpmExists().then(function () {
 
             try {
-                if (wooptpmDataLayer.pixels.facebook.pixel_id) {
+                if (wooptpmDataLayer.pixels.facebook.pixel_id && wooptpmDataLayer.pixels.facebook.capi) {
 
                     // We need to be sure that we capture the cid early enough, because the
                     // shop might be using a one click checkout button as early as on the product page.
-                    if (['cart', 'checkout', 'product'].indexOf(wooptpmDataLayer.shop.page_type) >= 0) {
-
+                    if (['cart', 'checkout'].indexOf(wooptpmDataLayer.shop.page_type) >= 0) {
 
                         wooptpm.setFacebookIdentifiersOnServer();
                     }
