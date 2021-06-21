@@ -44,6 +44,7 @@ class Google_Ads extends Google
 
     public function inject_order_received_page($order, $order_total, $is_new_customer)
     {
+        // If Google Ads Enhanced Conversions is active
         if($this->options_obj->google->ads->enhanced_conversions){
 
         $customer_data = [];
@@ -83,7 +84,7 @@ class Google_Ads extends Google
             endif; ?>
 
             <?php
-            if ($this->is_dynamic_remarketing_active()) echo $this->get_dyn_remarketing_purchase_script($order, $order_total) ?>
+            if ($this->is_dynamic_remarketing_active())  $this->get_dyn_remarketing_purchase_script($order, $order_total) ?>
 
             <?php
         }
@@ -92,7 +93,9 @@ class Google_Ads extends Google
             ?>
 
             gtag('event', 'purchase', <?php echo $this->get_event_purchase_json($order, $order_total, $order_currency, $is_new_customer, 'ads') ?>);
+
             <?php
+            if ($this->is_dynamic_remarketing_active())  $this->get_dyn_remarketing_purchase_script($order, $order_total);
         }
     }
 
@@ -193,15 +196,15 @@ class Google_Ads extends Google
     protected function get_dyn_remarketing_purchase_script($order, $order_total)
     {
         echo "
-                wooptpmExists().then(function(){
-                    if (!wooptpm.isOrderIdStored('" . $order->get_id() . "')) {
-                        gtag('event', 'purchase', {
-                            'send_to': " . json_encode($this->get_google_ads_conversion_ids()) . ",
-                            'value'  : " . $order_total . ",
-                            'items'  : " . (json_encode($this->get_formatted_order_items($order, 'ads'))) . "
-                        });
-                    }
-                });
+            wooptpmExists().then(function(){
+                if (!wooptpm.isOrderIdStored('" . $order->get_id() . "')) {
+                    gtag('event', 'purchase', {
+                        'send_to': " . json_encode($this->get_google_ads_conversion_ids()) . ",
+                        'value'  : " . $order_total . ",
+                        'items'  : " . (json_encode($this->get_formatted_order_items($order, 'ads'))) . "
+                    });
+                }
+            });
         ";
     }
 }

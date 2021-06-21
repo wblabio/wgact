@@ -276,7 +276,7 @@ varExists('jQuery').then(function () {
                     gtag("event", "view_item", {
                         "send_to": wooptpmDataLayer.pixels.google.analytics.universal.property_id,
                         "items"  : [{
-                            "id"      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
+                            "id"      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
                             "name"    : product.name,
                             "brand"   : product.brand,
                             "category": product.category,
@@ -296,7 +296,7 @@ varExists('jQuery').then(function () {
                         // console.log(`${key}: ${value}`);
 
                         products.push({
-                            "id"      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
+                            "id"      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
                             "name"    : product.name,
                             "quantity": 1,
                             // "affiliation": "",

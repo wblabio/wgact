@@ -250,7 +250,7 @@ varExists('jQuery').then(function () {
                         "currency": wooptpmDataLayer.shop.currency,
                         "value"   : 1 * product.price,
                         "items"   : [{
-                            "item_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
+                            "item_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
                             "item_name": product.name,
                             // "coupon": "",
                             // "discount": 0,
@@ -271,7 +271,7 @@ varExists('jQuery').then(function () {
                         // console.log(`${key}: ${value}`);
 
                         products.push({
-                            "item_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
+                            "item_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
                             "item_name": product.name,
                             "quantity" : 1,
                             // "affiliation": "",

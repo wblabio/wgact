@@ -55,7 +55,7 @@ varExists('jQuery').then(function () {
                 "content_type": "product",
                 "content_name": product.name,
                 // "content_category": product.category,
-                "content_ids": product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
+                "content_ids": product.dyn_r_ids[wooptpmDataLayer.pixels.facebook.dynamic_remarketing.id_type],
                 "currency"   : wooptpmDataLayer.shop.currency,
                 "value"      : product.price,
             }, {

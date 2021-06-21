@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, google analytics, facebook pixel, conversion trac
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 7.2
-Stable tag: 1.10.8-beta.1
+Stable tag: 1.10.8-beta.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -173,6 +173,11 @@ You can send the link to the front page of your shop too if you think it would b
 1. Settings page
 
 == Changelog ==
+
+= 1.10.8 =
+
+* Fix: Fixed ViewContent id_type variable for Facebook, GA UA and GA4
+* Fix: Added dynamic remarketing purchase script
 
 = 1.10.7 =
 
