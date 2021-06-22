@@ -176,6 +176,7 @@ You can send the link to the front page of your shop too if you think it would b
 
 = 1.10.8 =
 
+* Tweak: Fallback on PayPal check if option doesn't exist in the db
 * Fix: Fixed ViewContent id_type variable for Facebook, GA UA and GA4
 * Fix: Added dynamic remarketing purchase script
 

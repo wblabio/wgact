@@ -145,7 +145,7 @@ class Environment_Check
     {
         $woocommerce_paypal_settings = get_option('woocommerce_paypal_settings');
 
-        if ($woocommerce_paypal_settings['enabled'] === 'yes') {
+        if (!is_bool($woocommerce_paypal_settings) && array_key_exists('enabled', $woocommerce_paypal_settings) && $woocommerce_paypal_settings['enabled'] === 'yes') {
             return true;
         } else {
             return false;
