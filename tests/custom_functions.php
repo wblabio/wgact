@@ -175,3 +175,11 @@ function wgact_google_ads_conversion_identifiers($conversion_identifiers)
 //    }
 //    return $analytics_parameters;
 //}
+
+//    function fs_enqueue_local_style( $handle, $path, $deps = array(), $ver = false, $media = 'all' ) {
+//            wp_enqueue_style( $handle, plugin_dir_url( '' ) . 'woocommerce-google-adwords-conversion-tracking-tag' . '/freemius/assets/css'. $path, $deps, $ver, $media );
+//    }
+//
+//    function fs_enqueue_local_script( $handle, $path, $deps = array(), $ver = false, $in_footer = 'all' ) {
+//            wp_enqueue_script( $handle, plugin_dir_url( '' ) . 'woocommerce-google-adwords-conversion-tracking-tag' . '/freemius/assets/js/'. $path, $deps, $ver, $in_footer );
+//    }
