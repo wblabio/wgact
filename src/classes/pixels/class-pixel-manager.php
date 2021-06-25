@@ -142,7 +142,7 @@ class Pixel_Manager extends Pixel_Manager_Base
 
             if (is_object($product)) {
 
-                echo $this->get_product_data_layer_script($product, false);
+                echo $this->get_product_data_layer_script($product, false, true);
             } else {
 
                 wc_get_logger()->debug('woocommerce_inject_product_data_on_product_page provided no product on a product page: .' . get_the_id(), ['source' => 'wooptpm']);
@@ -155,7 +155,7 @@ class Pixel_Manager extends Pixel_Manager_Base
 
                     if (is_object($product)) {
 
-                        echo $this->get_product_data_layer_script($product, false);
+                        echo $this->get_product_data_layer_script($product, false, true);
                     } else {
                         $this->log_problematic_product_id($product_id);
                     }
@@ -169,7 +169,7 @@ class Pixel_Manager extends Pixel_Manager_Base
                     $variable_product = wc_get_product($variation['variation_id']);
 
                     if (is_object($variable_product)) {
-                        echo $this->get_product_data_layer_script($variable_product, false);
+                        echo $this->get_product_data_layer_script($variable_product, false, true);
                     } else {
 
                         $this->log_problematic_product_id($variation['variation_id']);
@@ -193,7 +193,7 @@ class Pixel_Manager extends Pixel_Manager_Base
         return $html . $this->get_product_data_layer_script($product);
     }
 
-    private function get_product_data_layer_script($product, $set_position = true): string
+    private function get_product_data_layer_script($product, $set_position = true, $meta_tag = false): string
     {
         global $woocommerce_wpml;
 
@@ -234,8 +234,11 @@ class Pixel_Manager extends Pixel_Manager_Base
             $data['variant']     = $this->get_formatted_variant_text($product);
         }
 
+        // if placed in <head> it must be a <meta> tag else, it can be an <input> tag
+        $tag = $meta_tag ? "meta" : "input";
+
         $html = "
-            <input type='hidden' class='wooptpmProductId' data-id='" . $product->get_id() . "'>
+            <$tag type='hidden' class='wooptpmProductId' data-id='" . $product->get_id() . "'>
             <script>
                 window.wooptpmDataLayer.products = window.wooptpmDataLayer.products || {};
                 window.wooptpmDataLayer.products[" . $product->get_id() . "] = " . json_encode($data) . ";";
@@ -512,11 +515,15 @@ class Pixel_Manager extends Pixel_Manager_Base
             $data['list_name'] = 'Front Page';
             $data['list_id']   = 'front_page';
             $data['page_type'] = 'front_page';
+        } else if (is_order_received_page()) {
+            $data['list_name'] = 'Order Received Page';
+            $data['list_id']   = 'order_received_page';
+            $data['page_type'] = 'order_received_page';
         } else if (is_checkout()) {
             $data['list_name'] = 'Checkout Page';
             $data['list_id']   = 'checkout';
             $data['page_type'] = 'checkout';
-        } else {
+        }  else {
             $data['list_name'] = '';
             $data['list_id']   = '';
             $data['page_type'] = '';

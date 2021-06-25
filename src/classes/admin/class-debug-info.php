@@ -251,10 +251,10 @@ class Debug_info
 
     private function get_last_orders($limit = 100)
     {
-        // Get 10 most recent order ids in date descending order.
+        // Get most recent order ids in date descending order.
         $query = new WC_Order_Query([
             'limit'   => $limit,
-            'type' => 'shop_order',
+            'type'    => 'shop_order',
             'orderby' => 'date',
             'order'   => 'DESC',
             'return'  => 'ids',
@@ -267,10 +267,18 @@ class Debug_info
     {
         $last_orders = $this->get_last_orders($limit);
 
+        if (empty($last_orders)) {
+            return [];
+        }
+
 //        error_log(print_r(array_flip($last_orders), true));
 //        error_log(min($last_orders));
 
         $earliest_relevant_order_id = $this->get_earliest_order_with_pixel_fired_tag($last_orders, $limit);
+
+        if ($earliest_relevant_order_id === false) {
+            return [];
+        }
 
         // only keep orders up until the oldest one with _wooptpm_conversion_pixel_fired
         $last_orders = array_filter($last_orders, function ($x) use ($earliest_relevant_order_id) {
@@ -309,7 +317,6 @@ class Debug_info
 //        error_log(print_r($data, true));
 
         return $data;
-
     }
 
     private function get_gateway_analysis_array($limit = 100): array
@@ -318,13 +325,16 @@ class Debug_info
 
         foreach ($this->list_gateways_of_orders($limit) as $gateway => $value) {
 
-            $fired      = $value['fired'];
-            $not_fired  = $value['not_fired'];
-            $total      = $fired + $not_fired;
-            $percentage = number_format((float)($fired / $total), 2, '.', '');
+            $fired     = $value['fired'];
+            $not_fired = $value['not_fired'];
+            $total     = $fired + $not_fired;
 
-            $text = $gateway . ' (' . $value['method_title'] . '): ' . $fired . ' / ' . $total . ' => ' . $percentage * 100 . '% accuracy';
-//            error_log($text);
+            if ($total > 0) {
+                $percentage = number_format((float)($fired / $total), 2, '.', '');
+                $text       = $gateway . ' (' . $value['method_title'] . '): ' . $fired . ' / ' . $total . ' => ' . $percentage * 100 . '% accuracy';
+            } else {
+                $text = $gateway . ' (' . $value['method_title'] . '): ' . $fired . ' / ' . $total;
+            }
 
             $data[] = $text;
         }
@@ -335,11 +345,11 @@ class Debug_info
     public function get_earliest_order_with_pixel_fired_tag($order_ids, $limit)
     {
         $query = new WC_Order_Query([
-             'limit'    => $limit,
+            'limit'    => $limit,
             // 'orderby'  => 'date',
             // 'order'    => 'DESC',
-             'type' => 'shop_order',
-             'return'   => 'ids',
+            'type'     => 'shop_order',
+            'return'   => 'ids',
             'post__in' => $order_ids,
             'meta_key' => '_wooptpm_conversion_pixel_fired'
         ]);
@@ -347,6 +357,12 @@ class Debug_info
 //        error_log(print_r($query->get_orders(), true));
 //        error_log('min: ' . min($query->get_orders()));
 
-        return min($query->get_orders());
+        $result = $query->get_orders();
+
+        if (!empty($result)) {
+            return min($result);
+        } else {
+            return false;
+        }
     }
 }

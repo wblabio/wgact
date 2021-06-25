@@ -177,6 +177,13 @@ You can send the link to the front page of your shop too if you think it would b
 = 1.10.8 =
 
 * Tweak: Fallback on PayPal check if option doesn't exist in the db
+* Tweak: Removed manual function override from Freemius source
+* Tweak: Added page type output on order received page
+* Tweak: Switched data wooptpmProductId output on product pages to meta tag for main product
+[//]: # fs_premium_only_begin
+* Fix: Fallback for a divide by zero in case the gateway analysis only has zero orders to analyse
+* Fix: Fallback in case no orders have been saved by de duplication prevention script
+[//]: # fs_premium_only_end
 * Fix: Fixed ViewContent id_type variable for Facebook, GA UA and GA4
 * Fix: Added dynamic remarketing purchase script
 
