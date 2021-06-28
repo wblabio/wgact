@@ -111,20 +111,18 @@ class Notifications
                 </a>
             </p>
 
-            <div style="position:relative; margin-bottom: 10px">
+            <div style=" margin-bottom: 10px; display: flex; justify-content: space-between">
 
                 <div id="wooptpm-paypal-standard-error-dismissal-button" class="button" style="white-space:normal;">
                     <?php esc_html_e('Click here to dismiss this warning forever', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
                 </div>
-                <div style="white-space:normal; position:absolute; bottom:0; right: 0; margin-bottom: 0px; margin-right: 5px">
+                <div style="white-space:normal; bottom:0; right: 0; margin-bottom: 0px; margin-right: 5px;align-self: flex-end;">
                     <a href="https://docs.woopt.com/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=dismiss-button-info#/faq?id=the-dismiss-button-doesnt-work-why"
                        target="_blank">
                         <?php esc_html_e('If the dismiss button is not working, here\'s why >>', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
                     </a>
                 </div>
             </div>
-
-
 
         </div>
         <?php

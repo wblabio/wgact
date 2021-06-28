@@ -4,7 +4,6 @@ namespace WGACT\Classes\Pixels;
 
 use stdClass;
 use WC_Order;
-use WC_Product_Variation;
 use WGACT\Classes\Admin\Environment_Check;
 use WGACT\Classes\Pixels\Bing\Bing_Pixel_Manager;
 use WGACT\Classes\Pixels\Facebook\Facebook_Pixel_Manager;
@@ -16,6 +15,7 @@ use WGACT\Classes\Pixels\Google\Google_Pixel_Manager;
 use WGACT\Classes\Pixels\Google\Trait_Google;
 use WGACT\Classes\Pixels\Hotjar\Hotjar_Pixel;
 use WGACT\Classes\Pixels\Pinterest\Pinterest_Pixel_Manager;
+use WGACT\Classes\Pixels\Snapchat\Snapchat_Pixel_Manager;
 use WGACT\Classes\Pixels\Twitter\Twitter_Pixel_Manager;
 
 if (!defined('ABSPATH')) {
@@ -85,6 +85,7 @@ class Pixel_Manager extends Pixel_Manager_Base
             if ($this->options_obj->bing->uet_tag_id) new Bing_Pixel_Manager($this->options);
             if ($this->options_obj->twitter->pixel_id) new Twitter_Pixel_Manager($this->options);
             if ($this->options_obj->pinterest->pixel_id) new Pinterest_Pixel_Manager($this->options);
+            if ($this->options_obj->snapchat->pixel_id) new Snapchat_Pixel_Manager($this->options);
         }
 
         add_action('wp_head', function () {

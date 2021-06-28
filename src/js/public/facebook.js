@@ -163,10 +163,10 @@ varExists('jQuery').then(function () {
                 });
             });
 
-            // AddToWishlist event
+            // ViewContent event
             jQuery(document).on('wooptpmViewItem', function (event, product) {
 
-                // console.log('firing facebook ads AddToWishlist event');
+                // console.log('firing facebook ads ViewContent event');
                 // console.log(product);
 
                 wooptpm.fbViewContent(product);

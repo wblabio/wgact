@@ -1,5 +1,10 @@
 <?php
 
+//add_filter('wooptpm_custom_brand_taxonomy', 'wooptpm_custom_brand_taxonomy');
+//function wooptpm_custom_brand_taxonomy(): string
+//{
+//    return 'pa_xxl-brand';
+//}
 
 //add_filter('wooptpm_google_cross_domain_linker_settings', function (){
 //

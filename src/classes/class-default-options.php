@@ -69,6 +69,9 @@ class Default_Options
             'pinterest'  => [
                 'pixel_id' => ''
             ],
+            'snapchat' => [
+                'pixel_id' => ''
+            ],
             'hotjar'     => [
                 'site_id' => ''
             ],

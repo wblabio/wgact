@@ -2,6 +2,9 @@
 
 namespace WGACT\Classes\Pixels;
 
+use http\Env;
+use WGACT\Classes\Admin\Environment_Check;
+
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
@@ -37,10 +40,24 @@ trait Trait_Product
     // https://stackoverflow.com/a/39034036/4688612
     public function get_brand_name($product_id): string
     {
-        return $this->get_brand_by_taxonomy($product_id, 'product_brand') ?: // for Woocommerce Brands plugin
-            $this->get_brand_by_taxonomy($product_id, 'yith_product_brand') ?: // for YITH WooCommerce Brands plugin
-                $this->get_brand_by_taxonomy($product_id, 'pa_brand') ?: // for a custom product attribute
-                    ''; // default value
+//        return $this->get_brand_by_taxonomy($product_id, 'product_brand') ?: // for Woocommerce Brands plugin
+//            $this->get_brand_by_taxonomy($product_id, 'yith_product_brand') ?: // for YITH WooCommerce Brands plugin
+//                $this->get_brand_by_taxonomy($product_id, 'pa_brand') ?: // for a custom product attribute
+//                    '';
+
+        $brand_taxonomy = 'pa_brand';
+
+        if ((new Environment_Check())->is_yith_wc_brands_active()) {
+            $brand_taxonomy = 'yith_product_brand';
+        } else if ((new Environment_Check())->is_woocommerce_brands_active()) {
+            $brand_taxonomy = 'product_brand';
+        }
+
+        $brand_taxonomy = apply_filters('wooptpm_custom_brand_taxonomy', $brand_taxonomy);
+
+        return $this->get_brand_by_taxonomy($product_id, $brand_taxonomy) ?:
+            $this->get_brand_by_taxonomy($product_id, 'pa_' . $brand_taxonomy) ?:
+                '';
     }
 
     public function get_brand_by_taxonomy($product_id, $taxonomy): string

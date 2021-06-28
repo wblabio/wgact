@@ -8,7 +8,7 @@
 }
 
 .subnav-tabs li {
-    float: left;
+    display: inline-block;
 }
 
 .subnav-tabs li + li::before {
@@ -35,7 +35,7 @@
     z-index: 1;
     top: -5px;
     left: 105%;
-    font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+    font-family: apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     margin-left: 10px;
     font-size: 16px;
 }
@@ -119,4 +119,59 @@ input:checked + .slider:before {
 
 .slider.round:before {
     border-radius: 50%;
+}
+
+.status-icon {
+    display: inline-block;
+    vertical-align: top;
+    text-decoration: none;
+    font-size: 90%;
+    font-weight: bold;
+    border: 2px solid;
+    border-radius: 4px;
+    margin-top: 1px;
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: 1px 3px 1px 3px;
+}
+
+.active {
+    border-color: #18b208;
+    color: #18b208;
+}
+
+.inactive {
+    border-color: #ff170b;
+    color: #ff170b;
+}
+
+.partially-active {
+    border-color: #fab32a;
+    color: #fab32a;
+}
+
+.beta {
+    border-color: #fab32a;
+    color: #fab32a;
+}
+
+.pro-feature {
+    display: inline-block;
+    vertical-align: top;
+    text-decoration: none;
+    font-size: 150%;
+    font-weight: bold;
+    border: 2px solid;
+    border-radius: 4px;
+    margin-top: 1px;
+    margin-left: 10px;
+    padding: 1px 3px 1px 3px;
+    border-color: #18b208;
+    color: #18b208;
+}
+
+.documentation-icon {
+    text-decoration: none;
+    margin-left: 5px;
+    margin-right: 5px;
 }

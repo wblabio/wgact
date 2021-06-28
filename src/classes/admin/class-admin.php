@@ -363,7 +363,7 @@ class Admin
                 esc_html__(
                     'Twitter pixel ID',
                     'woocommerce-google-adwords-conversion-tracking-tag'
-                ) . $this->svg_beta(),
+                ) . $this->html_beta(),
                 [$this, 'wgact_option_html_twitter_pixel_id'],
                 'wgact_plugin_options_page',
                 $section_ids['settings_name']
@@ -375,8 +375,20 @@ class Admin
                 esc_html__(
                     'Pinterest pixel ID',
                     'woocommerce-google-adwords-conversion-tracking-tag'
-                ) . $this->svg_beta(),
+                ) . $this->html_beta(),
                 [$this, 'wgact_option_html_pinterest_pixel_id'],
+                'wgact_plugin_options_page',
+                $section_ids['settings_name']
+            );
+
+            // add the field for the Snapchat pixel
+            add_settings_field(
+                'wgact_plugin_snapchat_pixel_id',
+                esc_html__(
+                    'Snapchat pixel ID',
+                    'woocommerce-google-adwords-conversion-tracking-tag'
+                ) . $this->html_beta(),
+                [$this, 'wgact_option_html_snapchat_pixel_id'],
                 'wgact_plugin_options_page',
                 $section_ids['settings_name']
             );
@@ -587,7 +599,7 @@ class Admin
                 esc_html__(
                     'Google Ads enhanced conversions',
                     'woocommerce-google-adwords-conversion-tracking-tag'
-                ) . $this->svg_beta(),
+                ) . $this->html_beta(),
                 [$this, 'wooptpm_setting_html_google_ads_enhanced_conversions'],
                 'wgact_plugin_options_page',
                 $section_ids['settings_name']
@@ -675,7 +687,7 @@ class Admin
                 esc_html__(
                     'Borlabs support',
                     'woocommerce-google-adwords-conversion-tracking-tag'
-                ) . $this->svg_beta(),
+                ) . $this->html_beta(),
                 [$this, 'wgact_setting_html_borlabs_support'],
                 'wgact_plugin_options_page',
                 $section_ids['settings_name']
@@ -757,7 +769,7 @@ class Admin
             esc_html__(
                 'Facebook microdata',
                 'woocommerce-google-adwords-conversion-tracking-tag'
-            ) . $this->svg_beta(),
+            ) . $this->html_beta(),
             [$this, 'wgact_setting_html_facebook_microdata'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
@@ -867,7 +879,7 @@ class Admin
                 esc_html__(
                     'Google Business Vertical',
                     'woocommerce-google-adwords-conversion-tracking-tag'
-                ) . $this->svg_pro_feature(),
+                ) . $this->html_pro_feature(),
                 [$this, 'wgact_plugin_option_google_business_vertical'],
                 'wgact_plugin_options_page',
                 'wgact_plugin_beta_section'
@@ -961,7 +973,7 @@ class Admin
 
         </div>
 
-        <div style="width:90%; float: left; margin: 5px">
+        <div style="width:90%; margin: 5px">
 
             <?php
             settings_errors(); ?>
@@ -978,25 +990,17 @@ class Admin
                 submit_button();
                 ?>
 
-
                 <div class="developer-banner">
-                    <div>
-                        <span>
+                    <div style="display: flex; justify-content: space-between">
+                        <span >
                             <?php
                             esc_html_e('Profit Driven Marketing by woopt', 'woocommerce-google-adwords-conversion-tracking-tag');
                             ?>
                         </span>
 
-                        <span style="float: right; padding-left: 20px">
-                            <?php esc_html_e('Visit us here:', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
-                            <a href="https://woopt.com/?utm_source=plugin&utm_medium=banner&utm_campaign=wooptpm"
-                               target="_blank">https://woopt.com
-                            </a>
-					    </span>
-
                         <?php if (!wga_fs()->is__premium_only()) : ?>
 
-                            <span style="float: right; padding-left: 20px">
+                            <div style="float: right; padding-left: 20px">
                                 <span style="padding-right: 6px">
                                     Enable Pro version demo features
                                 </span>
@@ -1010,9 +1014,17 @@ class Admin
                                     />
                                     <span class="slider round"></span>
                                 </label>
-                            </span>
+                            </div>
 
                         <?php endif; ?>
+
+                        <span style=" padding-left: 20px;">
+                            <?php esc_html_e('Visit us here:', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+                            <a href="https://woopt.com/?utm_source=plugin&utm_medium=banner&utm_campaign=wooptpm"
+                               target="_blank">https://woopt.com
+                            </a>
+					    </span>
+
                     </div>
                 </div>
 
@@ -1210,7 +1222,7 @@ class Admin
         echo "<input id='wgact_plugin_bing_uet_tag_id' name='wgact_plugin_options[bing][uet_tag_id]' size='40' type='text' value='{$this->options['bing']['uet_tag_id']}' {$this->disable_if_demo()} />";
         echo $this->get_status_icon($this->options['bing']['uet_tag_id']);
         echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=microsoft-advertising-uet-tag-id#/pixels/microsoft-advertising?id=setting-up-the-uet-tag');
-        echo $this->svg_pro_feature();
+        echo $this->html_pro_feature();
         echo '<br><br>';
         esc_html_e('The Microsoft Advertising UET tag ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo '&nbsp;<i>12345678</i>';
@@ -1220,8 +1232,8 @@ class Admin
     {
         echo "<input id='wgact_plugin_twitter_pixel_id' name='wgact_plugin_options[twitter][pixel_id]' size='40' type='text' value='{$this->options['twitter']['pixel_id']}' {$this->disable_if_demo()} />";
         echo $this->get_status_icon($this->options['twitter']['pixel_id']);
-//        echo $this->get_documentation_html('/wgact/#/bing');
-        echo $this->svg_pro_feature();
+//        echo $this->get_documentation_html('/wgact/#/twitter');
+        echo $this->html_pro_feature();
         echo '<br><br>';
         esc_html_e('The Twitter pixel ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo '&nbsp;<i>a1cde</i>';
@@ -1231,11 +1243,22 @@ class Admin
     {
         echo "<input id='wgact_plugin_pinterest_pixel_id' name='wgact_plugin_options[pinterest][pixel_id]' size='40' type='text' value='{$this->options['pinterest']['pixel_id']}' {$this->disable_if_demo()} />";
         echo $this->get_status_icon($this->options['pinterest']['pixel_id']);
-//        echo $this->get_documentation_html('/wgact/#/bing');
-        echo $this->svg_pro_feature();
+//        echo $this->get_documentation_html('/wgact/#/pinterest');
+        echo $this->html_pro_feature();
         echo '<br><br>';
         esc_html_e('The Pinterest pixel ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo '&nbsp;<i>1234567890123</i>';
+    }
+
+    public function wgact_option_html_snapchat_pixel_id()
+    {
+        echo "<input id='wgact_plugin_snapchat_pixel_id' name='wgact_plugin_options[snapchat][pixel_id]' size='40' type='text' value='{$this->options['snapchat']['pixel_id']}' {$this->disable_if_demo()} />";
+        echo $this->get_status_icon($this->options['snapchat']['pixel_id']);
+//        echo $this->get_documentation_html('/wgact/#/snapchat');
+        echo $this->html_pro_feature();
+        echo '<br><br>';
+        esc_html_e('The Snapchat pixel ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
+        echo '&nbsp;<i>1a2345b6-cd78-9012-e345-fg6h7890ij12</i>';
     }
 
     public function wgact_option_html_hotjar_site_id()
@@ -1274,7 +1297,7 @@ class Admin
 
     protected function get_documentation_html($path): string
     {
-        $html = '<a style="text-decoration: none;margin-left: 10px;" href="//' . $this->documentation_host . $path . '" target="_blank">';
+        $html = '<a class="documentation-icon" href="//' . $this->documentation_host . $path . '" target="_blank">';
         $html .= '<span style="vertical-align: top; margin-top: 0px" class="dashicons dashicons-info-outline tooltip"><span class="tooltiptext">';
         $html .= esc_html__('open the documentation', 'woocommerce-google-adwords-conversion-tracking-tag');
         $html .= '</span></span></a>';
@@ -1334,7 +1357,7 @@ class Admin
         echo $this->get_status_icon($this->options['google']['consent_mode']['active'], true, true); ?>
         <?php
         echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-consent-mode#/consent-mgmt/google-consent-mode');
-        echo $this->svg_pro_feature();
+        echo $this->html_pro_feature();
     }
 
     public function wgact_setting_html_google_consent_regions()
@@ -1361,7 +1384,7 @@ class Admin
         </script>
         <?php
         echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-consent-mode-regions#/consent-mgmt/google-consent-mode?id=regions');
-        echo $this->svg_pro_feature();
+        echo $this->html_pro_feature();
         ?>
         <p>
             <span class="dashicons dashicons-info"></span>
@@ -1391,7 +1414,7 @@ class Admin
         </label>
         <?php
         echo $this->get_status_icon($this->options['google']['analytics']['eec'], $this->options['google']['analytics']['universal']['property_id'] || $this->options['google']['analytics']['ga4']['measurement_id'], true);
-        echo $this->svg_pro_feature();
+        echo $this->html_pro_feature();
 //        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-consent-mode#/consent-mgmt/google-consent-mode');
         ?>
         <?php
@@ -1414,7 +1437,7 @@ class Admin
                 />";
         echo $this->get_status_icon($this->options['google']['analytics']['ga4']['api_secret'], $this->options['google']['analytics']['eec']);
 //        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-ads-phone-conversion-number#/pixels/google-ads?id=phone-conversion-number');
-        echo $this->svg_pro_feature();
+        echo $this->html_pro_feature();
         echo '<br><br>';
         if (!$this->options['google']['analytics']['ga4']['measurement_id']) {
             echo '<p></p><span class="dashicons dashicons-info" style="margin-right: 10px"></span>';
@@ -1476,7 +1499,7 @@ class Admin
         </label>
         <?php
         echo $this->get_status_icon($this->options['google']['user_id'], $this->options['google']['analytics']['universal']['property_id'] || $this->options['google']['analytics']['ga4']['measurement_id'] || $this->is_google_ads_active(), true);
-        echo $this->svg_pro_feature();
+        echo $this->html_pro_feature();
 //        echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-consent-mode#/consent-mgmt/google-consent-mode');
         ?>
         <?php
@@ -1506,7 +1529,7 @@ class Admin
         </label>
         <?php
         echo $this->get_status_icon($this->options['google']['ads']['enhanced_conversions'], $this->is_google_ads_active(), true);
-        echo $this->svg_pro_feature();
+        echo $this->html_pro_feature();
         echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-ads-enhanced-conversions#/pixels/google-ads?id=enhanced-conversions');
         ?>
         <?php
@@ -1529,7 +1552,7 @@ class Admin
                 />";
         echo $this->get_status_icon($this->options['google']['ads']['phone_conversion_number']);
         echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-ads-phone-conversion-number#/pixels/google-ads?id=phone-conversion-number');
-        echo $this->svg_pro_feature();
+        echo $this->html_pro_feature();
         echo '<br><br>';
         esc_html_e('The Google Ads phone conversion number must be in the same format as on the website.', 'woocommerce-google-adwords-conversion-tracking-tag');
     }
@@ -1546,7 +1569,7 @@ class Admin
                 />";
         echo $this->get_status_icon($this->options['google']['ads']['phone_conversion_label']);
         echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=google-ads-phone-conversion-number#/pixels/google-ads?id=phone-conversion-number');
-        echo $this->svg_pro_feature();
+        echo $this->html_pro_feature();
         echo '<br><br>';
 //        esc_html_e('The Google Ads phone conversion label must be in the same format as on the website.', 'woocommerce-google-adwords-conversion-tracking-tag');
     }
@@ -1555,7 +1578,7 @@ class Admin
     {
         esc_html_e('Borlabs detected. Automatic support is:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo $this->get_status_icon(true, true, true);
-        echo $this->svg_pro_feature();
+        echo $this->html_pro_feature();
     }
 
     public function wgact_setting_html_cookiebot_support()
@@ -1576,7 +1599,7 @@ class Admin
             esc_html_e('Enable Cookiebot settings', 'woocommerce-google-adwords-conversion-tracking-tag'); ?></label>
         <?php
         echo $this->get_status_icon($this->options['shop']['cookie_consent_mgmt']['cookiebot']['active'], $this->options['google']['consent_mode']['active'], true);
-        echo $this->svg_pro_feature();
+        echo $this->html_pro_feature();
         if ($this->options['shop']['cookie_consent_mgmt']['cookiebot']['active'] && !$this->options['google']['consent_mode']['active']) {
             echo '<p></p><span class="dashicons dashicons-info"></span>';
             esc_html_e('You need to activate the Google consent mode', 'woocommerce-google-adwords-conversion-tracking-tag');
@@ -1595,7 +1618,7 @@ class Admin
         <?php
         echo $this->get_status_icon($this->options['facebook']['capi']['token'], $this->options['facebook']['pixel_id']);
         echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=facebook-capi-token#/pixels/facebook?id=facebook-conversion-api-capi');
-        echo $this->svg_pro_feature();
+        echo $this->html_pro_feature();
         if (!$this->options['facebook']['pixel_id']) {
             echo '<p></p><span class="dashicons dashicons-info"></span>';
             esc_html_e('You need to activate the Facebook pixel', 'woocommerce-google-adwords-conversion-tracking-tag');
@@ -1628,7 +1651,7 @@ class Admin
         <?php
         echo $this->get_status_icon($this->options['facebook']['capi']['user_transparency']['process_anonymous_hits'], $this->options['facebook']['pixel_id'], true);
         echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=facebook-capi-token#/pixels/facebook?id=user-transparency-settings');
-        echo $this->svg_pro_feature();
+        echo $this->html_pro_feature();
         if ($this->options['facebook']['capi']['user_transparency']['process_anonymous_hits'] && !$this->options['facebook']['pixel_id']) {
             echo '<p></p><span class="dashicons dashicons-info"></span>';
             esc_html_e('You need to activate the Facebook pixel', 'woocommerce-google-adwords-conversion-tracking-tag');
@@ -1657,7 +1680,7 @@ class Admin
         <?php
         echo $this->get_status_icon($this->options['facebook']['capi']['user_transparency']['send_additional_client_identifiers'], $this->options['facebook']['pixel_id'], true);
         echo $this->get_documentation_html('/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=facebook-capi-token#/pixels/facebook?id=user-transparency-settings');
-        echo $this->svg_pro_feature();
+        echo $this->html_pro_feature();
         if ($this->options['facebook']['capi']['user_transparency']['send_additional_client_identifiers'] && !$this->options['facebook']['pixel_id']) {
             echo '<p></p><span class="dashicons dashicons-info"></span>';
             esc_html_e('You need to activate the Facebook pixel', 'woocommerce-google-adwords-conversion-tracking-tag');
@@ -1684,7 +1707,7 @@ class Admin
         </label>
         <?php
         echo $this->get_status_icon($this->options['facebook']['microdata'], $this->options['facebook']['pixel_id'], true);
-        echo $this->svg_pro_feature();
+        echo $this->html_pro_feature();
         if ($this->options['facebook']['microdata'] && !$this->options['facebook']['pixel_id']) {
             echo '<p></p><span class="dashicons dashicons-info"></span>';
             esc_html_e('You need to activate the Facebook pixel', 'woocommerce-google-adwords-conversion-tracking-tag');
@@ -2034,58 +2057,45 @@ class Admin
         <?php
     }
 
-    private function svg_beta(): string
+    private function html_beta(): string
     {
-        return '<svg width="40" style="vertical-align: middle; margin-left: 8px; margin-bottom: 1px" viewBox="0 0 440 200" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2"><path d="M435.07 33.033c0-14.417-11.707-26.124-26.125-26.124H31.052C16.634 6.909 4.93 18.616 4.93 33.033v133.934c0 14.419 11.705 26.123 26.123 26.123h377.893c14.418 0 26.124-11.704 26.124-26.123V33.033z" fill="none"/><path d="M435.07 33.033c0-14.417-11.707-26.124-26.125-26.124H31.052C16.634 6.909 4.93 18.616 4.93 33.033v133.934c0 14.419 11.705 26.123 26.123 26.123h377.893c14.418 0 26.124-11.704 26.124-26.123V33.033zm-10 0v133.934c0 8.9-7.225 16.123-16.125 16.123H31.052c-8.899 0-16.123-7.224-16.123-16.123V33.033c0-8.9 7.224-16.124 16.123-16.124h377.893c8.9 0 16.125 7.224 16.125 16.124z" fill="#fab32a"/><text font-family="\'LucidaGrande\',\'Lucida Grande\',sans-serif" font-weight="500" font-size="144.709" fill="#fab32a" transform="matrix(.9989 0 0 .98128 62.11 149.635)">beta</text></svg>';
+        return '<div class="status-icon beta">' . esc_html__('beta', 'woocommerce-google-adwords-conversion-tracking-tag') . '</div>';
     }
 
-    private function svg_active(): string
+    private function html_active(): string
     {
-        return '<svg height="20"  style="vertical-align: top; margin-left: 8px; margin-bottom: 1px; margin-top: 0px" viewBox="0 0 500 200"
-    xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
-    <path d="M490.702 34.281c0-14.148-11.487-25.636-25.637-25.636h-431.9c-14.149 0-25.637 11.488-25.637 25.636V165.72c0 14.15 11.488 25.637 25.637 25.637h431.9c14.15 0 25.637-11.487 25.637-25.637V34.28z" fill="none"/>
-    <path d="M490.702 34.281c0-14.148-11.487-25.636-25.637-25.636h-431.9c-14.149 0-25.637 11.488-25.637 25.636V165.72c0 14.15 11.488 25.637 25.637 25.637h431.9c14.15 0 25.637-11.487 25.637-25.637V34.28zm-10 0V165.72c0 8.63-7.007 15.635-15.637 15.635h-431.9c-8.63 0-15.636-7.005-15.636-15.635V34.28c0-8.63 7.006-15.635 15.636-15.635h431.9c8.63 0 15.636 7.005 15.636 15.635z" fill="#18b208"/>
-    <g>
-        <text font-family="\'LucidaGrande\',\'Lucida Grande\',sans-serif" font-weight="500" font-size="144.709" fill="#18b208" transform="matrix(.9989 0 0 .98128 47.996 145.228)">active</text>
-    </g>
-</svg>';
+        return '<div class="status-icon active">' . esc_html__('active', 'woocommerce-google-adwords-conversion-tracking-tag') . '</div>';
     }
 
-    private function svg_inactive(): string
+    private function html_inactive(): string
     {
-        return '<svg height="16" style="vertical-align: top; margin-left: 8px; margin-bottom: 1px; margin-top: 2px" viewBox="0 0 660 200" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2"><path d="M653.248 33.033c0-14.417-11.705-26.124-26.123-26.124H32.874c-14.42 0-26.125 11.707-26.125 26.124v133.934c0 14.419 11.705 26.123 26.125 26.123h594.251c14.418 0 26.123-11.704 26.123-26.123V33.033z" fill="none"/><path d="M653.248 33.033c0-14.417-11.705-26.124-26.123-26.124H32.874c-14.42 0-26.125 11.707-26.125 26.124v133.934c0 14.419 11.705 26.123 26.125 26.123h594.251c14.418 0 26.123-11.704 26.123-26.123V33.033zm-9.999 0v133.934c0 8.9-7.226 16.123-16.124 16.123H32.874c-8.9 0-16.124-7.224-16.124-16.123V33.033c0-8.9 7.224-16.124 16.124-16.124h594.251c8.898 0 16.124 7.224 16.124 16.124z" fill="#ff160b"/><g><text font-family="\'LucidaGrande\',\'Lucida Grande\',sans-serif" font-weight="500" font-size="144.709" fill="#ff170b" transform="matrix(.9989 0 0 .98128 59.818 144.808)">inactive</text></g></svg>';
+        return '<div class="status-icon inactive">' . esc_html__('inactive', 'woocommerce-google-adwords-conversion-tracking-tag') . '</div>';
     }
 
-    private function svg_partially_active(): string
+    private function html_partially_active(): string
     {
-        return '<svg height="16" style="vertical-align: middle; margin-left: 8px; margin-bottom: 1px" viewBox="0 0 1104 200" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2"><path d="M1096.11 27.322c0-10.353-8.404-18.757-18.757-18.757H26.649c-10.353 0-18.757 8.404-18.757 18.757v144.752c0 10.353 8.404 18.758 18.757 18.758h1050.704c10.353 0 18.757-8.405 18.757-18.758V27.322z" fill="none"/><path d="M1096.11 27.322c0-10.353-8.404-18.757-18.757-18.757H26.649c-10.353 0-18.757 8.404-18.757 18.757v144.752c0 10.353 8.404 18.758 18.757 18.758h1050.704c10.353 0 18.757-8.405 18.757-18.758V27.322zm-10 0v144.752c0 4.833-3.924 8.758-8.757 8.758H26.649c-4.833 0-8.757-3.925-8.757-8.758V27.322c0-4.833 3.924-8.757 8.757-8.757h1050.704c4.833 0 8.757 3.924 8.757 8.757z" fill="#fab32a"/><g><text font-family="\'LucidaGrande\',\'Lucida Grande\',sans-serif" font-weight="500" font-size="142.259" fill="#fab32a" transform="translate(50.412 141.122)">partially active</text></g></svg>';
+        return '<div class="status-icon partially-active">' . esc_html__('partially active', 'woocommerce-google-adwords-conversion-tracking-tag') . '</div>';
     }
 
-    private function svg_pro_feature(): string
+    private function html_pro_feature(): string
     {
         if (!wga_fs()->is__premium_only() && $this->options['general']['pro_version_demo']) {
-            return '<svg height="28" style="vertical-align: top; margin-left: 8px; margin-bottom: 1px"  viewBox="0 0 830 200"
-    xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
-    <path d="M822.793 34.281c0-14.148-11.488-25.636-25.638-25.636H32.843c-14.149 0-25.637 11.488-25.637 25.636V165.72c0 14.15 11.488 25.637 25.637 25.637h764.312c14.15 0 25.638-11.487 25.638-25.637V34.28z" fill="none"/>
-    <path d="M822.793 34.281c0-14.148-11.488-25.636-25.638-25.636H32.843c-14.149 0-25.637 11.488-25.637 25.636V165.72c0 14.15 11.488 25.637 25.637 25.637h764.312c14.15 0 25.638-11.487 25.638-25.637V34.28zm-10 0V165.72c0 8.63-7.006 15.635-15.638 15.635H32.843c-8.63 0-15.636-7.005-15.636-15.635V34.28c0-8.63 7.007-15.635 15.636-15.635h764.312c8.632 0 15.639 7.005 15.639 15.635z" fill="#18b208"/>
-    <g>
-        <text font-family="\'LucidaGrande\',\'Lucida Grande\',sans-serif" font-weight="500" font-size="144.709" fill="#18b208" transform="matrix(.9989 0 0 .98128 15.867 150.442)">Pro Feature</text>
-    </g>
-</svg>';
+//            if (1===1) {
+
+                return '<div class="pro-feature">' . esc_html__('Pro Feature', 'woocommerce-google-adwords-conversion-tracking-tag') . '</div>';
         } else {
             return '';
         }
-
     }
 
     private function get_status_icon($status, $requirements = true, $inactive_silent = false): string
     {
         if ($status && $requirements) {
-            return $this->svg_active();
+            return $this->html_active();
         } elseif ($status && !$requirements) {
-            return $this->svg_partially_active();
+            return $this->html_partially_active();
         } elseif ($inactive_silent == false) {
-            return $this->svg_inactive();
+            return $this->html_inactive();
         }
         return '';
     }
@@ -2208,6 +2218,14 @@ class Admin
             }
         }
 
+        // validate Snapchat pixel ID
+        if (isset($input['snapchat']['pixel_id'])) {
+            if (!$this->is_snapchat_pixel_id($input['snapchat']['pixel_id'])) {
+                $input['snapchat']['pixel_id'] = isset($this->options['snapchat']['pixel_id']) ? $this->options['snapchat']['pixel_id'] : '';
+                add_settings_error('wgact_plugin_options', 'invalid-snapchat-pixel-id', esc_html__('You have entered an invalid Snapchat pixel ID.', 'woocommerce-google-adwords-conversion-tracking-tag'));
+            }
+        }
+
         // validate Hotjar site ID
         if (isset($input['hotjar']['site_id'])) {
             if (!$this->is_hotjar_site_id($input['hotjar']['site_id'])) {
@@ -2221,7 +2239,6 @@ class Admin
 
         // since disabling a checkbox doesn't send a value,
         // we need to set one to overwrite the old value
-
 
         $input = array_replace_recursive($this->non_form_keys($input), $input);
 
@@ -2419,6 +2436,17 @@ class Admin
         }
 
         $re = '/^\d{13}$/m';
+
+        return $this->validate_with_regex($re, $string);
+    }
+
+    protected function is_snapchat_pixel_id($string): bool
+    {
+        if (empty($string)) {
+            return true;
+        }
+
+        $re = '/^[a-z0-9\-]*$/m';
 
         return $this->validate_with_regex($re, $string);
     }

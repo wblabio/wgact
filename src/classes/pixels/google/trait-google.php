@@ -141,11 +141,11 @@ trait Trait_Google
             //            'discount' => 0,
             'brand'       => (string)$this->get_brand_name($product->get_id()),
             // https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#pr_ca
-            'category'    => (string)implode(' | ', $this->get_product_category($product->get_id())),
+            'category'    => implode(',', $this->get_product_category($product->get_id())),
             'variant'     => (string)($product->get_type() === 'variation') ? $this->get_formatted_variant_text($product) : '',
             //            'tax'      => 0,
             'price'       => (float)$this->wooptpm_get_order_item_price($order_item, $product),
-            //                    'list_name' => ,
+            //            'list_name' => ,
             //            'currency' => '',
         ];
     }

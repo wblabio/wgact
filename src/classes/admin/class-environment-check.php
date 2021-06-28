@@ -212,11 +212,17 @@ class Environment_Check
 
     public function is_wp_optimize_active(): bool
     {
-        if (is_plugin_active('wp-optimize/wp-optimize.php')) {
-            return true;
-        } else {
-            return false;
-        }
+        return is_plugin_active('wp-optimize/wp-optimize.php');
+    }
+
+    public function is_woocommerce_brands_active(): bool
+    {
+        return is_plugin_active('woocommerce-brands/woocommerce-brands.php');
+    }
+
+    public function is_yith_wc_brands_active(): bool
+    {
+        return is_plugin_active('yith-woocommerce-brands-add-on-premium/init.php');
     }
 
     public function disable_yoast_seo_facebook_social($option)

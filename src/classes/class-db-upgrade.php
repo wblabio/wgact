@@ -19,7 +19,7 @@ class Db_Upgrade {
 
 		// determine version and run version specific upgrade function
 		// check if options db version zero by looking if the old entries are still there.
-		if ( '0.0' === $mysql_db_version ) {
+		if ( '0' === $mysql_db_version ) {
 			$this->up_from_zero_to_1();
 		}
 
