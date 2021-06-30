@@ -154,7 +154,7 @@ class Google_MP_GA4 extends Google_MP
         $refund = new WC_Order_Refund($refund_id);
 
         // only run, if the hit has not been sent already (check in db)
-        if (get_post_meta($order->get_id(), $this->mp_partial_refund_hit_key . '_' . $refund_id)) {
+        if ($this->has_partial_refund_hit_already_been_sent($order_id, $refund_id, $this->mp_partial_refund_hit_key)) {
             return;
         }
 
@@ -181,8 +181,11 @@ class Google_MP_GA4 extends Google_MP
         $this->send_hit($this->server_base_path, $payload);
 
         // Now we let the server know, that the hit has already been successfully sent.
-        update_post_meta($order->get_id(), $this->mp_partial_refund_hit_key . '_' . $refund_id, true);
+
+        $this->save_partial_refund_hit_to_db($order_id, $refund_id, $this->mp_partial_refund_hit_key);
     }
+
+
 
 
     protected function get_all_order_products($order): array

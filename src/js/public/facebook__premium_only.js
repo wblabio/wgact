@@ -43,7 +43,7 @@ varExists('jQuery').then(function () {
                         success : function (response) {
                             // console.log(response);
 
-                            if(window.sessionStorage && response['success'] === true ){
+                            if (window.sessionStorage && response['success'] === true) {
                                 // console.log('setting session storage');
                                 window.sessionStorage.setItem('wooptpm_fb_session_id_' + data.fbp + '_set', JSON.stringify(true));
                             }
@@ -81,6 +81,10 @@ varExists('jQuery').then(function () {
             });
 
             jQuery(document).on('wooptpmFbCapiEvent', function (event, eventData) {
+
+                if (wooptpmDataLayer.pixels.facebook.capi === false) {
+                    return;
+                }
 
                 try {
                     // save the state in the database

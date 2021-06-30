@@ -179,7 +179,9 @@ You can send the link to the front page of your shop too if you think it would b
 * New: Filter for custom brand taxonomy
 * Tweak: Refactored several elements in order to render correctly in RTL environments
 * Tweak: If product belongs to multiple categories, output them in a comma separated list for GA
+* Tweak: Better handling of saving partial refund hits in the db
 * Fix: Fixed version check for db upgrade function in case someone has been using one of the earliest versions of the plugin
+* Fix: Removed unnecessary FB CAPI calls if CAPI is disabled
 
 = 1.10.8 =
 

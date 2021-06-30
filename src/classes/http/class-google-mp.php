@@ -29,6 +29,41 @@ class Google_MP extends Http
         $this->use_debug_endpoint = apply_filters('wooptpm_google_mp_use_debug_endpoint', false);
     }
 
+    protected function delete_old_partial_refund_hit_keys()
+    {
+        global $wpdb;
+
+        $sql = "DELETE FROM {$wpdb->prefix}postmeta WHERE meta_key LIKE '%wooptpm_google_analytics_4_mp_partial_refund_hit_%'";
+
+        $wpdb->get_results($sql);
+
+        $sql = "DELETE FROM {$wpdb->prefix}postmeta WHERE meta_key LIKE '%wooptpm_google_analytics_ua_mp_partial_refund_hit_%'";
+
+        $wpdb->get_results($sql);
+    }
+
+    protected function has_partial_refund_hit_already_been_sent($order_id, $refund_id, $mp_partial_refund_hit_key): bool
+    {
+        $post_meta = get_post_meta($order_id, $mp_partial_refund_hit_key, true);
+
+        if ($post_meta) {
+            return (in_array($refund_id, $post_meta));
+        } else {
+            return false;
+        }
+    }
+
+    protected function save_partial_refund_hit_to_db($order_id, $refund_id, $mp_partial_refund_hit_key)
+    {
+        $post_meta = get_post_meta($order_id, $mp_partial_refund_hit_key, true);
+        if (!is_array($post_meta)) $post_meta = [];
+        $post_meta[] = $refund_id;
+        update_post_meta($order_id, $mp_partial_refund_hit_key, $post_meta);
+
+        // TODO remove by end of 2021
+        $this->delete_old_partial_refund_hit_keys();
+    }
+
     public function wooptpm_google_analytics_set_session_cid()
     {
         if (!check_ajax_referer('wooptpm-google-premium-only-nonce', 'nonce', false)) {

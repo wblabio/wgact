@@ -142,7 +142,6 @@ class Pixel_Manager_Base
         $order = new WC_Order($order_id);
 
         if (empty($order_id) || $order_id == 0) {
-
             return false;
         } else {
             return $order;
