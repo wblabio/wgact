@@ -270,9 +270,12 @@ class Pixel_Manager extends Pixel_Manager_Base
             'cart_item_keys'      => [],
             'pixels'              => [],
             'orderDeduplication'  => ($this->options['shop']['order_deduplication'] && !$this->is_nodedupe_parameter_set()) ? true : false,
-            'position'            => (int)1,
-            'viewItemListTrigger' => (array)$this->view_item_list_trigger_settings(),
-            'version'             => (string)WGACT_CURRENT_VERSION,
+            'position'            => 1,
+            'viewItemListTrigger' => $this->view_item_list_trigger_settings(),
+            'version'             => [
+                'number' => WGACT_CURRENT_VERSION,
+                'pro'    => wga_fs()->is__premium_only(),
+            ]
         ];
 
         ?>
@@ -524,7 +527,7 @@ class Pixel_Manager extends Pixel_Manager_Base
             $data['list_name'] = 'Checkout Page';
             $data['list_id']   = 'checkout';
             $data['page_type'] = 'checkout';
-        }  else {
+        } else {
             $data['list_name'] = '';
             $data['list_id']   = '';
             $data['page_type'] = '';

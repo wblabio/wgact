@@ -2026,14 +2026,14 @@ class Admin
                    name='wgact_plugin_options[google][ads][product_identifier]'
                    value='0' <?php
             echo(checked(0, $this->options['google']['ads']['product_identifier'], false)) ?>/><?php
-            esc_html_e('post id (default)', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
+            esc_html_e('post ID (default)', 'woocommerce-google-adwords-conversion-tracking-tag') ?></label>
         <br>
         <label>
             <input type='radio' id='wgact_plugin_option_product_identifier_1'
                    name='wgact_plugin_options[google][ads][product_identifier]'
                    value='1' <?php
             echo(checked(1, $this->options['google']['ads']['product_identifier'], false)) ?>/><?php
-            esc_html_e('post id with woocommerce_gpf_ prefix *', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+            esc_html_e('post ID with woocommerce_gpf_ prefix *', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
         </label>
         <br>
         <label>
