@@ -21,7 +21,9 @@ varExists('jQuery').then(function () {
                 // console.log('firing Snapchat ads ADD_CART event');
                 // console.log(product);
 
-                snaptr('track','ADD_CART')
+                snaptr('track', 'ADD_CART', {
+                    'item_ids': product.dyn_r_ids[wooptpmDataLayer.pixels.snapchat.dynamic_remarketing.id_type],
+                });
             });
 
             // VIEW_CONTENT event
@@ -30,7 +32,9 @@ varExists('jQuery').then(function () {
                 // console.log('firing Snapchat ads VIEW_CONTENT event');
                 // console.log(product);
 
-                snaptr('track','VIEW_CONTENT')
+                snaptr('track', 'VIEW_CONTENT', {
+                    'item_ids': product.dyn_r_ids[wooptpmDataLayer.pixels.snapchat.dynamic_remarketing.id_type],
+                });
             });
         }
     })
@@ -49,7 +53,9 @@ varExists('jQuery').then(function () {
                         // console.log('pintrk PageVisit');
                         // console.log(product);
 
-                        snaptr('track','VIEW_CONTENT')
+                        snaptr('track', 'VIEW_CONTENT', {
+                            'item_ids': product.dyn_r_ids[wooptpmDataLayer.pixels.snapchat.dynamic_remarketing.id_type],
+                        });
 
                     } else if (wooptpmDataLayer.shop.page_type === 'search') {
 

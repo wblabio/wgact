@@ -74,6 +74,7 @@ class Snapchat_Pixel extends Pixel
                         'currency'       : '" . $order->get_currency() . "',
                         'price'          : " . $order_total . ",
                         'transaction_id' : '" . $order->get_order_number() . "',
+                        'item_ids'       : " . json_encode($this->get_order_item_ids($order)) . ",
                     });
                 }
             });

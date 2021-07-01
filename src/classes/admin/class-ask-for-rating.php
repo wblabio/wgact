@@ -146,22 +146,36 @@ class Ask_For_Rating
 
                 <ul style="list-style-type: disc ;padding-left:20px">
                     <li>
-                        <a id="rate-it" href="#">
+                        <a id="wooptpm-rate-it" href="#">
                             <?php esc_html_e('Ok, you deserve it', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
                         </a>
                     </li>
                     <li>
-                        <a id="maybe-later" href="#">
+                        <a id="wooptpm-maybe-later" href="#">
                             <?php esc_html_e('Nope, maybe later', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
                         </a>
                     </li>
                     <li>
-                        <a id="already-did" href="#">
-                            <?php esc_html_e('I already did', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
-                        </a>
+
+                        <div style=" margin-bottom: 10px; display: flex; justify-content: space-between">
+
+                            <div id="wooptpm-paypal-standard-error-dismissal-button" style="white-space:normal;">
+                                <a id="wooptpm-already-did" href="#">
+                                    <?php esc_html_e('I already did', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+                                </a>
+                            </div>
+                            <div style="white-space:normal; bottom:0; right: 0; margin-bottom: 0px; margin-right: 5px;align-self: flex-end;">
+                                <a href="https://docs.woopt.com/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=dismiss-button-info#/faq?id=the-dismiss-button-doesnt-work-why"
+                                   target="_blank">
+                                    <?php esc_html_e('If the dismiss button is not working, here\'s why >>', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+                                </a>
+                            </div>
+                        </div>
                     </li>
                 </ul>
             </div>
+
+
 
 
         </div>
