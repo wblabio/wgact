@@ -263,8 +263,10 @@ varExists('jQuery').then(function () {
 
                     if (quantityToRemove == null) {
                         delete wooptpmDataLayer.cart[productId];
+                        if (sessionStorage) sessionStorage.setItem('wooptpmDataLayerCart', JSON.stringify(wooptpmDataLayer.cart));
                     } else {
                         wooptpmDataLayer.cart[productId].quantity = wooptpmDataLayer.cart[productId].quantity - quantity;
+                        if (sessionStorage) sessionStorage.setItem('wooptpmDataLayerCart', JSON.stringify(wooptpmDataLayer.cart));
                     }
                 }
             } catch (e) {
@@ -329,6 +331,7 @@ varExists('jQuery').then(function () {
                     // otherwise create that product object in the wooptpmDataLayer['cart']
                     if (wooptpmDataLayer.cart !== undefined && wooptpmDataLayer.cart[productId] !== undefined) {
                         wooptpmDataLayer.cart[productId].quantity = wooptpmDataLayer.cart[productId].quantity + quantity;
+                        if (sessionStorage) sessionStorage.setItem('wooptpmDataLayerCart', JSON.stringify(wooptpmDataLayer.cart));
                     } else {
 
                         if (!wooptpmDataLayer.cart) {
@@ -345,7 +348,7 @@ varExists('jQuery').then(function () {
                                     'price'    : wooptpmDataLayer.products[productId].price
                                 }
                             };
-
+                            if (sessionStorage) sessionStorage.setItem('wooptpmDataLayerCart', JSON.stringify(wooptpmDataLayer.cart));
                         } else {
 
                             wooptpmDataLayer.cart[productId] = {
@@ -358,19 +361,35 @@ varExists('jQuery').then(function () {
                                 'quantity' : quantity,
                                 'price'    : wooptpmDataLayer.products[productId].price
                             };
+                            if (sessionStorage) sessionStorage.setItem('wooptpmDataLayerCart', JSON.stringify(wooptpmDataLayer.cart));
                         }
                     }
                 }
             } catch (e) {
                 console.log(e);
+
+                // fallback if wooptpmDataLayer.cart and wooptpmDataLayer.products got out of sync in case cart caching has an issue
+                wooptpm.getCartItemsFromBackend();
             }
         }
 
-        wooptpm.getCartItemsFromBackEnd = function () {
-            // get all cart items from the backend
+        wooptpm.getCartItems = function () {
 
             // console.log('get cart items');
 
+            if (sessionStorage) {
+                if (!sessionStorage.getItem('wooptpmDataLayerCart') || wooptpmDataLayer.shop.page_type === "order_received_page") {
+                    sessionStorage.setItem('wooptpmDataLayerCart', JSON.stringify({}));
+                } else {
+                    wooptpm.saveCartObjectToDataLayer(JSON.parse(sessionStorage.getItem('wooptpmDataLayerCart')));
+                }
+            } else {
+                wooptpm.getCartItemsFromBackend();
+            }
+        }
+
+        wooptpm.getCartItemsFromBackend = function (){
+            // get all cart items from the backend
             try {
                 let data = {
                     'action': 'wooptpm_get_cart_items',
@@ -383,16 +402,19 @@ varExists('jQuery').then(function () {
                         url     : ajax_object.ajax_url,
                         data    : data,
                         success : function (cart_items) {
-                            // save all cart items into wooptpmDataLayer
                             // console.log(cart_items['cart']);
-                            wooptpmDataLayer.cart     = cart_items['cart'];
-                            // wooptpmDataLayer.products = {... wooptpmDataLayer.products, ...cart_items['cart']};
-                            wooptpmDataLayer.products = Object.assign({}, wooptpmDataLayer.products, cart_items['cart']);
+                            // save all cart items into wooptpmDataLayer
+                            wooptpm.saveCartObjectToDataLayer(cart_items['cart']);
                         }
                     });
             } catch (e) {
                 console.log(e);
             }
+        }
+
+        wooptpm.saveCartObjectToDataLayer = function (cartObject) {
+            wooptpmDataLayer.cart     = cartObject;
+            wooptpmDataLayer.products = Object.assign({}, wooptpmDataLayer.products, cartObject);
         }
 
         wooptpm.fireCheckoutOption = function (step, checkout_option = null, value = null) {
@@ -1035,19 +1057,38 @@ varExists('jQuery').then(function () {
         })
     });
 
+    jQuery(document).ajaxSend(function (event, jqxhr, settings) {
+        // console.log('settings.url: ' + settings.url);
 
+        if (settings.url.includes('get_refreshed_fragments') && sessionStorage) {
+            if (!sessionStorage.getItem('wooptpmMiniCartActive')) {
+                sessionStorage.setItem('wooptpmMiniCartActive', JSON.stringify(true));
+            }
+        }
+    });
+
+    // populate the wooptpmDataLayer with the cart items
     jQuery(window).on('load', function () {
-        // populate the wooptpmDataLayer with the cart items
         // console.log('getting cart');
 
         try {
-            if (wooptpmDataLayer.shop.page_type === 'cart' || wooptpmDataLayer.shop.mini_cart.track === true) {
-                wooptpm.getCartItemsFromBackEnd();
+            // console.log('wooptpmMiniCartActive: ' + JSON.parse(sessionStorage.getItem('wooptpmMiniCartActive')));
+            // if ( wooptpmDataLayer.shop.page_type === 'cart' || wooptpmDataLayer.shop.mini_cart.track === true) {
+
+            if (
+                JSON.parse(sessionStorage.getItem('wooptpmMiniCartActive')) && // if we detected calls to get_refreshed_fragments
+                JSON.parse(sessionStorage.getItem('wooptpmFirstPageLoad')) &&  // when a new session is initiated there are no items in the cart, so we can save that call
+                wooptpmDataLayer.shop.mini_cart.track === true                      // if shop owner generally allows the plugin to track the mini cart
+            ) {
+                // console.log('getting cart');
+                wooptpm.getCartItems();
+
+            } else {
+                sessionStorage.setItem('wooptpmFirstPageLoad', JSON.stringify(true));
             }
         } catch (e) {
             console.log(e);
         }
-        // wooptpm.loadPageProductsFromBackend();
     });
 
 }).catch(function () {

@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, google analytics, facebook pixel, conversion trac
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 7.2
-Stable tag: 1.10.9-beta.2
+Stable tag: 1.10.9-beta.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -177,11 +177,17 @@ You can send the link to the front page of your shop too if you think it would b
 = 1.10.9 =
 
 * New: Filter for custom brand taxonomy
+[//]: # fs_premium_only_begin
+* Tweak: Better handling of saving partial refund hits in the db
+[//]: # fs_premium_only_end
 * Tweak: Refactored several elements in order to render correctly in RTL environments
 * Tweak: If product belongs to multiple categories, output them in a comma separated list for GA
-* Tweak: Better handling of saving partial refund hits in the db
-* Fix: Fixed version check for db upgrade function in case someone has been using one of the earliest versions of the plugin
+* Tweak: Automatically detect if mini cart is being used, and depending on this, enable or disable wooptpm_get_cart_items
+* Tweak: Caching cart contents in sessionStorage in order to avoid as many API calls to backend as possible
+[//]: # fs_premium_only_begin
 * Fix: Removed unnecessary FB CAPI calls if CAPI is disabled
+[//]: # fs_premium_only_end
+* Fix: Fixed version check for db upgrade function in case someone has been using one of the earliest versions of the plugin
 
 = 1.10.8 =
 
@@ -373,7 +379,7 @@ You can send the link to the front page of your shop too if you think it would b
 [//]: # fs_premium_only_begin
 * Tweak: Twitter ID check now allows numbers too
 [//]: # fs_premium_only_end
-* Tweak: Moved getCartItemsFromBackEnd to document.load event
+* Tweak: Moved getCartItems to document.load event
 * Tweak: Added Freemius purchase conversion
 * Tweak: Avoid number output with too many decimals
 * Tweak: More reliable method to get order from order received page
