@@ -96,14 +96,11 @@ class Debug_info
             $html .= "\t" . get_class($value) . '(' . $value->method_title . ')' . PHP_EOL;
         }
 
-        if (wga_fs()->is__premium_only()) {
+        $max_order_amount = 100;
+        $html             .= PHP_EOL . "Purchase confirmation page reached per gateway (of last $max_order_amount orders):" . PHP_EOL;
 
-            $max_order_amount = 100;
-            $html             .= PHP_EOL . "Purchase confirmation page reached per gateway (of last $max_order_amount orders):" . PHP_EOL;
-
-            foreach ($this->get_gateway_analysis_array($max_order_amount) as $text) {
-                $html .= "\t" . $text . PHP_EOL;
-            }
+        foreach ($this->get_gateway_analysis_array($max_order_amount) as $text) {
+            $html .= "\t" . $text . PHP_EOL;
         }
 
 //        $html .= PHP_EOL;

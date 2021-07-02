@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, google analytics, facebook pixel, conversion trac
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 7.2
-Stable tag: 1.10.9-beta.3
+Stable tag: 1.10.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,13 +14,13 @@ Track visitors and conversions in Google Ads, Google Analytics, Facebook Pixel (
 
 This plugin <strong>tracks WooCommerce shop visitors and collects valuable data for conversion optimization, dynamic remarketing and reporting</strong>.
 
-While the setup is as simple as it can get, the pixel engine under the hood is very powerful. It tracks all standard events and implements all advanced pixel features like Facebook CAPI (Pro version), Google Enhanced E-Commerce, Google Shopping Cart Item Tracking and much more. For advanced users the plugin offers filters which allow to tweak the output very flexibly and fine tune the behaviour to each shop.
+While the setup is as simple as it can get, the pixel engine under the hood is very powerful. It tracks all e-commerce events and implements all advanced pixel features like Facebook CAPI (Pro version), Google Enhanced E-Commerce, Google Shopping Cart Item Tracking and much more. For advanced users the plugin offers filters which allow to tweak the output flexibly and fine tune the behaviour to each shop.
 
 <strong>What sets us apart from other, similar plugins?</strong>
 
-Well, out of many things, probably high tracking accuracy is the most important property that sets our plugin apart from others. While other plugin developers spend much of their time making the setup pages look fancy, we keep the settings pages as simple as possible, save that time and spend it on making the visitor and conversion tracking as accurate as possible.
+Out of many things, probably high tracking accuracy and a simple user interface are the most important properties that set our plugin apart from others.
 
-Our plugin is optimized for tracking accuracy for all included pixels. We've built many features into the plugin which help measure visitors and conversions as accurate as technically possible. For instance, if the plugin detects problems in the shop setup that might lower or prevent accurate tracking, it either fixes them seamlessly, or shows warnings with guidance on how to fix the problems.
+Additionally to the standard features offered by the tracking pixels we've developed more functional layers into the plugin which help increase measurement accuracy. For instance, if the plugin detects problems in the shop setup that might lower or prevent accurate tracking, it either fixes them seamlessly, or shows warnings with guidance on how to fix the problems.
 
 Read more about the importance of tracking accuracy over [here](https://docs.woopt.com/wgact/?utm_source=wordpress.org&utm_medium=wooptpm-plugin-page&utm_campaign=woopt-pixel-manager-docs#/faq?id=why-is-tracking-accuracy-so-important).
 
@@ -34,6 +34,7 @@ Read more about the importance of tracking accuracy over [here](https://docs.woo
 * Microsoft Ads (Pro version)
 * Twitter Ads (Pro version)
 * Pinterest Ads (Pro version)
+* Snapchat Ads (Pro version)
 
 <strong>Highlights</strong>
 
@@ -72,6 +73,7 @@ Have a look at the full feature list over [here](https://docs.woopt.com/wgact/#/
 * Microsoft Advertising Pixel with Purchase and all Remarketing Events
 * Twitter Ads Pixel with Purchase and all Remarketing Events
 * Pinterest Ads Pixel with Purchase and all Remarketing Events
+* Snapchat Ads Pixel with Purchase and all Remarketing Events
 * Advanced Order Deduplication
 
 Have a look at the full feature list over [here](https://docs.woopt.com/wgact/#/features?id=available-features).
@@ -83,8 +85,9 @@ Are you interested to purchase the [Pro version](https://woopt.com)? Come and vi
 The plugin supports and works with following third party plugins.
 
 * WooCommerce Brands
-* WooCommerce Wishlists
+* WooCommerce Composite Products
 * WooCommerce Google Product Feed
+* WooCommerce Wishlists
 * YITH WooCommerce Brands️
 * YITH WooCommerce Wishlist️
 * Woo Discount Rules️
@@ -177,6 +180,7 @@ You can send the link to the front page of your shop too if you think it would b
 = 1.10.9 =
 
 * New: Filter for custom brand taxonomy
+* New: Added payment gateway usage and successful redirect stats to free version
 [//]: # fs_premium_only_begin
 * Tweak: Better handling of saving partial refund hits in the db
 [//]: # fs_premium_only_end

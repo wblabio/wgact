@@ -42,7 +42,6 @@ trait Trait_Shop
         $list_suffix = '';
 
         if (is_product_category()) {
-
             $category    = get_queried_object();
             $list_suffix = '.' . $category->slug;
             $list_suffix = $this->add_parent_category_id($category, $list_suffix);
