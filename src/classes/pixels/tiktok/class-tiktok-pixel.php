@@ -63,27 +63,25 @@ class TikTok_Pixel extends Pixel
 
     public function inject_order_received_page($order, $order_total)
     {
+        $formatted_order_items = $this->get_order_items_formatted_for_purchase_event($order);
+
+        $data = [];
+        foreach ($formatted_order_items as $key => $item) {
+
+            $tiktok_formatted_item['content_id']   = $item['id'];
+            $tiktok_formatted_item['content_type'] = 'product';
+            $tiktok_formatted_item['content_name'] = $item['name'];
+            $tiktok_formatted_item['quantity']     = $item['quantity'];
+            $tiktok_formatted_item['price']        = $item['price'];
+
+            $data[] = $tiktok_formatted_item;
+        }
+
         echo "
             wooptpmExists().then(function(){
                 if (!wooptpm.isOrderIdStored('" . $order->get_id() . "')) {
-                    
-                    
                     ttq.track('Purchase', {
-                       contents: [
-                        {
-                          content_id: '1337',
-                          content_type: 'product',
-                          content_name: 'Product 1',
-                          quantity: 1,
-                          price: 8,
-                        },
-                        {
-                          content_id: '404',
-                          content_type: 'product',
-                          content_name: 'Product 2',
-                          quantity: 1,
-                          price: 1.2,
-                        }],
+                       contents: " . json_encode($data) . ",
                         'value': " . $order_total . ",
                         'currency': '" . $order->get_currency() . "',
                       });

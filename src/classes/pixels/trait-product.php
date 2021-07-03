@@ -154,6 +154,43 @@ trait Trait_Product
         return $order_items_array;
     }
 
+    protected function get_order_items_formatted_for_purchase_event($order): array
+    {
+        $order_items           = $order->get_items();
+        $order_items_formatted = [];
+
+        foreach ((array)$order_items as $order_item) {
+
+            $product_id = $this->get_variation_or_product_id($order_item->get_data(), $this->options_obj->general->variations_output);
+
+            $product         = wc_get_product($product_id);
+            $product_details = [];
+
+            // only continue if WC retrieves a valid product
+            if (is_object($product)) {
+
+                $dyn_r_ids           = $this->get_dyn_r_ids($product);
+                $product_id_compiled = $dyn_r_ids[$this->get_dyn_r_id_type()];
+//                $product_id_compiled = $this->get_compiled_product_id($product_id, $product->get_sku(), $this->options, '');
+
+                $product_details['id']       = $product_id_compiled;
+                $product_details['name']     = $product->get_name();
+                $product_details['quantity'] = $order_item->get_quantity();
+                $product_details['price']    = $product->get_price();
+
+
+                $order_items_formatted[] = $product_details;
+//                array_push($order_items_formatted, $product_details);
+            } else {
+
+                $this->log_problematic_product_id($product_id);
+            }
+        }
+
+        return $order_items_formatted;
+    }
+
+
     protected function get_dyn_r_id_type(): string
     {
 //        $dyn_r_id_type = '';

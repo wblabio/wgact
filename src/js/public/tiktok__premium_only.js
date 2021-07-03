@@ -51,7 +51,7 @@ varExists('jQuery').then(function () {
 
     jQuery(window).on('load', function () {
 
-        if (wooptpm.objectExists(wooptpmDataLayer.pixels.snapchat)) {
+        if (wooptpm.objectExists(wooptpmDataLayer.pixels.tiktok)) {
 
             wooptpmExists().then(function () {
 
@@ -60,11 +60,16 @@ varExists('jQuery').then(function () {
 
                         let product = wooptpm.getProductDataForViewItemEvent(wooptpm.getMainProductIdFromProductPage());
 
-                        // console.log('pintrk PageVisit');
+                        // console.log('ttq.track PageVisit');
                         // console.log(product);
 
-                        ttq.track( 'ViewContent', {
-                            'item_ids': product.dyn_r_ids[wooptpmDataLayer.pixels.snapchat.dynamic_remarketing.id_type],
+                        ttq.track('VIEW_CONTENT', {
+                            content_id: product.dyn_r_ids[wooptpmDataLayer.pixels.tiktok.dynamic_remarketing.id_type],
+                            content_type: 'product',
+                            content_name: product.name,
+                            quantity: product.quantity,
+                            value: product.price,
+                            currency: product.currency,
                         });
 
                     }

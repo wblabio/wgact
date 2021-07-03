@@ -246,7 +246,7 @@ class Environment_Check
 
     public function permanent_compatibility_mode()
     {
-//        if ($this->is_wp_rocket_active()) $this->exclude_inline_scripts_from_wp_rocket_using_options();
+        if ($this->is_wp_rocket_active()) $this->exclude_inline_scripts_from_wp_rocket_using_options();
 
         // for testing you need to clear the WP Rocket cache, only then the filters run
         if ($this->is_wp_rocket_active()) {
@@ -390,18 +390,18 @@ class Environment_Check
         foreach ($js_to_exclude as $string) {
 
             // add exclusions for inline js
-            if (array_key_exists('exclude_inline_js', $options) && is_array($options['exclude_inline_js']) && !in_array($string, $options['exclude_inline_js'])) {
-
-                array_push($options['exclude_inline_js'], $string);
-                $update_options = true;
-            }
+//            if (array_key_exists('exclude_inline_js', $options) && is_array($options['exclude_inline_js']) && !in_array($string, $options['exclude_inline_js'])) {
+//
+//                array_push($options['exclude_inline_js'], $string);
+//                $update_options = true;
+//            }
 
             // add exclusions for js
-            if (array_key_exists('exclude_js', $options) && is_array($options['exclude_js']) && !in_array($string, $options['exclude_js'])) {
-
-                array_push($options['exclude_js'], $string);
-                $update_options = true;
-            }
+//            if (array_key_exists('exclude_js', $options) && is_array($options['exclude_js']) && !in_array($string, $options['exclude_js'])) {
+//
+//                array_push($options['exclude_js'], $string);
+//                $update_options = true;
+//            }
 
             // remove scripts from delay_js_scripts
             if (array_key_exists('delay_js_scripts', $options) && is_array($options['delay_js_scripts']) && in_array($string, $options['delay_js_scripts'])) {
@@ -411,18 +411,18 @@ class Environment_Check
             }
 
             // exclude_defer_js
-            if (array_key_exists('exclude_defer_js', $options) && is_array($options['exclude_defer_js']) && !in_array($string, $options['exclude_defer_js'])) {
-
-                array_push($options['exclude_defer_js'], $string);
-                $update_options = true;
-            }
+//            if (array_key_exists('exclude_defer_js', $options) && is_array($options['exclude_defer_js']) && !in_array($string, $options['exclude_defer_js'])) {
+//
+//                array_push($options['exclude_defer_js'], $string);
+//                $update_options = true;
+//            }
 
             // exclude_delay_js
-            if (array_key_exists('delay_js_exclusions', $options) && is_array($options['delay_js_exclusions']) && !in_array($string, $options['delay_js_exclusions'])) {
-
-                array_push($options['delay_js_exclusions'], $string);
-                $update_options = true;
-            }
+//            if (array_key_exists('delay_js_exclusions', $options) && is_array($options['delay_js_exclusions']) && !in_array($string, $options['delay_js_exclusions'])) {
+//
+//                array_push($options['delay_js_exclusions'], $string);
+//                $update_options = true;
+//            }
         }
 
         if ($update_options === true) {
