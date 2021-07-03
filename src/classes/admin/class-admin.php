@@ -392,6 +392,18 @@ class Admin
                 'wgact_plugin_options_page',
                 $section_ids['settings_name']
             );
+
+            // add the field for the TikTok pixel
+            add_settings_field(
+                'wgact_plugin_tiktok_pixel_id',
+                esc_html__(
+                    'TikTok pixel ID',
+                    'woocommerce-google-adwords-conversion-tracking-tag'
+                ) . $this->html_beta(),
+                [$this, 'wgact_option_html_tiktok_pixel_id'],
+                'wgact_plugin_options_page',
+                $section_ids['settings_name']
+            );
         }
 
         // add the field for the Hotjar pixel
@@ -1259,6 +1271,17 @@ class Admin
         echo '<br><br>';
         esc_html_e('The Snapchat pixel ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
         echo '&nbsp;<i>1a2345b6-cd78-9012-e345-fg6h7890ij12</i>';
+    }
+
+    public function wgact_option_html_tiktok_pixel_id()
+    {
+        echo "<input id='wgact_plugin_tiktok_pixel_id' name='wgact_plugin_options[tiktok][pixel_id]' size='40' type='text' value='{$this->options['tiktok']['pixel_id']}' {$this->disable_if_demo()} />";
+        echo $this->get_status_icon($this->options['tiktok']['pixel_id']);
+//        echo $this->get_documentation_html('/wgact/#/tiktok');
+        echo $this->html_pro_feature();
+        echo '<br><br>';
+        esc_html_e('The TikTok pixel ID looks similar to this:', 'woocommerce-google-adwords-conversion-tracking-tag');
+        echo '&nbsp;<i>ABCD1E2FGH3IJK45LMN6</i>';
     }
 
     public function wgact_option_html_hotjar_site_id()
@@ -2226,6 +2249,14 @@ class Admin
             }
         }
 
+        // validate TikTok pixel ID
+        if (isset($input['tiktok']['pixel_id'])) {
+            if (!$this->is_tiktok_pixel_id($input['tiktok']['pixel_id'])) {
+                $input['tiktok']['pixel_id'] = isset($this->options['tiktok']['pixel_id']) ? $this->options['tiktok']['pixel_id'] : '';
+                add_settings_error('wgact_plugin_options', 'invalid-tiktok-pixel-id', esc_html__('You have entered an invalid TikTok pixel ID.', 'woocommerce-google-adwords-conversion-tracking-tag'));
+            }
+        }
+
         // validate Hotjar site ID
         if (isset($input['hotjar']['site_id'])) {
             if (!$this->is_hotjar_site_id($input['hotjar']['site_id'])) {
@@ -2447,6 +2478,17 @@ class Admin
         }
 
         $re = '/^[a-z0-9\-]*$/m';
+
+        return $this->validate_with_regex($re, $string);
+    }
+
+    protected function is_tiktok_pixel_id($string): bool
+    {
+        if (empty($string)) {
+            return true;
+        }
+
+        $re = '/^[A-Z0-9]{20,20}$/m';
 
         return $this->validate_with_regex($re, $string);
     }

@@ -233,8 +233,7 @@ class Environment_Check
 
     public function disable_litespeed_js_inline_after_dom($option): int
     {
-        $option = 0;
-        return $option;
+        return 0;
     }
 
     public function disable_wp_rocket_js_optimizations($option)
@@ -247,7 +246,17 @@ class Environment_Check
 
     public function permanent_compatibility_mode()
     {
-        if ($this->is_wp_rocket_active()) $this->exclude_inline_scripts_from_wp_rocket();
+//        if ($this->is_wp_rocket_active()) $this->exclude_inline_scripts_from_wp_rocket_using_options();
+
+        // for testing you need to clear the WP Rocket cache, only then the filters run
+        if ($this->is_wp_rocket_active()) {
+            add_filter('rocket_delay_js_exclusions', [$this, 'add_wp_rocket_exclusions']);
+            add_filter('rocket_defer_inline_exclusions', [$this, 'add_wp_rocket_exclusions']);
+            add_filter('rocket_exclude_defer_js', [$this, 'add_wp_rocket_exclusions']);
+            add_filter('rocket_exclude_js', [$this, 'add_wp_rocket_exclusions']);
+            add_filter('rocket_minify_excluded_external_js', [$this, 'add_wp_rocket_exclusions']);
+            add_filter('rocket_excluded_inline_js_content', [$this, 'add_wp_rocket_exclusions']);
+        }
 
         if ($this->is_sg_optimizer_active()) {
             add_filter('sgo_javascript_combine_excluded_inline_content', [$this, 'sg_optimizer_js_exclude_combine_inline_content']);
@@ -350,7 +359,6 @@ class Environment_Check
         $exclude_list[] = 'wooptpm-ga-ua-eec';
         $exclude_list[] = 'wooptpm-ga4-eec';
         $exclude_list[] = 'jquery';
-        $exclude_list[] = 'jquery-cookie';
         $exclude_list[] = 'jquery-core';
         $exclude_list[] = 'jquery-migrate';
 
@@ -366,7 +374,13 @@ class Environment_Check
         return $exclude_list;
     }
 
-    public function exclude_inline_scripts_from_wp_rocket()
+    public function add_wp_rocket_exclusions($exclusions): array
+    {
+        $exclusions = array_merge($exclusions, $this->get_wooptpm_script_identifiers());
+        return array_merge($exclusions, $this->get_wooptpm_script_identifiers());
+    }
+
+    public function exclude_inline_scripts_from_wp_rocket_using_options()
     {
         $options        = get_option('wp_rocket_settings');
         $update_options = false;
@@ -400,6 +414,13 @@ class Environment_Check
             if (array_key_exists('exclude_defer_js', $options) && is_array($options['exclude_defer_js']) && !in_array($string, $options['exclude_defer_js'])) {
 
                 array_push($options['exclude_defer_js'], $string);
+                $update_options = true;
+            }
+
+            // exclude_delay_js
+            if (array_key_exists('delay_js_exclusions', $options) && is_array($options['delay_js_exclusions']) && !in_array($string, $options['delay_js_exclusions'])) {
+
+                array_push($options['delay_js_exclusions'], $string);
                 $update_options = true;
             }
         }
@@ -460,6 +481,10 @@ class Environment_Check
             'static.ads-twitter.com/uwt.js',
             'platform.twitter.com/widgets.js',
             'uetq',
+            'ttq',
+            'events.js',
+            'snaptr',
+            'scevent.min.js',
         ];
     }
 

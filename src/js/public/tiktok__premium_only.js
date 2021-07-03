@@ -13,27 +13,37 @@ varExists('jQuery').then(function () {
 
     jQuery(function () {
 
-        if (wooptpm.objectExists(wooptpmDataLayer.pixels.snapchat)) {
+        if (wooptpm.objectExists(wooptpmDataLayer.pixels.tiktok)) {
 
             // AddToCart event
             jQuery(document).on('wooptpmAddToCart', function (event, product) {
 
-                // console.log('firing Snapchat ads ADD_CART event');
+                // console.log('firing TikTok ads AddToCart event');
                 // console.log(product);
 
-                snaptr('track', 'ADD_CART', {
-                    'item_ids': [product.dyn_r_ids[wooptpmDataLayer.pixels.snapchat.dynamic_remarketing.id_type]],
+                ttq.track('AddToCart', {
+                    content_id: product.dyn_r_ids[wooptpmDataLayer.pixels.tiktok.dynamic_remarketing.id_type],
+                    content_type: 'product',
+                    content_name: product.name,
+                    quantity: product.quantity,
+                    value: product.price,
+                    currency: product.currency,
                 });
             });
 
             // VIEW_CONTENT event
             jQuery(document).on('wooptpmViewItem', function (event, product) {
 
-                // console.log('firing Snapchat ads VIEW_CONTENT event');
+                // console.log('firing TikTok ads VIEW_CONTENT event');
                 // console.log(product);
 
-                snaptr('track', 'VIEW_CONTENT', {
-                    'item_ids': [product.dyn_r_ids[wooptpmDataLayer.pixels.snapchat.dynamic_remarketing.id_type]],
+                ttq.track('VIEW_CONTENT', {
+                    content_id: product.dyn_r_ids[wooptpmDataLayer.pixels.tiktok.dynamic_remarketing.id_type],
+                    content_type: 'product',
+                    content_name: product.name,
+                    quantity: product.quantity,
+                    value: product.price,
+                    currency: product.currency,
                 });
             });
         }
@@ -50,11 +60,11 @@ varExists('jQuery').then(function () {
 
                         let product = wooptpm.getProductDataForViewItemEvent(wooptpm.getMainProductIdFromProductPage());
 
-                        // console.log('snaptr VIEW_CONTENT');
+                        // console.log('pintrk PageVisit');
                         // console.log(product);
 
-                        snaptr('track', 'VIEW_CONTENT', {
-                            'item_ids': [product.dyn_r_ids[wooptpmDataLayer.pixels.snapchat.dynamic_remarketing.id_type]],
+                        ttq.track( 'ViewContent', {
+                            'item_ids': product.dyn_r_ids[wooptpmDataLayer.pixels.snapchat.dynamic_remarketing.id_type],
                         });
 
                     }

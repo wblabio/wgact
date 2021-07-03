@@ -72,6 +72,9 @@ class Default_Options
             'snapchat' => [
                 'pixel_id' => ''
             ],
+            'tiktok' => [
+                'pixel_id' => ''
+            ],
             'hotjar'     => [
                 'site_id' => ''
             ],

@@ -388,7 +388,7 @@ varExists('jQuery').then(function () {
             }
         }
 
-        wooptpm.getCartItemsFromBackend = function (){
+        wooptpm.getCartItemsFromBackend = function () {
             // get all cart items from the backend
             try {
                 let data = {
@@ -405,6 +405,7 @@ varExists('jQuery').then(function () {
                             // console.log(cart_items['cart']);
                             // save all cart items into wooptpmDataLayer
                             wooptpm.saveCartObjectToDataLayer(cart_items['cart']);
+                            if (sessionStorage) sessionStorage.setItem('wooptpmDataLayerCart', JSON.stringify(cart_items['cart']));
                         }
                     });
             } catch (e) {
