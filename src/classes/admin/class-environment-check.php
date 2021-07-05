@@ -3,7 +3,6 @@
 namespace WGACT\Classes\Admin;
 
 use WC_Order;
-use WC_Tracker;
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
@@ -22,6 +21,192 @@ class Environment_Check
 
             //check for active off-site payment gateways
 //            $this->check_active_off_site_payment_gateways();
+        }
+    }
+
+    public function flush_cache_on_plugin_changes()
+    {
+        // flush cache after saving the plugin options
+        add_action('update_option_wgact_plugin_options', [$this, 'flush_cache_of_all_cache_plugins'], 10, 3);
+
+        // flush cache after plugin update
+        add_filter('upgrader_post_install', [$this, 'flush_cache_of_all_cache_plugins'], 10, 3);
+    }
+
+    public function flush_cache_of_all_cache_plugins()
+    {
+//        error_log('flush cache of all cache plugins');
+        if ($this->is_wp_rocket_active()) $this->flush_wp_rocket_cache();          // works
+        if ($this->is_litespeed_active()) $this->flush_litespeed_cache();          // works
+        if ($this->is_autoptimize_active()) $this->flush_autoptimize_cache();      // works
+        if ($this->is_hummingbird_active()) $this->flush_hummingbird_cache();      // works
+        if ($this->is_nitropack_active()) $this->flush_nitropack_cache();          // works
+        if ($this->is_sg_optimizer_active()) $this->flush_sg_optimizer_cache();    // works
+        if ($this->is_w3_total_cache_active()) $this->flush_w3_total_cache();      // works
+        if ($this->is_wp_optimize_active()) $this->flush_wp_optimize_cache();      // works
+        if ($this->is_wp_super_cache_active()) $this->flush_wp_super_cache();      // works
+        if ($this->is_wp_fastest_cache_active()) $this->flush_wp_fastest_cache();  // works
+        if ($this->is_cloudflare_active()) $this->flush_cloudflare_cache();        // works
+
+        if ($this->is_hosting_wp_engine()) $this->flush_wp_engine_cache();         // works
+        if ($this->is_hosting_pagely()) $this->flush_pagely_cache();               // TODO test
+        if ($this->is_hosting_kinsta()) $this->flush_kinsta_cache();               // TODO test
+
+        if ($this->is_nginx_helper_active()) $this->flush_nginx_cache();           // TODO test
+
+        // TODO add generic varnish purge
+    }
+
+    function flush_kinsta_cache()
+    {
+        try {
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, 'https://localhost/kinsta-clear-cache-all');
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+            $response = curl_exec($ch);
+
+            if (!$response) {
+                die('Error: "' . curl_error($ch) . '" - Code: ' . curl_errno($ch));
+            }
+
+//            echo 'HTTP Status Code: ' . curl_getinfo($ch, CURLINFO_HTTP_CODE) . PHP_EOL;
+//            echo 'Response Body: ' . $response . PHP_EOL;
+
+            curl_close($ch);
+
+        } catch (\Exception $e) {
+            error_log($e);
+        }
+    }
+
+    public function is_nginx_helper_active(): bool
+    {
+        return defined('NGINX_HELPER_BASEPATH');
+    }
+
+    function flush_nginx_cache(): bool
+    {
+        global $nginx_purger;
+        if ($nginx_purger) {
+            $nginx_purger->purge_all();
+        }
+        return true;
+    }
+
+    public function flush_cloudflare_cache()
+    {
+        try {
+            (new \CF\WordPress\Hooks())->purgeCacheEverything();
+        } catch (\Exception $e) {
+            error_log($e);
+        }
+    }
+
+    public function flush_wp_engine_cache()
+    {
+        try {
+            if (class_exists('WpeCommon')) {
+                \WpeCommon::purge_varnish_cache_all();
+            }
+        } catch (\Exception $e) {
+            error_log($e);
+        }
+    }
+
+    function flush_pagely_cache()
+    {
+        try {
+            if (class_exists("PagelyCachePurge")) { // We need to have this check for clients that switch hosts
+                $pagely = new \PagelyCachePurge();
+                $pagely->purgeAll();
+            }
+        } catch (\Exception $e) {
+            error_log($e);
+        }
+    }
+
+    public function flush_wp_fastest_cache()
+    {
+        if (function_exists('wpfc_clear_all_cache')) {
+            wpfc_clear_all_cache(true);;
+        }
+    }
+
+    public function flush_wp_super_cache()
+    {
+        if (function_exists('wp_cache_clean_cache')) {
+            global $file_prefix;
+            wp_cache_clean_cache($file_prefix, true);
+        }
+    }
+
+    public function flush_wp_optimize_cache()
+    {
+        if (function_exists('wpo_cache_flush')) {
+            wpo_cache_flush();
+        }
+    }
+
+    public function flush_w3_total_cache()
+    {
+        if (function_exists('w3tc_flush_all')) {
+            w3tc_flush_all();
+        }
+    }
+
+    public function flush_sg_optimizer_cache()
+    {
+        if (function_exists('sg_cachepress_purge_everything')) {
+            sg_cachepress_purge_everything();
+        }
+    }
+
+    public function flush_nitropack_cache()
+    {
+        try {
+            $siteId     = get_option('nitropack-siteId');
+            $siteSecret = get_option('nitropack-siteSecret');
+
+            (new \NitroPack\SDK\Api\Cache($siteId, $siteSecret))->purge();
+        } catch (\Exception $e) {
+            error_log($e);
+        }
+
+//        do_action('nitropack_integration_purge_all');
+    }
+
+    public function flush_hummingbird_cache()
+    {
+        do_action('wphb_clear_page_cache');
+    }
+
+    public function flush_autoptimize_cache()
+    {
+        if (class_exists('autoptimizeCache')) {
+            // we need the backslash because autoptimizeCache is in the global namespace
+            // and otherwise our plugin would search in its own namespace and throw an error
+            \autoptimizeCache::clearall();
+        }
+    }
+
+    public function flush_litespeed_cache()
+    {
+        do_action('litespeed_purge_all');
+    }
+
+    protected function flush_wp_rocket_cache()
+    {
+        // flush WP Rocket cache
+        if (function_exists('rocket_clean_domain')) {
+            rocket_clean_domain();
+        }
+
+        // Preload cache.
+        if (function_exists('run_rocket_sitemap_preload')) {
+            run_rocket_sitemap_preload();
         }
     }
 
@@ -162,6 +347,11 @@ class Environment_Check
         return is_plugin_active('sg-cachepress/sg-cachepress.php');
     }
 
+    public function is_w3_total_cache_active(): bool
+    {
+        return is_plugin_active('w3-total-cache/w3-total-cache.php');
+    }
+
     public function is_litespeed_active(): bool
     {
         // TODO find out if there is a pro version with different folder and file name
@@ -176,6 +366,20 @@ class Environment_Check
         return is_plugin_active('autoptimize/autoptimize.php');
     }
 
+    public function is_hummingbird_active(): bool
+    {
+        // TODO find out if there is a pro version with different folder and file name
+
+        return is_plugin_active('hummingbird-performance/wp-hummingbird.php');
+    }
+
+    public function is_nitropack_active(): bool
+    {
+        // TODO find out if there is a pro version with different folder and file name
+
+        return is_plugin_active('nitropack/main.php');
+    }
+
     public function is_yoast_seo_active(): bool
     {
         // TODO find out if there is a pro version with different folder and file name
@@ -188,6 +392,25 @@ class Environment_Check
         // TODO find out if there is a pro version with different folder and file name
 
         return is_plugin_active('borlabs-cookie/borlabs-cookie.php');
+    }
+
+    public function is_wp_super_cache_active(): bool
+    {
+        // TODO find out if there is a pro version with different folder and file name
+
+        return is_plugin_active('wp-super-cache/wp-cache.php');
+    }
+
+    public function is_wp_fastest_cache_active(): bool
+    {
+        // TODO find out if there is a pro version with different folder and file name
+
+        return is_plugin_active('wp-fastest-cache/wpFastestCache.php');
+    }
+
+    public function is_cloudflare_active(): bool
+    {
+        return is_plugin_active('cloudflare/cloudflare.php');
     }
 
     public function is_wpml_woocommerce_multi_currency_active(): bool
@@ -223,6 +446,104 @@ class Environment_Check
     public function is_yith_wc_brands_active(): bool
     {
         return is_plugin_active('yith-woocommerce-brands-add-on-premium/init.php');
+    }
+
+    public function is_hosting_flywheel()
+    {
+        return defined("FLYWHEEL_PLUGIN_DIR");
+    }
+
+    public function is_hosting_cloudways()
+    {
+        return array_key_exists("cw_allowed_ip", $_SERVER) || preg_match("~/home/.*?cloudways.*~", __FILE__);
+    }
+
+    public function is_hosting_wp_engine(): bool
+    {
+        return !!getenv('IS_WPE');
+    }
+
+    public function is_hosting_godaddy_wpaas(): bool
+    {
+        return class_exists('\WPaaS\Plugin');
+    }
+
+    public function is_hosting_siteground(): bool
+    {
+        $configFilePath = $this->get_wpconfig_path();
+        if (!$configFilePath) return false;
+        return strpos(file_get_contents($configFilePath), 'Added by SiteGround WordPress management system') !== false;
+    }
+
+    public function is_hosting_gridpane(): bool
+    {
+        $configFilePath = $this->get_wpconfig_path();
+        if (!$configFilePath) return false;
+        return strpos(file_get_contents($configFilePath), 'GridPane Cache Settings') !== false;
+    }
+
+    public function is_hosting_kinsta(): bool
+    {
+        return defined("KINSTAMU_VERSION");
+    }
+
+    public function is_hosting_closte(): bool
+    {
+        return defined("CLOSTE_APP_ID");
+    }
+
+    public function is_hosting_pagely(): bool
+    {
+        return class_exists('\PagelyCachePurge');
+    }
+
+    public function get_hosting_provider(): string
+    {
+        if ($this->is_hosting_flywheel()) {
+            return "Flywheel";
+        } else if ($this->is_hosting_cloudways()) {
+            return "Cloudways";
+        } else if ($this->is_hosting_wp_engine()) {
+            return "WP Engine";
+        } else if ($this->is_hosting_siteground()) {
+            return "SiteGround";
+        } else if ($this->is_hosting_godaddy_wpaas()) {
+            return "GoDaddy WPaas";
+        } else if ($this->is_hosting_gridpane()) {
+            return "GridPane";
+        } else if ($this->is_hosting_kinsta()) {
+            return "Kinsta";
+        } else if ($this->is_hosting_closte()) {
+            return "Closte";
+        } else if ($this->is_hosting_pagely()) {
+            return "Pagely";
+        } else {
+            return "unknown";
+        }
+    }
+
+    // https://github.com/wp-cli/wp-cli/blob/c3bd5bd76abf024f9d492579539646e0d263a05a/php/utils.php#L257
+    public function get_wpconfig_path()
+    {
+        static $path;
+
+        if (null === $path) {
+            $path = false;
+
+            if (getenv('WP_CONFIG_PATH') && file_exists(getenv('WP_CONFIG_PATH'))) {
+                $path = getenv('WP_CONFIG_PATH');
+            } elseif (file_exists(ABSPATH . 'wp-config.php')) {
+                $path = ABSPATH . 'wp-config.php';
+            } elseif (file_exists(dirname(ABSPATH) . '/wp-config.php') && !file_exists(dirname(ABSPATH) . '/wp-settings.php')) {
+                $path = dirname(ABSPATH) . '/wp-config.php';
+            }
+
+            if ($path) {
+                $path = realpath($path);
+            }
+        }
+
+        return $path;
     }
 
     public function disable_yoast_seo_facebook_social($option)
@@ -268,6 +589,7 @@ class Environment_Check
             add_filter('litespeed_optm_js_defer_exc', [$this, 'litespeed_cache_js_defer_exc']);
             add_filter('litespeed_optimize_js_excludes', [$this, 'litespeed_optimize_js_excludes']);
             add_filter('litespeed_optm_cssjs', [$this, 'litespeed_optm_cssjs']);
+//            add_filter('option_litespeed.conf.optm-js_inline_defer', [$this, 'disable_litespeed_js_inline_after_dom']);
 
 //             litespeed_optm_cssjs
 //             litespeed_optm_html_head
@@ -376,8 +698,9 @@ class Environment_Check
 
     public function add_wp_rocket_exclusions($exclusions): array
     {
-        $exclusions = array_merge($exclusions, $this->get_wooptpm_script_identifiers());
-        return array_merge($exclusions, $this->get_wooptpm_script_identifiers());
+        if (is_array($exclusions)) $exclusions = array_merge($exclusions, $this->get_wooptpm_script_identifiers());
+
+        return $exclusions;
     }
 
     public function exclude_inline_scripts_from_wp_rocket_using_options()

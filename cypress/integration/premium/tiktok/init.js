@@ -32,6 +32,6 @@ describe('Snapchat init snaptr', () => {
     // https://github.com/cypress-io/cypress/issues/897
     it('check if TikTok ttq have been loaded successfully', () => {
         cy.visit('/')
-        cy.window().should('have.property', 'ttq')
+        cy.window().should('have.property', 'ttq');
     })
 })

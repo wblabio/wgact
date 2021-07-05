@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, google analytics, facebook pixel, conversion trac
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 7.2
-Stable tag: 1.10.10-beta.1
+Stable tag: 1.10.10-beta.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -183,6 +183,8 @@ You can send the link to the front page of your shop too if you think it would b
 * New: Snapchat pixel
 * New: TikTok pixel
 [//]: # fs_premium_only_end
+* New: Automatically flush cache of caching plugins and platforms on plugin settings changes
+* New: Report hosting platform in debug info
 * Tweak: Added new compatibility exclusions for WP Rocket
 
 = 1.10.9 =

@@ -5,7 +5,7 @@
  * Author:       woopt
  * Plugin URI:   https://wordpress.org/plugins/woocommerce-google-adwords-conversion-tracking-tag/
  * Author URI:   https://woopt.com
- * Version:      1.10.10-beta.1
+ * Version:      1.10.10-beta.2
  * License:      GPLv2 or later
  * Text Domain:  woocommerce-google-adwords-conversion-tracking-tag
  * WC requires at least: 2.6
@@ -112,6 +112,7 @@ if (function_exists('wga_fs')) {
     class WGACT
     {
         protected $options;
+        protected $environment_check;
 
         public function __construct()
         {
@@ -140,6 +141,8 @@ if (function_exists('wga_fs')) {
                 // autoloader
                 require_once 'lib/autoload.php';
 
+                $this->environment_check = new Environment_Check();
+
                 $plugin_data    = get_file_data(__FILE__, ['Version' => 'Version'], false);
                 $plugin_version = $plugin_data['Version'];
                 define('WGACT_CURRENT_VERSION', $plugin_version);
@@ -160,31 +163,43 @@ if (function_exists('wga_fs')) {
                 // run environment workflows
                 add_action('admin_notices', [$this, 'run_admin_compatibility_checks']);
                 add_action('admin_notices', [$this, 'environment_check_admin_notices']);
-                (new Environment_Check())->permanent_compatibility_mode();
+                $this->environment_check->permanent_compatibility_mode();
                 $this->run_compatibility_modes();
+                $this->environment_check->flush_cache_on_plugin_changes();
+                register_activation_hook(__FILE__, [$this, 'plugin_activated']);
+                register_deactivation_hook(__FILE__, [$this, 'plugin_deactivated']);
 
                 $this->init();
             }
         }
 
-        public function environment_check_admin_notices()
+        public function plugin_activated()
         {
-            (new Environment_Check())->check_active_off_site_payment_gateways();
+            $this->environment_check->flush_cache_of_all_cache_plugins();
         }
 
+        public function plugin_deactivated()
+        {
+            $this->environment_check->flush_cache_of_all_cache_plugins();
+        }
+
+        public function environment_check_admin_notices()
+        {
+            $this->environment_check->check_active_off_site_payment_gateways();
+        }
 
         private function run_compatibility_modes()
         {
             /*
             * Compatibility modes
             */
-            if ($this->options['general']['maximum_compatibility_mode']) (new Environment_Check())->enable_maximum_compatibility_mode();
+            if ($this->options['general']['maximum_compatibility_mode']) $this->environment_check->enable_maximum_compatibility_mode();
 
             if (
                 $this->options['general']['maximum_compatibility_mode'] &&
                 $this->options['facebook']['microdata']
             ) {
-                (new Environment_Check())->enable_maximum_compatibility_mode_yoast_seo();
+                $this->environment_check->enable_maximum_compatibility_mode_yoast_seo();
             }
         }
 
@@ -196,8 +211,6 @@ if (function_exists('wga_fs')) {
 
             // ask visitor for rating
             new Ask_For_Rating();
-
-            new Environment_Check();
 
             // add a settings link on the plugins page
             add_filter('plugin_action_links_' . plugin_basename(__FILE__), [$this, 'wgact_settings_link']);
@@ -225,7 +238,7 @@ if (function_exists('wga_fs')) {
 
         public function run_admin_compatibility_checks()
         {
-            (new Environment_Check())->run_checks();
+            $this->environment_check->run_checks();
         }
 
         // initialise the options

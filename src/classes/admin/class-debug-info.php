@@ -58,6 +58,11 @@ class Debug_info
 
         $html .= 'hook_suffix: ' . $hook_suffix . PHP_EOL;
 
+        $html .= PHP_EOL;
+
+        $html .= 'Hosting provider: ' . $this->environment_check->get_hosting_provider() . PHP_EOL;
+
+
         $html .= PHP_EOL . '## WooCommerce ##' . PHP_EOL . PHP_EOL;
 
         $html .= 'Default currency: ' . get_woocommerce_currency() . PHP_EOL;

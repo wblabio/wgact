@@ -363,7 +363,7 @@ class Admin
                 esc_html__(
                     'Twitter pixel ID',
                     'woocommerce-google-adwords-conversion-tracking-tag'
-                ) . $this->html_beta(),
+                ),
                 [$this, 'wgact_option_html_twitter_pixel_id'],
                 'wgact_plugin_options_page',
                 $section_ids['settings_name']
@@ -375,7 +375,7 @@ class Admin
                 esc_html__(
                     'Pinterest pixel ID',
                     'woocommerce-google-adwords-conversion-tracking-tag'
-                ) . $this->html_beta(),
+                ),
                 [$this, 'wgact_option_html_pinterest_pixel_id'],
                 'wgact_plugin_options_page',
                 $section_ids['settings_name']
