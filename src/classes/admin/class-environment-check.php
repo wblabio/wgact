@@ -49,10 +49,10 @@ class Environment_Check
         if ($this->is_cloudflare_active()) $this->flush_cloudflare_cache();        // works
 
         if ($this->is_hosting_wp_engine()) $this->flush_wp_engine_cache();         // works
-        if ($this->is_hosting_pagely()) $this->flush_pagely_cache();               // TODO test
-        if ($this->is_hosting_kinsta()) $this->flush_kinsta_cache();               // TODO test
-
-        if ($this->is_nginx_helper_active()) $this->flush_nginx_cache();           // TODO test
+//        if ($this->is_hosting_pagely()) $this->flush_pagely_cache();               // TODO test
+//        if ($this->is_hosting_kinsta()) $this->flush_kinsta_cache();               // TODO test
+//
+//        if ($this->is_nginx_helper_active()) $this->flush_nginx_cache();           // TODO test
 
         // TODO add generic varnish purge
     }

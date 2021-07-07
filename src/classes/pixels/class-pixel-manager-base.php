@@ -121,7 +121,6 @@ class Pixel_Manager_Base
 
                     // filter to adjust the order value
                     $order_total = apply_filters_deprecated('wgact_conversion_value_filter', [$order_total, $order], '1.10.2', 'wooptpm_conversion_value_filter');
-
                     $order_total = apply_filters('wooptpm_conversion_value_filter', $order_total, $order);
 
                     $this->inject_order_received_page($order, $order_total, $is_new_customer);

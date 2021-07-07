@@ -394,16 +394,16 @@ class Admin
             );
 
             // add the field for the TikTok pixel
-            add_settings_field(
-                'wgact_plugin_tiktok_pixel_id',
-                esc_html__(
-                    'TikTok pixel ID',
-                    'woocommerce-google-adwords-conversion-tracking-tag'
-                ) . $this->html_beta(),
-                [$this, 'wgact_option_html_tiktok_pixel_id'],
-                'wgact_plugin_options_page',
-                $section_ids['settings_name']
-            );
+//            add_settings_field(
+//                'wgact_plugin_tiktok_pixel_id',
+//                esc_html__(
+//                    'TikTok pixel ID',
+//                    'woocommerce-google-adwords-conversion-tracking-tag'
+//                ) . $this->html_beta(),
+//                [$this, 'wgact_option_html_tiktok_pixel_id'],
+//                'wgact_plugin_options_page',
+//                $section_ids['settings_name']
+//            );
         }
 
         // add the field for the Hotjar pixel
@@ -483,14 +483,14 @@ class Admin
             $section_ids['settings_name']
         );
 
-        // add checkbox for order deduplication
+        // add checkbox for order duplication prevention
         add_settings_field(
-            'wgact_setting_order_deduplication',
+            'wgact_setting_order_duplication_prevention',
             esc_html__(
-                'Order deduplication',
+                'Order Duplication Prevention',
                 'woocommerce-google-adwords-conversion-tracking-tag'
             ),
-            [$this, 'wgact_setting_html_order_deduplication'],
+            [$this, 'wgact_setting_html_order_duplication_prevention'],
             'wgact_plugin_options_page',
             $section_ids['settings_name']
         );
@@ -1765,7 +1765,7 @@ class Admin
         }
     }
 
-    public function wgact_setting_html_order_deduplication()
+    public function wgact_setting_html_order_duplication_prevention()
     {
         // adding the hidden input is a hack to make WordPress save the option with the value zero,
         // instead of not saving it and remove that array key entirely
@@ -1773,19 +1773,19 @@ class Admin
         ?>
         <label>
             <input type='hidden' value='0' name='wgact_plugin_options[shop][order_deduplication]'>
-            <input type='checkbox' id='wgact_setting_order_deduplication'
+            <input type='checkbox' id='wgact_setting_order_duplication_prevention'
                    name='wgact_plugin_options[shop][order_deduplication]'
                    value='1' <?php
             checked($this->options['shop']['order_deduplication']); ?> />
             <?php
-            $this->get_order_deduplication_text(); ?></label>
+            $this->get_order_duplication_prevention_text(); ?></label>
         <?php
         echo $this->get_status_icon($this->options['shop']['order_deduplication']); ?>
         <br>
         <p>
             <span class="dashicons dashicons-info"></span>
             <?php
-            esc_html_e('Only disable order deduplication for testing. Remember to re-enable the setting once done.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+            esc_html_e('Only disable order duplication prevention for testing. Remember to re-enable the setting once done.', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
         </p>
         <?php
     }
@@ -1812,12 +1812,12 @@ class Admin
 
     }
 
-    private function get_order_deduplication_text()
+    private function get_order_duplication_prevention_text()
     {
         if (wga_fs()->is__premium_only()) {
-            esc_html_e('Advanced order deduplication is ', 'woocommerce-google-adwords-conversion-tracking-tag');
+            esc_html_e('Advanced order duplication prevention is ', 'woocommerce-google-adwords-conversion-tracking-tag');
         } else {
-            esc_html_e('Basic order deduplication is ', 'woocommerce-google-adwords-conversion-tracking-tag');
+            esc_html_e('Basic order duplication prevention is ', 'woocommerce-google-adwords-conversion-tracking-tag');
         }
     }
 

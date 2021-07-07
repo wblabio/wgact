@@ -327,16 +327,21 @@ class Google extends Pixel
                 $ga_ua_parameters['user_id'] = get_current_user_id();
             }
 
-            $ga_ua_parameters = apply_filters('woopt_pm_analytics_parameters', $ga_ua_parameters, $id);
+            $ga_ua_parameters = apply_filters_deprecated('woopt_pm_analytics_parameters', [$ga_ua_parameters, $id], '1.10.10', 'wooptpm_ga_ua_parameters');
+            $ga_ua_parameters = apply_filters('wooptpm_ga_ua_parameters', $ga_ua_parameters, $id);
 
             return "\t" . "gtag('config', '" . $id . "', " . json_encode($ga_ua_parameters) . ");";
         } elseif ('ga_4' === $channel) {
+
+            $ga_4_parameters = [];
 
             if ($this->options_obj->google->user_id && is_user_logged_in()) {
                 $ga_4_parameters = [
                     'user_id' => get_current_user_id(),
                 ];
             }
+
+            $ga_4_parameters = apply_filters('wooptpm_ga_4_parameters', $ga_4_parameters, $id);
 
             if (empty($ga_4_parameters)) {
                 return "\t" . "gtag('config', '" . $id . "');";

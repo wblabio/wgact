@@ -186,6 +186,7 @@ You can send the link to the front page of your shop too if you think it would b
 * New: Automatically flush cache of caching plugins and platforms on plugin settings changes
 * New: Report hosting platform in debug info
 * Tweak: Added new compatibility exclusions for WP Rocket
+* Tweak: Added option to filter GA4 parameters
 
 = 1.10.9 =
 

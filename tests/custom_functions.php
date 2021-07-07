@@ -1,7 +1,6 @@
 <?php
 
 
-
 //add_filter('wooptpm_custom_brand_taxonomy', 'wooptpm_custom_brand_taxonomy');
 //function wooptpm_custom_brand_taxonomy(): string
 //{
@@ -148,8 +147,13 @@ function wgact_google_ads_conversion_identifiers($conversion_identifiers)
 // add_filter('wgdr_third_party_cookie_prevention', '__return_true');
 // add_filter('wgact_cookie_prevention', '__return_true');
 
+add_filter('wooptpm_ga_4_parameters', function ($analytics_parameters, $analytics_id) {
+        $analytics_parameters['debug_mode'] = 'true';
 
-// add_filter('woopt_pm_analytics_parameters', 'adjust_analytics_parameters', 10,2);
+    return $analytics_parameters;
+}, 10, 2);
+
+// add_filter('wooptpm_ga_4_parameters', 'adjust_analytics_parameters', 10,2);
 //function adjust_analytics_parameters($analytics_parameters, $analytics_id)
 //{
 //    if ('G-YQBXCRGVLT' == $analytics_id) {
@@ -169,19 +173,20 @@ function wgact_google_ads_conversion_identifiers($conversion_identifiers)
 //    return $analytics_parameters;
 //}
 //
-//function adjust_analytics_parameters($analytics_parameters, $analytics_id)
-//{
-//    if ('UA-39746956-9' == $analytics_id) {
+add_filter('wooptpm_ga_ua_parameters', 'adjust_analytics_parameters', 10,2);
+function adjust_analytics_parameters($analytics_parameters, $analytics_id)
+{
+    if ('UA-39746956-9' == $analytics_id) {
 //        error_log($analytics_id);
-//        // unset($analytics_parameters['link_attribution']);
-//        $analytics_parameters['link_attribution'] = [
-//            'cookie_name'    => '_gaela',
-//            'cookie_expires' => 60,
-//            'levels'         => 2
-//        ];
-//    }
-//    return $analytics_parameters;
-//}
+        // unset($analytics_parameters['link_attribution']);
+        $analytics_parameters['link_attribution'] = [
+            'cookie_name'    => '_gaela',
+            'cookie_expires' => 60,
+            'levels'         => 2
+        ];
+    }
+    return $analytics_parameters;
+}
 
 //    function fs_enqueue_local_style( $handle, $path, $deps = array(), $ver = false, $media = 'all' ) {
 //            wp_enqueue_style( $handle, plugin_dir_url( '' ) . 'woocommerce-google-adwords-conversion-tracking-tag' . '/freemius/assets/css'. $path, $deps, $ver, $media );
