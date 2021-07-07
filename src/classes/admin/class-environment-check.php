@@ -99,7 +99,9 @@ class Environment_Check
     public function flush_cloudflare_cache()
     {
         try {
-            (new \CF\WordPress\Hooks())->purgeCacheEverything();
+            if (class_exists('\CF\WordPress\Hooks')) {
+                (new \CF\WordPress\Hooks())->purgeCacheEverything();
+            }
         } catch (\Exception $e) {
             error_log($e);
         }
@@ -167,10 +169,12 @@ class Environment_Check
     public function flush_nitropack_cache()
     {
         try {
-            $siteId     = get_option('nitropack-siteId');
-            $siteSecret = get_option('nitropack-siteSecret');
+            if (class_exists('\NitroPack\SDK\Api\Cache')) {
+                $siteId     = get_option('nitropack-siteId');
+                $siteSecret = get_option('nitropack-siteSecret');
+                (new \NitroPack\SDK\Api\Cache($siteId, $siteSecret))->purge();
+            }
 
-            (new \NitroPack\SDK\Api\Cache($siteId, $siteSecret))->purge();
         } catch (\Exception $e) {
             error_log($e);
         }
