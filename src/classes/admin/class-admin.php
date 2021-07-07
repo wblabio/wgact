@@ -394,16 +394,16 @@ class Admin
             );
 
             // add the field for the TikTok pixel
-//            add_settings_field(
-//                'wgact_plugin_tiktok_pixel_id',
-//                esc_html__(
-//                    'TikTok pixel ID',
-//                    'woocommerce-google-adwords-conversion-tracking-tag'
-//                ) . $this->html_beta(),
-//                [$this, 'wgact_option_html_tiktok_pixel_id'],
-//                'wgact_plugin_options_page',
-//                $section_ids['settings_name']
-//            );
+            add_settings_field(
+                'wgact_plugin_tiktok_pixel_id',
+                esc_html__(
+                    'TikTok pixel ID',
+                    'woocommerce-google-adwords-conversion-tracking-tag'
+                ) . $this->html_beta(),
+                [$this, 'wgact_option_html_tiktok_pixel_id'],
+                'wgact_plugin_options_page',
+                $section_ids['settings_name']
+            );
         }
 
         // add the field for the Hotjar pixel

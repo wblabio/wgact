@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, google analytics, facebook pixel, conversion trac
 Requires at least: 3.7
 Tested up to: 5.7
 Requires PHP: 7.2
-Stable tag: 1.10.10-beta.2
+Stable tag: 1.10.11-beta.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -177,11 +177,17 @@ You can send the link to the front page of your shop too if you think it would b
 
 == Changelog ==
 
+= 1.10.11 =
+
+[//]: # fs_premium_only_begin
+* New: TikTok pixel
+[//]: # fs_premium_only_end
+* Fix: Output of product prices as float
+
 = 1.10.10 =
 
 [//]: # fs_premium_only_begin
 * New: Snapchat pixel
-* New: TikTok pixel
 [//]: # fs_premium_only_end
 * New: Automatically flush cache of caching plugins and platforms on plugin settings changes
 * New: Report hosting platform in debug info

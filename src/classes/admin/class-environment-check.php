@@ -29,8 +29,11 @@ class Environment_Check
         // flush cache after saving the plugin options
         add_action('update_option_wgact_plugin_options', [$this, 'flush_cache_of_all_cache_plugins'], 10, 3);
 
-        // flush cache after plugin update
+        // flush cache after install
         add_filter('upgrader_post_install', [$this, 'flush_cache_of_all_cache_plugins'], 10, 3);
+
+        // flush cache after plugin update
+        add_action('upgrader_process_complete', [$this, 'flush_cache_of_all_cache_plugins'], 10, 2);
     }
 
     public function flush_cache_of_all_cache_plugins()

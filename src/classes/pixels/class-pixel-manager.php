@@ -220,7 +220,7 @@ class Pixel_Manager extends Pixel_Manager_Base
             'id'          => (string)$product->get_id(),
             'sku'         => (string)$product->get_sku(),
             'name'        => (string)$product->get_name(),
-            'price'       => (int)$price,
+            'price'       => (float)$price,
             'brand'       => $this->get_brand_name($product->get_id()),
             'category'    => (array)$this->get_product_category($product->get_id()),
             'quantity'    => (int)1,
