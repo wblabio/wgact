@@ -30,7 +30,8 @@ class Environment_Check
         add_action('update_option_wgact_plugin_options', [$this, 'flush_cache_of_all_cache_plugins'], 10, 3);
 
         // flush cache after install
-        add_filter('upgrader_post_install', [$this, 'flush_cache_of_all_cache_plugins'], 10, 3);
+        // we don't need that because after first install the user needs to set new options anyway where the cache flush happens too
+//        add_filter('upgrader_post_install', [$this, 'flush_cache_of_all_cache_plugins'], 10, 3);
 
         // flush cache after plugin update
         add_action('upgrader_process_complete', [$this, 'flush_cache_of_all_cache_plugins'], 10, 2);

@@ -2,7 +2,7 @@
 Contributors: alekv, woopt, wolfbaer
 Tags: woocommerce, google ads, google analytics, facebook pixel, conversion tracking, dynamic retargeting, remarketing, pixel, facebook conversion api, woocommerce google, woocommerce facebook
 Requires at least: 3.7
-Tested up to: 5.7
+Tested up to: 5.8
 Requires PHP: 7.2
 Stable tag: 1.10.11-beta.1
 License: GPLv2 or later
@@ -181,6 +181,9 @@ You can send the link to the front page of your shop too if you think it would b
 
 [//]: # fs_premium_only_begin
 * New: TikTok pixel
+[//]: # fs_premium_only_end
+[//]: # fs_premium_only_begin
+* Fix: item_name for GA4 add_to_cart events
 [//]: # fs_premium_only_end
 * Fix: Output of product prices as float
 

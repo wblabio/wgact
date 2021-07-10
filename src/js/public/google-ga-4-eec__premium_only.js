@@ -115,6 +115,7 @@ varExists('jQuery').then(function () {
                     // "value": 0,
                     "items": [
                         {
+                            "item_name"     : product.name,
                             "item_id"       : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
                             "item_list_name": wooptpmDataLayer.shop.list_name,
                             "item_list_id"  : wooptpmDataLayer.id,

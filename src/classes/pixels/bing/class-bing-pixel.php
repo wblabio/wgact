@@ -25,13 +25,16 @@ class Bing_Pixel extends Pixel
 
     public function inject_everywhere()
     {
+        $data = [
+                'uet_tag_id' => $this->options_obj->bing->uet_tag_id,
+                'dynamic_remarketing' => [
+                        'id_type' => $this->get_dyn_r_id_type(),
+                ]
+        ];
+
         // @formatter:off
         ?>
-            wooptpmDataLayer.pixels.<?php echo $this->pixel_name ?> = {
-                'dynamic_remarketing': {
-                    'id_type': '<?php echo $this->get_dyn_r_id_type() ?>'
-                }
-            };
+            wooptpmDataLayer.pixels.<?php echo $this->pixel_name ?> = <?php echo json_encode($data) ?>;
 
             window.uetq = window.uetq || [];
 
