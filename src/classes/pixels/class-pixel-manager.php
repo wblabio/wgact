@@ -8,9 +8,7 @@ use WGACT\Classes\Admin\Environment_Check;
 use WGACT\Classes\Pixels\Bing\Bing_Pixel_Manager;
 use WGACT\Classes\Pixels\Facebook\Facebook_Pixel_Manager;
 use WGACT\Classes\Pixels\Facebook\Facebook_Pixel_Manager_Microdata;
-use WGACT\Classes\Pixels\Google\Google_Analytics_4_Refund;
 use WGACT\Classes\Pixels\Google\Google_Analytics_Refund;
-use WGACT\Classes\Pixels\Google\Google_Analytics_UA_Refund;
 use WGACT\Classes\Pixels\Google\Google_Pixel_Manager;
 use WGACT\Classes\Pixels\Google\Trait_Google;
 use WGACT\Classes\Pixels\Hotjar\Hotjar_Pixel;
@@ -106,10 +104,8 @@ class Pixel_Manager extends Pixel_Manager_Base
         add_action('wp_ajax_wooptpm_get_cart_items', [$this, 'ajax_wooptpm_get_cart_items']);
         add_action('wp_ajax_nopriv_wooptpm_get_cart_items', [$this, 'ajax_wooptpm_get_cart_items']);
 
-        if (wga_fs()->is__premium_only()) {
-            add_action('wp_ajax_wooptpm_purchase_pixels_fired', [$this, 'ajax_purchase_pixels_fired_handler__premium_only']);
-            add_action('wp_ajax_nopriv_wooptpm_purchase_pixels_fired', [$this, 'ajax_purchase_pixels_fired_handler__premium_only']);
-        }
+        add_action('wp_ajax_wooptpm_purchase_pixels_fired', [$this, 'ajax_purchase_pixels_fired_handler']);
+        add_action('wp_ajax_nopriv_wooptpm_purchase_pixels_fired', [$this, 'ajax_purchase_pixels_fired_handler']);
 
         /*
          * Inject pixel snippets after <body> tag
@@ -431,17 +427,17 @@ class Pixel_Manager extends Pixel_Manager_Base
         wp_send_json($data);
     }
 
-    public function ajax_purchase_pixels_fired_handler__premium_only()
+    public function ajax_purchase_pixels_fired_handler()
     {
 //        error_log('test save');
 //        if (!check_ajax_referer('wooptpm-premium-only-nonce', 'nonce', false)) {
 //        error_log('post nonce: ' . $_POST['nonce']);
 
-        if (!wp_verify_nonce($_POST['nonce'], $_POST['action'])) {
-            wp_send_json_error('Invalid security token sent.');
-            error_log('Invalid security token sent.');
-            wp_die();
-        }
+//        if (!wp_verify_nonce($_POST['nonce'], $_POST['action'])) {
+//            wp_send_json_error('Invalid security token sent.');
+//            error_log('Invalid security token sent.');
+//            wp_die();
+//        }
 
         $order_id = filter_var($_POST['order_id'], FILTER_SANITIZE_STRING);
         update_post_meta($order_id, '_wooptpm_conversion_pixel_fired', true);
@@ -454,24 +450,29 @@ class Pixel_Manager extends Pixel_Manager_Base
     public function wooptpm_front_end_scripts()
     {
 //        wp_enqueue_script('wooptpm', plugin_dir_url(__DIR__) . '../js/public/wooptpm.js', ['jquery', 'jquery-cookie'], WGACT_CURRENT_VERSION, false);
-        wp_enqueue_script('wooptpm', WOOPTPM_PLUGIN_DIR_PATH . 'js/public/wooptpm.js', ['jquery', 'jquery-cookie'], WGACT_CURRENT_VERSION, false);
+        wp_enqueue_script(
+            'wooptpm',
+            WOOPTPM_PLUGIN_DIR_PATH . 'js/public/wooptpm.js',
+            ['jquery', 'jquery-cookie'],
+            WGACT_CURRENT_VERSION,
+            false
+        );
 
-        wp_localize_script('wooptpm', 'ajax_object', ['ajax_url' => admin_url('admin-ajax.php')]);
+        wp_localize_script(
+            'wooptpm',
+            'ajax_object',
+            ['ajax_url' => admin_url('admin-ajax.php'),]
+        );
+
 
         if (wga_fs()->is__premium_only()) {
 
-//            wp_enqueue_script('wooptpm-premium-only', plugin_dir_url(__DIR__) . '../js/public/wooptpm__premium_only.js', ['jquery', 'wooptpm'], WGACT_CURRENT_VERSION, false);
-            wp_enqueue_script('wooptpm-premium-only', WOOPTPM_PLUGIN_DIR_PATH . 'js/public/wooptpm__premium_only.js', ['jquery', 'wooptpm'], WGACT_CURRENT_VERSION, false);
-
-//            $nonce = wp_create_nonce('wooptpm_purchase_pixels_fired');
-//            error_log('nonce: ' . $nonce);
-            wp_localize_script(
+            wp_enqueue_script(
                 'wooptpm-premium-only',
-                'wooptpm_premium_only_ajax_object',
-                [
-                    'ajax_url' => admin_url('admin-ajax.php'),
-                    'nonce'    => wp_create_nonce('wooptpm_purchase_pixels_fired')
-                ]
+                WOOPTPM_PLUGIN_DIR_PATH . 'js/public/wooptpm__premium_only.js',
+                ['jquery', 'wooptpm'],
+                WGACT_CURRENT_VERSION,
+                false
             );
         }
     }

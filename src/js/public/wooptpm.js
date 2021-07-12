@@ -713,14 +713,14 @@ varExists('jQuery').then(function () {
                 let data = {
                     'action'  : 'wooptpm_purchase_pixels_fired',
                     'order_id': orderId,
-                    'nonce'   : wooptpm_premium_only_ajax_object.nonce,
+                    'nonce'   : ajax_object.nonce,
                 };
 
                 jQuery.ajax(
                     {
                         type    : "post",
                         dataType: "json",
-                        url     : wooptpm_premium_only_ajax_object.ajax_url,
+                        url     : ajax_object.ajax_url,
                         data    : data,
                         success : function (response) {
                             if (response.success === false) {

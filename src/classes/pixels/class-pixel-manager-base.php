@@ -162,15 +162,15 @@ class Pixel_Manager_Base
 //        error_log('order number: ' . $order->get_order_number());
 //        error_log('get_post_meta($order->get_order_number(), \'_wooptpm_conversion_pixel_fired\', true): ' . get_post_meta($order->get_order_number(), '_wooptpm_conversion_pixel_fired', true));
 
-
         if (
             $this->is_nodedupe_parameter_set() ||
-            (!$order->has_status('failed') &&
+            (
+                !$order->has_status('failed') &&
                 !current_user_can('edit_others_pages') &&
                 $conversion_prevention == false &&
                 (
                     !$this->options['shop']['order_deduplication'] ||
-                    get_post_meta($order->get_id(), '_wooptpm_conversion_pixel_fired', true) != true
+                    $this->has_conversion_pixel_already_fired($order) != true
                 )
             )
         ) {
@@ -178,6 +178,15 @@ class Pixel_Manager_Base
             return true;
         } else {
 //            error_log('fire pixels: false' . PHP_EOL);
+            return false;
+        }
+    }
+
+    private function has_conversion_pixel_already_fired($order)
+    {
+        if(wga_fs()->is__premium_only()){
+            return get_post_meta($order->get_id(), '_wooptpm_conversion_pixel_fired', true);
+        } else {
             return false;
         }
     }
