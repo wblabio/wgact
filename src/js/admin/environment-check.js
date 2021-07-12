@@ -1,5 +1,18 @@
 jQuery(function () {
 
+    // disable incompatible plugin warning
+    jQuery(document).on('click', '.incompatible-plugin-error-dismissal-button', function (e) {
+        e.preventDefault();
+
+        let data = {
+            'action'         : 'environment_check_handler',
+            'disable_warning': jQuery(this).data('plugin-slug'),
+        };
+
+        wgact_send_ajax_data(data);
+    });
+
+
     // disable WP Rocket JavaScript concatenation
     jQuery(document).on('click', '#wgact-wp-rocket-js-concatenation-disable', function (e) {
         e.preventDefault();
@@ -62,7 +75,7 @@ jQuery(function () {
 
 });
 
-function wgact_send_ajax_data(data){
+function wgact_send_ajax_data(data) {
     jQuery.post(ajaxurl, data, function (response) {
         // console.log('Got this from the server: ' + response);
         // console.log('update rating done');

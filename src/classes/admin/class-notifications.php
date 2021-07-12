@@ -93,7 +93,7 @@ class Notifications
     public function paypal_standard_active_warning()
     {
         ?>
-        <div class="notice notice-error wooptpm-paypal-standard-error" >
+        <div class="notice notice-error wooptpm-paypal-standard-error">
             <p style="color:red;">
                 <span>
                         <?php esc_html_e('The woopt WooCommerce Pixel Manager plugin detected that the PayPal standard payment gateway is active. The PayPal standard payment gateway is an off-site payment gateway which impairs conversion tracking significantly. Please switch to an on-site payment gateway as soon as possible in order to increase your conversion tracking accuracy.', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
@@ -114,6 +114,52 @@ class Notifications
             <div style=" margin-bottom: 10px; display: flex; justify-content: space-between">
 
                 <div id="wooptpm-paypal-standard-error-dismissal-button" class="button" style="white-space:normal;">
+                    <?php esc_html_e('Click here to dismiss this warning forever', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+                </div>
+                <div style="white-space:normal; bottom:0; right: 0; margin-bottom: 0px; margin-right: 5px;align-self: flex-end;">
+                    <a href="https://docs.woopt.com/wgact/?utm_source=woocommerce-plugin&utm_medium=documentation-link&utm_campaign=woopt-pixel-manager-docs&utm_content=dismiss-button-info#/faq?id=the-dismiss-button-doesnt-work-why"
+                       target="_blank">
+                        <?php esc_html_e('If the dismiss button is not working, here\'s why >>', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+        <?php
+    }
+
+    public function plugin_is_incompatible($name, $version, $slug, $link = '', $wooptpm_doc_link = '')
+    {
+        ?>
+        <div class="notice notice-error <?php echo $slug ?>-incompatible-plugin-error">
+            <p>
+                <span>
+                    <?php esc_html_e('The following plugin is not compatible with the woopt Pixel Manager for WooCommerce: ', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+                </span>
+                <span>
+                    <a href="<?php echo $link ?>" target="_blank">
+                        <?php echo $name ?>
+                    </a>
+                    (<?php esc_html_e('Version', 'woocommerce-google-adwords-conversion-tracking-tag') ?>: <?php echo $version ?>)
+                </span>
+                <br>
+                <span>
+                        <?php esc_html_e('Please disable the plugin as soon as possible.', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+                </span><br>
+                <span>
+                        <?php esc_html_e('Find more information about the the reason in our documentation: ', 'woocommerce-google-adwords-conversion-tracking-tag') ?>
+                </span><a
+                        href="<?php echo $wooptpm_doc_link ?>"
+                        target="_blank">
+                    <?php esc_html_e('Learn more', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
+                </a><br>
+            </p>
+            <p>
+
+            </p>
+            <div style="margin-bottom: 10px; display: flex; justify-content: space-between">
+
+                <div id="<?php echo $slug ?>-incompatible-plugin-error-dismissal-button" class="button incompatible-plugin-error-dismissal-button" style="white-space:normal;" data-plugin-slug="<?php echo $slug ?>">
                     <?php esc_html_e('Click here to dismiss this warning forever', 'woocommerce-google-adwords-conversion-tracking-tag'); ?>
                 </div>
                 <div style="white-space:normal; bottom:0; right: 0; margin-bottom: 0px; margin-right: 5px;align-self: flex-end;">

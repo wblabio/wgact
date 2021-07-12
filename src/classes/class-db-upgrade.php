@@ -61,7 +61,7 @@ class Db_Upgrade
 
     protected function up_from_2_to_3()
     {
-        $options_old = get_option(WGACT_DB_OPTIONS_NAME);
+        $options_old = get_option(WOOPTPM_DB_OPTIONS_NAME);
 
         $this->backup_options($options_old, '2');
 
@@ -82,12 +82,12 @@ class Db_Upgrade
 
         $options_new['db_version'] = '3';
 
-        update_option(WGACT_DB_OPTIONS_NAME, $options_new);
+        update_option(WOOPTPM_DB_OPTIONS_NAME, $options_new);
     }
 
     protected function up_from_1_to_2()
     {
-        $options_old = get_option(WGACT_DB_OPTIONS_NAME);
+        $options_old = get_option(WOOPTPM_DB_OPTIONS_NAME);
 
         $this->backup_options($options_old, '1');
 
@@ -106,13 +106,13 @@ class Db_Upgrade
             'db_version' => '2',
         ];
 
-        update_option(WGACT_DB_OPTIONS_NAME, $options_new);
+        update_option(WOOPTPM_DB_OPTIONS_NAME, $options_new);
     }
 
     protected function get_mysql_db_version(): string
     {
 
-        $options = get_option(WGACT_DB_OPTIONS_NAME);
+        $options = get_option(WOOPTPM_DB_OPTIONS_NAME);
 
 //		error_log(print_r($options,true));
 
@@ -138,7 +138,7 @@ class Db_Upgrade
         ];
 
         // store new option array into the options table
-        update_option(WGACT_DB_OPTIONS_NAME, $options);
+        update_option(WOOPTPM_DB_OPTIONS_NAME, $options);
 
         // delete old options
         // only on single site

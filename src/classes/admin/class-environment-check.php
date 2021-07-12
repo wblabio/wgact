@@ -10,9 +10,13 @@ if (!defined('ABSPATH')) {
 
 class Environment_Check
 {
+    public $notifications;
+
     public function __construct()
     {
         if (is_admin()) {
+
+            $this->notifications = new Notifications();
             add_action('admin_enqueue_scripts', [$this, 'environment_check_script']);
             add_action('wp_ajax_environment_check_handler', [$this, 'ajax_environment_check_handler']);
 
@@ -22,6 +26,39 @@ class Environment_Check
             //check for active off-site payment gateways
 //            $this->check_active_off_site_payment_gateways();
         }
+    }
+
+    public function run_incompatible_plugins_checks()
+    {
+        $saved_notifications = get_option(WOOPTPM_NOTIFICATIONS);
+
+        foreach ($this->get_incompatible_plugins_list() as $plugin) {
+
+            if (!array_key_exists($plugin['slug'], $saved_notifications) && is_plugin_active($plugin['file_location'])) {
+
+                (new Notifications())->plugin_is_incompatible(
+                    $plugin['name'],
+                    $plugin['version'],
+                    $plugin['slug'],
+                    $plugin['link'],
+                    $plugin['wooptpm_doc_link']
+                );
+            }
+        }
+    }
+
+    public function get_incompatible_plugins_list(): array
+    {
+        return [
+            'wc-custom-thank-you' => [
+                'name'             => 'WC Custom Thank You',
+                'slug'             => 'wc-custom-thank-you',
+                'file_location'    => 'wc-custom-thank-you/woocommerce-custom-thankyou.php',
+                'link'             => 'https://wordpress.org/plugins/wc-custom-thank-you/',
+                'wooptpm_doc_link' => 'https://docs.woopt.com/wgact/#/troubleshooting?id=wc-custom-thank-you',
+                'version'          => '1.2.1',
+            ]
+        ];
     }
 
     public function flush_cache_on_plugin_changes()
@@ -220,7 +257,7 @@ class Environment_Check
 
     public function check_active_off_site_payment_gateways()
     {
-        $wgact_notifications = get_option('wgact_notifications');
+        $wgact_notifications = get_option(WOOPTPM_NOTIFICATIONS);
 
         if (!is_array($wgact_notifications) || !array_key_exists('dismiss_paypal_standard_warning', $wgact_notifications) || $wgact_notifications['dismiss_paypal_standard_warning'] !== true) {
 
@@ -261,40 +298,48 @@ class Environment_Check
     public function environment_check_script()
     {
 //        wp_enqueue_script('wooptpm-environment-check', plugin_dir_url(__DIR__) . '../js/admin/environment-check.js', ['jquery'], WGACT_CURRENT_VERSION, true);
-        wp_enqueue_script('wooptpm-environment-check', WGACT_PLUGIN_DIR_PATH . 'js/admin/environment-check.js', ['jquery'], WGACT_CURRENT_VERSION, true);
+        wp_enqueue_script('wooptpm-environment-check', WOOPTPM_PLUGIN_DIR_PATH . 'js/admin/environment-check.js', ['jquery'], WGACT_CURRENT_VERSION, true);
     }
 
     public function ajax_environment_check_handler()
     {
-        $set = $_POST['set'];
+        if (isset($_POST['set'])) {
 
-        if ('disable_wp_rocket_javascript_concatenation' == $set) {
-            $wp_rocket_options                          = get_option('wp_rocket_settings');
-            $wp_rocket_options['minify_concatenate_js'] = 0;
-            update_option('wp_rocket_settings', $wp_rocket_options);
-        }
+            $set = $_POST['set'];
 
-        if ('dismiss_wp_rocket_javascript_concatenation_error' == $set) {
-            $wgact_notifications                                                     = get_option('wgact_notifications');
-            $wgact_notifications['dismiss_wp_rocket_javascript_concatenation_error'] = true;
-            update_option('wgact_notifications', $wgact_notifications);
-        }
+            if ('disable_wp_rocket_javascript_concatenation' == $set) {
+                $wp_rocket_options                          = get_option('wp_rocket_settings');
+                $wp_rocket_options['minify_concatenate_js'] = 0;
+                update_option('wp_rocket_settings', $wp_rocket_options);
+            }
 
-        if ('disable_litespeed_inline_js_dom_ready' == $set) {
-            $litespeed_inline_js_dom_ready_option = 0;
-            update_option('litespeed.conf.optm-js_inline_defer', $litespeed_inline_js_dom_ready_option);
-        }
+            if ('dismiss_wp_rocket_javascript_concatenation_error' == $set) {
+                $wooptpm_notifications                                                     = get_option(WOOPTPM_NOTIFICATIONS);
+                $wooptpm_notifications['dismiss_wp_rocket_javascript_concatenation_error'] = true;
+                update_option(WOOPTPM_NOTIFICATIONS, $wooptpm_notifications);
+            }
 
-        if ('dismiss_litespeed_inline_js_dom_ready' == $set) {
-            $wgact_notifications                                                = get_option('wgact_notifications');
-            $wgact_notifications['dismiss_litespeed_inline_js_dom_ready_error'] = true;
-            update_option('wgact_notifications', $wgact_notifications);
-        }
+            if ('disable_litespeed_inline_js_dom_ready' == $set) {
+                $litespeed_inline_js_dom_ready_option = 0;
+                update_option('litespeed.conf.optm-js_inline_defer', $litespeed_inline_js_dom_ready_option);
+            }
 
-        if ('dismiss_paypal_standard_warning' == $set) {
-            $wgact_notifications                                    = get_option('wgact_notifications');
-            $wgact_notifications['dismiss_paypal_standard_warning'] = true;
-            update_option('wgact_notifications', $wgact_notifications);
+            if ('dismiss_litespeed_inline_js_dom_ready' == $set) {
+                $wooptpm_notifications                                                = get_option(WOOPTPM_NOTIFICATIONS);
+                $wooptpm_notifications['dismiss_litespeed_inline_js_dom_ready_error'] = true;
+                update_option(WOOPTPM_NOTIFICATIONS, $wooptpm_notifications);
+            }
+
+            if ('dismiss_paypal_standard_warning' == $set) {
+                $wooptpm_notifications                                    = get_option(WOOPTPM_NOTIFICATIONS);
+                $wooptpm_notifications['dismiss_paypal_standard_warning'] = true;
+                update_option(WOOPTPM_NOTIFICATIONS, $wooptpm_notifications);
+            }
+        } else if (isset($_POST['disable_warning'])) {
+            $wooptpm_notifications                            = get_option(WOOPTPM_NOTIFICATIONS);
+            $wooptpm_notifications[$_POST['disable_warning']] = true;
+            update_option(WOOPTPM_NOTIFICATIONS, $wooptpm_notifications);
+//            error_log('warning disabled for: ' . $_POST['disable_warning']);
         }
 
         wp_die(); // this is required to terminate immediately and return a proper response
@@ -302,7 +347,7 @@ class Environment_Check
 
     private function check_wp_rocket_js_concatenation()
     {
-        $wgact_notifications = get_option('wgact_notifications');
+        $wgact_notifications = get_option(WOOPTPM_NOTIFICATIONS);
 
         if ($this->is_wp_rocket_active() && (!is_array($wgact_notifications) || false == $wgact_notifications['dismiss_wp_rocket_javascript_concatenation_error'])) {
 
@@ -319,7 +364,7 @@ class Environment_Check
 
     private function check_litespeed_js_inline_after_dom()
     {
-        $wgact_notifications = get_option('wgact_notifications');
+        $wgact_notifications = get_option(WOOPTPM_NOTIFICATIONS);
 
         if ($this->is_litespeed_active() && (!is_array($wgact_notifications) || false == $wgact_notifications['dismiss_litespeed_inline_js_dom_ready_error'])) {
 
@@ -343,6 +388,11 @@ class Environment_Check
         } else {
             return false;
         }
+    }
+
+    public function is_wc_custom_thank_you_active(): bool
+    {
+        return is_plugin_active('wc-custom-thank-you/woocommerce-custom-thankyou.php');
     }
 
     public function is_wp_rocket_active(): bool

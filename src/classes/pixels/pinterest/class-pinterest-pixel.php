@@ -24,13 +24,16 @@ class Pinterest_Pixel extends Pixel
 
     public function inject_everywhere()
     {
+        $data = [
+                'pixel_id' => $this->options_obj->pinterest->pixel_id,
+                'dynamic_remarketing' => [
+                        'id_type' => $this->get_dyn_r_id_type(),
+                ],
+        ];
+
         // @formatter:off
         ?>
-            wooptpmDataLayer.pixels.<?php echo $this->pixel_name ?> = {
-                'dynamic_remarketing': {
-                    'id_type': '<?php echo $this->get_dyn_r_id_type() ?>'
-                }
-            };
+            wooptpmDataLayer.pixels.<?php echo $this->pixel_name ?> = <?php echo json_encode($data) ?>;
 
             !function(e){if(!window.pintrk){window.pintrk = function () {
             window.pintrk.queue.push(Array.prototype.slice.call(arguments))};var

@@ -25,7 +25,7 @@ class Snapchat_Pixel_Manager extends Pixel_Manager_Base
     {
         wp_enqueue_script(
             'wooptpm-snapchat-premium-only',
-            WGACT_PLUGIN_DIR_PATH . 'js/public/snapchat__premium_only.js',
+            WOOPTPM_PLUGIN_DIR_PATH . 'js/public/snapchat__premium_only.js',
             ['jquery', 'wooptpm'],
             WGACT_CURRENT_VERSION,
             true);

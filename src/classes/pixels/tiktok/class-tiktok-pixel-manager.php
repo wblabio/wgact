@@ -25,7 +25,7 @@ class TikTok_Pixel_Manager extends Pixel_Manager_Base
     {
         wp_enqueue_script(
             'wooptpm-tiktok-premium-only',
-            WGACT_PLUGIN_DIR_PATH . 'js/public/tiktok__premium_only.js',
+            WOOPTPM_PLUGIN_DIR_PATH . 'js/public/tiktok__premium_only.js',
             ['jquery', 'wooptpm'],
             WGACT_CURRENT_VERSION,
             true);

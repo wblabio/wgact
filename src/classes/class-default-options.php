@@ -92,7 +92,7 @@ class Default_Options
                 'maximum_compatibility_mode' => 0,
                 'pro_version_demo'           => 0,
             ],
-            'db_version' => WGACT_DB_VERSION,
+            'db_version' => WOOPTPM_DB_VERSION,
         ];
     }
 

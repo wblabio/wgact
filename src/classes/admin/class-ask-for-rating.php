@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
 class Ask_For_Rating
 {
 
-    private $option_name = WGACT_DB_RATINGS;
+    private $option_name = WOOPTPM_DB_RATINGS;
 
     public function __construct()
     {
@@ -31,7 +31,7 @@ class Ask_For_Rating
     {
 
 //        wp_enqueue_script('wooptpm-ask-for-rating', plugin_dir_url(__DIR__) . '../js/admin/ask-for-rating.js', ['jquery'], WGACT_CURRENT_VERSION, true);
-        wp_enqueue_script('wooptpm-ask-for-rating', WGACT_PLUGIN_DIR_PATH . 'js/admin/ask-for-rating.js', ['jquery'], WGACT_CURRENT_VERSION, true);
+        wp_enqueue_script('wooptpm-ask-for-rating', WOOPTPM_PLUGIN_DIR_PATH . 'js/admin/ask-for-rating.js', ['jquery'], WGACT_CURRENT_VERSION, true);
 
 //	    wp_localize_script(
 //		    'ask-for-rating', // Handle
