@@ -138,12 +138,21 @@ class Pixel_Manager_Base
 
         $order_id = absint($wp->query_vars['order-received']);
 
-        $order = new WC_Order($order_id);
-
         if (empty($order_id) || $order_id == 0) {
+
+            wc_get_logger()->debug(
+                'WooCommerce couldn\'t retrieve the order ID from $wp->query_vars[\'order-received\']',
+                ['source' => 'wooptpm']
+            );
+
+            wc_get_logger()->debug(
+                print_r($wp->query_vars, true),
+                ['source' => 'wooptpm']
+            );
+
             return false;
         } else {
-            return $order;
+            return new WC_Order($order_id);
         }
     }
 
@@ -184,7 +193,7 @@ class Pixel_Manager_Base
 
     private function has_conversion_pixel_already_fired($order)
     {
-        if(wga_fs()->is__premium_only()){
+        if (wga_fs()->is__premium_only()) {
             return get_post_meta($order->get_id(), '_wooptpm_conversion_pixel_fired', true);
         } else {
             return false;
