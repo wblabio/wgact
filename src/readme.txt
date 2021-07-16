@@ -187,6 +187,7 @@ You can send the link to the front page of your shop too if you think it would b
 * Fix: item_name for GA4 add_to_cart events
 [//]: # fs_premium_only_end
 * Fix: Output of product prices as float
+* Fix: Added string to float conversion in wooptpm_get_order_item_price to make sure a float is returned
 
 = 1.10.10 =
 

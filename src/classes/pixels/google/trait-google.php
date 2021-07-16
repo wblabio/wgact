@@ -116,7 +116,7 @@ trait Trait_Google
     {
         $product = $order_item->get_product();
 
-        if(!is_object($product)){
+        if (!is_object($product)) {
 
 //            $this->log_problematic_product_id();
             wc_get_logger()->debug('get_order_item_data received an order item which is not a valid product: ' . $order_item->get_id(), ['source' => 'wooptpm']);
@@ -155,14 +155,14 @@ trait Trait_Google
         if ((new Environment_Check())->is_woo_discount_rules_active()) {
             $item_value = $order_item->get_meta('_advanced_woo_discount_item_total_discount');
             if (is_array($item_value) && array_key_exists('discounted_price', $item_value) && $item_value['discounted_price'] != 0) {
-                return $item_value['discounted_price'];
+                return (float)$item_value['discounted_price'];
             } elseif (is_array($item_value) && array_key_exists('initial_price', $item_value) && $item_value['initial_price'] != 0) {
-                return $item_value['initial_price'];
+                return (float)$item_value['initial_price'];
             } else {
-                return $product->get_price();
+                return (float)$product->get_price();
             }
         } else {
-            return $product->get_price();
+            return (float)$product->get_price();
         }
     }
 }

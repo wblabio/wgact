@@ -35,6 +35,29 @@ varExists('jQuery').then(function () {
                     }],
                 });
             });
+
+            // pageview event
+            jQuery(document).on('wooptpmViewItem', function (event, product) {
+
+                // console.log('firing Pinterest pageview event');
+                // console.log(product);
+                // console.log(wooptpmDataLayer.pixels.google.ads.conversionIds);
+                // console.log('dyn_r_id: ' + product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type]);
+                // console.log('dyn_r_id: ' + product.dyn_r_ids['gpf']);
+
+                pintrk("track", "pagevisit", {
+                    "currency"  : product.currency,
+                    "line_items": [{
+                        "product_name"    : product.name,
+                        "product_id"      : product.dyn_r_ids[wooptpmDataLayer.pixels.pinterest.dynamic_remarketing.id_type],
+                        "product_category": product.category,
+                        "product_variant" : product.variant,
+                        "product_price"   : product.price,
+                        "product_quantity": product.quantity,
+                        "product_brand"   : product.brand,
+                    }],
+                });
+            });
         }
     })
 
@@ -52,7 +75,20 @@ varExists('jQuery').then(function () {
                         // console.log('pintrk PageVisit');
                         // console.log(product);
 
-                        pintrk("track", "pagevisit");
+                        pintrk("track", "pagevisit", {
+                            "currency"  : product.currency,
+                            "line_items": [{
+                                "product_name"    : product.name,
+                                "product_id"      : product.dyn_r_ids[wooptpmDataLayer.pixels.pinterest.dynamic_remarketing.id_type],
+                                "product_category": product.category,
+                                "product_variant" : product.variant,
+                                "product_price"   : product.price,
+                                "product_quantity": product.quantity,
+                                "product_brand"   : product.brand,
+                            }],
+                        });
+
+                        // pintrk("track", "pagevisit");
 
                     } else if (wooptpmDataLayer.shop.page_type === 'search') {
 

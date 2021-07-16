@@ -926,7 +926,7 @@ class Environment_Check
     {
         $last_order_id = $this->get_last_order_id();
         //		echo('last order: ' . $last_order_id . PHP_EOL);
-        $last_order = new WC_Order(wc_get_order($last_order_id));
+        $last_order = wc_get_order($last_order_id);
 
         return $last_order->get_checkout_order_received_url();
     }

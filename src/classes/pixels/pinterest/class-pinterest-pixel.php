@@ -25,10 +25,10 @@ class Pinterest_Pixel extends Pixel
     public function inject_everywhere()
     {
         $data = [
-                'pixel_id' => $this->options_obj->pinterest->pixel_id,
-                'dynamic_remarketing' => [
-                        'id_type' => $this->get_dyn_r_id_type(),
-                ],
+            'pixel_id'            => $this->options_obj->pinterest->pixel_id,
+            'dynamic_remarketing' => [
+                'id_type' => $this->get_dyn_r_id_type(),
+            ],
         ];
 
         // @formatter:off
@@ -86,4 +86,6 @@ class Pinterest_Pixel extends Pixel
             });
         ";
     }
+
+
 }
