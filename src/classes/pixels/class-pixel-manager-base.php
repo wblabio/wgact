@@ -4,7 +4,6 @@ namespace WGACT\Classes\Pixels;
 
 
 use stdClass;
-use WC_Order;
 use WC_Product;
 use WC_Product_Data_Store_CPT;
 
@@ -15,6 +14,7 @@ if (!defined('ABSPATH')) {
 class Pixel_Manager_Base
 {
     use Trait_Product;
+    use Trait_Shop;
 
     protected $transaction_deduper_timeout = 2000;
     protected $options;
@@ -129,31 +129,6 @@ class Pixel_Manager_Base
         }
 
         $this->inject_closing_script_tag();
-    }
-
-    // https://stackoverflow.com/a/49616130/4688612
-    protected function get_order_from_order_received_page()
-    {
-        global $wp;
-
-        $order_id = absint($wp->query_vars['order-received']);
-
-        if (empty($order_id) || $order_id == 0) {
-
-            wc_get_logger()->debug(
-                'WooCommerce couldn\'t retrieve the order ID from $wp->query_vars[\'order-received\']',
-                ['source' => 'wooptpm']
-            );
-
-            wc_get_logger()->debug(
-                print_r($wp->query_vars, true),
-                ['source' => 'wooptpm']
-            );
-
-            return false;
-        } else {
-            return new WC_Order($order_id);
-        }
     }
 
     protected function can_order_confirmation_be_processed($order): bool

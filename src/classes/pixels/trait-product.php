@@ -177,7 +177,21 @@ trait Trait_Product
                 $product_details['name']     = $product->get_name();
                 $product_details['quantity'] = $order_item->get_quantity();
                 $product_details['price']    = $product->get_price();
+                $product_details['brand']    = $this->get_brand_name($product_id);
+                $product_details['category'] = implode(',', $this->get_product_category($product_id));
 
+//                error_log('type: ' . $product->get_type());
+
+                if ($product->is_type('variation')) {
+                    $product_details['variant'] = $this->get_formatted_variant_text($product);
+
+                    $parent_id                  = $product->get_parent_id();
+                    $parent_product             = wc_get_product($parent_id);
+
+                    $dyn_r_ids_parent             = $this->get_dyn_r_ids($parent_product);
+                    $parent_product_id_compiled   = $dyn_r_ids_parent[$this->get_dyn_r_id_type()];
+                    $product_details['parent_id'] = $parent_product_id_compiled;
+                }
 
                 $order_items_formatted[] = $product_details;
 //                array_push($order_items_formatted, $product_details);

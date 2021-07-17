@@ -2,6 +2,8 @@
 
 namespace WGACT\Classes\Pixels;
 
+use WC_Order;
+
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
@@ -66,4 +68,28 @@ trait Trait_Shop
         return $list_suffix;
     }
 
+    // https://stackoverflow.com/a/49616130/4688612
+    protected function get_order_from_order_received_page()
+    {
+        global $wp;
+
+        $order_id = absint($wp->query_vars['order-received']);
+
+        if (empty($order_id) || $order_id == 0) {
+
+            wc_get_logger()->debug(
+                'WooCommerce couldn\'t retrieve the order ID from $wp->query_vars[\'order-received\']',
+                ['source' => 'wooptpm']
+            );
+
+            wc_get_logger()->debug(
+                print_r($wp->query_vars, true),
+                ['source' => 'wooptpm']
+            );
+
+            return false;
+        } else {
+            return new WC_Order($order_id);
+        }
+    }
 }

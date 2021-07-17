@@ -11,6 +11,35 @@ if (typeof varExists !== "function") {
 
 varExists('jQuery').then(function () {
 
+    (function (wooptpm, $, undefined) {
+
+        wooptpm.getPinterestProductData = function (product) {
+
+            if (product.isVariation) {
+                return {
+                    product_name      : product.name,
+                    product_variant_id: product.dyn_r_ids[wooptpmDataLayer.pixels.pinterest.dynamic_remarketing.id_type],
+                    product_id        : wooptpmDataLayer.products[product.parentId].dyn_r_ids[wooptpmDataLayer.pixels.pinterest.dynamic_remarketing.id_type],
+                    product_category  : product.category,
+                    product_variant   : product.variant,
+                    product_price     : product.price,
+                    product_quantity  : product.quantity,
+                    product_brand     : product.brand,
+                }
+            } else {
+                return {
+                    product_name    : product.name,
+                    product_id      : product.dyn_r_ids[wooptpmDataLayer.pixels.pinterest.dynamic_remarketing.id_type],
+                    product_category: product.category,
+                    product_price   : product.price,
+                    product_quantity: product.quantity,
+                    product_brand   : product.brand,
+                }
+            }
+        }
+
+    }(window.wooptpm = window.wooptpm || {}, jQuery));
+
     jQuery(function () {
 
         if (wooptpm.objectExists(wooptpmDataLayer.pixels.pinterest)) {
@@ -24,15 +53,7 @@ varExists('jQuery').then(function () {
                 pintrk("track", "addtocart", {
                     "value"     : parseFloat(product.quantity * product.price),
                     "currency"  : product.currency,
-                    "line_items": [{
-                        "product_name"    : product.name,
-                        "product_id"      : product.dyn_r_ids[wooptpmDataLayer.pixels.pinterest.dynamic_remarketing.id_type],
-                        "product_category": product.category,
-                        "product_variant" : product.variant,
-                        "product_price"   : product.price,
-                        "product_quantity": product.quantity,
-                        "product_brand"   : product.brand,
-                    }],
+                    "line_items": [wooptpm.getPinterestProductData(product)],
                 });
             });
 
@@ -41,21 +62,10 @@ varExists('jQuery').then(function () {
 
                 // console.log('firing Pinterest pageview event');
                 // console.log(product);
-                // console.log(wooptpmDataLayer.pixels.google.ads.conversionIds);
-                // console.log('dyn_r_id: ' + product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type]);
-                // console.log('dyn_r_id: ' + product.dyn_r_ids['gpf']);
 
                 pintrk("track", "pagevisit", {
                     "currency"  : product.currency,
-                    "line_items": [{
-                        "product_name"    : product.name,
-                        "product_id"      : product.dyn_r_ids[wooptpmDataLayer.pixels.pinterest.dynamic_remarketing.id_type],
-                        "product_category": product.category,
-                        "product_variant" : product.variant,
-                        "product_price"   : product.price,
-                        "product_quantity": product.quantity,
-                        "product_brand"   : product.brand,
-                    }],
+                    "line_items": [wooptpm.getPinterestProductData(product)],
                 });
             });
         }
@@ -75,17 +85,13 @@ varExists('jQuery').then(function () {
                         // console.log('pintrk PageVisit');
                         // console.log(product);
 
+                        let productData = wooptpm.getPinterestProductData(product);
+
+                        console.log(productData);
+
                         pintrk("track", "pagevisit", {
                             "currency"  : product.currency,
-                            "line_items": [{
-                                "product_name"    : product.name,
-                                "product_id"      : product.dyn_r_ids[wooptpmDataLayer.pixels.pinterest.dynamic_remarketing.id_type],
-                                "product_category": product.category,
-                                "product_variant" : product.variant,
-                                "product_price"   : product.price,
-                                "product_quantity": product.quantity,
-                                "product_brand"   : product.brand,
-                            }],
+                            "line_items": [productData],
                         });
 
                         // pintrk("track", "pagevisit");

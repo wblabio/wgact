@@ -4,7 +4,7 @@ Tags: woocommerce, google ads, google analytics, facebook pixel, conversion trac
 Requires at least: 3.7
 Tested up to: 5.8
 Requires PHP: 7.2
-Stable tag: 1.10.11-beta.1
+Stable tag: 1.10.11-beta.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -181,11 +181,13 @@ You can send the link to the front page of your shop too if you think it would b
 
 [//]: # fs_premium_only_begin
 * New: TikTok pixel
+* New: Filter to enable enhanced match for Pinterest
 [//]: # fs_premium_only_end
 * Tweak: Implemented warning for incompatible plugins
-[//]: # fs_premium_only_begin
 * Tweak: Added logging for cid retrieval
+[//]: # fs_premium_only_begin
 * Fix: item_name for GA4 add_to_cart events
+* Fix: Added proper product ID output to addtocart, pagevisit and checkout events for Pinterest
 [//]: # fs_premium_only_end
 * Fix: Output of product prices as float
 * Fix: Added string to float conversion in wooptpm_get_order_item_price to make sure a float is returned

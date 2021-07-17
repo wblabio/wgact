@@ -1,5 +1,7 @@
 <?php
 
+ add_filter('wooptpm_pinterest_enhanced_match', '__return_true');
+
 
 //add_filter('wooptpm_custom_brand_taxonomy', 'wooptpm_custom_brand_taxonomy');
 //function wooptpm_custom_brand_taxonomy(): string

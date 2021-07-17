@@ -244,16 +244,16 @@ varExists('jQuery').then(function () {
                 if (wooptpmDataLayer.cart[productId]) {
 
                     let data = {
-                        "id"       : productId.toString(),
-                        "dyn_r_ids": wooptpmDataLayer.cart[productId].dyn_r_ids,
-                        "name"     : wooptpmDataLayer.cart[productId].name,
-                        // "list_name": wooptpmDataLayer.shop.list_name, // doesn't make sense on mini_cart
-                        "brand"   : wooptpmDataLayer.cart[productId].brand,
-                        "category": wooptpmDataLayer.cart[productId].category,
-                        "variant" : wooptpmDataLayer.cart[productId].variant,
-                        // "list_position": wooptpmDataLayer.cart[productId].position, // doesn't make sense on mini_cart
-                        "quantity": quantity,
-                        "price"   : wooptpmDataLayer.cart[productId].price
+                        id       : productId.toString(),
+                        dyn_r_ids: wooptpmDataLayer.cart[productId].dyn_r_ids,
+                        name     : wooptpmDataLayer.cart[productId].name,
+                        // list_name: wooptpmDataLayer.shop.list_name, // doesn't make sense on mini_cart
+                        brand   : wooptpmDataLayer.cart[productId].brand,
+                        category: wooptpmDataLayer.cart[productId].category,
+                        variant : wooptpmDataLayer.cart[productId].variant,
+                        // list_position: wooptpmDataLayer.cart[productId].position, // doesn't make sense on mini_cart
+                        quantity   : quantity,
+                        price      : wooptpmDataLayer.cart[productId].price,
                     };
 
                     // console.log('removing');
@@ -308,17 +308,19 @@ varExists('jQuery').then(function () {
                 if (wooptpmDataLayer.products[productId]) {
 
                     let data = {
-                        "id"           : productId.toString(),
-                        "dyn_r_ids"    : wooptpmDataLayer.products[productId].dyn_r_ids,
-                        "name"         : wooptpmDataLayer.products[productId].name,
-                        "list_name"    : wooptpmDataLayer.shop.list_name, // maybe remove if in products
-                        "brand"        : wooptpmDataLayer.products[productId].brand,
-                        "category"     : wooptpmDataLayer.products[productId].category,
-                        "variant"      : wooptpmDataLayer.products[productId].variant,
-                        "list_position": wooptpmDataLayer.products[productId].position,
-                        "quantity"     : quantity,
-                        "price"        : wooptpmDataLayer.products[productId].price,
-                        "currency"     : wooptpmDataLayer.shop.currency,
+                        id           : productId.toString(),
+                        dyn_r_ids    : wooptpmDataLayer.products[productId].dyn_r_ids,
+                        name         : wooptpmDataLayer.products[productId].name,
+                        list_name    : wooptpmDataLayer.shop.list_name, // maybe remove if in products
+                        brand        : wooptpmDataLayer.products[productId].brand,
+                        category     : wooptpmDataLayer.products[productId].category,
+                        variant      : wooptpmDataLayer.products[productId].variant,
+                        list_position: wooptpmDataLayer.products[productId].position,
+                        quantity     : quantity,
+                        price        : wooptpmDataLayer.products[productId].price,
+                        currency     : wooptpmDataLayer.shop.currency,
+                        isVariation  : wooptpmDataLayer.products[productId].isVariation,
+                        parentId     : wooptpmDataLayer.products[productId].parentId,
                     };
 
                     // console.log(data);
@@ -338,28 +340,32 @@ varExists('jQuery').then(function () {
 
                             wooptpmDataLayer['cart'] = {
                                 [productId]: {
-                                    'id'       : productId,
-                                    'dyn_r_ids': wooptpmDataLayer.products[productId].dyn_r_ids,
-                                    'name'     : wooptpmDataLayer.products[productId].name,
-                                    'brand'    : wooptpmDataLayer.products[productId].brand,
-                                    'category' : wooptpmDataLayer.products[productId].category,
-                                    "variant"  : wooptpmDataLayer.products[productId].variant,
-                                    'quantity' : quantity,
-                                    'price'    : wooptpmDataLayer.products[productId].price
+                                    id         : productId,
+                                    dyn_r_ids  : wooptpmDataLayer.products[productId].dyn_r_ids,
+                                    name       : wooptpmDataLayer.products[productId].name,
+                                    brand      : wooptpmDataLayer.products[productId].brand,
+                                    category   : wooptpmDataLayer.products[productId].category,
+                                    variant    : wooptpmDataLayer.products[productId].variant,
+                                    quantity   : quantity,
+                                    price      : wooptpmDataLayer.products[productId].price,
+                                    isVariation: wooptpmDataLayer.products[productId].isVariation,
+                                    parentId   : wooptpmDataLayer.products[productId].parentId,
                                 }
                             };
                             if (sessionStorage) sessionStorage.setItem('wooptpmDataLayerCart', JSON.stringify(wooptpmDataLayer.cart));
                         } else {
 
                             wooptpmDataLayer.cart[productId] = {
-                                'id'       : productId,
-                                'dyn_r_ids': wooptpmDataLayer.products[productId].dyn_r_ids,
-                                'name'     : wooptpmDataLayer.products[productId].name,
-                                'brand'    : wooptpmDataLayer.products[productId].brand,
-                                'category' : wooptpmDataLayer.products[productId].category,
-                                "variant"  : wooptpmDataLayer.products[productId].variant,
-                                'quantity' : quantity,
-                                'price'    : wooptpmDataLayer.products[productId].price
+                                id         : productId,
+                                dyn_r_ids  : wooptpmDataLayer.products[productId].dyn_r_ids,
+                                name       : wooptpmDataLayer.products[productId].name,
+                                brand      : wooptpmDataLayer.products[productId].brand,
+                                category   : wooptpmDataLayer.products[productId].category,
+                                variant    : wooptpmDataLayer.products[productId].variant,
+                                quantity   : quantity,
+                                price      : wooptpmDataLayer.products[productId].price,
+                                isVariation: wooptpmDataLayer.products[productId].isVariation,
+                                parentId   : wooptpmDataLayer.products[productId].parentId,
                             };
                             if (sessionStorage) sessionStorage.setItem('wooptpmDataLayerCart', JSON.stringify(wooptpmDataLayer.cart));
                         }
@@ -467,17 +473,19 @@ varExists('jQuery').then(function () {
             try {
                 if (wooptpmDataLayer.products[productId]) {
                     return {
-                        "id"           : productId.toString(),
-                        "dyn_r_ids"    : wooptpmDataLayer.products[productId].dyn_r_ids,
-                        "name"         : wooptpmDataLayer.products[productId].name,
-                        "list_name"    : wooptpmDataLayer.shop.list_name, // maybe remove if in cart
-                        "brand"        : wooptpmDataLayer.products[productId].brand,
-                        "category"     : wooptpmDataLayer.products[productId].category,
-                        "variant"      : wooptpmDataLayer.products[productId].variant,
-                        "list_position": wooptpmDataLayer.products[productId].position,
-                        "quantity"     : 1,
-                        "price"        : wooptpmDataLayer.products[productId].price,
-                        "currency"     : wooptpmDataLayer.shop.currency,
+                        id           : productId.toString(),
+                        dyn_r_ids    : wooptpmDataLayer.products[productId].dyn_r_ids,
+                        name         : wooptpmDataLayer.products[productId].name,
+                        list_name    : wooptpmDataLayer.shop.list_name, // maybe remove if in cart
+                        brand        : wooptpmDataLayer.products[productId].brand,
+                        category     : wooptpmDataLayer.products[productId].category,
+                        variant      : wooptpmDataLayer.products[productId].variant,
+                        list_position: wooptpmDataLayer.products[productId].position,
+                        quantity     : 1,
+                        price        : wooptpmDataLayer.products[productId].price,
+                        currency     : wooptpmDataLayer.shop.currency,
+                        isVariation  : wooptpmDataLayer.products[productId].isVariation,
+                        parentId     : wooptpmDataLayer.products[productId].parentId,
                     };
                 }
             } catch (e) {
@@ -924,16 +932,18 @@ varExists('jQuery').then(function () {
                     if (wooptpmDataLayer.products && wooptpmDataLayer.products[productId]) {
 
                         let data = {
-                            "id"           : productId.toString(),
-                            "dyn_r_ids"    : wooptpmDataLayer.products[productId].dyn_r_ids,
-                            "name"         : wooptpmDataLayer.products[productId].name,
-                            "list_name"    : wooptpmDataLayer.shop.list_name,
-                            "brand"        : wooptpmDataLayer.products[productId].brand,
-                            "category"     : wooptpmDataLayer.products[productId].category,
-                            "variant"      : wooptpmDataLayer.products[productId].variant,
-                            "list_position": wooptpmDataLayer.products[productId].position,
-                            "quantity"     : 1,
-                            "price"        : wooptpmDataLayer.products[productId].price
+                            id           : productId.toString(),
+                            dyn_r_ids    : wooptpmDataLayer.products[productId].dyn_r_ids,
+                            name         : wooptpmDataLayer.products[productId].name,
+                            list_name    : wooptpmDataLayer.shop.list_name,
+                            brand        : wooptpmDataLayer.products[productId].brand,
+                            category     : wooptpmDataLayer.products[productId].category,
+                            variant      : wooptpmDataLayer.products[productId].variant,
+                            list_position: wooptpmDataLayer.products[productId].position,
+                            quantity     : 1,
+                            price        : wooptpmDataLayer.products[productId].price,
+                            isVariation  : wooptpmDataLayer.products[productId].isVariation,
+                            parentId     : wooptpmDataLayer.products[productId].parentId,
                         };
 
                         jQuery(document).trigger('wooptpmSelectContentGaUa', data);
@@ -1035,16 +1045,18 @@ varExists('jQuery').then(function () {
                     // console.log('productId: ' + productId);
 
                     let data = {
-                        "id"           : productId.toString(),
-                        "dyn_r_ids"    : wooptpmDataLayer.products[productId].dyn_r_ids,
-                        "name"         : wooptpmDataLayer.products[productId].name,
-                        "list_name"    : wooptpmDataLayer.shop.list_name,
-                        "brand"        : wooptpmDataLayer.products[productId].brand,
-                        "category"     : wooptpmDataLayer.products[productId].category,
-                        "variant"      : wooptpmDataLayer.products[productId].variant,
-                        "list_position": wooptpmDataLayer.products[productId].position,
-                        "quantity"     : 1,
-                        "price"        : wooptpmDataLayer.products[productId].price
+                        id           : productId.toString(),
+                        dyn_r_ids    : wooptpmDataLayer.products[productId].dyn_r_ids,
+                        name         : wooptpmDataLayer.products[productId].name,
+                        list_name    : wooptpmDataLayer.shop.list_name,
+                        brand        : wooptpmDataLayer.products[productId].brand,
+                        category     : wooptpmDataLayer.products[productId].category,
+                        variant      : wooptpmDataLayer.products[productId].variant,
+                        list_position: wooptpmDataLayer.products[productId].position,
+                        quantity     : 1,
+                        price        : wooptpmDataLayer.products[productId].price,
+                        isVariation  : wooptpmDataLayer.products[productId].isVariation,
+                        parentId     : wooptpmDataLayer.products[productId].parentId,
                     };
 
                     jQuery(document).trigger('wooptpmViewItem', data);
@@ -1071,16 +1083,18 @@ varExists('jQuery').then(function () {
                 if (!productId) throw Error('Wasn\'t able to retrieve a productId');
 
                 let product = {
-                    "id"           : productId.toString(),
-                    "dyn_r_ids"    : wooptpmDataLayer.products[productId].dyn_r_ids,
-                    "name"         : wooptpmDataLayer.products[productId].name,
-                    "list_name"    : wooptpmDataLayer.shop.list_name,
-                    "brand"        : wooptpmDataLayer.products[productId].brand,
-                    "category"     : wooptpmDataLayer.products[productId].category,
-                    "variant"      : wooptpmDataLayer.products[productId].variant,
-                    "list_position": wooptpmDataLayer.products[productId].position,
-                    "quantity"     : 1,
-                    "price"        : wooptpmDataLayer.products[productId].price
+                    id           : productId.toString(),
+                    dyn_r_ids    : wooptpmDataLayer.products[productId].dyn_r_ids,
+                    name         : wooptpmDataLayer.products[productId].name,
+                    list_name    : wooptpmDataLayer.shop.list_name,
+                    brand        : wooptpmDataLayer.products[productId].brand,
+                    category     : wooptpmDataLayer.products[productId].category,
+                    variant      : wooptpmDataLayer.products[productId].variant,
+                    list_position: wooptpmDataLayer.products[productId].position,
+                    quantity     : 1,
+                    price        : wooptpmDataLayer.products[productId].price,
+                    isVariation  : wooptpmDataLayer.products[productId].isVariation,
+                    parentId     : wooptpmDataLayer.products[productId].parentId,
                 };
 
                 // console.log('add_to_wishlist');
