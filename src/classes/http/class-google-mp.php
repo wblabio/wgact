@@ -80,8 +80,10 @@ class Google_MP extends Http
             $this->cid = $this->get_cid_from_session();
         } else if ($_COOKIE['_ga']){
             $this->cid = substr($_COOKIE['_ga'], 6);
+            wc_get_logger()->debug('Couldn\'t retrieve cid from WC session. Getting it from $_COOKIE[\'_ga\']: ' . $this->cid, ['source' => 'wooptpm-cid']);
         } else {
             $this->cid = $this->get_random_cid();
+            wc_get_logger()->debug('Couldn\'t retrieve cid from WC session nor from $_COOKIE[\'_ga\']. Setting random cid: ' . $this->cid, ['source' => 'wooptpm-cid']);
         }
 
         update_post_meta($order->get_id(), $this->cid_key, $this->cid);

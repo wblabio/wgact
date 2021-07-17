@@ -184,6 +184,7 @@ You can send the link to the front page of your shop too if you think it would b
 [//]: # fs_premium_only_end
 * Tweak: Implemented warning for incompatible plugins
 [//]: # fs_premium_only_begin
+* Tweak: Added logging for cid retrieval
 * Fix: item_name for GA4 add_to_cart events
 [//]: # fs_premium_only_end
 * Fix: Output of product prices as float
