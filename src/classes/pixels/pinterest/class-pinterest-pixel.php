@@ -44,7 +44,6 @@ class Pinterest_Pixel extends Pixel
             t=document.createElement("script");t.async=!0,t.src=e;var
             r=document.getElementsByTagName("script")[0];
             r.parentNode.insertBefore(t,r)}}("https://s.pinimg.com/ct/core.js");
-            // pintrk('load', '1111111111111', {em: '<user_email_address>'});
 
             <?php echo $this->get_pintrk_load_event() ?>
             pintrk('page');
@@ -61,7 +60,12 @@ class Pinterest_Pixel extends Pixel
                 $email        = $current_user->user_email;
             } else {
                 $order = $this->get_order_from_order_received_page();
-                $email = $order->get_billing_email();
+
+                if ($order) {
+                    $email = $order->get_billing_email();
+                } else {
+                    $email = '';
+                }
             }
             return "pintrk('load', '" . $this->options_obj->pinterest->pixel_id . "', {em: '" . $email . "'});" . PHP_EOL;
         } else {
@@ -92,14 +96,14 @@ class Pinterest_Pixel extends Pixel
     public function inject_order_received_page($order, $order_total)
     {
 
-        $formatted_order_items = $this->get_formatted_order_items($order);
+        $formatted_order_items = $this->get_order_items_formatted_for_pinterest($order);
 
         echo "
             wooptpmExists().then(function(){
                 if (!wooptpm.isOrderIdStored('" . $order->get_id() . "')) {
                     pintrk('track', 'checkout', {
                         'value'         : " . $order_total . ",
-                        'order_quantity': " . count($order->get_items()) . ",
+                        'order_quantity': " . count($this->wooptpm_get_order_items($order)) . ",
                         'currency'      : '" . $order->get_currency() . "',
                         'order_id'      : '" . $order->get_order_number() . "',
                         'line_items'   : " . json_encode($formatted_order_items) . "
@@ -109,7 +113,7 @@ class Pinterest_Pixel extends Pixel
         ";
     }
 
-    private function get_formatted_order_items($order): array
+    private function get_order_items_formatted_for_pinterest($order): array
     {
         $order_items = $this->get_order_items_formatted_for_purchase_event($order);
 

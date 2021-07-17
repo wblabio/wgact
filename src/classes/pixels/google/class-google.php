@@ -151,7 +151,7 @@ class Google extends Pixel
 
     protected function get_formatted_order_items($order, $channel = '')
     {
-        $order_items       = $order->get_items();
+        $order_items       = $this->wooptpm_get_order_items($order);
         $order_items_array = [];
 
         $list_position = 1;

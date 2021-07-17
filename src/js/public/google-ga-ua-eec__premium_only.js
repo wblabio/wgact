@@ -330,12 +330,11 @@ varExists('jQuery').then(function () {
             try {
                 if (wooptpmDataLayer.pixels.google.analytics.eec && wooptpmDataLayer.pixels.google.analytics.universal.property_id) {
 
+                    let targetID = wooptpmDataLayer.pixels.google.analytics.universal.property_id;
+
                     // We need to be sure that we capture the cid early enough, because the
                     // shop might be using a one click checkout button as early as on the product page.
-                    if (['cart', 'checkout'].indexOf(wooptpmDataLayer.shop.page_type) >= 0) {
-
-                        let targetID = wooptpmDataLayer.pixels.google.analytics.universal.property_id;
-
+                    if (['product', 'cart', 'checkout'].indexOf(wooptpmDataLayer.shop.page_type) >= 0) {
                         wooptpm.setGoogleCidOnServer(targetID);
                     }
                 }

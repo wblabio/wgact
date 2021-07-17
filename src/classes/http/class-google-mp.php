@@ -50,11 +50,13 @@ class Google_MP extends Http
 
     public function wooptpm_google_analytics_set_session_cid()
     {
-        if (!check_ajax_referer('wooptpm-google-premium-only-nonce', 'nonce', false)) {
-            wp_send_json_error('Invalid security token sent.');
-            error_log('Invalid security token sent.');
-            wp_die();
-        }
+//        error_log('set cid');
+
+//        if (!check_ajax_referer('wooptpm-google-premium-only-nonce', 'nonce', false)) {
+//            wp_send_json_error('Invalid security token sent.');
+//            error_log('Invalid security token sent.');
+//            wp_die();
+//        }
 
         $target_id = filter_var($_POST['target_id'], FILTER_SANITIZE_STRING);
         $client_id = filter_var($_POST['client_id'], FILTER_SANITIZE_STRING);
@@ -138,7 +140,7 @@ class Google_MP extends Http
             return WC()->session->get($this->cid_key);
         } else {
 //            return bin2hex(random_bytes(10));
-            return $this->get_random_cid();
+            return false;
         }
     }
 

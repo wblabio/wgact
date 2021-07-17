@@ -79,7 +79,7 @@ class Twitter_Pixel extends Pixel
                     twq('track', 'Purchase', {
                         value       : '" . $order_total . "',
                         currency    : '" . $order->get_currency() . "',
-                        num_items   : '" . count($order->get_items()) . "',
+                        num_items   : '" . count($this->wooptpm_get_order_items($order)) . "',
                         content_ids : " . json_encode($this->get_order_item_ids($order)) . ",
                         content_type: 'product',
                         order_id    : '" . $order->get_order_number() . "'

@@ -2,7 +2,6 @@
 
 namespace WGACT\Classes\Pixels;
 
-use http\Env;
 use WGACT\Classes\Admin\Environment_Check;
 
 if (!defined('ABSPATH')) {
@@ -129,7 +128,7 @@ trait Trait_Product
 
     protected function get_order_item_ids($order): array
     {
-        $order_items       = $order->get_items();
+        $order_items       = $this->wooptpm_get_order_items($order);
         $order_items_array = [];
 
         foreach ((array)$order_items as $order_item) {
@@ -156,7 +155,7 @@ trait Trait_Product
 
     protected function get_order_items_formatted_for_purchase_event($order): array
     {
-        $order_items           = $order->get_items();
+        $order_items           = $this->wooptpm_get_order_items($order);
         $order_items_formatted = [];
 
         foreach ((array)$order_items as $order_item) {
@@ -221,5 +220,10 @@ trait Trait_Product
         $this->dyn_r_id_type = apply_filters('wooptpm_product_id_type_for_' . $this->pixel_name, $this->dyn_r_id_type);
 
         return $this->dyn_r_id_type;
+    }
+
+    protected function wooptpm_get_order_items($order)
+    {
+        return apply_filters('wooptpm_order_items', $order->get_items(), $order);
     }
 }

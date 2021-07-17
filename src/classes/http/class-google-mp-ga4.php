@@ -192,7 +192,7 @@ class Google_MP_GA4 extends Google_MP
     {
         $items = [];
 
-        foreach ($order->get_items() as $item_id => $item) {
+        foreach ($this->wooptpm_get_order_items($order) as $item_id => $item) {
 
             $order_item_data = $this->get_order_item_data($item);
 

@@ -252,8 +252,8 @@ varExists('jQuery').then(function () {
                         category: wooptpmDataLayer.cart[productId].category,
                         variant : wooptpmDataLayer.cart[productId].variant,
                         // list_position: wooptpmDataLayer.cart[productId].position, // doesn't make sense on mini_cart
-                        quantity   : quantity,
-                        price      : wooptpmDataLayer.cart[productId].price,
+                        quantity: quantity,
+                        price   : wooptpmDataLayer.cart[productId].price,
                     };
 
                     // console.log('removing');
@@ -686,11 +686,15 @@ varExists('jQuery').then(function () {
                 jQuery(elem).siblings('.wooptpmProductId').length);
         }
 
-        wooptpm.setCookie = function (cookieName, cookieValue = '', expiryDays = 365) {
-            let d = new Date();
-            d.setTime(d.getTime() + (expiryDays * 24 * 60 * 60 * 1000));
-            let expires     = "expires=" + d.toUTCString();
-            document.cookie = cookieName + "=" + cookieValue + ";" + expires + ";path=/";
+        wooptpm.setCookie = function (cookieName, cookieValue = '', expiryDays = null) {
+            if (expiryDays) {
+                let d = new Date();
+                d.setTime(d.getTime() + (expiryDays * 24 * 60 * 60 * 1000));
+                let expires     = "expires=" + d.toUTCString();
+                document.cookie = cookieName + "=" + cookieValue + ";" + expires + ";path=/";
+            } else {
+                document.cookie = cookieName + "=" + cookieValue + ";path=/";
+            }
         }
 
         wooptpm.getCookie = function (cookieName) {

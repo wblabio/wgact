@@ -183,8 +183,10 @@ You can send the link to the front page of your shop too if you think it would b
 * New: TikTok pixel
 * New: Filter to enable enhanced match for Pinterest
 [//]: # fs_premium_only_end
+* New: Filter for order items
 * Tweak: Implemented warning for incompatible plugins
 * Tweak: Added logging for cid retrieval
+* Tweak: Setting GA cid already on product page if possible
 [//]: # fs_premium_only_begin
 * Fix: item_name for GA4 add_to_cart events
 * Fix: Added proper product ID output to addtocart, pagevisit and checkout events for Pinterest

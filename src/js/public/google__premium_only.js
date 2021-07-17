@@ -21,14 +21,16 @@ varExists('jQuery').then(function () {
                 gtag('get', targetID, 'client_id', (clientID) => {
                     // console.log('Google cid: ' + clientID);
 
-                    if (window.sessionStorage && window.sessionStorage.getItem('wooptpm_cid_' + targetID + '_' + clientID + '_set')) {
+                    let cidSetOnServerCookie = 'wooptpm_cid_' + targetID + '_' + clientID + '_set';
+
+                    if ((window.sessionStorage && window.sessionStorage.getItem(cidSetOnServerCookie)) || wooptpm.getCookie(cidSetOnServerCookie)) {
                         return;
                     }
 
                     // save the state in the database
                     let data = {
-                        'action'   : 'wooptpm_google_analytics_set_session_cid',
-                        'nonce'    : wooptpm_google_premium_only_ajax_object.nonce,
+                        'action': 'wooptpm_google_analytics_set_session_cid',
+                        // 'nonce'    : wooptpm_google_premium_only_ajax_object.nonce,
                         'target_id': targetID,
                         'client_id': clientID,
                     };
@@ -44,9 +46,13 @@ varExists('jQuery').then(function () {
                                 // console.log(response);
                                 // console.log(response['cid_set'])
 
-                                if(window.sessionStorage && response['success'] === true ){
-                                    // console.log('setting session storage');
-                                    window.sessionStorage.setItem('wooptpm_cid_' + targetID + '_' + clientID + '_set', JSON.stringify(true));
+                                if (response['success'] === true) {
+                                    if (window.sessionStorage) {
+                                        // console.log('setting session storage');
+                                        window.sessionStorage.setItem(cidSetOnServerCookie, JSON.stringify(true));
+                                    } else {
+                                        wooptpm.setCookie(cidSetOnServerCookie, true);
+                                    }
                                 }
                             },
                             error   : function (response) {

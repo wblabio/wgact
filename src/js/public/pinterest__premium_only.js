@@ -87,7 +87,7 @@ varExists('jQuery').then(function () {
 
                         let productData = wooptpm.getPinterestProductData(product);
 
-                        console.log(productData);
+                        // console.log(productData);
 
                         pintrk("track", "pagevisit", {
                             "currency"  : product.currency,

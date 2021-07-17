@@ -1,5 +1,15 @@
 <?php
 
+add_filter('wooptpm_order_items', function ($order_items, $order){
+
+    foreach($order_items as $item_id => $item ){
+        error_log('price: ' . $item->get_subtotal());
+    }
+    return $order_items;
+}, 2, 10);
+
+
+
  add_filter('wooptpm_pinterest_enhanced_match', '__return_true');
 
 
@@ -47,8 +57,10 @@ add_filter('wooptpm_facebook_capi_test_event_code', function () {
 //    ];
 //});
 
-add_filter('wooptpm_enable_ga_4_mp_event_debug_mode', '__return_true');
+//add_filter('wooptpm_enable_ga_4_mp_event_debug_mode', '__return_true');
 //add_filter('wooptpm_send_http_api_ga_4_requests_blocking', '__return_true');
+//add_filter('wooptpm_send_http_api_ga_ua_requests_blocking', '__return_true');
+
 
 //add_filter('wooptpm_view_item_list_trigger_settings', 'wooptpm_view_item_list_trigger_settings');
 function wooptpm_view_item_list_trigger_settings($settings)
