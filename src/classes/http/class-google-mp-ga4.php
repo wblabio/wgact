@@ -71,14 +71,14 @@ class Google_MP_GA4 extends Google_MP
         // Also run it on subscription renewals,
         // but not on orders before premium activation (orders missing a cid)
 
-        if ($this->approve_purchase_hit_processing($order, $cid) === false) {
+        if ($this->approve_purchase_hit_processing($order, $cid, $this->cid_key) === false) {
             return;
         }
 
 //        error_log('GA 4, no previous order hit registered, continue...');
 
         $payload = [
-            'client_id'            => $this->get_cid_from_order($order),
+            'client_id'            => $this->get_cid_from_order($order, $this->cid_key),
             'non_personalized_ads' => false,
             'events'               => [
                 'name'   => 'purchase',
@@ -125,7 +125,7 @@ class Google_MP_GA4 extends Google_MP
 //        error_log('processing Measure Protocol full refund hit');
 
         $payload = [
-            'client_id' => (string)$this->get_cid_from_order($order),
+            'client_id' => (string)$this->get_cid_from_order($order, $this->cid_key),
             'events'    => [
                 'name'   => 'refund',
                 'params' => [
@@ -161,7 +161,7 @@ class Google_MP_GA4 extends Google_MP
 //        error_log('processing GA UA Measurement Protocol partial refund hit');
 
         $payload = [
-            'client_id' => $this->get_cid_from_order($order),
+            'client_id' => $this->get_cid_from_order($order, $this->cid_key),
             'events'    => [
                 'name'   => 'refund',
                 'params' => [

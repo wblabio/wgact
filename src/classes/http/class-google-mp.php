@@ -64,9 +64,11 @@ class Google_MP extends Http
 //        error_log('target_id: ' . $target_id);
 //        error_log('client_id: ' . $client_id);
 
-        if ( ! WC()->session->has_session() ) {
-            WC()->session->set_customer_session_cookie( true );
+        if (!WC()->session->has_session()) {
+            WC()->session->set_customer_session_cookie(true);
         }
+
+//        error_log('setting ga cid on session. Target ID: ' . $target_id . ', cid: ' . $client_id);
 
         WC()->session->set('google_cid_' . $target_id, $client_id);
 
@@ -75,38 +77,49 @@ class Google_MP extends Http
         wp_die(); // this is required to terminate immediately and return a proper response
     }
 
-    public function set_cid_on_order($order)
+    public function set_cid_on_order($order, $cid_key)
     {
         // Get the cid if the client provides one, if not generate an anonymous one
-        if ($this->get_cid_from_session()) {
-            $this->cid = $this->get_cid_from_session();
-        } else if ($_COOKIE['_ga']){
-            $this->cid = substr($_COOKIE['_ga'], 6);
-            wc_get_logger()->debug('Couldn\'t retrieve cid from WC session. Getting it from $_COOKIE[\'_ga\']: ' . $this->cid, ['source' => 'wooptpm-cid']);
-        } else {
-            $this->cid = $this->get_random_cid();
-            wc_get_logger()->debug('Couldn\'t retrieve cid from WC session nor from $_COOKIE[\'_ga\']. Setting random cid: ' . $this->cid, ['source' => 'wooptpm-cid']);
-        }
-
-        update_post_meta($order->get_id(), $this->cid_key, $this->cid);
-    }
-
-    public function get_cid_from_order($order): string
-    {
-        $cid = get_post_meta($order->get_id(), $this->cid_key, true);
+        $cid = $this->get_cid_from_session($cid_key);
 
         if ($cid) {
-//            error_log('cid found: ' . $cid);
+            if (apply_filters('wooptpm_get_ga_cid_logger', false)) {
+                wc_get_logger()->debug('Successfully received cid from session: ' . $cid, ['source' => 'wooptpm-cid']);
+            }
+        } else if ($_COOKIE['_ga']) {
+            $cid = substr($_COOKIE['_ga'], 6);
+            if (apply_filters('wooptpm_get_ga_cid_logger', false)) {
+                wc_get_logger()->debug('Couldn\'t retrieve cid from WC session. Getting it from $_COOKIE[\'_ga\']: ' . $cid, ['source' => 'wooptpm-cid']);
+            }
+        } else {
+            $cid = $this->get_random_cid();
+            if (apply_filters('wooptpm_get_ga_cid_logger', false)) {
+                wc_get_logger()->debug('Couldn\'t retrieve cid from WC session nor from $_COOKIE[\'_ga\']. Setting random cid: ' . $cid, ['source' => 'wooptpm-cid']);
+            }
+        }
+
+        update_post_meta($order->get_id(), $cid_key, $cid);
+    }
+
+    public function get_cid_from_order($order, $cid_key): string
+    {
+        $cid = get_post_meta($order->get_id(), $cid_key, true);
+
+        if ($cid) {
+//            error_log('cid found: ' . $cid . ', cid_key: ' . $cid_key);
             return $cid;
         } else {
 //            error_log('cid not found. Returning random');
+            if (apply_filters('wooptpm_get_ga_cid_logger', false)) {
+                wc_get_logger()->debug('Couldn\'t retrieve cid from order. Setting random cid', ['source' => 'wooptpm-cid']);
+            }
             return $this->get_random_cid();
         }
     }
 
-    public function is_cid_set_on_order($order): bool
+    public function is_cid_set_on_order($order, $cid_key): bool
     {
-        $cid = get_post_meta($order->get_id(), $this->cid_key, true);
+        $cid = get_post_meta($order->get_id(), $cid_key, true);
 
         if ($cid) {
             return true;
@@ -115,7 +128,7 @@ class Google_MP extends Http
         }
     }
 
-    protected function approve_purchase_hit_processing($order, $cid): bool
+    protected function approve_purchase_hit_processing($order, $cid, $cid_key): bool
     {
         // Only approve, if the hit has not been sent already (check in db)
         // Also approve subscription renewals (cid is missing),
@@ -125,7 +138,7 @@ class Google_MP extends Http
             get_post_meta($order->get_id(), $this->mp_purchase_hit_key) ||
             (
                 $cid === null &&
-                $this->is_cid_set_on_order($order) === false
+                $this->is_cid_set_on_order($order, $cid_key) === false
             )
         ) {
             return false;
@@ -134,10 +147,10 @@ class Google_MP extends Http
         }
     }
 
-    protected function get_cid_from_session()
+    protected function get_cid_from_session($cid_key)
     {
-        if (WC()->session->get($this->cid_key)) {
-            return WC()->session->get($this->cid_key);
+        if (WC()->session->get($cid_key)) {
+            return WC()->session->get($cid_key);
         } else {
 //            return bin2hex(random_bytes(10));
             return false;

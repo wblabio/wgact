@@ -22,11 +22,10 @@ varExists('jQuery').then(function () {
                 // console.log(product);
 
                 gtag('event', 'view_item_list', {
-                    "send_to": wooptpmDataLayer.pixels.google.ads.conversionIds,
-                    "items"  : [{
-                        "id"                      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
-                        "google_business_vertical": wooptpmDataLayer.pixels.google.ads.google_business_vertical,
-
+                    send_to: wooptpmDataLayer.pixels.google.ads.conversionIds,
+                    items  : [{
+                        id                      : product.dyn_r_ids[wooptpmDataLayer.pixels.google.ads.dynamic_remarketing.id_type],
+                        google_business_vertical: wooptpmDataLayer.pixels.google.ads.google_business_vertical,
                     }]
                 });
             });

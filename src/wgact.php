@@ -5,7 +5,7 @@
  * Author:       woopt
  * Plugin URI:   https://wordpress.org/plugins/woocommerce-google-adwords-conversion-tracking-tag/
  * Author URI:   https://woopt.com
- * Version:      1.10.11-beta.2
+ * Version:      1.10.11-beta.4
  * License:      GPLv2 or later
  * Text Domain:  woocommerce-google-adwords-conversion-tracking-tag
  * WC requires at least: 2.6

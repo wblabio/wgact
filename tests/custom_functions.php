@@ -1,17 +1,17 @@
 <?php
 
-add_filter('wooptpm_order_items', function ($order_items, $order){
 
-    foreach($order_items as $item_id => $item ){
-        error_log('price: ' . $item->get_subtotal());
-    }
-    return $order_items;
-}, 2, 10);
+add_filter('wooptpm_get_ga_cid_logger', '__return_true');
 
+//add_filter('wooptpm_order_items', function ($order_items, $order){
+//
+//    foreach($order_items as $item_id => $item ){
+//        error_log('price: ' . $item->get_subtotal());
+//    }
+//    return $order_items;
+//}, 2, 10);
 
-
- add_filter('wooptpm_pinterest_enhanced_match', '__return_true');
-
+add_filter('wooptpm_pinterest_enhanced_match', '__return_true');
 
 //add_filter('wooptpm_custom_brand_taxonomy', 'wooptpm_custom_brand_taxonomy');
 //function wooptpm_custom_brand_taxonomy(): string

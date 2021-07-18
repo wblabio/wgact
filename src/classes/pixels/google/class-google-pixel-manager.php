@@ -23,6 +23,8 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
     private $google_analytics_4_http_mp;
 //    private $google_analytics_ua_refund_pixel;
     private $google_analytics_4_eec_pixel;
+    private $cid_key_ga_ua;
+    private $cid_key_ga4;
 
     public function __construct($options)
     {
@@ -57,6 +59,9 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
 
                 $this->google_analytics_ua_http_mp = new Google_MP_UA($options);
                 $this->google_analytics_4_http_mp  = new Google_MP_GA4($options);
+
+                $this->cid_key_ga_ua = 'google_cid_' . $this->options_obj->google->analytics->universal->property_id;
+                $this->cid_key_ga4   = 'google_cid_' . $this->options_obj->google->analytics->ga4->measurement_id;
 
 //                error_log('running mp scripts');
 
@@ -105,7 +110,7 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
         $parent_order = $subscription->get_parent();
 
         // Get cid from parent order
-        $cid = $this->google_analytics_ua_http_mp->get_cid_from_order($parent_order);
+        $cid = $this->google_analytics_ua_http_mp->get_cid_from_order($parent_order, $this->cid_key_ga_ua);
 
         if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_http_mp->send_purchase_hit($renewal_order, $cid);
         if ($this->is_google_analytics_4_mp_active()) $this->google_analytics_4_http_mp->send_purchase_hit($renewal_order, $cid);
@@ -113,8 +118,8 @@ class Google_Pixel_Manager extends Pixel_Manager_Base
 
     public function google_analytics_save_cid_on_order__premium_only($order)
     {
-        if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_http_mp->set_cid_on_order($order);
-        if ($this->is_google_analytics_4_mp_active()) $this->google_analytics_4_http_mp->set_cid_on_order($order);
+        if ($this->is_google_analytics_ua_active()) $this->google_analytics_ua_http_mp->set_cid_on_order($order, $this->cid_key_ga_ua);
+        if ($this->is_google_analytics_4_mp_active()) $this->google_analytics_4_http_mp->set_cid_on_order($order, $this->cid_key_ga4);
     }
 
     public function google_analytics_mp_report_purchase__premium_only($order_id)

@@ -56,7 +56,7 @@ class Google_MP_UA extends Google_MP
     public function send_purchase_hit($order, $cid = null)
     {
         // only approve, if several conditions are met
-        if ($this->approve_purchase_hit_processing($order, $cid) === false) {
+        if ($this->approve_purchase_hit_processing($order, $cid, $this->cid_key) === false) {
             return;
         }
 
@@ -259,7 +259,7 @@ class Google_MP_UA extends Google_MP
         } else {
             // We always send a cid. If we were able successfully capture one from the session,
             // we use that one. Otherwise we send a random cid.
-            $data['cid'] = $this->get_cid_from_order($order);
+            $data['cid'] = $this->get_cid_from_order($order, $this->cid_key);
         }
 
         return $data;
