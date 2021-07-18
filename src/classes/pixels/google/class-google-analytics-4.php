@@ -70,13 +70,14 @@ class Google_Analytics_4 extends Google_Analytics
                 //                'coupon' => '',
                 //                'discount' => 0,
                 'item_brand'    => $order_item_data['brand'],
-                'item_category' => $order_item_data['category'],
                 'item_variant'  => $order_item_data['variant'],
                 //                'tax' => 0,
                 'price'         => $order_item_data['price'],
                 //                    'list_name' => ,
                 'currency'      => get_woocommerce_currency(),
             ];
+
+            $item_details_array = $this->add_categories_to_ga4_product_items($item_details_array, $order_item_data['category_array']);
 
             array_push($order_items_array, $item_details_array);
         }

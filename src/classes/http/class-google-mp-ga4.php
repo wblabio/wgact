@@ -203,12 +203,13 @@ class Google_MP_GA4 extends Google_MP
                 //                'discount'      => '',
                 //                'affiliation'   => '',
                 'item_brand'    => $order_item_data['brand'],
-                'item_category' => $order_item_data['category'],
                 'item_variant'  => $order_item_data['variant'],
                 'price'         => $order_item_data['price'],
                 //                'currency'      => '',
                 'quantity'      => $order_item_data['quantity'],
             ];
+
+            $item_details = $this->add_categories_to_ga4_product_items($item_details, $order_item_data['category_array']);
 
             array_push($items, $item_details);
         }

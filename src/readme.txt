@@ -191,6 +191,7 @@ You can send the link to the front page of your shop too if you think it would b
 * Tweak: Added logging for cid retrieval
 * Tweak: Save cid_set cookie as normal cookie if sessionStorage is not available
 * Tweak: Comma separated categories for GA UA
+* Tweak: Proper category variables for GA4
 [//]: # fs_premium_only_end
 * Tweak: Refactored wooptpm.setCookie() so that it can create session cookies
 [//]: # fs_premium_only_begin

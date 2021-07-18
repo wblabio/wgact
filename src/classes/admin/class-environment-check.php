@@ -34,7 +34,7 @@ class Environment_Check
 
         foreach ($this->get_incompatible_plugins_list() as $plugin) {
 
-            if (!array_key_exists($plugin['slug'], $saved_notifications) && is_plugin_active($plugin['file_location'])) {
+            if (is_array($saved_notifications) && !array_key_exists($plugin['slug'], $saved_notifications) && is_plugin_active($plugin['file_location'])) {
 
                 (new Notifications())->plugin_is_incompatible(
                     $plugin['name'],

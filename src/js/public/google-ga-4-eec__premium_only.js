@@ -19,19 +19,22 @@ varExists('jQuery').then(function () {
 
             for (const [productId, product] of Object.entries(wooptpmDataLayer.cart)) {
 
-                data.push({
+                let productItems = {
                     "item_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
                     "item_name": product.name,
                     "quantity" : product.quantity,
                     // "affiliation'  : '',
                     // "coupon"       : '',
                     // "discount"     : 0,
-                    "item_brand"   : product.brand,
-                    "item_category": product.category,
-                    "item_variant" : product.variant,
-                    "price"        : product.price,
-                    "currency"     : wooptpmDataLayer.shop.currency,
-                });
+                    "item_brand"  : product.brand,
+                    "item_variant": product.variant,
+                    "price"       : product.price,
+                    "currency"    : wooptpmDataLayer.shop.currency,
+                }
+
+                productItems = wooptpm.getFormattedGA4Categories(productItems, product.category);
+
+                data.push(productItems);
             }
 
             return data;
@@ -51,24 +54,27 @@ varExists('jQuery').then(function () {
                 // console.log('firing google select_content event');
                 // console.log(product);
 
+                let productItems = {
+                    "item_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
+                    "item_name": product.name,
+                    // "coupon"   : "",
+                    // "discount": 0,
+                    "index"         : product.list_position, // doesn't make sense on mini_cart
+                    "item_list_name": wooptpmDataLayer.shop.list_name,
+                    "item_list_id"  : wooptpmDataLayer.id,
+                    // "affiliation": "",
+                    "item_brand"  : product.brand,
+                    "item_variant": product.variant,
+                    "price"       : product.price,
+                    "currency"    : wooptpmDataLayer.shop.currency,
+                    "quantity"    : product.quantity,
+                }
+
+                productItems = wooptpm.getFormattedGA4Categories(productItems, product.category);
+
                 gtag('event', 'view_item_list', {
                     "send_to"       : wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id,
-                    "items"         : [{
-                        "item_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
-                        "item_name": product.name,
-                        // "coupon"   : "",
-                        // "discount": 0,
-                        "index"         : product.list_position, // doesn't make sense on mini_cart
-                        "item_list_name": wooptpmDataLayer.shop.list_name,
-                        "item_list_id"  : wooptpmDataLayer.id,
-                        // "affiliation": "",
-                        "item_brand"   : product.brand,
-                        "item_category": product.category,
-                        "item_variant" : product.variant,
-                        "price"        : product.price,
-                        "currency"     : wooptpmDataLayer.shop.currency,
-                        "quantity"     : product.quantity,
-                    }],
+                    "items"         : [productItems],
                     "item_list_name": product.list_name, // doesn't make sense on mini_cart
                     // "item_list_id": product.list_id, // doesn't make sense on mini_cart
                 });
@@ -81,24 +87,27 @@ varExists('jQuery').then(function () {
                 // console.log('firing google select_content event');
                 // console.log(product);
 
+                let productItems = {
+                    "item_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
+                    "item_name": product.name,
+                    // "coupon"   : "",
+                    // "discount": 0,
+                    "index"         : product.list_position, // doesn't make sense on mini_cart
+                    "item_list_name": wooptpmDataLayer.shop.list_name,
+                    "item_list_id"  : wooptpmDataLayer.id,
+                    // "affiliation": "",
+                    "item_brand"  : product.brand,
+                    "item_variant": product.variant,
+                    "price"       : product.price,
+                    "currency"    : wooptpmDataLayer.shop.currency,
+                    "quantity"    : product.quantity,
+                }
+
+                productItems = wooptpm.getFormattedGA4Categories(productItems, product.category);
+
                 gtag('event', 'select_item', {
                     "send_to": wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id,
-                    "items"  : [{
-                        "item_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
-                        "item_name": product.name,
-                        // "coupon"   : "",
-                        // "discount": 0,
-                        "index"         : product.list_position, // doesn't make sense on mini_cart
-                        "item_list_name": wooptpmDataLayer.shop.list_name,
-                        "item_list_id"  : wooptpmDataLayer.id,
-                        // "affiliation": "",
-                        "item_brand"   : product.brand,
-                        "item_category": product.category,
-                        "item_variant" : product.variant,
-                        "price"        : product.price,
-                        "currency"     : wooptpmDataLayer.shop.currency,
-                        "quantity"     : product.quantity,
-                    }],
+                    "items"  : [productItems],
                 });
             });
 
@@ -109,27 +118,28 @@ varExists('jQuery').then(function () {
                 // console.log('firing google add_to_cart event for: ' + wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id);
                 // console.log(product);
 
+                let productItems = {
+                    "item_name"     : product.name,
+                    "item_id"       : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
+                    "item_list_name": wooptpmDataLayer.shop.list_name,
+                    "item_list_id"  : wooptpmDataLayer.id,
+                    // "coupon": "",
+                    // "discount": 0,
+                    // "affiliation": "",
+                    "item_brand"  : product.brand,
+                    "item_variant": product.variant,
+                    "price"       : product.price,
+                    "currency"    : wooptpmDataLayer.shop.currency,
+                    "quantity"    : product.quantity,
+                }
+
+                productItems = wooptpm.getFormattedGA4Categories(productItems, product.category);
+
                 gtag('event', 'add_to_cart', {
                     "send_to" : wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id,
                     "currency": wooptpmDataLayer.shop.currency,
                     // "value": 0,
-                    "items": [
-                        {
-                            "item_name"     : product.name,
-                            "item_id"       : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
-                            "item_list_name": wooptpmDataLayer.shop.list_name,
-                            "item_list_id"  : wooptpmDataLayer.id,
-                            // "coupon": "",
-                            // "discount": 0,
-                            // "affiliation": "",
-                            "item_brand"   : product.brand,
-                            "item_category": product.category,
-                            "item_variant" : product.variant,
-                            "price"        : product.price,
-                            "currency"     : wooptpmDataLayer.shop.currency,
-                            "quantity"     : product.quantity,
-                        }
-                    ]
+                    "items": [productItems]
                 });
             });
 
@@ -140,25 +150,26 @@ varExists('jQuery').then(function () {
                 // console.log('firing google view_item event for: ' + wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id);
                 // console.log(product);
 
+                let productItems = {
+                    "item_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
+                    "item_name": product.name,
+                    // "coupon": "",
+                    // "discount": 0,
+                    // "affiliation": "",
+                    "item_brand"  : product.brand,
+                    "item_variant": product.variant,
+                    "price"       : product.price,
+                    "currency"    : wooptpmDataLayer.shop.currency,
+                    "quantity"    : 1,
+                }
+
+                productItems = wooptpm.getFormattedGA4Categories(productItems, product.category);
+
                 gtag('event', 'view_item', {
                     "send_to" : wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id,
                     "currency": wooptpmDataLayer.shop.currency,
                     // "value": 0,
-                    "items": [
-                        {
-                            "item_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
-                            "item_name": product.name,
-                            // "coupon": "",
-                            // "discount": 0,
-                            // "affiliation": "",
-                            "item_brand"   : product.brand,
-                            "item_category": product.category,
-                            "item_variant" : product.variant,
-                            "price"        : product.price,
-                            "currency"     : wooptpmDataLayer.shop.currency,
-                            "quantity"     : 1,
-                        }
-                    ]
+                    "items": [productItems]
                 });
             });
 
@@ -169,25 +180,26 @@ varExists('jQuery').then(function () {
                 // console.log('firing google add_to_wishlist event for: ' + wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id);
                 // console.log(product);
 
+                let productItems = {
+                    "item_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
+                    "item_name": product.name,
+                    "quantity" : 1,
+                    // "affiliation": "",
+                    // "coupon": "",
+                    // "discount": 0,
+                    "item_brand"  : product.brand,
+                    "item_variant": product.variant,
+                    "price"       : product.price,
+                    "currency"    : wooptpmDataLayer.shop.currency,
+                }
+
+                productItems = wooptpm.getFormattedGA4Categories(productItems, product.category);
+
                 gtag('event', 'add_to_wishlist', {
                     "send_to" : wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id,
                     "currency": wooptpmDataLayer.shop.currency,
                     // "value": 0,
-                    "items": [
-                        {
-                            "item_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
-                            "item_name": product.name,
-                            "quantity" : 1,
-                            // "affiliation": "",
-                            // "coupon": "",
-                            // "discount": 0,
-                            "item_brand"   : product.brand,
-                            "item_category": product.category,
-                            "item_variant" : product.variant,
-                            "price"        : product.price,
-                            "currency"     : wooptpmDataLayer.shop.currency,
-                        }
-                    ]
+                    "items": [productItems]
                 });
             });
 
@@ -198,25 +210,26 @@ varExists('jQuery').then(function () {
                 // console.log('firing google remove_from_cart event');
                 // console.log(product);
 
+                let productItems = {
+                    "item_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
+                    "item_name": product.name,
+                    // "coupon": "",
+                    // "discount": 0,
+                    // "affiliation": "",
+                    "item_brand"  : product.brand,
+                    "item_variant": product.variant,
+                    "price"       : product.price,
+                    "currency"    : wooptpmDataLayer.shop.currency,
+                    "quantity"    : product.quantity,
+                }
+
+                productItems = wooptpm.getFormattedGA4Categories(productItems, product.category);
+
                 gtag('event', 'remove_from_cart', {
                     "send_to" : wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id,
                     "currency": wooptpmDataLayer.shop.currency,
                     // "value": 0,
-                    "items": [
-                        {
-                            "item_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
-                            "item_name": product.name,
-                            // "coupon": "",
-                            // "discount": 0,
-                            // "affiliation": "",
-                            "item_brand"   : product.brand,
-                            "item_category": product.category,
-                            "item_variant" : product.variant,
-                            "price"        : product.price,
-                            "currency"     : wooptpmDataLayer.shop.currency,
-                            "quantity"     : product.quantity,
-                        }
-                    ]
+                    "items": [productItems]
                 });
             });
 
@@ -246,23 +259,26 @@ varExists('jQuery').then(function () {
 
                     let product = wooptpm.getProductDataForViewItemEvent(wooptpm.getMainProductIdFromProductPage());
 
+                    let productItems = {
+                        "item_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
+                        "item_name": product.name,
+                        // "coupon": "",
+                        // "discount": 0,
+                        // "affiliation": "",
+                        "item_brand"  : product.brand,
+                        "item_variant": product.variant,
+                        "price"       : product.price,
+                        "currency"    : wooptpmDataLayer.shop.currency,
+                        "quantity"    : 1,
+                    }
+
+                    productItems = wooptpm.getFormattedGA4Categories(productItems, product.category);
+
                     gtag("event", "view_item", {
                         "send_to" : wooptpmDataLayer.pixels.google.analytics.ga4.measurement_id,
                         "currency": wooptpmDataLayer.shop.currency,
                         "value"   : 1 * product.price,
-                        "items"   : [{
-                            "item_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
-                            "item_name": product.name,
-                            // "coupon": "",
-                            // "discount": 0,
-                            // "affiliation": "",
-                            "item_brand"   : product.brand,
-                            "item_category": product.category,
-                            "item_variant" : product.variant,
-                            "price"        : product.price,
-                            "currency"     : wooptpmDataLayer.shop.currency,
-                            "quantity"     : 1,
-                        }]
+                        "items"   : [productItems]
                     });
                 } else if (wooptpmDataLayer.shop.page_type === 'search') {
 
@@ -271,7 +287,7 @@ varExists('jQuery').then(function () {
                     for (const [key, product] of Object.entries(wooptpmDataLayer.products)) {
                         // console.log(`${key}: ${value}`);
 
-                        products.push({
+                        let productItems = {
                             "item_id"  : product.dyn_r_ids[wooptpmDataLayer.pixels.google.analytics.id_type],
                             "item_name": product.name,
                             "quantity" : 1,
@@ -280,13 +296,16 @@ varExists('jQuery').then(function () {
                             // "discount": 0,
                             "index"         : product.position,
                             "item_brand"    : product.brand,
-                            "item_category" : product.category,
                             "item_list_name": wooptpmDataLayer.shop.list_name,
                             "item_list_id"  : wooptpmDataLayer.shop.list_id,
                             "item_variant"  : product.variant,
                             "price"         : product.price,
                             "currency"      : wooptpmDataLayer.shop.currency,
-                        });
+                        }
+
+                        productItems = wooptpm.getFormattedGA4Categories(productItems, product.category);
+
+                        products.push(productItems);
                     }
 
                     gtag("event", "view_search_results", {

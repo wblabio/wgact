@@ -133,18 +133,19 @@ trait Trait_Google
         }
 
         return [
-            'id'          => (string)$dyn_r_ids[$this->get_ga_id_type()],
-            'name'        => (string)$name,
-            'quantity'    => (int)$order_item['quantity'],
-            'affiliation' => (string)get_bloginfo('name'),
+            'id'             => (string)$dyn_r_ids[$this->get_ga_id_type()],
+            'name'           => (string)$name,
+            'quantity'       => (int)$order_item['quantity'],
+            'affiliation'    => (string)get_bloginfo('name'),
             //            'coupon' => '',
             //            'discount' => 0,
-            'brand'       => (string)$this->get_brand_name($product->get_id()),
+            'brand'          => (string)$this->get_brand_name($product->get_id()),
             // https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#pr_ca
-            'category'    => implode(',', $this->get_product_category($product->get_id())),
-            'variant'     => (string)($product->get_type() === 'variation') ? $this->get_formatted_variant_text($product) : '',
+            'category'       => implode(',', $this->get_product_category($product->get_id())),
+            'category_array' => $this->get_product_category($product->get_id()),
+            'variant'        => (string)($product->get_type() === 'variation') ? $this->get_formatted_variant_text($product) : '',
             //            'tax'      => 0,
-            'price'       => (float)$this->wooptpm_get_order_item_price($order_item, $product),
+            'price'          => (float)$this->wooptpm_get_order_item_price($order_item, $product),
             //            'list_name' => ,
             //            'currency' => '',
         ];
@@ -164,5 +165,25 @@ trait Trait_Google
         } else {
             return (float)$product->get_price();
         }
+    }
+
+    protected function add_categories_to_ga4_product_items($item_details_array, $categories)
+    {
+        $categories = array_unique($categories);
+
+        if(count($categories) > 0){
+
+            $max_categories = 5;
+
+            $item_details_array['item_category'] = $categories[0];
+
+            $max = count($categories) > $max_categories ? $max_categories : count($categories);
+
+            for ($i = 1; $i < $max; $i++) {
+                $item_details_array['item_category' . ($i + 1)] = $categories[$i];
+            }
+        }
+
+        return $item_details_array;
     }
 }

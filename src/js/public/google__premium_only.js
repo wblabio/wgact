@@ -13,6 +13,26 @@ varExists('jQuery').then(function () {
 
     (function (wooptpm, $, undefined) {
 
+        wooptpm.getFormattedGA4Categories = function (productItems, categories) {
+
+            let maxCategories = 5;
+
+            // remove categories with equal names from array
+            categories = Array.from(new Set(categories));
+
+            if (Array.isArray(categories) && categories.length) {
+
+                productItems['item_category'] = categories[0];
+
+                let max = categories.length > maxCategories ? maxCategories : categories.length;
+
+                for (let i = 1; i < max; i++) {
+                    productItems['item_category' + (i + 1)] = categories[i];
+                }
+            }
+
+            return productItems;
+        }
 
         wooptpm.setGoogleCidOnServer = function (targetID) {
 
