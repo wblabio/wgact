@@ -18,6 +18,9 @@ varExists('jQuery').then(function () {
             // view_item_list event
             jQuery(document).on('wooptpmViewItemList', function (event, product) {
 
+                // try to prevent that WC sends cached hits to Google
+                if(!product) return;
+
                 // console.log('firing google view_item_list event');
                 // console.log(product);
 

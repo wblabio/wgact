@@ -190,6 +190,7 @@ You can send the link to the front page of your shop too if you think it would b
 * Tweak: Remove nonce check when setting cid on product pages because product pages are cached
 * Tweak: Added logging for cid retrieval
 * Tweak: Save cid_set cookie as normal cookie if sessionStorage is not available
+* Tweak: Comma separated categories for GA UA
 [//]: # fs_premium_only_end
 * Tweak: Refactored wooptpm.setCookie() so that it can create session cookies
 [//]: # fs_premium_only_begin

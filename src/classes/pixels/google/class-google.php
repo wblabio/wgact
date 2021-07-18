@@ -359,12 +359,15 @@ class Google extends Pixel
                         window.setTimeout(updateGoogleConsentMode, 50);
                     } else {
                         if (window.BorlabsCookie.checkCookieGroupConsent('statistics')) {
+//                            console.log('update analytics_storage to granted');
+
                             gtag('consent', 'update', {
                                 'analytics_storage': 'granted'
                         });
                     }
         
                     if (window.BorlabsCookie.checkCookieGroupConsent('marketing')) {
+//                        console.log('update ad_storage to granted');
                         gtag('consent', 'update', {
                             'ad_storage': 'granted'
                             });
