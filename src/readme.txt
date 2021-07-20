@@ -183,6 +183,7 @@ You can send the link to the front page of your shop too if you think it would b
 
 * Tweak: Avoid an issue when trying to read WP Rocket options when no options exist yet
 * Tweak: Removed some unnecessary parameters from Google Ads purchase confirmation script
+* Fix: Fixed some events on cart page for variable products
 
 = 1.10.11 = 19.07.2021
 

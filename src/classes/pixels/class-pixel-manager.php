@@ -130,7 +130,57 @@ class Pixel_Manager extends Pixel_Manager_Base
         add_action('woocommerce_after_shop_loop_item', [$this, 'action_woocommerce_after_shop_loop_item'], 10, 1);
         add_filter('woocommerce_blocks_product_grid_item_html', [$this, 'wc_add_date_to_gutenberg_block'], 10, 3);
         add_action('wp_head', [$this, 'woocommerce_inject_product_data_on_product_page']);
+        // do_action( 'woocommerce_after_cart_item_name', $cart_item, $cart_item_key );
+        add_action('woocommerce_after_cart_item_name', [$this, 'woocommerce_after_cart_item_name'], 10, 2);
     }
+
+    public function woocommerce_after_cart_item_name($cart_item, $cart_item_key)
+    {
+        $data = [
+            'product_id'   => $cart_item['product_id'],
+            'variation_id' => $cart_item['variation_id'],
+        ];
+
+        ?>
+        <script>
+            window.wooptpmDataLayer.cartItemKeys                                 = window.wooptpmDataLayer.cartItemKeys || {};
+            window.wooptpmDataLayer.cartItemKeys['<?php echo $cart_item_key ?>'] = <?php echo json_encode($data) ?>
+        </script>
+
+        <?php
+
+        // if this is a variation we need to load the parent ID too for Pinterest
+        if ($this->options_obj->pinterest->pixel_id && !$cart_item['variation_id'] == 0) {
+            ?>
+            <script type="text/javascript" data-cfasync="false">
+                window.wooptpmDataLayer.products = window.wooptpmDataLayer.products || {};
+                window.wooptpmDataLayer.products[<?php echo $cart_item['product_id'] ?>] = <?php echo json_encode($this->get_cart_parent_product_for_pinterest($cart_item['product_id'])) ?>;
+            </script>
+            <?php
+        }
+    }
+
+    private function get_cart_parent_product_for_pinterest($product_id)
+    {
+        $product = wc_get_product($product_id);
+
+        if (!is_object($product)) {
+
+//            $this->log_problematic_product_id();
+            wc_get_logger()->debug('get_product_data_layer_script received an invalid product', ['source' => 'wooptpm']);
+
+            return '';
+        }
+
+        $this->dyn_r_ids = $this->get_dyn_r_ids($product);
+
+        return [
+            'id'          => (string)$product->get_id(),
+            'dyn_r_ids'   => $this->dyn_r_ids,
+        ];
+    }
+
+
 
     // on product page
     public function woocommerce_inject_product_data_on_product_page()

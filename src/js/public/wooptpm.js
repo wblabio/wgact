@@ -1014,7 +1014,17 @@ varExists('jQuery').then(function () {
             try {
                 jQuery('.cart_item').each(function () {
 
-                    let productId = jQuery(this).find('[data-product_id]').data('product_id');
+                    // let productId = jQuery(this).find('[data-product_id]').data('product_id');
+
+                    let url = new URL (jQuery(this).find('.product-remove').find('a').attr('href'));
+                    let searchParams = new URLSearchParams(url.search);
+                    let cartItemKey = searchParams.get('remove_item');
+
+                    if(wooptpmDataLayer.cartItemKeys[cartItemKey]['variation_id'] === 0) {
+                        productId = wooptpmDataLayer.cartItemKeys[cartItemKey]['product_id'];
+                    } else {
+                        productId = wooptpmDataLayer.cartItemKeys[cartItemKey]['variation_id'];
+                    }
 
                     let quantity = jQuery(this).find('.qty').val();
 
