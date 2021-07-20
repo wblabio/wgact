@@ -3,13 +3,14 @@
 
 add_filter('wooptpm_get_ga_cid_logger', '__return_true');
 
-//add_filter('wooptpm_order_items', function ($order_items, $order){
-//
-//    foreach($order_items as $item_id => $item ){
-//        error_log('price: ' . $item->get_subtotal());
-//    }
-//    return $order_items;
-//}, 2, 10);
+add_filter('wooptpm_order_items', function ($order_items, $order){
+
+    foreach($order_items as $item_id => $item ){
+        // do something
+
+    }
+    return $order_items;
+}, 2, 10);
 
 add_filter('wooptpm_pinterest_enhanced_match', '__return_true');
 
@@ -115,11 +116,11 @@ if (isset($_GET["dynr"])) {
         return $dyn_r_ids;
     }
 
-//    add_filter('wooptpm_product_id_type_for_google', 'product_id_type_output_for_google');
-//    function product_id_type_output_for_google(): string
-//    {
-//        return 'custom1';
-//    }
+    add_filter('wooptpm_product_id_type_for_google', 'product_id_type_output_for_google');
+    function product_id_type_output_for_google(): string
+    {
+        return 'custom1';
+    }
 
     add_filter('wooptpm_product_id_type_for_google_ads', 'product_id_type_output_for_google_ads');
     function product_id_type_output_for_google_ads(): string

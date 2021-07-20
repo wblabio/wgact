@@ -185,7 +185,7 @@ class Google extends Pixel
                 $item_details_array['google_business_vertical'] = (string)$this->google_business_vertical;
             }
 
-            if ($this->is_google_analytics_active()) {
+            if ($this->is_google_analytics_active() && $channel <> 'ads') {
                 $item_details_array['name'] = (string)$product->get_name();
 //                $item_details_array['list_name'] = '';
                 $item_details_array['brand']    = (string)$this->get_brand_name($product_id);

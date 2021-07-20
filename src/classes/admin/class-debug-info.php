@@ -159,9 +159,9 @@ class Debug_info
         $html .= 'api.freemius.com : ' . $this->try_connect_to_server('api.freemius.com') . PHP_EOL;
         $html .= 'wp.freemius.com : ' . $this->try_connect_to_server('wp.freemius.com') . PHP_EOL;
 
-        $html .= PHP_EOL . '## misc ##' . PHP_EOL . PHP_EOL;
+//        $html .= PHP_EOL . '## misc ##' . PHP_EOL . PHP_EOL;
 
-        $html .= 'WP Rocket JavaScript concatenation: ' . $this->is_wp_rocket_js_concatenation();
+//        $html .= 'WP Rocket JavaScript concatenation: ' . $this->is_wp_rocket_js_concatenation();
 
         $html .= PHP_EOL . PHP_EOL . '### End of Information ###';
 

@@ -763,7 +763,11 @@ class Environment_Check
 
     public function exclude_inline_scripts_from_wp_rocket_using_options()
     {
-        $options        = get_option('wp_rocket_settings');
+        $options = get_option('wp_rocket_settings');
+
+        // if no options array could be retrieved.
+        if (!is_array($options)) return;
+
         $update_options = false;
 
         $js_to_exclude = $this->get_wooptpm_script_identifiers();

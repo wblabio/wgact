@@ -45,9 +45,9 @@ class Google_Ads extends Google
     public function inject_order_received_page($order, $order_total, $is_new_customer)
     {
         // If Google Ads Enhanced Conversions is active
-        if($this->options_obj->google->ads->enhanced_conversions){
+        if ($this->options_obj->google->ads->enhanced_conversions) {
 
-        $customer_data = [];
+            $customer_data = [];
 
             if ($order->get_billing_email()) $customer_data['email'] = (string)$order->get_billing_email();
             if ($order->get_billing_phone()) $customer_data['phone_number'] = (string)$order->get_billing_phone();
@@ -84,7 +84,7 @@ class Google_Ads extends Google
             endif; ?>
 
             <?php
-            if ($this->is_dynamic_remarketing_active())  $this->get_dyn_remarketing_purchase_script($order, $order_total) ?>
+            if ($this->is_dynamic_remarketing_active()) $this->get_dyn_remarketing_purchase_script($order, $order_total) ?>
 
             <?php
         }
@@ -92,105 +92,28 @@ class Google_Ads extends Google
         if ($this->add_cart_data == true && $this->conversion_id && $this->conversion_label) {
             ?>
 
-            gtag('event', 'purchase', <?php echo $this->get_event_purchase_json($order, $order_total, $order_currency, $is_new_customer, 'ads') ?>);
+            gtag('event', 'purchase', <?php echo json_encode($this->get_google_ads_formatted_purchase_json($order, $order_total, $order_currency, $is_new_customer))  ?>);
 
             <?php
-            if ($this->is_dynamic_remarketing_active())  $this->get_dyn_remarketing_purchase_script($order, $order_total);
+            if ($this->is_dynamic_remarketing_active()) $this->get_dyn_remarketing_purchase_script($order, $order_total);
         }
     }
 
-
-    // get products from wp_query
-    protected function get_products_from_wp_query($wp_query): array
+    // https://support.google.com/google-ads/answer/9028614
+    private function get_google_ads_formatted_purchase_json($order, $order_total, $order_currency, $is_new_customer): array
     {
-        $items = [];
-
-        $posts = $wp_query->posts;
-
-        foreach ($posts as $key => $post) {
-
-            if ($post->post_type == 'product' || $post->post_type == 'product_variation') {
-
-                $item_details = [];
-
-                $product = wc_get_product($post->ID);
-
-                // only continue if WC retrieves a valid product
-                if (is_object($product)) {
-
-                    $dyn_r_ids = $this->get_dyn_r_ids($product);
-
-                    $item_details['id']                       = $dyn_r_ids[$this->get_dyn_r_id_type()];
-                    $item_details['google_business_vertical'] = $this->google_business_vertical;
-
-                    array_push($items, $item_details);
-                } else {
-
-                    $this->log_problematic_product_id($post->ID);
-                }
-            }
-        }
-
-        return $items;
-    }
-
-    protected function get_gads_formatted_product_details_from_product_id($product_id): array
-    {
-        $product = wc_get_product($product_id);
-
-        if (is_object($product)) {
-
-            $dyn_r_ids = $this->get_dyn_r_ids($product);
-
-            $product_details['id']       = $dyn_r_ids[$this->get_dyn_r_id_type()];
-            $product_details['category'] = $this->get_product_category($product_id);
-            // $product_details['list_position'] = 1;
-            $product_details['quantity']                 = 1;
-            $product_details['price']                    = (float)$product->get_price();
-            $product_details['google_business_vertical'] = $this->google_business_vertical;
-
-            return $product_details;
-        } else {
-
-            $this->log_problematic_product_id($product_id);
-        }
-    }
-
-    // get an array with all cart product ids
-    protected function get_gads_formatted_cart_items($cart)
-    {
-//         error_log(print_r($cart, true));
-        // initiate product identifier array
-        $cart_items   = [];
-        $item_details = [];
-
-        // go through the array and get all product identifiers
-        foreach ((array)$cart as $cart_item) {
-//            error_log(print_r($cart_item,true));
-            $product_id = $this->get_variation_or_product_id($cart_item, $this->options_obj->general->variations_output);
-//            error_log('id: ' . $product_id);
-            $product = wc_get_product($product_id);
-
-            if (is_object($product)) {
-
-                $dyn_r_ids = $this->get_dyn_r_ids($product);
-
-                $item_details['id']                       = $dyn_r_ids[$this->get_dyn_r_id_type()];
-                $item_details['quantity']                 = (int)$cart_item['quantity'];
-                $item_details['price']                    = (int)$product->get_price();
-                $item_details['google_business_vertical'] = $this->google_business_vertical;
-
-                array_push($cart_items, $item_details);
-            } else {
-
-                $this->log_problematic_product_id($product_id);
-            }
-        }
-
-        // apply filter to the $cartprods_items array
-        $cart_items = apply_filters_deprecated('wgact_filter', [$cart_items], '1.10.2', '', 'This filter has been deprecated without replacement.');
-
-        return $cart_items;
+        return  [
+            'send_to'          => $this->get_google_ads_conversion_ids(true),
+            'transaction_id'   => (string)$order->get_order_number(),
+            'value'            => (float)$order_total,
+            'currency'         => (string)$order_currency,
+            'discount'         => (float)$order->get_total_discount(),
+            'aw_merchant_id'   => (int)$this->aw_merchant_id,
+            'aw_feed_country'  => (string)$this->get_visitor_country(),
+            'aw_feed_language' => $this->get_gmc_language(),
+            'new_customer'     => (string)$is_new_customer,
+            'items'            => $this->get_order_items_for_google_ads_purchase_script($order, false),
+        ];
     }
 
     protected function get_dyn_remarketing_purchase_script($order, $order_total)
@@ -201,10 +124,43 @@ class Google_Ads extends Google
                     gtag('event', 'purchase', {
                         'send_to': " . json_encode($this->get_google_ads_conversion_ids()) . ",
                         'value'  : " . $order_total . ",
-                        'items'  : " . (json_encode($this->get_formatted_order_items($order, 'ads'))) . "
+                        'items'  : " . (json_encode($this->get_order_items_for_google_ads_purchase_script($order, true))) . "
                     });
                 }
             });
         ";
+    }
+
+    private function get_order_items_for_google_ads_purchase_script($order, $dyn_r = false): array
+    {
+        $order_items = (array)$this->wooptpm_get_order_items($order);
+
+        $order_items_array = [];
+
+        foreach ($order_items as $order_item) {
+
+            $product_id = $this->get_variation_or_product_id($order_item->get_data(), $this->options_obj->general->variations_output);
+            $product    = wc_get_product($product_id);
+
+            $order_items_array = [];
+
+            if (!is_object($product)) {
+
+                $this->log_problematic_product_id($product_id);
+                continue;
+            }
+
+            $dyn_r_ids = $this->get_dyn_r_ids($product);
+
+            $item_details_array['id']                       = (string)$dyn_r_ids[$this->get_dyn_r_id_type()];
+            $item_details_array['quantity']                 = (int)$order_item['quantity'];
+            $item_details_array['price']                    = (float)$product->get_price();
+
+            if($dyn_r === true) $item_details_array['google_business_vertical'] = (string)$this->google_business_vertical;
+
+            array_push($order_items_array, $item_details_array);
+        }
+
+        return $order_items_array;
     }
 }
